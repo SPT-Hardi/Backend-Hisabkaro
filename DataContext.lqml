@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database Name="HisabKaroDB" EntityNamespace="HisabKaroDBContext" ContextNamespace="HisabKaroDBContext" Class="HisabKaroDBDataContext" xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ed:Guid="18f418d5-4de8-4a62-aa4f-b258feb31f9b" Provider="Devart.Data.SqlServer.Linq.Provider.SqlDataProvider, Devart.Data.SqlServer.Linq" Extended="true" xmlns="http://schemas.devart.com/linqconnect/mapping">
+  <Connection Mode="ConnectionString" ConnectionString="Data Source=20.204.136.73;Initial Catalog=HisabKaroDB;Integrated Security=False;Persist Security Info=True;User ID=HisabKaroDB;Password=Otobit@2022@@#" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.common_Contact_Addresses" Member="CommonContactAddresses">
+    <Type Name="CommonContactAddress" ed:Guid="551aea72-a017-4d72-b663-bbcd9a998cfe">
+      <Column Name="ContactAddressId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="391f9582-f2fd-4d6e-810b-f9568dec825d" />
+      <Column Name="AddressLine1" Type="System.String" DbType="VARCHAR(100)" CanBeNull="true" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="false" ed:Guid="d3c8632a-2ecd-4d51-804d-3e4fd2bca0e5" />
+      <Column Name="AddressLine2" Type="System.String" DbType="VARCHAR(100)" CanBeNull="true" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="false" ed:Guid="f8df717a-b3e7-4141-88eb-e4de0ef1d491" />
+      <Column Name="City" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="5d2311c6-357a-4c70-9b5e-530dcc5adf65" />
+      <Column Name="State" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="0af63e31-d014-4067-a833-7a01775b562b" />
+      <Column Name="PinCode" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="5855d993-1191-47ab-aed7-07e1c223bfd7" />
+      <Column Name="Landmark" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="8dba96cc-c3b9-4551-9031-27a404a46448" />
+      <Association Name="CommonContactAddress_DevOrganisationBranch" ed:AssociationGuid="66cec1b5-df49-4570-ab92-cbc56596f294" Member="DevOrganisationBranches" ed:Guid="827bbb4e-38f1-476d-8dda-f166ffc2aa7a" ThisKey="ContactAddressId" OtherKey="ContactAddressId" Type="DevOrganisationBranch" />
+      <Association Name="CommonContactAddress_DevOrganisation" ed:AssociationGuid="3ec1baef-4c83-4f20-bf33-64f7e1f42f76" Member="DevOrganisations" ed:Guid="aa5bc4ef-8591-438d-8be7-c9229ce68cf8" ThisKey="ContactAddressId" OtherKey="ContactAddressId" Type="DevOrganisation" />
+      <Association Name="CommonContactAddress_SubUsersDetail" ed:AssociationGuid="552f67b7-9dcc-4c91-b9c4-9f013de8f7d3" Member="SubUsersDetails" ed:Guid="a1bcb300-fd7f-45ed-8c10-efc828ad5356" ThisKey="ContactAddressId" OtherKey="AddressID" Type="SubUsersDetail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.common_Files" Member="CommonFiles">
+    <Type Name="CommonFile" ed:Guid="69b9a66b-65fe-4c08-a191-71d41967f0dc">
+      <Column Name="FileId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="6bd47ea0-9553-48a4-92c1-f74e26b957fe" />
+      <Column Name="FileType" Type="System.String" DbType="VARCHAR(8)" CanBeNull="true" UpdateCheck="Never" MaxLength="8" ed:ValidateMaxLength="8" ed:ValidateRequired="false" ed:Guid="c4347a7f-e6e1-4688-a31a-de63cbb6487a" />
+      <Column Name="FilePath" Type="System.String" DbType="VARCHAR(100)" CanBeNull="true" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="false" ed:Guid="fdb86a55-8fd2-4575-ad43-d5cd1051df97" />
+      <Column Name="FileSize" Type="System.String" DbType="VARCHAR(10)" CanBeNull="true" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="false" ed:Guid="d3e799c5-e26a-4aab-913a-7c3020e92c7f" />
+      <Association Name="CommonFile_DevOrganisation" ed:AssociationGuid="e68752c7-c8c2-4f31-87f3-2de5a90e46d4" Member="DevOrganisations_PANFileId" ed:Guid="af04a2dd-19a6-42d0-af19-4071b1307460" ThisKey="FileId" OtherKey="PANFileId" Type="DevOrganisation" />
+      <Association Name="CommonFile_DevOrganisation1" ed:AssociationGuid="6e91aee0-24b7-49d1-9ea9-640997711e16" Member="DevOrganisations_GSTFileId" ed:Guid="0f0d4bc7-0a2f-46aa-871e-5baaa3aeaf7d" ThisKey="FileId" OtherKey="GSTFileId" Type="DevOrganisation" />
+      <Association Name="CommonFile_DevOrganisation2" ed:AssociationGuid="7f3c85a9-75dc-4974-bc2d-2ada9ee8d34d" Member="DevOrganisations_LogoFileId" ed:Guid="4fcb6358-b0b8-4f37-b1ee-133bd0f7fdca" ThisKey="FileId" OtherKey="LogoFileId" Type="DevOrganisation" />
+      <Association Name="CommonFile_DevOrganisationsStaff" ed:AssociationGuid="61c276d7-9a97-4eb7-86ba-75e5c0939437" Member="DevOrganisationsStaffs" ed:Guid="e10abccf-1a34-4d69-afa9-1f5571c1cb37" ThisKey="FileId" OtherKey="ProfileFileId" Type="DevOrganisationsStaff" />
+      <Association Name="CommonFile_EmpResumeOtherCertificate" ed:AssociationGuid="c83072b2-dbb3-412f-a6f6-63bd791ecb86" Member="EmpResumeOtherCertificates" ed:Guid="7b17a966-b1fb-4e6e-8bda-b97290ff67e1" ThisKey="FileId" OtherKey="CertificateFileId" Type="EmpResumeOtherCertificate" />
+      <Association Name="CommonFile_EmprJob" ed:AssociationGuid="6cfaa132-f46d-48e4-96d0-1cb3a9caa367" Member="EmprJobs" ed:Guid="27cbae3e-980f-402d-8b9b-97bde82cf18c" ThisKey="FileId" OtherKey="FileId" Type="EmprJob" />
+      <Association Name="CommonFile_SubUsersDetail" ed:AssociationGuid="4eb9e5cd-6231-4d97-be09-2074d2c71c43" Member="SubUsersDetails" ed:Guid="70489503-0d38-472d-b2d9-f216c3a24282" ThisKey="FileId" OtherKey="FileId" Type="SubUsersDetail" />
+      <Association Name="CommonFile_SubUsersIdentity" ed:AssociationGuid="11f60f08-a579-4788-a28e-7089918ef47d" Member="SubUsersIdentities_AadharBackFileId" ed:Guid="da4c49d7-2c33-4e28-9116-36941e37970b" ThisKey="FileId" OtherKey="AadharBackFileId" Type="SubUsersIdentity" />
+      <Association Name="CommonFile_SubUsersIdentity1" ed:AssociationGuid="b37bd08e-a0cf-4fc7-a4ee-8a99b9e679ed" Member="SubUsersIdentities_AadharFrontFileId" ed:Guid="4135f44a-471e-4feb-9823-33da68aefbd0" ThisKey="FileId" OtherKey="AadharFrontFileId" Type="SubUsersIdentity" />
+      <Association Name="CommonFile_SubUsersIdentity2" ed:AssociationGuid="ff6717ae-8b4f-4714-a081-75cd81353269" Member="SubUsersIdentities_PanFileId" ed:Guid="d76dfcdd-91f5-41c7-9a51-e7b450881a4a" ThisKey="FileId" OtherKey="PanFileId" Type="SubUsersIdentity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Controllers" Member="DevControllers">
+    <Type Name="DevController" ed:Guid="43689f37-dc9f-41f5-a99d-2dda1c6255e2">
+      <Column Name="CId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="beccce99-1967-426f-afdd-dd16d8de3ca5" />
+      <Column Name="ControllerTypeId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="1f632d2b-5842-4375-9dc9-1027f4be3d45" />
+      <Column Name="ControllerName" Type="System.String" DbType="VARCHAR(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="true" ed:Guid="c86de49b-f6a9-460b-93b0-9a9a6a6cd090" />
+      <Column Name="DisplayName" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="a0888d63-0cc1-4a68-a2bd-4eeb0242cd08" />
+      <Column Name="IsVisible" Type="System.Boolean" DbType="BIT" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="c9f11c5c-ec82-44de-a28b-72499fa01c01" />
+      <Column Name="ChildControllers" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="a0a2e66d-6c4e-469d-8278-67cbb3eeba37" />
+      <Association Name="DevControllerType_DevController" ed:AssociationGuid="0416e5fc-62b0-4fdf-aba3-1896cd0cd419" Member="DevControllerType" ed:Guid="1d67bcfc-aabd-431b-97dd-01aa3ae58607" ThisKey="ControllerTypeId" OtherKey="ControllerTypeId" Type="DevControllerType" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevController_SubRoleController" ed:AssociationGuid="ccb12544-3e07-4a24-b88c-ed5fa88429b4" Member="SubRoleControllers" ed:Guid="3d5f4b42-f736-4875-bb7e-ef1f90e07d10" ThisKey="CId" OtherKey="CId" Type="SubRoleController" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_ControllerTypes" Member="DevControllerTypes">
+    <Type Name="DevControllerType" ed:Guid="89a6d938-48a4-4b51-a774-a5c10b40d24e">
+      <Column Name="ControllerTypeId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="7a95ba67-9a87-4ed6-b320-6b265dfec6b2" />
+      <Column Name="ControllerType" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="00dea4e4-17a3-4878-beb2-cd293a951e0d" />
+      <Association Name="DevControllerType_DevController" ed:AssociationGuid="0416e5fc-62b0-4fdf-aba3-1896cd0cd419" Member="DevControllers" ed:Guid="dfb5a4d3-f956-45bc-a660-0a66e12612db" ThisKey="ControllerTypeId" OtherKey="ControllerTypeId" Type="DevController" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisation_Branches" Member="DevOrganisationBranches">
+    <Type Name="DevOrganisationBranch" ed:Guid="02c1d3ef-2521-46b6-954b-b90b0f56eb9b">
+      <Column Name="BranchId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="4e03ae97-0060-4a6c-8b54-13da3e62ae76" />
+      <Column Name="BranchName" Type="System.String" DbType="VARCHAR(20)" CanBeNull="true" UpdateCheck="Never" MaxLength="20" ed:ValidateMaxLength="20" ed:ValidateRequired="false" ed:Guid="9cc51768-8893-4ed3-8006-ad8fd71fb817" />
+      <Column Name="OId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="1c002d7a-d91a-47d6-9a26-7d9f0070a00d" />
+      <Column Name="Longitude" Type="System.Decimal" DbType="DECIMAL(9,6)" CanBeNull="true" UpdateCheck="Never" Precision="9" Scale="6" ed:ValidateRequired="false" ed:Guid="20c76c8d-d487-40b7-afae-343047512517" />
+      <Column Name="Latitude" Type="System.Decimal" DbType="DECIMAL(9,6)" CanBeNull="true" UpdateCheck="Never" Precision="9" Scale="6" ed:ValidateRequired="false" ed:Guid="8061dba1-9a02-45fe-86df-14e7eb8fbbea" />
+      <Column Name="ContactAddressId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="54a7026c-6c6b-4da9-9f95-c87d19d89a70" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="7ce32b75-dc91-41b2-bf33-7cab5ee9a6cb" />
+      <Association Name="CommonContactAddress_DevOrganisationBranch" ed:AssociationGuid="66cec1b5-df49-4570-ab92-cbc56596f294" Member="CommonContactAddress" ed:Guid="60ba1fb9-3bbd-4184-9669-402ac49904c4" ThisKey="ContactAddressId" OtherKey="ContactAddressId" Type="CommonContactAddress" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_DevOrganisationBranch" ed:AssociationGuid="dc81b8d1-3bf1-4a3c-9059-633c75ef04e3" Member="DevOrganisation" ed:Guid="0cc1d2f0-8b6a-4ccc-b056-c61c273a5565" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_DevOrganisationBranch" ed:AssociationGuid="5be394c1-4e9f-4456-abf2-d38f22947fea" Member="SubUser" ed:Guid="14aaf444-3685-4b03-9c14-2622eaa75164" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisationBranch_DevOrganisationsBranchesShiftTime" ed:AssociationGuid="03694ae2-3bcb-4319-ba45-3fbfd4cb1b99" Member="DevOrganisationsBranchesShiftTimes" ed:Guid="60a54142-8bb3-43c4-83ee-3ed6a7c37c4e" ThisKey="BranchId" OtherKey="BranchId" Type="DevOrganisationsBranchesShiftTime" />
+      <Association Name="DevOrganisationBranch_DevOrganisationsStaff" ed:AssociationGuid="27b04db5-523d-43fa-bec9-c402405cc2e2" Member="DevOrganisationsStaffs" ed:Guid="49af1df4-2547-4137-896b-c6bf19a01354" ThisKey="BranchId" OtherKey="BranchId" Type="DevOrganisationsStaff" />
+      <Association Name="DevOrganisationBranch_EmpApplyJobDetail" ed:AssociationGuid="16acabb3-8159-4790-9c04-00f2b5b635cb" Member="EmpApplyJobDetails" ed:Guid="193d9107-a60c-4326-9c8a-0f6b95e5aff3" ThisKey="BranchId" OtherKey="BranchId" Type="EmpApplyJobDetail" />
+      <Association Name="DevOrganisationBranch_EmpBookmarkJobsDetail" ed:AssociationGuid="34620007-07f0-4427-8ed1-14000e3a24d1" Member="EmpBookmarkJobsDetails" ed:Guid="d3d47612-4a46-4310-8aed-7d1533dae011" ThisKey="BranchId" OtherKey="BranchId" Type="EmpBookmarkJobsDetail" />
+      <Association Name="DevOrganisationBranch_EmprJob" ed:AssociationGuid="74aabec8-d422-4d09-8cd2-1809c9cb0052" Member="EmprJobs" ed:Guid="b5ee016b-284d-4454-a1ff-7946cbdda58c" ThisKey="BranchId" OtherKey="BranchID" Type="EmprJob" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisations" Member="DevOrganisations">
+    <Type Name="DevOrganisation" ed:Guid="60459fb1-394a-4ca4-8877-44733b05ee03">
+      <Column Name="OId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="17b9b5eb-b33b-4d4b-b1d8-3fa1f3571ad3" />
+      <Column Name="OrganisationName" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="079f6e7f-b590-418d-a0ec-156944e60668" />
+      <Column Name="BussinessTypeId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="fdebe881-73b3-4db9-8982-105acd14c6c3" />
+      <Column Name="Email" Type="System.String" DbType="VARCHAR(30)" CanBeNull="true" UpdateCheck="Never" MaxLength="30" ed:ValidateMaxLength="30" ed:ValidateRequired="false" ed:Guid="ed9aec4e-921b-4125-8c34-eda64c58a0bb" />
+      <Column Name="MobileNumber" Type="System.String" DbType="VARCHAR(10)" CanBeNull="true" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="false" ed:Guid="da933b3b-cef3-4d6b-be46-1fab39b91532" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="1671fc0b-6661-4454-9446-e0e1efe3bd4e" />
+      <Column Name="ContactAddressId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="f7e787a4-ccd0-45c6-b939-006fe0a642d9" />
+      <Column Name="PANFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="488abda5-3a8e-4256-b9eb-e3a1230813f5" />
+      <Column Name="PAN" Type="System.String" DbType="VARCHAR(10)" CanBeNull="true" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="false" ed:Guid="c06f5076-05b6-4d1c-bc03-6ed3dc821225" />
+      <Column Name="GSTFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="68bb2892-c3c3-403b-96d6-d375a2857ded" />
+      <Column Name="GSTIN" Type="System.String" DbType="VARCHAR(15)" CanBeNull="true" UpdateCheck="Never" MaxLength="15" ed:ValidateMaxLength="15" ed:ValidateRequired="false" ed:Guid="784c4cae-97dd-4cce-808b-1fc2295acc2e" />
+      <Column Name="LogoFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="ddf0c414-9eba-46d9-9a05-9c01d4b7150a" />
+      <Column Name="Latitude" Type="System.Decimal" DbType="DECIMAL(9,6)" CanBeNull="true" UpdateCheck="Never" Precision="9" Scale="6" ed:ValidateRequired="false" ed:Guid="d8eefe96-f729-4867-b1aa-2320b786249d" />
+      <Column Name="Longitude" Type="System.Decimal" DbType="DECIMAL(9,6)" CanBeNull="true" UpdateCheck="Never" Precision="9" Scale="6" ed:ValidateRequired="false" ed:Guid="d2337f61-fedf-4271-be94-4b859823b505" />
+      <Association Name="CommonContactAddress_DevOrganisation" ed:AssociationGuid="3ec1baef-4c83-4f20-bf33-64f7e1f42f76" Member="CommonContactAddress" ed:Guid="bd2ec8f2-85ab-4d57-b031-f84dd02962f4" ThisKey="ContactAddressId" OtherKey="ContactAddressId" Type="CommonContactAddress" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="CommonFile_DevOrganisation" ed:AssociationGuid="e68752c7-c8c2-4f31-87f3-2de5a90e46d4" Member="CommonFile_PANFileId" ed:Guid="b06beea4-3a32-430d-ae0d-c380fd56e0ba" ThisKey="PANFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="CommonFile_DevOrganisation1" ed:AssociationGuid="6e91aee0-24b7-49d1-9ea9-640997711e16" Member="CommonFile_GSTFileId" ed:Guid="07e857dd-ee95-4301-bd76-d555cab0c155" ThisKey="GSTFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="CommonFile_DevOrganisation2" ed:AssociationGuid="7f3c85a9-75dc-4974-bc2d-2ada9ee8d34d" Member="CommonFile_LogoFileId" ed:Guid="96f330d2-1b97-4bfe-891d-e9a0988d04ee" ThisKey="LogoFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_DevOrganisationBranch" ed:AssociationGuid="dc81b8d1-3bf1-4a3c-9059-633c75ef04e3" Member="DevOrganisationBranches" ed:Guid="f7716ba0-0975-45f5-8b96-018b58d60acd" ThisKey="OId" OtherKey="OId" Type="DevOrganisationBranch" />
+      <Association Name="SubUser_DevOrganisation" ed:AssociationGuid="e231fb0c-572f-40ec-b32c-653d89b587b8" Member="SubUser" ed:Guid="fd1d7cdc-7ebd-4a47-9c30-52f577561239" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_DevOrganisationsBranchesShiftTime" ed:AssociationGuid="6fcae2f3-ec57-4468-b212-fe0e3a10ca65" Member="DevOrganisationsBranchesShiftTimes" ed:Guid="88c5c431-2c6e-474d-a497-b75419a7a722" ThisKey="OId" OtherKey="OId" Type="DevOrganisationsBranchesShiftTime" />
+      <Association Name="DevOrganisation_DevOrganisationsPartner" ed:AssociationGuid="e3f96110-e51b-48c4-a4d8-b60f977bb4e4" Member="DevOrganisationsPartners" ed:Guid="c548fde7-d208-46ba-ba46-397dce8269e5" ThisKey="OId" OtherKey="OId" Type="DevOrganisationsPartner" />
+      <Association Name="DevOrganisation_DevOrganisationsShiftTime" ed:AssociationGuid="966c59e3-19c6-4dc1-89b4-70109406a4ba" Member="DevOrganisationsShiftTimes" ed:Guid="ee80e9f9-a616-415c-8f40-68943ee2f227" ThisKey="OId" OtherKey="OId" Type="DevOrganisationsShiftTime" />
+      <Association Name="DevOrganisation_DevOrganisationsStaff" ed:AssociationGuid="d9886968-8f72-4cac-9548-cdcf5c21b762" Member="DevOrganisationsStaffs" ed:Guid="32452619-9c48-407b-a73d-2e0de89f23b1" ThisKey="OId" OtherKey="OId" Type="DevOrganisationsStaff" />
+      <Association Name="DevOrganisation_EmpApplyJobDetail" ed:AssociationGuid="fab9375d-6df2-4a0b-b19d-ab418d6476f3" Member="EmpApplyJobDetails" ed:Guid="5c13db89-d5ff-420b-a4d0-07a33f19ea4f" ThisKey="OId" OtherKey="OId" Type="EmpApplyJobDetail" />
+      <Association Name="DevOrganisation_EmpBookmarkJobsDetail" ed:AssociationGuid="0fa73c11-c7ca-4ec9-acd0-fd3431212643" Member="EmpBookmarkJobsDetails" ed:Guid="02d495b4-6ba2-4b67-a1f8-fdac00df3d11" ThisKey="OId" OtherKey="OId" Type="EmpBookmarkJobsDetail" />
+      <Association Name="DevOrganisation_EmprJob" ed:AssociationGuid="cded593e-aa75-4590-8269-b890ab54a632" Member="EmprJobs" ed:Guid="2a4bbd28-b9b3-4341-ab03-9659f9cd959b" ThisKey="OId" OtherKey="OId" Type="EmprJob" />
+      <Association Name="DevOrganisation_SubRole" ed:AssociationGuid="e8d84f81-809f-4131-87e2-091199dec7e4" Member="SubRoles" ed:Guid="5a13ec34-7f9e-42a4-819d-14629654005e" ThisKey="OId" OtherKey="OId" Type="SubRole" />
+      <Association Name="DevOrganisation_SubUserOrganisation" ed:AssociationGuid="25c26f8e-2c9f-4334-8c24-ed61e0e484fb" Member="SubUserOrganisations" ed:Guid="13a83755-7a68-4c8b-a3d9-8c745f160fd2" ThisKey="OId" OtherKey="OId" Type="SubUserOrganisation" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisations_Branches_ShiftTimes" Member="DevOrganisationsBranchesShiftTimes">
+    <Type Name="DevOrganisationsBranchesShiftTime" ed:Guid="c5772720-df2d-4f38-9634-76ab01d721da">
+      <Column Name="ShiftTimeId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="292cd834-c3d8-4be4-bdac-b50e001bad13" />
+      <Column Name="OId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="3c0f730a-9806-4afd-ac9b-9a0024bfea33" />
+      <Column Name="StartTime" Type="System.TimeSpan" DbType="TIME(0) NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="0" ed:ValidateRequired="true" ed:Guid="39fbe4a3-d457-4682-89e8-8763ed65e307" />
+      <Column Name="EndTime" Type="System.TimeSpan" DbType="TIME(0) NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="0" ed:ValidateRequired="true" ed:Guid="cb03c114-0b92-44ad-b3d6-2c533d4dfdf5" />
+      <Column Name="MarkLate" Type="System.TimeSpan" DbType="TIME(0)" CanBeNull="true" UpdateCheck="Never" Precision="0" ed:ValidateRequired="false" ed:Guid="b3c75be3-85ae-40e6-8ce7-b3902e7e42e6" />
+      <Column Name="BranchId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="494cd3e0-00d3-47aa-be62-955ac522db2f" />
+      <Association Name="DevOrganisationBranch_DevOrganisationsBranchesShiftTime" ed:AssociationGuid="03694ae2-3bcb-4319-ba45-3fbfd4cb1b99" Member="DevOrganisationBranch" ed:Guid="9dc7af41-e8de-42b8-8158-173c60ba8808" ThisKey="BranchId" OtherKey="BranchId" Type="DevOrganisationBranch" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_DevOrganisationsBranchesShiftTime" ed:AssociationGuid="6fcae2f3-ec57-4468-b212-fe0e3a10ca65" Member="DevOrganisation" ed:Guid="e8e5c76f-46e7-42cc-baf3-318cea8ab912" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisations_Partners" Member="DevOrganisationsPartners">
+    <Type Name="DevOrganisationsPartner" ed:Guid="e6bc3c6d-3c19-4ce2-9a60-c865142b421e">
+      <Column Name="PId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="a97c1c55-8f37-4da3-9dce-55bdbb1199c6" />
+      <Column Name="OId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="6844e01a-6dfe-4d86-95b6-3a26a836d0b3" />
+      <Column Name="OwnershipTypeId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="2f9d0ba1-0088-4d30-95a7-ad692fdc030f" />
+      <Column Name="Email" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="03817bb7-7591-49e1-8dbc-59702afc8fb1" />
+      <Column Name="MobleNumber" Type="System.String" DbType="VARCHAR(10)" CanBeNull="true" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="false" ed:Guid="4495a887-c8d5-4b55-a8e6-07b51b0e4fc6" />
+      <Association Name="DevOrganisation_DevOrganisationsPartner" ed:AssociationGuid="e3f96110-e51b-48c4-a4d8-b60f977bb4e4" Member="DevOrganisation" ed:Guid="3a56f8a1-c8d4-4557-ab73-ad511bc90189" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisations_ShiftTimes" Member="DevOrganisationsShiftTimes">
+    <Type Name="DevOrganisationsShiftTime" ed:Guid="30021e17-8f47-4663-a427-82a028fb76fe">
+      <Column Name="ShiftTimeId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="98568e69-c45c-4eea-97a4-264395012241" />
+      <Column Name="OId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="de286a4f-3634-4a6d-84f9-b22ccf00dae4" />
+      <Column Name="StartTime" Type="System.TimeSpan" DbType="TIME(0) NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="0" ed:ValidateRequired="true" ed:Guid="05547ff2-c27f-4e00-898d-8e512e7ab4a6" />
+      <Column Name="EndTime" Type="System.TimeSpan" DbType="TIME(0) NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="0" ed:ValidateRequired="true" ed:Guid="e2710c37-c909-4148-a78b-aee842e5dd35" />
+      <Column Name="MarkLate" Type="System.TimeSpan" DbType="TIME(0)" CanBeNull="true" UpdateCheck="Never" Precision="0" ed:ValidateRequired="false" ed:Guid="33003366-394b-4919-a706-52c04e9f1f6a" />
+      <Association Name="DevOrganisation_DevOrganisationsShiftTime" ed:AssociationGuid="966c59e3-19c6-4dc1-89b4-70109406a4ba" Member="DevOrganisation" ed:Guid="41156eeb-81c8-4801-b148-f7d54a7f07c1" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisationsShiftTime_DevOrganisationsStaff" ed:AssociationGuid="7b157473-4497-41b8-b0b3-514025681c23" Member="DevOrganisationsStaffs" ed:Guid="863ce933-9164-496c-be34-f5798a12e354" ThisKey="ShiftTimeId" OtherKey="ShiftTimeId" Type="DevOrganisationsStaff" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisations_Staffs" Member="DevOrganisationsStaffs">
+    <Type Name="DevOrganisationsStaff" ed:Guid="7cb3627e-e00c-44a4-b3e5-575a4f5f7f46">
+      <Column Name="StaffId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="344d6ecd-b658-4984-b6e4-6ae361fc1742" />
+      <Column Name="OId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="fcc1ed4b-3576-49d8-85e9-6825bb31d0fe" />
+      <Column Name="BranchId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="9e01a10f-0a36-401d-b0e9-f1f6f2f794aa" />
+      <Column Name="Salary" Type="System.Double" DbType="FLOAT" CanBeNull="true" UpdateCheck="Never" Precision="53" ed:ValidateRequired="false" ed:Guid="975b2e1d-4e39-435d-a756-50e8e3af1c89" />
+      <Column Name="IsOnenWeek" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="true" ed:Guid="6064a9f5-518b-425d-b3ad-a8d9c6c7eb2c" />
+      <Column Name="ShiftTimeId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="b93c33da-5246-4576-beb9-5396b2e405d0" />
+      <Column Name="WeekOffOneDay" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="dcf142de-7687-4881-a000-70a2995c4d6b" />
+      <Column Name="WeekOffSecondDay" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="1feab688-c652-4b59-a6ac-ad1cbdae8481" />
+      <Column Name="DOB" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="566b9d4b-6ad0-441f-bdbd-807c932a4379" />
+      <Column Name="Gender" Type="System.String" DbType="VARCHAR(6)" CanBeNull="true" UpdateCheck="Never" MaxLength="6" ed:ValidateMaxLength="6" ed:ValidateRequired="false" ed:Guid="0565f2b5-0564-4934-9b8a-8e2ce5497360" />
+      <Column Name="ProfileFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="e0e396c5-e90b-499a-ad6f-d2da199c5083" />
+      <Column Name="BankDetailId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="2461a860-34a1-4783-9568-ad0f6694c04d" />
+      <Column Name="UId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="4869b35f-8b4c-47de-aa48-2edd6c370e00" />
+      <Association Name="CommonFile_DevOrganisationsStaff" ed:AssociationGuid="61c276d7-9a97-4eb7-86ba-75e5c0939437" Member="CommonFile" ed:Guid="5c18c10b-02ce-431a-bdd2-a02068e57d67" ThisKey="ProfileFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisationBranch_DevOrganisationsStaff" ed:AssociationGuid="27b04db5-523d-43fa-bec9-c402405cc2e2" Member="DevOrganisationBranch" ed:Guid="6b13239f-9ca2-486a-bc52-cf6bc7e9af3e" ThisKey="BranchId" OtherKey="BranchId" Type="DevOrganisationBranch" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_DevOrganisationsStaff" ed:AssociationGuid="d9886968-8f72-4cac-9548-cdcf5c21b762" Member="DevOrganisation" ed:Guid="0601d6a3-1fe2-4a26-a1fe-ffd10c837e5d" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisationsShiftTime_DevOrganisationsStaff" ed:AssociationGuid="7b157473-4497-41b8-b0b3-514025681c23" Member="DevOrganisationsShiftTime" ed:Guid="42e8f496-8a72-4d05-ab9f-90041a4ceb0c" ThisKey="ShiftTimeId" OtherKey="ShiftTimeId" Type="DevOrganisationsShiftTime" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisationsStaffsBankDetail_DevOrganisationsStaff" ed:AssociationGuid="92d7f2b6-047c-459b-a3fd-ce04a9cdad40" Member="DevOrganisationsStaffsBankDetail" ed:Guid="b324b3b2-e7fc-4274-b67d-d522c7a12ff1" ThisKey="BankDetailId" OtherKey="BankDetailId" Type="DevOrganisationsStaffsBankDetail" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubFixedLookup_DevOrganisationsStaff" ed:AssociationGuid="403e20df-c1ba-4343-bac4-135e602f46f1" Member="SubFixedLookup_WeekOffOneDay" ed:Guid="d436a94b-99c0-4cf7-a181-f27b573eec01" ThisKey="WeekOffOneDay" OtherKey="FixedLookupId" Type="SubFixedLookup" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubFixedLookup_DevOrganisationsStaff1" ed:AssociationGuid="ea702eb4-20af-4f7e-b6ee-8ef767af5710" Member="SubFixedLookup_WeekOffSecondDay" ed:Guid="3aa484ac-78db-438b-aeb4-29fd6597552d" ThisKey="WeekOffSecondDay" OtherKey="FixedLookupId" Type="SubFixedLookup" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_DevOrganisationsStaff" ed:AssociationGuid="4aa605c2-b8f3-40d3-a00e-35270b934b55" Member="SubUser" ed:Guid="0532a209-104c-4404-a0e2-6b0d5bb2f96b" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.dev_Organisations_Staffs_BankDetails" Member="DevOrganisationsStaffsBankDetails">
+    <Type Name="DevOrganisationsStaffsBankDetail" ed:Guid="84f1230c-c362-49f1-931c-069bd4f88ab1">
+      <Column Name="BankDetailId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="fcdb9955-ed83-44f7-b50a-0672f32139db" />
+      <Column Name="BankName" Type="System.String" DbType="VARCHAR(30)" CanBeNull="true" UpdateCheck="Never" MaxLength="30" ed:ValidateMaxLength="30" ed:ValidateRequired="false" ed:Guid="061d23a9-2f88-469e-a87c-6a9db3a9bf12" />
+      <Column Name="AccountNumber" Type="System.String" DbType="VARCHAR(18)" CanBeNull="true" UpdateCheck="Never" MaxLength="18" ed:ValidateMaxLength="18" ed:ValidateRequired="false" ed:Guid="a28cc826-a670-4b8d-877e-62297855f6c1" />
+      <Column Name="IFSCCode" Type="System.String" DbType="VARCHAR(11)" CanBeNull="true" UpdateCheck="Never" MaxLength="11" ed:ValidateMaxLength="11" ed:ValidateRequired="false" ed:Guid="6f20de0b-8fc3-4137-9657-d31a5906e973" />
+      <Column Name="UPI" Type="System.String" DbType="VARCHAR(6)" CanBeNull="true" UpdateCheck="Never" MaxLength="6" ed:ValidateMaxLength="6" ed:ValidateRequired="false" ed:Guid="a22456eb-d272-4ff1-ae52-66ef904cf746" />
+      <Association Name="DevOrganisationsStaffsBankDetail_DevOrganisationsStaff" ed:AssociationGuid="92d7f2b6-047c-459b-a3fd-ce04a9cdad40" Member="DevOrganisationsStaffs" ed:Guid="ded0018e-8c91-4cf9-8ea9-1f06fe05d1df" ThisKey="BankDetailId" OtherKey="BankDetailId" Type="DevOrganisationsStaff" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_ApplyJob_Details" Member="EmpApplyJobDetails">
+    <Type Name="EmpApplyJobDetail" ed:Guid="dedaed5b-b8fa-41ee-a197-c8a83a4b5629">
+      <Column Name="ApplyId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="00172196-49c8-4727-9dec-f043b8960196" />
+      <Column Name="UId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="79f02a0c-b005-446c-9881-84b34214430d" />
+      <Column Name="JobId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="aae38fc0-5822-4ad3-8a70-6be53e228b8e" />
+      <Column Name="OId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="d728cba7-e62e-439b-8aa4-5d0ec5d15dac" />
+      <Column Name="BranchId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="76f5b05a-1182-41f6-81b7-7f70650a34cc" />
+      <Column Name="ApplyDate" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="true" ed:Guid="f04d5601-6216-4701-b4e3-35b2b71c9466" />
+      <Association Name="DevOrganisationBranch_EmpApplyJobDetail" ed:AssociationGuid="16acabb3-8159-4790-9c04-00f2b5b635cb" Member="DevOrganisationBranch" ed:Guid="92e12bd5-a925-4b68-bac3-81d82424bf72" ThisKey="BranchId" OtherKey="BranchId" Type="DevOrganisationBranch" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_EmpApplyJobDetail" ed:AssociationGuid="fab9375d-6df2-4a0b-b19d-ab418d6476f3" Member="DevOrganisation" ed:Guid="8809e54b-cc2d-477e-b4a0-1bdeae395a8d" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_EmpApplyJobDetail" ed:AssociationGuid="a858698a-f0bc-4d52-994c-af243c073083" Member="SubUser" ed:Guid="1011f326-97b1-4466-b4a0-f5f8aaf4393d" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="EmprJob_EmpApplyJobDetail" ed:AssociationGuid="c2c1f636-592f-4197-a3fa-606046600936" Member="EmprJob" ed:Guid="fa318041-f90e-4c7c-8da6-6afe253963aa" ThisKey="JobId" OtherKey="JobId" Type="EmprJob" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_BookmarkJobs_Details" Member="EmpBookmarkJobsDetails">
+    <Type Name="EmpBookmarkJobsDetail" ed:Guid="371cf961-2c24-4689-ad50-7e1aa4ef6aa8">
+      <Column Name="BookMarkId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="4cd6cc14-0fad-4f35-a830-ca0a62eea2d9" />
+      <Column Name="UId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="384e86e2-234c-4f16-976e-3f23a82f812f" />
+      <Column Name="JobId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="6d4e44df-7a49-42f1-af54-a6715880a68f" />
+      <Column Name="SaveDate" Type="System.DateTime" DbType="DATETIME" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="f0d9fcdd-0c01-4a68-ad7a-a3bcd2f0ebc1" />
+      <Column Name="OId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="85f63fcb-30e4-4820-9bb4-11306ffc7b6d" />
+      <Column Name="BranchId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="7c624b89-6286-49be-b4eb-40841317e6c9" />
+      <Association Name="DevOrganisationBranch_EmpBookmarkJobsDetail" ed:AssociationGuid="34620007-07f0-4427-8ed1-14000e3a24d1" Member="DevOrganisationBranch" ed:Guid="10a038dc-c56c-443b-b693-efca307ad0de" ThisKey="BranchId" OtherKey="BranchId" Type="DevOrganisationBranch" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_EmpBookmarkJobsDetail" ed:AssociationGuid="0fa73c11-c7ca-4ec9-acd0-fd3431212643" Member="DevOrganisation" ed:Guid="276595bd-2fcc-4cd7-8878-12a63c27caaf" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="EmprJob_EmpBookmarkJobsDetail" ed:AssociationGuid="ea8afd9a-f128-4157-ac45-7a3fc608a387" Member="EmprJob" ed:Guid="588b7823-b7c6-4962-8ee3-54a896c136e7" ThisKey="JobId" OtherKey="JobId" Type="EmprJob" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_EmpBookmarkJobsDetail" ed:AssociationGuid="12e142a6-839e-45e5-8f04-b3dacba5f9b7" Member="SubUser" ed:Guid="3fe67d84-af86-4f04-8407-01e2c6d65c5f" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_Resume_About" Member="EmpResumeAbouts">
+    <Type Name="EmpResumeAbout" ed:Guid="13da1853-5afd-4ad3-9de7-a154a7a88fed">
+      <Column Name="EmpResumeAboutId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="c65f66af-378d-4969-87ba-afdbf504a7e9" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="dfb618a8-b3b7-4e53-b213-d390c32a2021" />
+      <Column Name="About" Type="System.String" DbType="VARCHAR(150)" CanBeNull="true" UpdateCheck="Never" MaxLength="150" ed:ValidateMaxLength="150" ed:ValidateRequired="false" ed:Guid="cd2f637a-f9c6-4191-b98e-f3e327adc713" />
+      <Association Name="SubUser_EmpResumeAbout" ed:AssociationGuid="7a7a226a-f60a-410f-860a-f625e879bf16" Member="SubUser" ed:Guid="31243549-bcc7-4e91-bfe4-7d018abf4a34" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_Resume_Educations" Member="EmpResumeEducations">
+    <Type Name="EmpResumeEducation" ed:Guid="d1aea718-3110-4572-8ff3-21e879f9ec0e">
+      <Column Name="EmpResumeEducationId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="e54909a4-035f-4751-b6bd-3c8ffec04c92" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="750e2fda-cfbe-4647-930a-aa45ae13c3d9" />
+      <Column Name="EducationNameId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="b1c8fe86-87e5-498e-a7b7-3b25d7819597" />
+      <Column Name="EducationSteamId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="9cd2782a-87e3-4f83-91d2-5458bcfce255" />
+      <Column Name="InstituteName" Type="System.String" DbType="VARCHAR(100)" CanBeNull="true" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="false" ed:Guid="fea8bac4-1d32-4fe1-8074-7c46326cc7bd" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="c5f0868b-66a4-4f22-bf4c-9774109ecb78" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="1cc9b1ed-6215-4c50-b1ac-d4684f4ad882" />
+      <Association Name="SubFixedLookup_EmpResumeEducation" ed:AssociationGuid="432f9ee4-efb2-48e9-870b-37d10c4b170b" Member="SubFixedLookup" ed:Guid="e581d52e-528c-415a-a0c5-0bf3bf1517fb" ThisKey="EducationNameId" OtherKey="FixedLookupId" Type="SubFixedLookup" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubLookup_EmpResumeEducation" ed:AssociationGuid="35c76823-e5d5-45ee-9405-1f7e84c8134f" Member="SubLookup" ed:Guid="7be35bf9-37d7-4fcc-b6cf-68d96303ab87" ThisKey="EducationSteamId" OtherKey="LookupId" Type="SubLookup" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_EmpResumeEducation" ed:AssociationGuid="dfd04cc3-0516-4204-9a65-050c2b54929d" Member="SubUser" ed:Guid="4793bc59-70d6-4c4b-9fcc-c7cd6abfd613" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_Resume_OtherCertificates" Member="EmpResumeOtherCertificates">
+    <Type Name="EmpResumeOtherCertificate" ed:Guid="9a0acacf-0980-4f39-80f2-330facf3193e">
+      <Column Name="EmpResumeOtherCertificateId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="6a5bb2c5-629c-4808-8eb3-a83da1828f04" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="2cc48ca6-45d1-4a11-9ebf-bdf2a5600df4" />
+      <Column Name="CertificateName" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="1633b65a-c6c8-4b4c-b32c-7ab160de2634" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="fa44c760-0a69-441a-9e03-51b41530cf96" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="075b640c-ed81-489a-8da8-9d242187f666" />
+      <Column Name="CertificateFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="c183513a-6574-44ea-ab57-4a17ce8745fd" />
+      <Association Name="CommonFile_EmpResumeOtherCertificate" ed:AssociationGuid="c83072b2-dbb3-412f-a6f6-63bd791ecb86" Member="CommonFile" ed:Guid="7f36a402-fa6f-49b8-83d4-74ae9413908a" ThisKey="CertificateFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_EmpResumeOtherCertificate" ed:AssociationGuid="be2140f3-878b-4c5b-8916-71b85432eaa0" Member="SubUser" ed:Guid="43e62455-ccb2-4f80-ae95-0cbf9c03d2c6" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_Resume_Skills" Member="EmpResumeSkills">
+    <Type Name="EmpResumeSkill" ed:Guid="3ba76c0c-a8eb-4df7-b221-a74968201b97">
+      <Column Name="EmpResumeSkillId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="d28b5785-af41-4408-bea3-7ba6a845983a" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="6e1f9018-efb6-4328-b292-342b18aa461d" />
+      <Column Name="SkillName" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="5b96d533-ca84-4d61-b03c-5ca64b32181c" />
+      <Association Name="SubUser_EmpResumeSkill" ed:AssociationGuid="6f1ccaa2-85b6-4ac3-9987-ca418d7b7b48" Member="SubUser" ed:Guid="d32dca06-1be7-492e-adbb-a13b4c408d7c" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.emp_Resume_WorkExperience" Member="EmpResumeWorkExperiences">
+    <Type Name="EmpResumeWorkExperience" ed:Guid="38935238-a68a-4ac6-9be2-029496d23ac7">
+      <Column Name="EmpResumeWorkExperienceId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="9c9edecd-e1b1-4b3d-bce0-b9bdcb461afc" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="86a3b5d0-637f-4a2f-b751-81171ad0fee1" />
+      <Column Name="JobTitle" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="164cb67c-9b7f-4850-96d4-ffec243e99ca" />
+      <Column Name="OrganizationName" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="8f475b6f-9c48-4db7-a250-df6f2dc8058f" />
+      <Column Name="WorkFrom" Type="System.String" DbType="VARCHAR(20)" CanBeNull="true" UpdateCheck="Never" MaxLength="20" ed:ValidateMaxLength="20" ed:ValidateRequired="false" ed:Guid="a4e121a1-2de8-4fae-bdcf-e01df5741588" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="6af76c57-c01d-42bd-844c-f47f563910cd" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="c549309f-8359-4001-9ab6-59bd2e4ef2b2" />
+      <Association Name="SubUser_EmpResumeWorkExperience" ed:AssociationGuid="0ac7c448-2d66-4a2e-b614-6082c300626d" Member="SubUser" ed:Guid="317612d1-6714-4d23-ba9f-fe90afa2907e" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.empr_Jobs" Member="EmprJobs">
+    <Type Name="EmprJob" ed:Guid="27d0d501-7cca-49c6-92ef-f898325e6f8e">
+      <Column Name="JobId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="79fa7d31-fc44-4f7b-b265-860fe6de31ca" />
+      <Column Name="Title" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="748a15b0-4dd8-4e48-84df-c60b44cc9364" />
+      <Column Name="FileId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="d1596189-5581-4e32-85bb-5b33fddb824f" />
+      <Column Name="Location" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="66ff1a34-5aee-468a-9126-98a717fb59ee" />
+      <Column Name="MinSalary" Type="System.String" DbType="VARCHAR(10) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="true" ed:Guid="939651bb-ce1d-45be-93c2-4b5eb5d621ef" />
+      <Column Name="MaxSalary" Type="System.String" DbType="VARCHAR(10) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="true" ed:Guid="a7d5850f-f0db-4692-95fd-ec744a5ec24a" />
+      <Column Name="Roles" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="e9917c60-1d79-4385-b44d-2d7a6f5a9877" />
+      <Column Name="Description" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="d71a1809-75c6-4b70-a643-0da35b2ef623" />
+      <Column Name="PostDate" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="true" ed:Guid="8a008759-32f0-46d3-b982-2dd41e18800e" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="true" ed:Guid="8ada7905-8ccf-4f2f-86e6-cb48a866d777" />
+      <Column Name="OId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="201ef6d7-4810-4674-9540-02238940b8f7" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="4626c8a3-c239-467e-8469-246f2ee5a962" />
+      <Column Name="BranchID" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="0a63759c-c8b6-4a3e-bedc-24b39b4c43d5" />
+      <Column Name="Status" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="6e7e76ee-e199-4c8d-bc53-f532ea5ccfc9" />
+      <Association Name="CommonFile_EmprJob" ed:AssociationGuid="6cfaa132-f46d-48e4-96d0-1cb3a9caa367" Member="CommonFile" ed:Guid="53c0fd56-ccd0-48b9-865f-0b90a97d8710" ThisKey="FileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisationBranch_EmprJob" ed:AssociationGuid="74aabec8-d422-4d09-8cd2-1809c9cb0052" Member="DevOrganisationBranch" ed:Guid="9c61f0ee-2b88-48e9-b27a-0f3f40f61e8a" ThisKey="BranchID" OtherKey="BranchId" Type="DevOrganisationBranch" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="DevOrganisation_EmprJob" ed:AssociationGuid="cded593e-aa75-4590-8269-b890ab54a632" Member="DevOrganisation" ed:Guid="a5df1df9-75fc-48d3-9704-cfddd37d1c21" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="EmprJob_EmpApplyJobDetail" ed:AssociationGuid="c2c1f636-592f-4197-a3fa-606046600936" Member="EmpApplyJobDetails" ed:Guid="d9d2f14b-3ceb-4d6f-b7f7-af7614b22f67" ThisKey="JobId" OtherKey="JobId" Type="EmpApplyJobDetail" />
+      <Association Name="EmprJob_EmpBookmarkJobsDetail" ed:AssociationGuid="ea8afd9a-f128-4157-ac45-7a3fc608a387" Member="EmpBookmarkJobsDetails" ed:Guid="14c75770-c4ab-4e2f-a3e3-06b7b3d7e9f6" ThisKey="JobId" OtherKey="JobId" Type="EmpBookmarkJobsDetail" />
+      <Association Name="SubUser_EmprJob" ed:AssociationGuid="283a3455-3901-45b3-bdf4-44c29ed30ebc" Member="SubUser" ed:Guid="ff89c085-5c9d-4c04-8769-b44a052e2158" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="EmprJob_EmprJobSkill" ed:AssociationGuid="1c854714-26ed-497a-8555-7acda975467d" Member="EmprJobSkills" ed:Guid="6dbb5ec6-582a-48ce-aaa3-081989811ef6" ThisKey="JobId" OtherKey="JobId" Type="EmprJobSkill" />
+      <Association Name="EmprJob_EmprJobType" ed:AssociationGuid="83d5e35f-799e-4185-aea2-da5686eef394" Member="EmprJobTypes" ed:Guid="b208533e-642e-496c-8dad-39779c16caf6" ThisKey="JobId" OtherKey="JobId" Type="EmprJobType" />
+    </Type>
+  </Table>
+  <Table Name="dbo.empr_JobSkills" Member="EmprJobSkills">
+    <Type Name="EmprJobSkill" ed:Guid="9165ca96-464b-4e7d-aae6-20940436f925">
+      <Column Name="SkillId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="a4f0cdb9-fa38-43e3-827d-267b7914d0e1" />
+      <Column Name="Skill" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="befe8635-f4b8-41fb-99a5-35fada49da12" />
+      <Column Name="JobId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="361c6d3a-180b-461a-ba4d-cd907bcdf26a" />
+      <Association Name="EmprJob_EmprJobSkill" ed:AssociationGuid="1c854714-26ed-497a-8555-7acda975467d" Member="EmprJob" ed:Guid="cd7f62b9-566c-4c39-bdc5-b2821fd01a93" ThisKey="JobId" OtherKey="JobId" Type="EmprJob" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.empr_JobTypes" Member="EmprJobTypes">
+    <Type Name="EmprJobType" ed:Guid="7d242b89-345f-441f-b9f5-a7c44050e43d">
+      <Column Name="JobTypeId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="2994559d-8c92-4764-960e-740790137573" />
+      <Column Name="Type" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="f6ea362c-4e4b-4033-90bb-1cd5b97304ef" />
+      <Column Name="JobId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="50371c9a-a8d6-4577-b28b-b9aea1cfb201" />
+      <Association Name="EmprJob_EmprJobType" ed:AssociationGuid="83d5e35f-799e-4185-aea2-da5686eef394" Member="EmprJob" ed:Guid="d019908e-3f1e-4ce6-be99-32f1c75cfb9e" ThisKey="JobId" OtherKey="JobId" Type="EmprJob" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.org_Staffs_Attendances_Daily" Member="OrgStaffsAttendancesDailies">
+    <Type Name="OrgStaffsAttendancesDaily" ed:Guid="4be2511d-1a74-4f05-9c78-75fa077cc73c">
+      <Column Name="OrgStaffAttendanceDailyId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="68587006-cad2-47e7-b0bf-7534090e842d" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="128d44de-b6b3-461c-82dc-f91be3281434" />
+      <Column Name="RId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="b2238652-5cf0-421d-954d-67096b6ef795" />
+      <Column Name="ChekIN" Type="System.DateTime" DbType="DATETIME" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="7a55b6ac-7519-4653-af09-f210f71d4cbb" />
+      <Column Name="CheckOUT" Type="System.DateTime" DbType="DATETIME" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="d1a38ae9-2747-460c-9afa-a7487962fdff" />
+      <Column Name="LastUpdateDate" Type="System.DateTime" DbType="DATETIME" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="bcaa478e-eb0a-43f0-aec1-42ac8264c241" />
+      <Column Name="IsAccessible" Type="System.Boolean" DbType="BIT" CanBeNull="true" UpdateCheck="Never" DefaultValue="1" ed:ValidateRequired="false" ed:Guid="ff039236-15cd-4701-915a-8772b8c5e8ce" />
+      <Association Name="SubUser_OrgStaffsAttendancesDaily" ed:AssociationGuid="5c10e360-b15d-4af4-a063-9bc5ad2e1d4c" Member="SubUser" ed:Guid="42140c19-e004-45bc-87b9-8687d56d5803" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubRole_OrgStaffsAttendancesDaily" ed:AssociationGuid="cede390c-1057-4ee0-ba8e-566e056d3349" Member="SubRole" ed:Guid="12e9a47f-4209-4706-953c-5eeaefdb0304" ThisKey="RId" OtherKey="RId" Type="SubRole" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.org_Staffs_LeaveApplications" Member="OrgStaffsLeaveApplications">
+    <Type Name="OrgStaffsLeaveApplication" ed:Guid="5b43ac93-9b3d-4f6a-9157-3a2ff50e972d">
+      <Column Name="OrgStaffLeaveId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="75447cd1-ceb9-41d0-9d75-02d92f0521af" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="8a7b63e0-9cf1-4cad-a326-3d5598b91f23" />
+      <Column Name="RId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="eb9d67ba-9228-4aac-a9e9-39f2a82057f4" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="88206c40-9c30-4f44-892c-72764acdf935" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="DATE" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="391c7f8c-f96c-428e-890c-74bd925624f6" />
+      <Column Name="Reason" Type="System.String" DbType="VARCHAR(100)" CanBeNull="true" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="false" ed:Guid="68cc5a01-359b-40e5-801a-9d364335d5b2" />
+      <Column Name="IsPaidLeave" Type="System.Boolean" DbType="BIT" CanBeNull="true" UpdateCheck="Never" DefaultValue="1" ed:ValidateRequired="false" ed:Guid="39e50b7e-6c70-4391-8e13-268f85b9ce37" />
+      <Column Name="IsLeaveApproved" Type="System.Boolean" DbType="BIT" CanBeNull="true" UpdateCheck="Never" DefaultValue="0" ed:ValidateRequired="false" ed:Guid="f6d75662-e966-45f1-a6a2-c708604c4d8a" />
+      <Association Name="SubUser_OrgStaffsLeaveApplication" ed:AssociationGuid="e01bdf08-b9e7-428c-a211-a21f433bd5e7" Member="SubUser" ed:Guid="5010c812-6e02-4a90-a9a7-366ac2b19173" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubRole_OrgStaffsLeaveApplication" ed:AssociationGuid="e1e97d44-2224-4e83-bc4b-c9eddbf26c36" Member="SubRole" ed:Guid="5ec04b79-13cf-413a-a54d-55a20d86976d" ThisKey="RId" OtherKey="RId" Type="SubRole" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_FixedLookup" Member="SubFixedLookups">
+    <Type Name="SubFixedLookup" ed:Guid="fae8ad08-a051-412b-bf13-07f65599ce83">
+      <Column Name="FixedLookupId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="ac4b321f-1444-41da-a2dc-7bfa0b40247b" />
+      <Column Name="FixedLookupType" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="d364723f-1b16-4884-95dc-6b04c9a07907" />
+      <Column Name="FixedLookup" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="7aa9b0af-e69f-41de-8f42-f772aec3bee9" />
+      <Column Name="FixedLookupFormatted" Type="System.String" AutoSync="Always" DbType="VARCHAR(8000)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" MaxLength="8000" ed:ValidateMaxLength="8000" ed:ValidateRequired="false" ed:Guid="83ff105b-4bf1-4e2a-90ac-923aee7e5180" />
+      <Association Name="SubFixedLookup_DevOrganisationsStaff" ed:AssociationGuid="403e20df-c1ba-4343-bac4-135e602f46f1" Member="DevOrganisationsStaffs_WeekOffOneDay" ed:Guid="d88d307c-5e82-4f2c-a4f3-e4f7bab54813" ThisKey="FixedLookupId" OtherKey="WeekOffOneDay" Type="DevOrganisationsStaff" />
+      <Association Name="SubFixedLookup_DevOrganisationsStaff1" ed:AssociationGuid="ea702eb4-20af-4f7e-b6ee-8ef767af5710" Member="DevOrganisationsStaffs_WeekOffSecondDay" ed:Guid="4a143c93-2143-41a1-8b07-3494dc2c6624" ThisKey="FixedLookupId" OtherKey="WeekOffSecondDay" Type="DevOrganisationsStaff" />
+      <Association Name="SubFixedLookup_EmpResumeEducation" ed:AssociationGuid="432f9ee4-efb2-48e9-870b-37d10c4b170b" Member="EmpResumeEducations" ed:Guid="fd31cb6a-4a26-4cba-b031-582d562dc9bc" ThisKey="FixedLookupId" OtherKey="EducationNameId" Type="EmpResumeEducation" />
+      <Association Name="SubFixedLookup_SubLookup" ed:AssociationGuid="e75bc8f4-84da-4a6d-b2dd-cf59545d19b1" Member="SubLookups" ed:Guid="f03fd639-fea2-4883-a700-0e2aa2a8f26e" ThisKey="FixedLookupId" OtherKey="LookupTypeId" Type="SubLookup" />
+      <Association Name="SubFixedLookup_SubUser" ed:AssociationGuid="613c0e13-4295-467a-9ba5-39eafa964ab3" Member="SubUsers" ed:Guid="553730b9-b7c6-4bc3-9533-4be376dc5f76" ThisKey="FixedLookupId" OtherKey="LoginTypeId" Type="SubUser" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_Lookup" Member="SubLookups">
+    <Type Name="SubLookup" ed:Guid="6f0f5232-12d6-4fef-ba53-27ea33a65f37">
+      <Column Name="LookupId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="9bc1b5e2-87e0-4bc8-894e-375e64fcf89e" />
+      <Column Name="LookupTypeId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="dcf3f964-837b-496d-9cb1-d2ba984b6cae" />
+      <Column Name="Lookup" Type="System.String" DbType="VARCHAR(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="true" ed:Guid="d28a640c-cbc6-4078-94f6-4aae4436b014" />
+      <Association Name="SubLookup_EmpResumeEducation" ed:AssociationGuid="35c76823-e5d5-45ee-9405-1f7e84c8134f" Member="EmpResumeEducations" ed:Guid="e729f6bc-fca0-4565-bd13-ee0b52e90e18" ThisKey="LookupId" OtherKey="EducationSteamId" Type="EmpResumeEducation" />
+      <Association Name="SubFixedLookup_SubLookup" ed:AssociationGuid="e75bc8f4-84da-4a6d-b2dd-cf59545d19b1" Member="SubFixedLookup" ed:Guid="7a60bf25-15a9-4904-a88b-092d13403611" ThisKey="LookupTypeId" OtherKey="FixedLookupId" Type="SubFixedLookup" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_OTPs" Member="SubOTPs">
+    <Type Name="SubOTP" ed:Guid="9297af8d-50a4-41c0-8d46-a01e662fbd87">
+      <Column Name="OTPId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="4203caa9-c312-4682-8af3-339a053f5bb0" />
+      <Column Name="OTP" Type="System.String" DbType="VARCHAR(6) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="6" ed:ValidateMaxLength="6" ed:ValidateRequired="true" ed:Guid="b2af6cba-1776-45cb-b441-3c7518b7cf97" />
+      <Column Name="DeviceToken" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="aeefe023-7a23-4e95-988f-a334715eb9ad" />
+      <Column Name="ExpiryDate" Type="System.DateTime" DbType="DATETIME NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="true" ed:Guid="05e94ff0-6c9d-4adc-ad26-2fe4eae7b2f1" />
+      <Column Name="UId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="237ce592-2fb5-4c53-ac7e-c0677407a6c2" />
+      <Column Name="IsUsed" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" UpdateCheck="Never" ed:ValidateRequired="true" ed:Guid="5e3dec21-7c61-40e1-83dd-d3c939221fd2" />
+      <Association Name="SubUser_SubOTP" ed:AssociationGuid="7f594025-c5c1-464d-b158-e73d299ae479" Member="SubUser" ed:Guid="2372f65c-9578-4e01-ab4a-3973632b799d" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_Role_Controllers" Member="SubRoleControllers">
+    <Type Name="SubRoleController" ed:Guid="6a13cd68-0dba-4b70-97d7-3a653b8a7290">
+      <Column Name="RId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="972cb440-13dd-4299-829a-3f4997c924a2" />
+      <Column Name="CId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="0b1b015c-a111-458f-ab71-f921f1d754ca" />
+      <Association Name="DevController_SubRoleController" ed:AssociationGuid="ccb12544-3e07-4a24-b88c-ed5fa88429b4" Member="DevController" ed:Guid="db0878b4-d528-46b6-b988-69a50c858e29" ThisKey="CId" OtherKey="CId" Type="DevController" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubRole_SubRoleController" ed:AssociationGuid="8136510f-f769-427a-bfa5-b6b8e596af2a" Member="SubRole" ed:Guid="adc4a815-1f90-47b0-bc37-2ecd31ead715" ThisKey="RId" OtherKey="RId" Type="SubRole" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_Roles" Member="SubRoles">
+    <Type Name="SubRole" ed:Guid="150805e1-8f81-450d-ba4d-d540284cd156">
+      <Column Name="RId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="4c1e2ad9-225a-4f82-a445-f7bb53da83f4" />
+      <Column Name="OId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="b1d22b39-b47f-4331-9047-9e098c0bc028" />
+      <Column Name="RoleName" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="true" ed:Guid="e1b87642-5dd4-464f-bfd3-1ae1804dbd84" />
+      <Column Name="LoginTypeId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="64b7af69-67f3-4d27-84c4-a6db303f650e" />
+      <Association Name="DevOrganisation_SubRole" ed:AssociationGuid="e8d84f81-809f-4131-87e2-091199dec7e4" Member="DevOrganisation" ed:Guid="5354f5b2-45fe-410f-ae70-d925ab3216f2" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubRole_OrgStaffsAttendancesDaily" ed:AssociationGuid="cede390c-1057-4ee0-ba8e-566e056d3349" Member="OrgStaffsAttendancesDailies" ed:Guid="6f38069b-bfc1-4eb0-83c5-62ef07d3f205" ThisKey="RId" OtherKey="RId" Type="OrgStaffsAttendancesDaily" />
+      <Association Name="SubRole_OrgStaffsLeaveApplication" ed:AssociationGuid="e1e97d44-2224-4e83-bc4b-c9eddbf26c36" Member="OrgStaffsLeaveApplications" ed:Guid="0aa07df4-7b9d-47bb-a2b2-1f3c44b5d101" ThisKey="RId" OtherKey="RId" Type="OrgStaffsLeaveApplication" />
+      <Association Name="SubRole_SubRoleController" ed:AssociationGuid="8136510f-f769-427a-bfa5-b6b8e596af2a" Member="SubRoleControllers" ed:Guid="b4ea06d0-5fb0-4e18-8ecf-92df22d4c1d2" ThisKey="RId" OtherKey="RId" Type="SubRoleController" />
+      <Association Name="SubRole_SubUserOrganisation" ed:AssociationGuid="6f76fee6-b36a-4d29-9423-6fb94eb0322c" Member="SubUserOrganisations" ed:Guid="99a97cb3-16de-4307-bd77-543a412fffd1" ThisKey="RId" OtherKey="RId" Type="SubUserOrganisation" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_User_Organisations" Member="SubUserOrganisations">
+    <Type Name="SubUserOrganisation" ed:Guid="cce2a77f-b0c8-4a2e-832d-a8392674e29b">
+      <Column Name="UId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="25f44c3d-ef00-498f-a252-06cd92ebe2c7" />
+      <Column Name="OId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="94c3223a-aab8-47f6-96fd-e0c9696d7abc" />
+      <Column Name="RId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="379acaeb-487b-4213-8ddf-f509abeb302f" />
+      <Association Name="DevOrganisation_SubUserOrganisation" ed:AssociationGuid="25c26f8e-2c9f-4334-8c24-ed61e0e484fb" Member="DevOrganisation" ed:Guid="912b0686-61b6-455e-9e73-d2b114ac8de8" ThisKey="OId" OtherKey="OId" Type="DevOrganisation" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubRole_SubUserOrganisation" ed:AssociationGuid="6f76fee6-b36a-4d29-9423-6fb94eb0322c" Member="SubRole" ed:Guid="1584095f-3c22-4d2f-bc13-598ab17e34b2" ThisKey="RId" OtherKey="RId" Type="SubRole" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_SubUserOrganisation" ed:AssociationGuid="d03cdcff-5c1a-4702-9d99-e480392655eb" Member="SubUser" ed:Guid="5ca74036-b765-4e0d-93b4-7e8eea3e2226" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_User_Tokens" Member="SubUserTokens">
+    <Type Name="SubUserToken" ed:Guid="00d35ccb-3170-4a47-a7dc-facf033601e4">
+      <Column Name="LoginId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="207692dc-e79d-4c99-aaf7-82db570febf8" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="3cea98ff-69db-46b5-92dd-5735a2728251" />
+      <Column Name="Token" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="353cd27e-74f2-4ce2-b4b6-d34b65650d23" />
+      <Column Name="DeviceToken" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="9cfc0c83-50a3-42dd-bffa-e3f025c2199f" />
+      <Column Name="DeviceProfile" Type="System.String" DbType="VARCHAR(MAX)" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="c369a4cc-9b90-449b-b0ed-8a032cd84bb0" />
+      <Column Name="ExpiryDate" Type="System.DateTime" DbType="DATETIME" CanBeNull="true" UpdateCheck="Never" ed:ValidateRequired="false" ed:Guid="9e5d3a51-5643-41d4-91bb-f58e7842d65a" />
+      <Association Name="SubUser_SubUserToken" ed:AssociationGuid="be0c7cfb-b19c-4292-b070-39b9f9d97be1" Member="SubUser" ed:Guid="f63ba180-ed8f-4e94-bf39-879c2116e80b" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_Users" Member="SubUsers">
+    <Type Name="SubUser" ed:Guid="7b6104ea-a069-4798-9a08-e2488211cf11">
+      <Column Name="UId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="049e46f3-05b2-450c-bfe2-3869b1c9d7ba" />
+      <Column Name="MobileNumber" Type="System.String" DbType="VARCHAR(10) NOT NULL" CanBeNull="false" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="true" ed:Guid="f1c54875-91c9-478d-875f-43923a604726" />
+      <Column Name="DefaultLanguageId" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" UpdateCheck="Never" Precision="10" ed:ValidateRequired="true" ed:Guid="1a526ea5-6006-4c8c-8e65-8e4ba1409338" />
+      <Column Name="LoginTypeId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="026ff1c4-6258-4095-ac28-dfc33b271e84" />
+      <Association Name="SubUser_DevOrganisationBranch" ed:AssociationGuid="5be394c1-4e9f-4456-abf2-d38f22947fea" Member="DevOrganisationBranches" ed:Guid="12c27f64-5374-453a-a8a9-93382af309e9" ThisKey="UId" OtherKey="UId" Type="DevOrganisationBranch" />
+      <Association Name="SubUser_DevOrganisation" ed:AssociationGuid="e231fb0c-572f-40ec-b32c-653d89b587b8" Member="DevOrganisations" ed:Guid="3d9708ee-3aa0-4e06-8bce-7caf31fb78b3" ThisKey="UId" OtherKey="UId" Type="DevOrganisation" />
+      <Association Name="SubUser_DevOrganisationsStaff" ed:AssociationGuid="4aa605c2-b8f3-40d3-a00e-35270b934b55" Member="DevOrganisationsStaffs" ed:Guid="248437e5-80b5-4c75-a026-f03c8627265e" ThisKey="UId" OtherKey="UId" Type="DevOrganisationsStaff" />
+      <Association Name="SubUser_EmpApplyJobDetail" ed:AssociationGuid="a858698a-f0bc-4d52-994c-af243c073083" Member="EmpApplyJobDetails" ed:Guid="4ba47ded-24b3-40c2-a8b7-1e65872222b0" ThisKey="UId" OtherKey="UId" Type="EmpApplyJobDetail" />
+      <Association Name="SubUser_EmpBookmarkJobsDetail" ed:AssociationGuid="12e142a6-839e-45e5-8f04-b3dacba5f9b7" Member="EmpBookmarkJobsDetails" ed:Guid="be0cfce4-dfa8-4c7b-bb50-ff15d920356d" ThisKey="UId" OtherKey="UId" Type="EmpBookmarkJobsDetail" />
+      <Association Name="SubUser_EmpResumeAbout" ed:AssociationGuid="7a7a226a-f60a-410f-860a-f625e879bf16" Member="EmpResumeAbouts" ed:Guid="5d90c417-a50f-471a-a09b-b3c53b6a0033" ThisKey="UId" OtherKey="UId" Type="EmpResumeAbout" />
+      <Association Name="SubUser_EmpResumeEducation" ed:AssociationGuid="dfd04cc3-0516-4204-9a65-050c2b54929d" Member="EmpResumeEducations" ed:Guid="3d028d12-7678-41c9-9a55-6434adc825e9" ThisKey="UId" OtherKey="UId" Type="EmpResumeEducation" />
+      <Association Name="SubUser_EmpResumeOtherCertificate" ed:AssociationGuid="be2140f3-878b-4c5b-8916-71b85432eaa0" Member="EmpResumeOtherCertificates" ed:Guid="813b1674-4a9c-4608-9755-2f3397107d5f" ThisKey="UId" OtherKey="UId" Type="EmpResumeOtherCertificate" />
+      <Association Name="SubUser_EmpResumeSkill" ed:AssociationGuid="6f1ccaa2-85b6-4ac3-9987-ca418d7b7b48" Member="EmpResumeSkills" ed:Guid="24810ff6-fa09-45cd-98d4-34a5a7380246" ThisKey="UId" OtherKey="UId" Type="EmpResumeSkill" />
+      <Association Name="SubUser_EmpResumeWorkExperience" ed:AssociationGuid="0ac7c448-2d66-4a2e-b614-6082c300626d" Member="EmpResumeWorkExperiences" ed:Guid="154b65be-cdc5-4f98-8df5-097a16448678" ThisKey="UId" OtherKey="UId" Type="EmpResumeWorkExperience" />
+      <Association Name="SubUser_EmprJob" ed:AssociationGuid="283a3455-3901-45b3-bdf4-44c29ed30ebc" Member="EmprJobs" ed:Guid="95260cd7-bd80-482c-8196-9ae4e82ee518" ThisKey="UId" OtherKey="UId" Type="EmprJob" />
+      <Association Name="SubUser_OrgStaffsAttendancesDaily" ed:AssociationGuid="5c10e360-b15d-4af4-a063-9bc5ad2e1d4c" Member="OrgStaffsAttendancesDailies" ed:Guid="dad16c9b-14f3-466c-8026-995216fa36b0" ThisKey="UId" OtherKey="UId" Type="OrgStaffsAttendancesDaily" />
+      <Association Name="SubUser_OrgStaffsLeaveApplication" ed:AssociationGuid="e01bdf08-b9e7-428c-a211-a21f433bd5e7" Member="OrgStaffsLeaveApplications" ed:Guid="9310f49a-2adb-42ae-b8fa-e08102cc36d4" ThisKey="UId" OtherKey="UId" Type="OrgStaffsLeaveApplication" />
+      <Association Name="SubFixedLookup_SubUser" ed:AssociationGuid="613c0e13-4295-467a-9ba5-39eafa964ab3" Member="SubFixedLookup" ed:Guid="cad00b0f-3722-41a3-947e-0106a287b9dd" ThisKey="LoginTypeId" OtherKey="FixedLookupId" Type="SubFixedLookup" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_SubOTP" ed:AssociationGuid="7f594025-c5c1-464d-b158-e73d299ae479" Member="SubOTPs" ed:Guid="16d00991-47f7-49a8-bab9-e5d0e10e2b3a" ThisKey="UId" OtherKey="UId" Type="SubOTP" />
+      <Association Name="SubUser_SubUserOrganisation" ed:AssociationGuid="d03cdcff-5c1a-4702-9d99-e480392655eb" Member="SubUserOrganisations" ed:Guid="861aaefa-7403-4f42-afc7-c06894892b4e" ThisKey="UId" OtherKey="UId" Type="SubUserOrganisation" />
+      <Association Name="SubUser_SubUserToken" ed:AssociationGuid="be0c7cfb-b19c-4292-b070-39b9f9d97be1" Member="SubUserTokens" ed:Guid="a63c2e79-b2fe-47c0-9305-450b2fcdc0a4" ThisKey="UId" OtherKey="UId" Type="SubUserToken" />
+      <Association Name="SubUser_SubUsersDetail" ed:AssociationGuid="88392d53-a470-4623-baf5-b83750ac345f" Member="SubUsersDetail" ed:Guid="78d7c4f5-4fcb-4b1c-9314-a101b79ccd69" ThisKey="UId" OtherKey="UId" Type="SubUsersDetail" Cardinality="One" />
+      <Association Name="SubUser_SubUsersIdentity" ed:AssociationGuid="72d35a48-4a64-4022-a740-4c58f08e6770" Member="SubUsersIdentities" ed:Guid="3bfdd818-9f22-4765-a1e1-de52022d7ae4" ThisKey="UId" OtherKey="UId" Type="SubUsersIdentity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_Users_Details" Member="SubUsersDetails">
+    <Type Name="SubUsersDetail" ed:Guid="7b01fcf6-51f2-4257-9eb0-82c98d18158d">
+      <Column Name="UId" Type="System.Int32" DbType="INT NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="0c476107-b221-4371-8a43-8a99b79e28f2" />
+      <Column Name="FullName" Type="System.String" DbType="VARCHAR(100)" CanBeNull="true" UpdateCheck="Never" MaxLength="100" ed:ValidateMaxLength="100" ed:ValidateRequired="false" ed:Guid="75af7440-db22-4a4b-b671-f005977b7b77" />
+      <Column Name="Email" Type="System.String" DbType="VARCHAR(50)" CanBeNull="true" UpdateCheck="Never" MaxLength="50" ed:ValidateMaxLength="50" ed:ValidateRequired="false" ed:Guid="f2b6600e-c197-4e46-8392-1a2d802cdea6" />
+      <Column Name="AMobileNumber" Type="System.String" DbType="VARCHAR(10)" CanBeNull="true" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="false" ed:Guid="8fb6e9fc-f53c-4342-8a9b-29aba5140913" />
+      <Column Name="AddressID" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="8d0f943a-25a2-44f3-b26b-c8cf7a52b3b5" />
+      <Column Name="FileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="aeb766f6-0b15-430a-91fb-534e1a262370" />
+      <Column Name="CompleteProfile" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="a2e6cc78-ae89-4f46-a816-9da5faa0afc8" />
+      <Association Name="CommonContactAddress_SubUsersDetail" ed:AssociationGuid="552f67b7-9dcc-4c91-b9c4-9f013de8f7d3" Member="CommonContactAddress" ed:Guid="13b7a2a0-88bf-40b8-b655-599fd2ca4d60" ThisKey="AddressID" OtherKey="ContactAddressId" Type="CommonContactAddress" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="CommonFile_SubUsersDetail" ed:AssociationGuid="4eb9e5cd-6231-4d97-be09-2074d2c71c43" Member="CommonFile" ed:Guid="9c172ddc-be28-426b-8cef-dba301b527a2" ThisKey="FileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_SubUsersDetail" ed:AssociationGuid="88392d53-a470-4623-baf5-b83750ac345f" Member="SubUser" ed:Guid="42dc6d9d-bd66-4113-9309-2e1ddb94b093" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" Cardinality="One" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_Users_Identity" Member="SubUsersIdentities">
+    <Type Name="SubUsersIdentity" ed:Guid="d924c764-cb62-4ad3-b6b8-404526c6bc3d">
+      <Column Name="UserIdentityId" Type="System.Int32" AutoSync="OnInsert" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" Precision="10" ed:ValidateRequired="true" ed:Guid="5d765b38-6d10-4522-8da3-8ba366ea8209" />
+      <Column Name="PanNumber" Type="System.String" DbType="VARCHAR(10)" CanBeNull="true" UpdateCheck="Never" MaxLength="10" ed:ValidateMaxLength="10" ed:ValidateRequired="false" ed:Guid="4727330d-a7f7-446b-a3fe-78db814e3a2f" />
+      <Column Name="PanFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="8a41ea35-bca4-4022-9901-98ab6df7c460" />
+      <Column Name="AadharNumber" Type="System.String" DbType="VARCHAR(12)" CanBeNull="true" UpdateCheck="Never" MaxLength="12" ed:ValidateMaxLength="12" ed:ValidateRequired="false" ed:Guid="da9315a7-cc2c-4b82-b2b5-6866756b21cf" />
+      <Column Name="AadharFrontFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="c84b6c6c-5de8-46a9-b52f-2c78c2a4d201" />
+      <Column Name="AadharBackFileId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="984ceb34-c669-4c4e-94f4-59331cc4db5f" />
+      <Column Name="UId" Type="System.Int32" DbType="INT" CanBeNull="true" UpdateCheck="Never" Precision="10" ed:ValidateRequired="false" ed:Guid="b766d956-e35a-4403-8717-62a185497ad0" />
+      <Association Name="CommonFile_SubUsersIdentity" ed:AssociationGuid="11f60f08-a579-4788-a28e-7089918ef47d" Member="CommonFile_AadharBackFileId" ed:Guid="0abf1298-21d0-41b2-b64f-5d6694dd2bb6" ThisKey="AadharBackFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="CommonFile_SubUsersIdentity1" ed:AssociationGuid="b37bd08e-a0cf-4fc7-a4ee-8a99b9e679ed" Member="CommonFile_AadharFrontFileId" ed:Guid="1d43f385-51b8-48fa-bee7-e11feb5d67d6" ThisKey="AadharFrontFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="CommonFile_SubUsersIdentity2" ed:AssociationGuid="ff6717ae-8b4f-4714-a081-75cd81353269" Member="CommonFile_PanFileId" ed:Guid="0f65d706-e8b8-4d21-b988-f853824e857a" ThisKey="PanFileId" OtherKey="FileId" Type="CommonFile" DeleteRule="NO ACTION" IsForeignKey="true" />
+      <Association Name="SubUser_SubUsersIdentity" ed:AssociationGuid="72d35a48-4a64-4022-a740-4c58f08e6770" Member="SubUser" ed:Guid="4d666525-738c-4367-b750-786c8b9b7704" ThisKey="UId" OtherKey="UId" Type="SubUser" DeleteRule="NO ACTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
