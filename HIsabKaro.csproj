@@ -15,14 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DataContext.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataContext.lqml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="DataContext.Diagram1.view">
       <AutoGen>True</AutoGen>
       <DependentUpon>DataContext.lqml</DependentUpon>
