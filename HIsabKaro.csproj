@@ -14,4 +14,27 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="DataContext.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataContext.lqml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DataContext.Diagram1.view">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataContext.lqml</DependentUpon>
+    </None>
+    <None Update="DataContext.edps">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataContext.lqml</DependentUpon>
+    </None>
+    <None Update="DataContext.lqml">
+      <Generator>DevartLinqToSqlGenerator</Generator>
+      <LastGenOutput>DataContext.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -22,7 +22,7 @@ namespace HIsabKaro.Cores.Common.File
 
         public Result Upload(Models.Common.File.Upload objFile)
         {
-            using (DBContext c = new DBContext())
+            using (DBContext c= new DBContext())
             {
                 if (objFile.files == null) 
                 {
