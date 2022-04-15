@@ -1,6 +1,7 @@
-using HisaabKaro.Cores.Development.Subscriber;
-using HisaabKaro.Middleware;
-using HisaabKaro.Services;
+using HIsabKaro.Cores.Common;
+using HIsabKaro.Cores.Developer.Subscriber;
+using HIsabKaro.Middleware;
+using HIsabKaro.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,7 +33,7 @@ namespace HIsabKaro
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-         //   HisabKaroDBContext.HisabKaroDBDataContext db = new HisabKaroDBContext.HisabKaroDBDataContext("data source=20.204.136.73;initial catalog=HisabKaroDB;integrated security=False;persist security info=True;user id=HisabKaroDB;password=Otobit@2022@@#;License Key=qHnH5wx/L422kFN4WQussVkqbelF0xGMaZi+DGL6lhFu+VTasW/ZRA22+dVoDbuQ64trDZsBMziLDE9kumHeTDKlcRSCvsotqn7rHn9VHFXS3Jmh/rFBVSxav6UlKmT4POdU+hnX8ACaigXhFdBiZ4NeHNVRNTqJ4fUTou0czKt8ATWxOB2MjUrprbYTV2ECFJOo2uLgwGzqeEpv1gGPLKR3p5DOKdeMu61FRAak23fmjt8PPQpz50o1E0r0FFdoQrJIYKkMxqRiD2IhVxlcVCvpIqR31rWwKJ1sNquGBMU=;");
+          HisabKaroDBContext.DBContext db = new HisabKaroDBContext.DBContext("data source=20.204.136.73;initial catalog=HisabKaroDB;integrated security=False;persist security info=True;user id=HisabKaroDB;password=Otobit@2022@@#;License Key=qHnH5wx/L422kFN4WQussVkqbelF0xGMaZi+DGL6lhFu+VTasW/ZRA22+dVoDbuQ64trDZsBMziLDE9kumHeTDKlcRSCvsotqn7rHn9VHFXS3Jmh/rFBVSxav6UlKmT4POdU+hnX8ACaigXhFdBiZ4NeHNVRNTqJ4fUTou0czKt8ATWxOB2MjUrprbYTV2ECFJOo2uLgwGzqeEpv1gGPLKR3p5DOKdeMu61FRAak23fmjt8PPQpz50o1E0r0FFdoQrJIYKkMxqRiD2IhVxlcVCvpIqR31rWwKJ1sNquGBMU=;");
             services.AddCors(options =>
             {
                 options.AddPolicy("MyPolicy",
@@ -53,7 +54,7 @@ namespace HIsabKaro
             //------------------------------------register services----------------------------//
             services.AddSingleton<Users>();
             services.AddTransient<ITokenServices, TokenServices>();
-            services.AddTransient<HisaabKaro.Cores.Common.Tokens>();
+            services.AddTransient<Tokens>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>

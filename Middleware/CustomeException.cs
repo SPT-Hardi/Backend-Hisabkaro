@@ -17,18 +17,18 @@ namespace HIsabKaro.Middleware
         {
             _next = next;
         }
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext c)
         {
             var hasError = false;
             Result result = new Result();
             try
             {
-                await _next(context);
+                await _next(c);
             }
             catch (ArgumentException e)
             {
                 hasError = true;
-                var response = context.Response;
+                var response = c.Response;
                 response.ContentType = "application/json";
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 result = new Result()
@@ -40,7 +40,7 @@ namespace HIsabKaro.Middleware
             catch (MethodAccessException e)
             {
                 hasError = true;
-                var response = context.Response;
+                var response = c.Response;
                 response.ContentType = "application/json";
                 response.StatusCode = (int)HttpStatusCode.NotModified;
                 result = new Result()
@@ -52,7 +52,7 @@ namespace HIsabKaro.Middleware
             catch (UnauthorizedAccessException e)
             {
                 hasError = true;
-                var response = context.Response;
+                var response = c.Response;
                 response.ContentType = "application/json";
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 result = new Result()
@@ -64,7 +64,7 @@ namespace HIsabKaro.Middleware
             catch (Exception e)
             {
                 hasError = true;
-                var response = context.Response;
+                var response = c.Response;
                 response.ContentType = "application/json";
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 result = new Result()
@@ -78,7 +78,7 @@ namespace HIsabKaro.Middleware
                 if (hasError)
                 {
                     var errorJson = JsonConvert.SerializeObject(result);
-                    await context.Response.WriteAsync(errorJson);
+                    await c.Response.WriteAsync(errorJson);
                 }
             }
         }

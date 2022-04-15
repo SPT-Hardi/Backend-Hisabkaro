@@ -11,15 +11,15 @@ namespace HIsabKaro.Cores.Employee.Job
     {
         public Result Create(int Uid, int Jid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var job = context.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
 
-                var apply = (from x in context.EmpApplyJobDetails
+                var apply = (from x in c.EmpApplyJobDetails
                              orderby x.JobId descending
                              where x.OId == job.OId && x.BranchId == job.BranchID
                              && x.JobId == job.JobId && x.UId == Uid
@@ -28,7 +28,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 {
                     throw new ArgumentException("Job Already Applied");
                 }
-                context.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
+                c.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
                 {
                     UId = Uid,
                     JobId = job.JobId,
@@ -36,7 +36,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     OId = (int)job.OId,
                     ApplyDate = DateTime.Now
                 });
-                context.SubmitChanges();
+                c.SubmitChanges();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
@@ -47,15 +47,15 @@ namespace HIsabKaro.Cores.Employee.Job
 
         public Result One(int Uid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var user = context.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
                 }
 
-                var apply = (from x in context.EmpApplyJobDetails
+                var apply = (from x in c.EmpApplyJobDetails
                             where x.UId == Uid
                             select new
                             {

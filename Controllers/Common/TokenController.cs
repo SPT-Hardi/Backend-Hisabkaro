@@ -27,19 +27,19 @@ namespace HIsabKaro.Controllers.Common
         [HttpPost("Revoke")]
         public async Task<IActionResult> Revoke()
         {
-            using (ProductInventoryDataContext _context = new ProductInventoryDataContext())
+            using (ProductInventoryDataContext _c new ProductInventoryDataContext())
             {
                 var emailaddress = User.Identity.Name;
 
-                var user = _context.Users.SingleOrDefault(u => u.EmailAddress == emailaddress);
+                var user = _c.Users.SingleOrDefault(u => u.EmailAddress == emailaddress);
                 if (user == null)
                     return BadRequest();
 
-                var _user = _context.UserRefreshTokens.SingleOrDefault(id => id.UserID == user.UserID);
-                var Token = _context.RefreshTokens.SingleOrDefault(id => id.RefreshID == _user.RefreshID);
+                var _user = _c.UserRefreshTokens.SingleOrDefault(id => id.UserID == user.UserID);
+                var Token = _c.RefreshTokens.SingleOrDefault(id => id.RefreshID == _user.RefreshID);
 
                 Token.RToken = null;
-                _context.SubmitChanges();
+                _c.SubmitChanges();
 
                 return NoContent();
             }

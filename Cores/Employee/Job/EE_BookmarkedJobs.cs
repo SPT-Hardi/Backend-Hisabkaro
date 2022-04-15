@@ -11,15 +11,15 @@ namespace HIsabKaro.Cores.Employee.Job
     {
         public Result Create(int Uid,int Jid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var job = context.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
                 if(job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
 
-                var save = (from x in context.EmpBookmarkJobsDetails
+                var save = (from x in c.EmpBookmarkJobsDetails
                             where x.EmprJob.DevOrganisation.OId == job.OId && x.JobId == job.JobId && x.UId == Uid
                             select x).SingleOrDefault();
                 if (save != null)
@@ -29,14 +29,14 @@ namespace HIsabKaro.Cores.Employee.Job
                     save.OId = job.OId;
                     save.BranchId = job.BranchID;
                     save.SaveDate = DateTime.Now;
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format("Job Saved Successfully"),
                     };
                 }
-                context.EmpBookmarkJobsDetails.InsertOnSubmit(new EmpBookmarkJobsDetail()
+                c.EmpBookmarkJobsDetails.InsertOnSubmit(new EmpBookmarkJobsDetail()
                 {
                     UId = Uid,
                     JobId = job.JobId,
@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     BranchId = job.BranchID,
                     SaveDate = DateTime.Now
                 });
-                context.SubmitChanges();
+                c.SubmitChanges();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
@@ -55,15 +55,15 @@ namespace HIsabKaro.Cores.Employee.Job
 
         public Result One(int Uid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var user = context.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
                 }
 
-                var save = (from x in context.EmpBookmarkJobsDetails
+                var save = (from x in c.EmpBookmarkJobsDetails
                             where x.UId == Uid
                             select new { 
                               JobTitle = x.EmprJob.Title,
@@ -73,7 +73,7 @@ namespace HIsabKaro.Cores.Employee.Job
                               //String.Format("{0:dd MMM yyyy hh:mm tt}", x.EmprJob.EndDate),
                               //SaveDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.SaveDate),
                               //Location = x.EmprJob.Location,
-                                //count = (from y in context.EmprJobs
+                                //count = (from y in c.EmprJobs
                                 //         where y.UId == Uid
                                 //         select y.JobId).Count(),
 

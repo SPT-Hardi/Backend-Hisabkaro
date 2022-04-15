@@ -22,7 +22,7 @@ namespace HIsabKaro.Cores.Common
         {
             string token = value.JWT;
             string refreshToken = value.RToken;
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 if (token is null)
                 {
@@ -35,12 +35,12 @@ namespace HIsabKaro.Cores.Common
                 var principal = _tokenService.GetPrincipalFromExpiredToken(token);
                 var RoleID = principal.Claims.First(x => x.Type == ClaimTypes.Role).Value;
                 var UserID = principal.Claims.First(x => x.Type == ClaimTypes.Sid).Value;
-                var user = context.SubUserTokens.Where(x => x.UId.ToString() == UserID).SingleOrDefault();
+                var user = c.SubUserTokens.Where(x => x.UId.ToString() == UserID).SingleOrDefault();
                 if (user == null)
                 {
                     throw new ArgumentException("Bad Request!!");
                 }
-                var userrefreshtoken = context.SubUserTokens.Where(x => x.Token == refreshToken && x.UId.ToString() == UserID).SingleOrDefault();
+                var userrefreshtoken = c.SubUserTokens.Where(x => x.Token == refreshToken && x.UId.ToString() == UserID).SingleOrDefault();
 
 
                 if (user == null || userrefreshtoken == null)

@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
     {
         public Result Get(int Uid, int Rid)
         {
-            using (HisabKaroDBDataContext c = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
                 if (user == null)
@@ -38,7 +38,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 
         public Result Update(int Uid, int Rid, int leaveId, Models.Employer.Organization.Staff.Leave.Approve value)
         {
-            using (HisabKaroDBDataContext c = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
                 if (user == null)

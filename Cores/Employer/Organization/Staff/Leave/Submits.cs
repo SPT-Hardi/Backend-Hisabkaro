@@ -14,9 +14,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                   // var roleid = context.SubUserOrganisations.Where(x => x.RId == value.StaffRId).SingleOrDefault();
+                   // var roleid = c.SubUserOrganisations.Where(x => x.RId == value.StaffRId).SingleOrDefault();
                     OrgStaffsLeaveApplication leavesubmit = new OrgStaffsLeaveApplication();
                     leavesubmit.StartDate = value.StartDate;
                     leavesubmit.EndDate = value.EndDate;
@@ -24,8 +24,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     leavesubmit.IsPaidLeave = value.IsPaidLeave;
                     leavesubmit.IsLeaveApproved = true;
 
-                    context.OrgStaffsLeaveApplications.InsertOnSubmit(leavesubmit);
-                    context.SubmitChanges();
+                    c.OrgStaffsLeaveApplications.InsertOnSubmit(leavesubmit);
+                    c.SubmitChanges();
 
                     scope.Complete();
 

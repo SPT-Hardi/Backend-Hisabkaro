@@ -16,15 +16,15 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var qs = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var qs = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (qs == null)
                     {
                         throw new ArgumentException("User Doesnt exist!");
                     }
                     //------user address---------------------//
-                    var userdetail = context.SubUsersDetails.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var userdetail = c.SubUsersDetails.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (userdetail.AddressID == null)
                     {
                         CommonContactAddress contactaddress = new CommonContactAddress()
@@ -37,10 +37,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                             Landmark= value.address.LandMark,
                             
                         };
-                        context.CommonContactAddresses.InsertOnSubmit(contactaddress);
-                        context.SubmitChanges();
+                        c.CommonContactAddresses.InsertOnSubmit(contactaddress);
+                        c.SubmitChanges();
                         userdetail.AddressID = contactaddress.ContactAddressId;
-                        context.SubmitChanges();
+                        c.SubmitChanges();
                     }
                     else 
                     {
@@ -56,8 +56,8 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         LookingForJob = value.totalWorkExperience.LookingForJob,
                         CurrentlyWorking=value.totalWorkExperience.CurrentlyWorking,
                     };
-                    context.SubUsersTotalworkexperiences.InsertOnSubmit(totalworkexperience);
-                    context.SubmitChanges();
+                    c.SubUsersTotalworkexperiences.InsertOnSubmit(totalworkexperience);
+                    c.SubmitChanges();
 
                     
 

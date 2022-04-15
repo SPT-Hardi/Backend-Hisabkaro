@@ -20,11 +20,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
         public Result Create( int Uid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            using(HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using(DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user =  context.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                    var user =  c.SubUsers.SingleOrDefault(x => x.UId == Uid);
 
                     if(user == null)
                     {
@@ -32,7 +32,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     }
 
                     
-                    var jDetails = (from j in context.EmprJobs
+                    var jDetails = (from j in c.EmprJobs
                                     where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.ID
                                     orderby j.JobId descending
                                     select j).FirstOrDefault();
@@ -57,23 +57,23 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 UId = Uid,
                                 Status = "Open"
                             };
-                            context.EmprJobs.InsertOnSubmit(_job);
-                            context.SubmitChanges();
+                            c.EmprJobs.InsertOnSubmit(_job);
+                            c.SubmitChanges();
 
 
-                            context.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+                            c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
                             {
                                 Skill = x.skill,
                                 JobId = _job.JobId
                             }));
-                            context.SubmitChanges();
+                            c.SubmitChanges();
 
-                            context.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+                            c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
                             {
                                 Type = x.type.Text,
                                 JobId = _job.JobId
                             }));
-                            context.SubmitChanges();
+                            c.SubmitChanges();
 
                             return new Result()
                             {
@@ -102,22 +102,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         UId = Uid,
                         Status = "Open"
                     };
-                    context.EmprJobs.InsertOnSubmit(job);
-                    context.SubmitChanges();
+                    c.EmprJobs.InsertOnSubmit(job);
+                    c.SubmitChanges();
 
-                    context.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
                     {
                         Skill = x.skill,
                         JobId = job.JobId
                     }));
-                    context.SubmitChanges();
+                    c.SubmitChanges();
 
-                    context.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
                     {
                         Type = x.type.Text,
                         JobId = job.JobId
                     }));
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     scope.Complete();
                     return new Result()
                     {
@@ -131,11 +131,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
         public Result Update(int Uid, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var job = context.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
+                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
                     if (null == job)
                     {
                         throw new ArgumentException("JobDeatils doesn't exist");
@@ -154,39 +154,39 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.BranchID = value.Branch.ID;
                     job.UId = Uid;
                     job.Status = "Open";
-                    context.SubmitChanges();
+                    c.SubmitChanges();
 
-                    var _s = (from s in context.EmprJobSkills
+                    var _s = (from s in c.EmprJobSkills
                               where s.JobId == Jid
                               select s).ToList();
                     if (_s.Any())
                     {
-                        context.EmprJobSkills.DeleteAllOnSubmit(_s);
-                        context.SubmitChanges();
+                        c.EmprJobSkills.DeleteAllOnSubmit(_s);
+                        c.SubmitChanges();
                     }
 
-                    var _t = (from t in context.EmprJobTypes
+                    var _t = (from t in c.EmprJobTypes
                               where t.JobId == Jid
                               select t).ToList();
                     if (_t.Any())
                     {
-                        context.EmprJobTypes.DeleteAllOnSubmit(_t);
-                        context.SubmitChanges();
+                        c.EmprJobTypes.DeleteAllOnSubmit(_t);
+                        c.SubmitChanges();
                     }
 
-                    context.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
                     {
                         Skill = x.skill,
                         JobId = job.JobId
                     }));
-                    context.SubmitChanges();
+                    c.SubmitChanges();
 
-                    context.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
                     {
                         Type = x.type.Text,
                         JobId = job.JobId
                     }));
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     scope.Complete();
                     return new Result()
                     {
@@ -200,28 +200,28 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         //user view specific organization job
         public Result One(int OId)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var org = context.DevOrganisations.SingleOrDefault(x => x.OId == OId);
+                var org = c.DevOrganisations.SingleOrDefault(x => x.OId == OId);
                 if (org == null)
                 {
                     throw new ArgumentException("No Organization Found");
                 }
                 //status = (x.OId == org ? "currently working" : "looking for job")
-                var query = (from x in context.EmprJobs
+                var query = (from x in c.EmprJobs
                              where x.OId == org.OId
                              orderby x.JobId descending
                              select new
                              {
                                  JobID = x.JobId,
                                  JobTitle = x.Title,
-                                 Skill = (from s in context.EmprJobSkills
+                                 Skill = (from s in c.EmprJobSkills
                                           where s.JobId == x.JobId
                                           select new { 
                                               id = s.SkillId,
                                               skill = s.Skill
                                           }).ToList().Distinct(),
-                                 Type = (from t in context.EmprJobTypes
+                                 Type = (from t in c.EmprJobTypes
                                          where t.JobId == x.JobId
                                          select new { 
                                            id = t.JobTypeId,
@@ -235,7 +235,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  PostDate = x.PostDate,
                                  EndDate = x.EndDate,
                                  Organization = x.DevOrganisation.OrganisationName,
-                                 count = (from y in context.EmpBookmarkJobsDetails
+                                 count = (from y in c.EmpBookmarkJobsDetails
                                           where y.EmprJob.DevOrganisation.OId == OId && y.JobId == x.JobId
                                           select y.UId).Count(),
                              });
@@ -252,30 +252,30 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         //user view specific organization specific job
         public Result GetJob(int Jid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var job = context.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
 
                 if (job == null)
                 {
                     throw new ArgumentException("No Job Found");
                 }
 
-                var query = (from x in context.EmprJobs
+                var query = (from x in c.EmprJobs
                              where x.JobId == Jid
                              orderby x.JobId descending
                              select new
                              {
                                  id = x.JobId,
                                  JobTitle = x.Title,
-                                 Skill = (from s in context.EmprJobSkills
+                                 Skill = (from s in c.EmprJobSkills
                                           where s.JobId == Jid
                                           select new
                                           {
                                               id = s.SkillId,
                                               skill = s.Skill
                                           }).ToList(),
-                                 Type = (from t in context.EmprJobTypes
+                                 Type = (from t in c.EmprJobTypes
                                          where t.JobId == Jid
                                          select new
                                          {
@@ -303,9 +303,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
         public Result RemovePost(int Jid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var job = context.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
 
                 if (job == null)
                 {
@@ -313,7 +313,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 }
 
                 job.Status = "Remove";
-                context.SubmitChanges();
+                c.SubmitChanges();
 
                 return new Result()
                 {
@@ -326,9 +326,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
         public Result DisablePost(int Jid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var job = context.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
 
                 if (job == null)
                 {
@@ -336,7 +336,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 }
 
                 job.Status = "Disable";
-                context.SubmitChanges();
+                c.SubmitChanges();
 
                 return new Result()
                 {

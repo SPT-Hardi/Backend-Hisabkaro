@@ -12,14 +12,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
     {
         public Result One(int OId)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var _staff = (from x in context.DevOrganisationsStaffs
+                var _staff = (from x in c.DevOrganisationsStaffs
                               where x.OId == OId
                               select new
                               {
                                   Name = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
-                                  Profile = (from y in context.CommonFiles
+                                  Profile = (from y in c.CommonFiles
                                              where y.FileId == x.SubUserOrganisation.SubUser.SubUsersDetail.FileId
                                              select y.FilePath).SingleOrDefault(),
                               }).ToList();
@@ -33,16 +33,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
         }
         public Result Create(Models.Employer.Organization.Staff.StaffDetail value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _OId = context.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
                     }
-                    //var _BId = context.DevOrganisationBranches.SingleOrDefault(o => o.OId == value.Organization.ID && o.BranchId == value.Branch.ID);
+                    //var _BId = c.DevOrganisationBranches.SingleOrDefault(o => o.OId == value.Organization.ID && o.BranchId == value.Branch.ID);
                     //if (_BId is null)
                     //{
                     //    throw new ArgumentException($"Branch Does Not Exits For {_OId.OrganisationName}!");
@@ -52,12 +52,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     {
                         throw new ArgumentException("MoileNumber and AlternerNumaber Are Same!");
                     }
-                    var _OrgRole = context.SubRoles.Where(x => x.RoleName == "Staff").SingleOrDefault(x => x.OId == _OId.OId);
+                    var _OrgRole = c.SubRoles.Where(x => x.RoleName == "Staff").SingleOrDefault(x => x.OId == _OId.OId);
 
-                    var _subUser = context.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
+                    var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
                     if (_subUser is not null)
                     {
-                        var _subUserOrg = context.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
+                        var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
                         if (_subUserOrg is not null)
                         {
                             throw new ArgumentException($"Staff Member Are Alredy Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
@@ -70,8 +70,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                                 OId = _OId.OId,
                                 RId = _OrgRole.RId
                             };
-                            context.SubUserOrganisations.InsertOnSubmit(_userOrg);
-                            context.SubmitChanges();
+                            c.SubUserOrganisations.InsertOnSubmit(_userOrg);
+                            c.SubmitChanges();
                         }
                     }
                     else
@@ -82,8 +82,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             DefaultLanguageId = 1,
                             LoginTypeId = 20
                         };
-                        context.SubUsers.InsertOnSubmit(_user);
-                        context.SubmitChanges();
+                        c.SubUsers.InsertOnSubmit(_user);
+                        c.SubmitChanges();
 
                         var _userDetail = new SubUsersDetail()
                         {
@@ -92,8 +92,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             Email = value.Email,
                             AMobileNumber = value.AMobileNumber
                         };
-                        context.SubUsersDetails.InsertOnSubmit(_userDetail);
-                        context.SubmitChanges();
+                        c.SubUsersDetails.InsertOnSubmit(_userDetail);
+                        c.SubmitChanges();
 
                         var _userOrg = new SubUserOrganisation()
                         {
@@ -101,12 +101,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             OId = _OId.OId,
                             RId = _OrgRole.RId
                         };
-                        context.SubUserOrganisations.InsertOnSubmit(_userOrg);
-                        context.SubmitChanges();
+                        c.SubUserOrganisations.InsertOnSubmit(_userOrg);
+                        c.SubmitChanges();
                     }
-                    var _OrgRol = context.SubRoles.Where(x => x.RoleName == "Staff").SingleOrDefault(x => x.OId == _OId.OId);
-                    var _users=context.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
-                    var _URID = context.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRol.RId);
+                    var _OrgRol = c.SubRoles.Where(x => x.RoleName == "Staff").SingleOrDefault(x => x.OId == _OId.OId);
+                    var _users=c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRol.RId);
 
                     var staff = new DevOrganisationsStaff()
                     {
@@ -122,8 +122,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         staff.WeekOffOneDay = value.WeekOff1.ID;
                         staff.WeekOffSecondDay = value.WeekOff2.ID;
                     }
-                    context.DevOrganisationsStaffs.InsertOnSubmit(staff);
-                    context.SubmitChanges();
+                    c.DevOrganisationsStaffs.InsertOnSubmit(staff);
+                    c.SubmitChanges();
                     scope.Complete();
                 }
                 return new Result()

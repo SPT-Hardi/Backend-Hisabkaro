@@ -13,21 +13,21 @@ namespace HIsabKaro.Cores.Employer.Organization
     {
         public Result Create(int UserID,OrganizationDetail value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var _UserID = context.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
+                var _UserID = c.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
                 if (_UserID is null)
                 {
                     throw new ArgumentException("User Does Not Exits!");
                 }
 
-                var _orgname = context.DevOrganisations.Where(o => o.OrganisationName == value.OrgName).SingleOrDefault();
+                var _orgname = c.DevOrganisations.Where(o => o.OrganisationName == value.OrgName).SingleOrDefault();
                 if (_orgname is not null)
                 {
                     throw new ArgumentException($"Organization Are Alredy Exits With Same Name :{value.OrgName}.");
                 }
 
-                var _FileId = context.CommonFiles.SingleOrDefault(x=>x.FGUID==value.Image);
+                var _FileId = c.CommonFiles.SingleOrDefault(x=>x.FGUID==value.Image);
                 var Org = new DevOrganisation()
                 {
                     LogoFileId= _FileId.FileId,
@@ -37,8 +37,8 @@ namespace HIsabKaro.Cores.Employer.Organization
                     Longitude = value.Longitude,
                     UId=UserID,
                 };
-                context.DevOrganisations.InsertOnSubmit(Org);
-                context.SubmitChanges();
+                c.DevOrganisations.InsertOnSubmit(Org);
+                c.SubmitChanges();
 
                 return new Result()
                 {

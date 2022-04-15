@@ -14,22 +14,22 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                   var qs = context.EmpResumeAbouts.Where(x => x.UId.ToString()==UID).SingleOrDefault();
+                   var qs = c.EmpResumeAbouts.Where(x => x.UId.ToString()==UID).SingleOrDefault();
                     if (qs == null)
                     {
                         EmpResumeAbout about = new EmpResumeAbout();
                         about.UId = int.Parse(UID);
                         about.About = value.AboutText;
-                        context.EmpResumeAbouts.InsertOnSubmit(about);
-                        context.SubmitChanges();
+                        c.EmpResumeAbouts.InsertOnSubmit(about);
+                        c.SubmitChanges();
                         value.EmpResumeAboutId = about.EmpResumeAboutId;
                     }
                     else 
                     {
                         qs.About = value.AboutText;
-                        context.SubmitChanges();
+                        c.SubmitChanges();
                         value.EmpResumeAboutId = qs.EmpResumeAboutId;
                     }
                     scope.Complete();
@@ -46,9 +46,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var about = context.EmpResumeAbouts.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var about = c.EmpResumeAbouts.Where(x => x.UId.ToString() == UID).SingleOrDefault();
 
                     return new Result()
                     {

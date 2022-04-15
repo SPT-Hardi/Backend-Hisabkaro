@@ -11,21 +11,21 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
     {
         public Result Get(int Oid,int Jid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var org = context.DevOrganisations.SingleOrDefault(x => x.OId == Oid);
+                var org = c.DevOrganisations.SingleOrDefault(x => x.OId == Oid);
                 if (org == null)
                 {
                     throw new ArgumentException("Org Doesn't Exist");
                 }
 
-                var job = context.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == Oid );
+                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == Oid );
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
 
-                var save = (from x in context.EmpBookmarkJobsDetails
+                var save = (from x in c.EmpBookmarkJobsDetails
                             where x.DevOrganisation.OId == Oid && x.JobId == Jid
                             select new
                             {

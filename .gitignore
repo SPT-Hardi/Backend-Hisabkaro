@@ -5,6 +5,10 @@
 
 bin/
 wwwroot/
+DataContext.lqml
+DataContext.Diagram1.view
+DataContext.Designer.cs
+DataContext.edps
 obj/
 # User-specific files
 *.rsuser
