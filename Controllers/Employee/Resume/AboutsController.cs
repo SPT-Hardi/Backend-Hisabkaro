@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Cores.Employee.Resume;
+﻿using HIsabKaro.Cores.Employee.Resume;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Employee.Resume
+namespace HIsabKaro.Controllers.Employee.Resume
 {
     [Route("Employee/User/Resume")]
     [ApiController]
@@ -17,7 +17,7 @@ namespace HisaabKaro.Controllers.Employee.Resume
         public IActionResult Post(Models.Employee.Resume.About value) 
         {
             var UID = HttpContext.Items["UserID"];
-            return Ok(new Abouts().Add(value,UID.ToString()));
+            return Ok(new Abouts().Add(UID.ToString(),value));
         }
 
         [HttpGet]

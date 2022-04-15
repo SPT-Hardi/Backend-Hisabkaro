@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Services
+namespace HIsabKaro.Services
 {
     public interface ITokenServices
     {

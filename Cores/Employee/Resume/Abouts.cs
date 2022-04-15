@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Models.Common;
+﻿using HIsabKaro.Models.Common;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HisaabKaro.Cores.Employee.Resume
+namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Abouts
     {
-        public Result Add(Models.Employee.Resume.About value,string UID) 
+        public Result Add( string UID,Models.Employee.Resume.About value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -58,6 +58,7 @@ namespace HisaabKaro.Cores.Employee.Resume
                         {
                             AboutText = about == null ? null : about.About,
                             EmpResumeAboutId = about == null ? 0: about.EmpResumeAboutId
+                            
                         }
                     };
                 }

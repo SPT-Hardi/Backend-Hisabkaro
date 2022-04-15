@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Services
+namespace HIsabKaro.Services
 {
     public class TokenServices : ITokenServices
     {
@@ -27,7 +27,7 @@ namespace HisaabKaro.Services
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["Jwt:ValidAudience"],
                 notBefore: DateTime.Now,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddDays(15),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSignKey, SecurityAlgorithms.HmacSha256)
             );

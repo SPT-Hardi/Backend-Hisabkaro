@@ -1,12 +1,10 @@
-﻿
-
-using HisaabKaro.Cores.Common;
-using HisaabKaro.Models.Common;
-using HisaabKaro.Services;
+﻿using HIsabKaro.Cores.Common;
+using HIsabKaro.Models.Common;
+using HIsabKaro.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Common
+namespace HIsabKaro.Controllers.Common
 {
     [Microsoft.AspNetCore.Components.Route("Token")]
     [ApiController]

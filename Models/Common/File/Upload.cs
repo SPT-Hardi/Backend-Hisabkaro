@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Models.Common.File
+namespace HIsabKaro.Models.Common.File
 {
     public class Upload
     {

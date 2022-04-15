@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Models.Common;
+﻿using HIsabKaro.Models.Common;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HisaabKaro.Cores.Employer.Organization.Staff.Attendance
+namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Submits
     {
-        public Result Add(Models.Employer.Organization.Staff.Attendance.Submit value, string UID)
+        public Result Add(string UID,Models.Employer.Organization.Staff.Attendance.Submit value)
         {
             using (TransactionScope scope = new TransactionScope())
             {

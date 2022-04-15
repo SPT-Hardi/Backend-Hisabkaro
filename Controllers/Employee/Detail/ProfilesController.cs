@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Employee.Details
+namespace HIsabKaro.Controllers.Employee.Details
 {
     [Route("Employee/Details")]
     [ApiController]

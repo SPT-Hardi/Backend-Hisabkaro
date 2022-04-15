@@ -2,14 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Models.Common
+namespace HIsabKaro.Models.Common
 {
     public class Result
     {
-
         public enum ResultStatus
         {
             none,
@@ -17,10 +15,7 @@ namespace HisaabKaro.Models.Common
             danger,
             warning,
             info
-
         }
-
-        
 
         [JsonProperty("Result")]
         public string StatusString
@@ -34,6 +29,7 @@ namespace HisaabKaro.Models.Common
                 Status = (ResultStatus)(Enum.Parse(typeof(ResultStatus), value, true));
             }
         }
+
         [JsonIgnore]
         public ResultStatus Status { get; set; }
         public string Message { get; set; }

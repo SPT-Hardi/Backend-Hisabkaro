@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Services;
+﻿using HIsabKaro.Services;
 using HisabKaroDBContext;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HisaabKaro.Cores.Common
+namespace HIsabKaro.Cores.Common
 {
     public class Claims
     {
@@ -22,7 +22,7 @@ namespace HisaabKaro.Cores.Common
                 _configuration = configuration;
                 _tokenServices = tokenServices;
             }
-        public Models.Common.Token Add(string UID, string DToken)
+        public Models.Common.Token Add(string UID, string DToken,string RID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -33,6 +33,7 @@ namespace HisaabKaro.Cores.Common
                         {
                      new Claim(ClaimTypes.Sid,UID.ToString()),
                      new Claim(ClaimTypes.Name,DToken.ToString()),
+                     new Claim(ClaimTypes.Role,RID.ToString()),
                      new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
                          };
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);

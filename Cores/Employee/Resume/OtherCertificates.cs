@@ -1,5 +1,5 @@
-﻿using HisaabKaro.Models.Common;
-using HisaabKaro.Services;
+using HIsabKaro.Models.Common;
+using HIsabKaro.Services;
 using HisabKaroDBContext;
 using Microsoft.AspNetCore.Hosting;
 using System;
@@ -8,16 +8,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HisaabKaro.Cores.Employee.Resume
+namespace HIsabKaro.Cores.Employee.Resume
 {
     public class OtherCertificates
     {
-        public Result Add(Models.Employee.Resume.OtherCertificate value,string UID) 
+       
+
+        public Result Add(string UID,Models.Employee.Resume.OtherCertificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
                 {
+                    
                     var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (user == null) 
                     {
@@ -27,7 +30,6 @@ namespace HisaabKaro.Cores.Employee.Resume
                                             select new EmpResumeOtherCertificate()
                                             {
                                                 UId=int.Parse(UID),
-                                                
                                                 CertificateName=obj.CertificateName,
                                                 StartDate=obj.StartDate,
                                                 EndDate=obj.EndDate,
@@ -36,14 +38,10 @@ namespace HisaabKaro.Cores.Employee.Resume
                     context.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificate);
                     context.SubmitChanges();
                     var res = (from obj in othercertificate
-                               select new Models.Employee.Resume.OtherCertificateDetails()
+                               select new 
                                {
                                    EmpResumeOtherCertificateId=obj.EmpResumeOtherCertificateId,
                                    CertificateName=obj.CertificateName,
-                                   StartDate=Convert.ToDateTime(obj.StartDate),
-                                   EndDate=Convert.ToDateTime(obj.EndDate),
-                                   CertificateFileId=(int)obj.CertificateFileId,
-                                   
                                    
                                }).ToList();
                     scope.Complete();
@@ -56,7 +54,8 @@ namespace HisaabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result UploadCertificate(Models.Common.File.Upload objFile,int Id, string UID, IWebHostEnvironment Environment) 
+       
+        public Result UploadCertificate(int Id,string UID,Models.Employee.Resume.Certificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -67,10 +66,13 @@ namespace HisaabKaro.Cores.Employee.Resume
                     {
                         throw new ArgumentException($"There are no details for OtherCertificateId:{Id}");
                     }
-                    FileUploadServices upload = new FileUploadServices(Environment);
-                    var res = upload.Upload(objFile);
-                    
-                    certificate.CertificateFileId = res.Data;
+
+                    var file = context.CommonFiles.Where(x => x.FGUID == value.CertificateFGUID).SingleOrDefault();
+                    if (file == null) 
+                    {
+                        throw new ArgumentException("File not exist!");
+                    }
+                    certificate.CertificateFileId = file.FileId;
                     context.SubmitChanges();
                    
                     scope.Complete();
@@ -81,7 +83,7 @@ namespace HisaabKaro.Cores.Employee.Resume
                         Data = new 
                         {
                             CertificateFileId=certificate.CertificateFileId,
-                            CertificateFilePath=certificate.CommonFile.FilePath,
+                            CertificateName=certificate.CertificateName,
                         },
                     };
                 }
@@ -93,15 +95,16 @@ namespace HisaabKaro.Cores.Employee.Resume
             {
                 using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
                 {
-                    var othercertificate = context.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID).ToList();
-                    var res = (from obj in othercertificate
-                               select new Models.Employee.Resume.OtherCertificateDetails()
+                    
+                    var res = (from obj in context.EmpResumeOtherCertificates
+                               where obj.UId.ToString()==UID
+                               select new 
                                {
                                    EmpResumeOtherCertificateId = obj.EmpResumeOtherCertificateId,
                                    CertificateName = obj.CertificateName,
                                    StartDate = Convert.ToDateTime(obj.StartDate),
                                    EndDate = Convert.ToDateTime(obj.EndDate),
-                                   CertificateFileId = (int)obj.CertificateFileId,
+                                   CertificateFilePath =obj.CertificateFileId==null ? null : obj.CommonFile.FilePath ,
 
                                }).ToList();
                     return new Result()
@@ -113,7 +116,7 @@ namespace HisaabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(Models.Employee.Resume.OtherCertificateDetails value,int Id,string UID)
+        public Result Update(int Id, string UID,Models.Employee.Resume.OtherCertificateDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -130,13 +133,11 @@ namespace HisaabKaro.Cores.Employee.Resume
                     othercertificates.StartDate =value.StartDate;
 
                     context.SubmitChanges();
-                    var res = new Models.Employee.Resume.OtherCertificateDetails()
+                    var res = new 
                     {
                         EmpResumeOtherCertificateId = othercertificates.EmpResumeOtherCertificateId,
                         CertificateName = othercertificates.CertificateName,
-                        StartDate = Convert.ToDateTime(othercertificates.StartDate),
-                        EndDate = Convert.ToDateTime(othercertificates.EndDate),
-                        CertificateFileId = (int)othercertificates.CertificateFileId,
+                        
 
 
                     };

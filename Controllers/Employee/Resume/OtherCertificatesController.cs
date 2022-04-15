@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Cores.Employee.Resume;
+﻿using HIsabKaro.Cores.Employee.Resume;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,24 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Employee.Resume
+namespace HIsabKaro.Controllers.Employee.Resume
 {
     [Route("Employee/Resume")]
     [ApiController]
     public class OtherCertificatesController : ControllerBase
     {
-        private readonly IWebHostEnvironment _environment;
-
-        public OtherCertificatesController(IWebHostEnvironment Environment) 
-        {
-            _environment = Environment;
-        }
+       
         [HttpPost]
         [Route("OtherCertificates")]
-        public IActionResult Post(Models.Employee.Resume.OtherCertificate value) 
+        public IActionResult Post(Models.Employee.Resume.OtherCertificate value)
         {
             var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().Add(value,UID.ToString()));
+            return Ok(new OtherCertificates().Add(UID.ToString(),value));
         }
 
         [HttpGet]
@@ -37,18 +32,18 @@ namespace HisaabKaro.Controllers.Employee.Resume
 
         [HttpPatch]
         [Route("OtherCertificates/{Id}")]
-        public IActionResult Patch([FromBody]Models.Employee.Resume.OtherCertificateDetails value,[FromRoute]int Id)
+        public IActionResult Patch([FromBody] Models.Employee.Resume.OtherCertificateDetails value, [FromRoute] int Id)
         {
             var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().Update(value,Id,UID.ToString()));
+            return Ok(new OtherCertificates().Update(Id, UID.ToString(),value));
         }
 
         [HttpPost]
         [Route("OtherCertificates/Upload/{Id}")]
-        public IActionResult PostCertificate([FromForm]Models.Common.File.Upload objFile,int Id)
+        public IActionResult PostCertificate([FromBody] Models.Employee.Resume.Certificate value,[FromRoute] int Id)
         {
             var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().UploadCertificate(objFile, Id,UID.ToString(),_environment));
+            return Ok(new OtherCertificates().UploadCertificate(Id,UID.ToString(),value));
         }
     }
 }

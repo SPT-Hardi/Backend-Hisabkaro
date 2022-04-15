@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Models.Employee.Resume
+namespace HIsabKaro.Models.Employee.Resume
 {
     public class WorkExperinece
     {

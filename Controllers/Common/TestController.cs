@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Common
+namespace HIsabKaro.Controllers.Common
 {
     [Route("test")]
     [ApiController]

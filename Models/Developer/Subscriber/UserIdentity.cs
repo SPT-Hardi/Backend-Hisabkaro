@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Models.Developer.Subscriber
+namespace HIsabKaro.Models.Developer.Subscriber
 {
     public class UserIdentity
     {
-        
         public int UserIdentityId { get; set; }
         public string PanNumber { get; set; }
         public int PanFileId { get; set; }

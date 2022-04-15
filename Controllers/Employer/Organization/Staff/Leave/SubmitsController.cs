@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Cores.Employer.Organization.Staff.Leave;
+﻿using HIsabKaro.Cores.Employer.Organization.Staff.Leave;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Employer.Organization.Staff.Leave
+namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
 {
     [Route("Employer/Organization/Staff")]
     [ApiController]
@@ -14,17 +14,12 @@ namespace HisaabKaro.Controllers.Employer.Organization.Staff.Leave
     {
         [HttpPost]
         [Route("Leave/Submit")]
-        public IActionResult Post(Models.Employer.Organization.Staff.Leave.Submit value) 
+        public IActionResult Post(Models.Employer.Organization.Staff.Leave.Submit value)
         {
-            if (value.RId == 2 || value.RId == 3)
-            {
-                var UID = HttpContext.Items["UserID"];
-                return Ok(new Submits().Add(value, UID.ToString()));
-            }
-            else 
-            {
-                throw new ArgumentException("User not Authorized!");
-            }
+            // var UID = HttpContext.Items["UserID"];Uid, Rid,
+            int Uid = 50000003;
+            int Rid = 1000002;
+            return Ok(new Submits().Create(value,Uid));
         }
     }
 }

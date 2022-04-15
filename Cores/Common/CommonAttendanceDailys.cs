@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Models.Common;
+﻿using HIsabKaro.Models.Common;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HisaabKaro.Cores.Common
+namespace HIsabKaro.Cores.Common
 {
     public class CommonAttendanceDailys
     {

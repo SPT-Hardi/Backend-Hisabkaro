@@ -1,5 +1,4 @@
-﻿using HisaabKaro.Cores.Common;
-//using HisaabKaro.Cores.Employer.Staff.Attendance;
+﻿using HIsabKaro.Cores.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Employer.Organization.Staff.Attendance
+namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
 {
     [Route("Employer/Staff")]
     [ApiController]

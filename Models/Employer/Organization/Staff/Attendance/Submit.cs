@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Models.Employer.Organization.Staff.Attendance
+namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
 {
     public class Submit
     {

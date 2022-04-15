@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Cores.Employee.Resume;
+﻿using HIsabKaro.Cores.Employee.Resume;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Controllers.Employee.Resume
+namespace HIsabKaro.Controllers.Employee.Resume
 {
     [Route("Employee/Resume")]
     [ApiController]
@@ -17,7 +17,7 @@ namespace HisaabKaro.Controllers.Employee.Resume
         public IActionResult Add(Models.Employee.Resume.Skill value) 
         {
             var UID = HttpContext.Items["UserID"];
-            return Ok(new Skills().Add(value,UID.ToString()));
+            return Ok(new Skills().Add(UID.ToString(),value));
         }
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace HisaabKaro.Controllers.Employee.Resume
         public IActionResult Update(Models.Employee.Resume.SkillDetails value,int Id)
         {
             var UID = HttpContext.Items["UserID"];
-            return Ok(new Skills().Update(value,Id,UID.ToString()));
+            return Ok(new Skills().Update(Id, UID.ToString(),value));
         }
     }
 }

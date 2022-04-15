@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Models.Developer.Subscriber
+namespace HIsabKaro.Models.Developer.Subscriber
 {
     public class OTP
     {

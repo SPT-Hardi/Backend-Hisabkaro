@@ -1,4 +1,4 @@
-﻿using HisaabKaro.Services;
+﻿using HIsabKaro.Services;
 using HisabKaroDBContext;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace HisaabKaro.Cores.Common
+namespace HIsabKaro.Cores.Common
 {
     public class Tokens
     {
