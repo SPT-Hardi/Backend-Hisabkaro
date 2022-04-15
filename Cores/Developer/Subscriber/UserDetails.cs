@@ -28,10 +28,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
 
-                    var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     //we need to change this insertion one time only after,change inside app
                     //20 for employee
                     //21 for employer
@@ -39,14 +39,14 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("User not Exist!");
                     }
-                    var usersDetail = context.SubUsersDetails.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var usersDetail = c.SubUsersDetails.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if(usersDetail!=null && user.LoginTypeId != null) 
                     {
                         throw new ArgumentException("User details already exist!");
                     }
                     user.LoginTypeId = value.role.ID;
-                    context.SubmitChanges();
-                    var file = context.CommonFiles.Where(x => x.FGUID == value.userdetails.ProfilePhotoFGUID).SingleOrDefault();
+                    c.SubmitChanges();
+                    var file = c.CommonFiles.Where(x => x.FGUID == value.userdetails.ProfilePhotoFGUID).SingleOrDefault();
                     SubUsersDetail udetails = new SubUsersDetail();
                     udetails.AMobileNumber = value.userdetails.AMobileNumber;
                     udetails.Email = value.userdetails.Email;
@@ -55,10 +55,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     udetails.UId = int.Parse(UID);
                     Claims claims = new Claims(_configuration, _tokenServices);
                     var res = claims.Add(UID, DeviceToken,user.LoginTypeId.ToString());
-                    context.SubUsersDetails.InsertOnSubmit(udetails);
-                    context.SubmitChanges();
+                    c.SubUsersDetails.InsertOnSubmit(udetails);
+                    c.SubmitChanges();
 
-                    var role = context.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
+                    var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
                     scope.Complete();
                     return new Result()
                     {

@@ -18,10 +18,10 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
                     
-                    var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist,(enter valid token)");
@@ -35,8 +35,8 @@ namespace HIsabKaro.Cores.Employee.Resume
                                                 EndDate=obj.EndDate,
                                                 
                                             }).ToList();
-                    context.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificate);
-                    context.SubmitChanges();
+                    c.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificate);
+                    c.SubmitChanges();
                     var res = (from obj in othercertificate
                                select new 
                                {
@@ -59,21 +59,21 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var certificate = context.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (certificate == null) 
                     {
                         throw new ArgumentException($"There are no details for OtherCertificateId:{Id}");
                     }
 
-                    var file = context.CommonFiles.Where(x => x.FGUID == value.CertificateFGUID).SingleOrDefault();
+                    var file = c.CommonFiles.Where(x => x.FGUID == value.CertificateFGUID).SingleOrDefault();
                     if (file == null) 
                     {
                         throw new ArgumentException("File not exist!");
                     }
                     certificate.CertificateFileId = file.FileId;
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                    
                     scope.Complete();
                     return new Result()
@@ -93,10 +93,10 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
                     
-                    var res = (from obj in context.EmpResumeOtherCertificates
+                    var res = (from obj in c.EmpResumeOtherCertificates
                                where obj.UId.ToString()==UID
                                select new 
                                {
@@ -120,9 +120,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var othercertificates = context.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (othercertificates == null) 
                     {
                         throw new ArgumentException("No othercertificate details for this Id,(enter valid token)");
@@ -132,7 +132,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     othercertificates.EndDate =value.EndDate;
                     othercertificates.StartDate =value.StartDate;
 
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     var res = new 
                     {
                         EmpResumeOtherCertificateId = othercertificates.EmpResumeOtherCertificateId,

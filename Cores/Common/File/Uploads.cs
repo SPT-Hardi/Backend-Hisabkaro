@@ -22,7 +22,7 @@ namespace HIsabKaro.Cores.Common.File
 
         public Result Upload(Models.Common.File.Upload objFile)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 if (objFile.files == null) 
                 {
@@ -55,8 +55,8 @@ namespace HIsabKaro.Cores.Common.File
                             FileSize = objFile.files.Length.ToString(),
                             FileType = fileExt,
                         };
-                        context.CommonFiles.InsertOnSubmit(file);
-                        context.SubmitChanges();
+                        c.CommonFiles.InsertOnSubmit(file);
+                        c.SubmitChanges();
                         return new Result()
                         {
                             Message = "File uploaded successfully!",

@@ -14,7 +14,7 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
                     //24-10th
                     //25-12th
@@ -23,14 +23,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                     //28-ITI
                     //1-salesman
                     //2-electrician
-                    var check = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var check = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (check == null) 
                     {
                         throw new ArgumentException("User Doesnt Exist!,(enter valid token)");
                     }
                     foreach (var item in value.educationlist)
                     {
-                        var edu = context.EmpResumeEducations.Where(x => x.UId.ToString() == UID && x.EducationNameId == item.EducationName.ID).SingleOrDefault();
+                        var edu = c.EmpResumeEducations.Where(x => x.UId.ToString() == UID && x.EducationNameId == item.EducationName.ID).SingleOrDefault();
                         if (edu != null) 
                         {
                             throw new ArgumentException($"Users {edu.SubFixedLookup.FixedLookup} education details already exist!");
@@ -46,8 +46,8 @@ namespace HIsabKaro.Cores.Employee.Resume
                                          StartDate=obj.StartDate,
                                          EndDate=obj.EndDate,
                                      }).ToList();
-                    context.EmpResumeEducations.InsertAllOnSubmit(education);
-                    context.SubmitChanges();
+                    c.EmpResumeEducations.InsertAllOnSubmit(education);
+                    c.SubmitChanges();
                     var res = (from obj in education
                                select new 
                                {
@@ -68,9 +68,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var res = (from obj in context.EmpResumeEducations
+                    var res = (from obj in c.EmpResumeEducations
                                where obj.UId.ToString() == UID
                                select new Models.Employee.Resume.EducationDetail()
                                {
@@ -107,10 +107,10 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
                     
-                    var education = context.EmpResumeEducations.Where(x => x.UId.ToString() == UID && x.EmpResumeEducationId == Id).SingleOrDefault();
+                    var education = c.EmpResumeEducations.Where(x => x.UId.ToString() == UID && x.EmpResumeEducationId == Id).SingleOrDefault();
                     if (education == null) 
                     {
                         throw new ArgumentException("Enter valid EducationId");
@@ -122,7 +122,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                         education.InstituteName = value.InstituteName;
                         education.EndDate = value.EndDate;
                         education.StartDate = value.StartDate;
-                        context.SubmitChanges();
+                        c.SubmitChanges();
                     }
                     else 
                     {

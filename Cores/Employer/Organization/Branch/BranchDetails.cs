@@ -23,17 +23,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
 
         public Result Create(int Uid,Models.Employer.Organization.Branch.BranchDetail value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = context.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                    var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
                     if (user == null)
                     {
                         throw new ArgumentException("User Doesn't exist");
                     }
 
-                    var _OId = context.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
@@ -49,13 +49,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         Longitude = value.longitude,
                         OId = value.Organization.ID
                     };
-                    context.DevOrganisationBranches.InsertOnSubmit(branch);
-                    context.SubmitChanges();
+                    c.DevOrganisationBranches.InsertOnSubmit(branch);
+                    c.SubmitChanges();
 
                     if (value.status == true)
                     {
                         var shiftTime = new Models.Common.Shift.ShitTime();
-                        var shift = (from x in context.DevOrganisationsShiftTimes
+                        var shift = (from x in c.DevOrganisationsShiftTimes
                                      where x.OId == _OId.OId
                                      select
                                      new Models.Common.Shift.TimeList()
@@ -83,17 +83,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
 
         public Result Update(int Uid, int BId,Models.Employer.Organization.Branch.BranchDetail value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = context.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                    var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
                     if (user == null)
                     {
                         throw new ArgumentException("User Doesn't exist");
                     }
 
-                    var branch = context.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == BId);
+                    var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == BId);
                     if (branch == null)
                     {
                         throw new ArgumentException("Branch Doesn't exist");
@@ -106,7 +106,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     branch.Latitude = value.latitude;
                     branch.Longitude = value.longitude;
                     branch.OId = value.Organization.ID;
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     scope.Complete();
                     return new Result()
                     {
@@ -119,9 +119,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
 
         public Result GetOrg(int Oid, int Uid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var query = (from x in context.DevOrganisationBranches
+                var query = (from x in c.DevOrganisationBranches
                              where x.OId == Oid && x.UId == Uid
                              orderby x.OId ascending
                              select new
@@ -142,9 +142,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
 
         public Result GetBranch(int Bid, int Uid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var query = (from x in context.DevOrganisationBranches
+                var query = (from x in c.DevOrganisationBranches
                              where x.BranchId == Bid && x.UId == Uid
                              orderby x.OId ascending
                              select new

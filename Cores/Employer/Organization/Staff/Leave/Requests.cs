@@ -11,9 +11,9 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
     {
         public Result Create(int Uid, int Rid, Models.Employer.Organization.Staff.Leave.Request value)
         {
-            using(HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using(DBContext c = new DBContext())
             {
-                var user = context.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -27,8 +27,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     Reason = value.reason,
                     IsPaidLeave = value.Ispaid
                 };
-                context.OrgStaffsLeaveApplications.InsertOnSubmit(request);
-                context.SubmitChanges();
+                c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
+                c.SubmitChanges();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,

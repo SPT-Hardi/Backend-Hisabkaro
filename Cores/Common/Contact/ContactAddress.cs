@@ -12,7 +12,7 @@ namespace HIsabKaro.Cores.Common.Contact
     {
         internal Result Create(Models.Common.Contact.Address value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
@@ -25,8 +25,8 @@ namespace HIsabKaro.Cores.Common.Contact
                         PinCode = value.PinCode,
                         Landmark = value.LandMark,
                     };
-                    context.CommonContactAddresses.InsertOnSubmit(add);
-                    context.SubmitChanges();
+                    c.CommonContactAddresses.InsertOnSubmit(add);
+                    c.SubmitChanges();
                     scope.Complete();
 
                     var id = add.ContactAddressId;

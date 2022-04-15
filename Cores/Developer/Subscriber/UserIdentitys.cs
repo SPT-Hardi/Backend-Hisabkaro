@@ -14,9 +14,9 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var qs = context.SubUserTokens.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var qs = c.SubUserTokens.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (qs == null) 
                     {
                         throw new ArgumentException("User Doesnt exist!");
@@ -28,8 +28,8 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     identity.AadharNumber = value.AadharNumber;
                     identity.AadharFrontFileId = value.AadharFrontFileId;
                     identity.AadharBackFileId = value.AadharBackFileId;
-                    context.SubUsersIdentities.InsertOnSubmit(identity);
-                    context.SubmitChanges();
+                    c.SubUsersIdentities.InsertOnSubmit(identity);
+                    c.SubmitChanges();
                     scope.Complete();
 
                     value.UserIdentityId = identity.UserIdentityId;
@@ -46,13 +46,13 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var useridentity = context.SubUsersIdentities.Where(x => x.UserIdentityId == value.UserIdentityId).SingleOrDefault();
+                    var useridentity = c.SubUsersIdentities.Where(x => x.UserIdentityId == value.UserIdentityId).SingleOrDefault();
                     if (useridentity != null) 
                     {
-                        context.SubUsersIdentities.DeleteOnSubmit(useridentity);
-                        context.SubmitChanges();
+                        c.SubUsersIdentities.DeleteOnSubmit(useridentity);
+                        c.SubmitChanges();
                     }
                     scope.Complete();
                     return new Result()

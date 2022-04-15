@@ -27,9 +27,9 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var qs = context.SubUsers.Where(x => x.MobileNumber == value.MobileNumber).SingleOrDefault();
+                    var qs = c.SubUsers.Where(x => x.MobileNumber == value.MobileNumber).SingleOrDefault();
                     
                     CustomOTPs customOTPs = new CustomOTPs();
                     var otp = customOTPs.GenerateOTP();
@@ -42,8 +42,8 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         suser.MobileNumber = value.MobileNumber;
                         suser.LoginTypeId = 23;
                         suser.DefaultLanguageId = value.DefaultLanguageID;
-                        context.SubUsers.InsertOnSubmit(suser);
-                        context.SubmitChanges();
+                        c.SubUsers.InsertOnSubmit(suser);
+                        c.SubmitChanges();
 
                     
                     }
@@ -55,15 +55,15 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         sotp.UId = qs.UId;
                     }
-                    var newotp = context.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==qs.UId).SingleOrDefault();
+                    var newotp = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==qs.UId).SingleOrDefault();
                     if (newotp == null)
                     {
                         sotp.OTP = "456456";
                         sotp.ExpiryDate = DateTime.Now.AddMinutes(15);
                         sotp.IsUsed = false;
                         sotp.DeviceToken = value.DeviceToken;
-                        context.SubOTPs.InsertOnSubmit(sotp);
-                        context.SubmitChanges();
+                        c.SubOTPs.InsertOnSubmit(sotp);
+                        c.SubmitChanges();
 
                     }
                     else 
@@ -73,7 +73,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         newotp.IsUsed = false;
                         newotp.DeviceToken = value.DeviceToken;
                         
-                        context.SubmitChanges();
+                        c.SubmitChanges();
                     }
                     
 
@@ -97,15 +97,15 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         }
         public Result VerifyOtp(Models.Developer.Subscriber.UserMobile value) 
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
 
-                var usersigninrole = context.SubUsers.Where(x => x.MobileNumber == value.MobileNumber).SingleOrDefault();
+                var usersigninrole = c.SubUsers.Where(x => x.MobileNumber == value.MobileNumber).SingleOrDefault();
                 if (usersigninrole == null) 
                 {
                     throw new ArgumentException($"User not exist for:{value.MobileNumber} number!");
                 }
-                var qs = context.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==usersigninrole.UId).SingleOrDefault();
+                var qs = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==usersigninrole.UId).SingleOrDefault();
                     if (qs == null)
                     {
                         throw new ArgumentException("User not exist,enter valid token!");
@@ -122,10 +122,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("OTP Time Expired!");
                     }
-                    var user = context.SubUsers.Where(x => x.UId == qs.UId).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == qs.UId).SingleOrDefault();
                     var tokn = new Claims(_configuration, _tokenServices);
                     var res = tokn.Add(usersigninrole.UId.ToString(), value.DeviceToken,usersigninrole.LoginTypeId.ToString());
-                    var checktoken = (from obj in context.SubUserTokens
+                    var checktoken = (from obj in c.SubUserTokens
                                       where obj.DeviceToken == qs.DeviceToken && obj.UId == qs.UId
                                       select obj).SingleOrDefault();
 
@@ -136,21 +136,21 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         refreshtoken.Token = res.RToken;
                         refreshtoken.DeviceToken = value.DeviceToken;
                         refreshtoken.DeviceProfile = value.DeviceProfile;
-                        context.SubUserTokens.InsertOnSubmit(refreshtoken);
-                        context.SubmitChanges();
+                        c.SubUserTokens.InsertOnSubmit(refreshtoken);
+                        c.SubmitChanges();
 
                     }
                     else
                     {
                         checktoken.Token = res.RToken;
-                        context.SubmitChanges();
+                        c.SubmitChanges();
 
                     }
 
                     qs.IsUsed = true;
-                    context.SubmitChanges();
-                    var role = context.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
-                    var udetails = context.SubUsersDetails.Where(x => x.UId == user.UId).SingleOrDefault();
+                    c.SubmitChanges();
+                    var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
+                    var udetails = c.SubUsersDetails.Where(x => x.UId == user.UId).SingleOrDefault();
 
                     
                     return new Result()

@@ -14,9 +14,9 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         //{
         //    using (TransactionScope scope = new TransactionScope())
         //    {
-        //        using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+        //        using (DBContext c = new DBContext())
         //        {
-        //            var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+        //            var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
         //            if (user == null) 
         //            {
         //                throw new ArgumentException("User doent exist,(enter valid token)");

@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Common.Shift
     {
         internal Result Create(int OId ,Models.Common.Shift.ShitTime value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 var listShift = value.TimeLists.Select(x => new { starttime = x.StartTime, Endtime = x.EndTime, marklate = x.MarkLate }).ToList();
                 if (listShift.Distinct().Count() != listShift.Count())
@@ -26,8 +26,8 @@ namespace HIsabKaro.Cores.Common.Shift
                     MarkLate = x.MarkLate,
                     OId = OId
                 });
-                context.DevOrganisationsShiftTimes.InsertAllOnSubmit(shifttime);
-                context.SubmitChanges();
+                c.DevOrganisationsShiftTimes.InsertAllOnSubmit(shifttime);
+                c.SubmitChanges();
 
                 var id = shifttime.Select(x => x.OId == OId).ToList();
                 return new Models.Common.Result
@@ -41,7 +41,7 @@ namespace HIsabKaro.Cores.Common.Shift
 
         internal Result CreateBranchShift(Models.Common.Shift.ShitTime value, int OId, int BId)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 var listShift = value.TimeLists.Select(x => new { starttime = x.StartTime, Endtime = x.EndTime, marklate = x.MarkLate }).ToList();
                 if (listShift.Distinct().Count() != listShift.Count())
@@ -57,8 +57,8 @@ namespace HIsabKaro.Cores.Common.Shift
                     OId = OId,
                     BranchId = BId
                 });
-                context.DevOrganisationsBranchesShiftTimes.InsertAllOnSubmit(shifttime);
-                context.SubmitChanges();
+                c.DevOrganisationsBranchesShiftTimes.InsertAllOnSubmit(shifttime);
+                c.SubmitChanges();
 
                 return new Models.Common.Result
                 {

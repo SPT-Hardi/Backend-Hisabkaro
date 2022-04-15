@@ -21,17 +21,17 @@ namespace HIsabKaro.Middleware
             _configuration = configuration;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext c)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = c.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token != null)
             {
-                getUserDataFromToken(context, token);
+                getUserDataFromToken(c, token);
             }
-            await _next(context);
+            await _next(c);
         }
 
-        private void getUserDataFromToken(HttpContext context, string token)
+        private void getUserDataFromToken(HttpContext c, string token)
         {
             try
             {
@@ -48,9 +48,9 @@ namespace HIsabKaro.Middleware
                 var jwtToken = (JwtSecurityToken)validatedToken;
                
                 string DeviceToken = jwtToken.Claims.First(x => x.Type == ClaimTypes.Name).Value;
-                context.Items["DeviceToken"] = DeviceToken;
+                c.Items["DeviceToken"] = DeviceToken;
                 string UserID = jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid).Value;
-                context.Items["UserID"] = UserID;
+                c.Items["UserID"] = UserID;
 
             }
             catch (Exception)

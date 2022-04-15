@@ -11,22 +11,22 @@ namespace HIsabKaro.Cores.Employee.Job
     {
         public Result Create(int Uid,Models.Employee.Job.EE_ViewJob value)
         {
-            using(HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using(DBContext c = new DBContext())
             {
-                var job = (from x in context.EmprJobs
+                var job = (from x in c.EmprJobs
                            where x.DevOrganisation.OrganisationName.Contains(value.CName)
                            select new
                            {
                                JobID = x.JobId,
                                JobTitle = x.Title,
-                               Skill = (from s in context.EmprJobSkills
+                               Skill = (from s in c.EmprJobSkills
                                         where s.JobId == x.JobId
                                         select new
                                         {
                                             id = s.SkillId,
                                             skill = s.Skill
                                         }).ToList().Distinct(),
-                               Type = (from t in context.EmprJobTypes
+                               Type = (from t in c.EmprJobTypes
                                        where t.JobId == x.JobId
                                        select new
                                        {
@@ -58,21 +58,21 @@ namespace HIsabKaro.Cores.Employee.Job
 
         public Result Get(int Uid)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var job = (from x in context.EmprJobs
+                var job = (from x in c.EmprJobs
                            select new
                            {
                                JobID = x.JobId,
                                JobTitle = x.Title,
-                               Skill = (from s in context.EmprJobSkills
+                               Skill = (from s in c.EmprJobSkills
                                         where s.JobId == x.JobId
                                         select new
                                         {
                                             id = s.SkillId,
                                             skill = s.Skill
                                         }).ToList().Distinct(),
-                               Type = (from t in context.EmprJobTypes
+                               Type = (from t in c.EmprJobTypes
                                        where t.JobId == x.JobId
                                        select new
                                        {

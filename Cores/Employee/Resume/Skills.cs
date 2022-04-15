@@ -14,9 +14,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt Exist!");
@@ -48,9 +48,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var skills = context.EmpResumeSkills.Where(x => x.UId.ToString() == UID).ToList();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId.ToString() == UID).ToList();
                     var res = (from obj in skills
                                select new Models.Employee.Resume.SkillDetails()
                                {
@@ -70,15 +70,15 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var skills = context.EmpResumeSkills.Where(x => x.UId.ToString() == UID && x.EmpResumeSkillId == Id).SingleOrDefault();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId.ToString() == UID && x.EmpResumeSkillId == Id).SingleOrDefault();
                     if (skills == null) 
                     {
                         throw new ArgumentException("No Skills details for this id,(enter valid token)");
                     }
                     skills.SkillName = value.SkillName;
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     var res = new Models.Employee.Resume.SkillDetails()
                     {
                         EmpResumeSkillId = skills.EmpResumeSkillId,

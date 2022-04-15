@@ -14,9 +14,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist!,(enter valid token)");
@@ -31,8 +31,8 @@ namespace HIsabKaro.Cores.Employee.Resume
                                               OrganizationName=obj.OrganizationName,
                                               WorkFrom=obj.WorkFrom,
                                           }).ToList();
-                    context.EmpResumeWorkExperiences.InsertAllOnSubmit(workexperience);
-                    context.SubmitChanges();
+                    c.EmpResumeWorkExperiences.InsertAllOnSubmit(workexperience);
+                    c.SubmitChanges();
                     var res = (from obj in workexperience
                               select new Models.Employee.Resume.WorkExperienceDetails()
                               {
@@ -57,14 +57,14 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var user = context.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User Doesnt Exist!,(Enter valid token)");
                     }
-                    var workExperience = context.EmpResumeWorkExperiences.Where(x => x.UId.ToString() == UID).ToList();
+                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId.ToString() == UID).ToList();
                     var res= (from obj in workExperience
                               select new Models.Employee.Resume.WorkExperienceDetails()
                               {
@@ -88,9 +88,9 @@ namespace HIsabKaro.Cores.Employee.Resume
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var workExperience = context.EmpResumeWorkExperiences.Where(x => x.UId.ToString() == UID && x.EmpResumeWorkExperienceId == Id).SingleOrDefault();
+                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId.ToString() == UID && x.EmpResumeWorkExperienceId == Id).SingleOrDefault();
                     if (workExperience == null) 
                     {
                         throw new ArgumentException("Enter valid WorkExperienceId,(enter valid token)");
@@ -100,7 +100,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     workExperience.OrganizationName =value.OrganizationName;
                     workExperience.StartDate =value.StartDate;
                     workExperience.WorkFrom =value.WorkFrom;
-                    context.SubmitChanges();
+                    c.SubmitChanges();
 
                     var res = new Models.Employee.Resume.WorkExperienceDetails()
                     {

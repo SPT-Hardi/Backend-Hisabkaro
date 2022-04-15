@@ -22,39 +22,39 @@ namespace HIsabKaro.Cores.Employer.Organization
         }
         public Result One(int OId)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
-                var _OId = context.DevOrganisations.SingleOrDefault(o => o.OId == OId);
+                var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == OId);
                 if (_OId is null)
                 {
                     throw new ArgumentException("Organization Does Not Exits!");
                 }
 
-                var _Org = (from x in context.DevOrganisations
+                var _Org = (from x in c.DevOrganisations
                          where x.OId == OId
                          select new
                          {
                              Organization = new IntegerNullString { ID = x.OId, Text = x.OrganisationName },
-                             Image = (from f in context.CommonFiles
+                             Image = (from f in c.CommonFiles
                                       where f.FileId == x.LogoFileId
                                       select f.FilePath).SingleOrDefault(),
                              GSTNumber = x.GSTIN,
-                             GST = (from f in context.CommonFiles
+                             GST = (from f in c.CommonFiles
                                     where f.FileId == x.GSTFileId
                                     select f.FilePath).SingleOrDefault(),
                              PanCardNumber = x.PAN,
-                             PanCard = (from f in context.CommonFiles
+                             PanCard = (from f in c.CommonFiles
                                         where f.FileId == x.PANFileId
                                         select f.FilePath).SingleOrDefault(),
                              Email = x.Email,
                              MobileNumber = x.MobileNumber,
-                             Partners = (from p in context.DevOrganisationsPartners
+                             Partners = (from p in c.DevOrganisationsPartners
                                          where p.OId == x.OId
                                          select new Models.Employer.Organization.Partner
                                          {
                                              Email = p.Email,
                                              Mobilenumber = p.MobleNumber,
-                                             OwnershipTypeID = (from l in context.SubLookups
+                                             OwnershipTypeID = (from l in c.SubLookups
                                                                 where l.LookupId == p.OwnershipTypeId
                                                                 select new IntegerNullString { ID = l.LookupId, Text = l.Lookup }).SingleOrDefault()
                                          }).ToList()
@@ -71,17 +71,17 @@ namespace HIsabKaro.Cores.Employer.Organization
         }
         public Result Create(int UserID,Models.Employer.Organization.OrganizationProfile value)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope=new TransactionScope())
                 {
-                    var _UserID = context.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
+                    var _UserID = c.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
                     if (_UserID is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
 
-                    var _OId = context.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
@@ -109,16 +109,16 @@ namespace HIsabKaro.Cores.Employer.Organization
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
                     
-                    context.SubmitChanges();
+                    c.SubmitChanges();
 
-                    context.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
+                    c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
                     {
                         OId = value.Organization.ID,
                         OwnershipTypeId=x.OwnershipTypeID.ID,
                         Email=x.Email,
                         MobleNumber=x.Mobilenumber,
                     }).ToList());
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     scope.Complete();
 
                     return new Result()
@@ -133,17 +133,17 @@ namespace HIsabKaro.Cores.Employer.Organization
 
         public Result Update(Models.Employer.Organization.OrganizationProfile value, int UserID)
         {
-            using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _UserID = context.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
+                    var _UserID = c.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
                     if (_UserID is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
 
-                    var _OId = context.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
@@ -169,16 +169,16 @@ namespace HIsabKaro.Cores.Employer.Organization
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
 
-                    context.SubmitChanges();
+                    c.SubmitChanges();
 
-                    context.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
+                    c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
                     {
                         OId = value.Organization.ID,
                         OwnershipTypeId = x.OwnershipTypeID.ID,
                         Email = x.Email,
                         MobleNumber = x.Mobilenumber,
                     }).ToList());
-                    context.SubmitChanges();
+                    c.SubmitChanges();
                     scope.Complete();
                     return new Result()
                     {

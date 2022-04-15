@@ -14,24 +14,24 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
-                    var qs = context.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Day == DateTime.Now.Day && x.RId == value.RId).SingleOrDefault();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Day == DateTime.Now.Day && x.RId == value.RId).SingleOrDefault();
                     if (qs == null)
                     {
-                        HisabKaroDBContext.OrgStaffsAttendancesDaily attendance = new HisabKaroDBContext.OrgStaffsAttendancesDaily();
+                       OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                         attendance.UId = int.Parse(UID);
                         attendance.RId = value.RId;
                         attendance.LastUpdateDate = DateTime.Now;
                         attendance.ChekIN = value.CheckIN;
-                        context.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
-                        context.SubmitChanges();
+                        c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
+                        c.SubmitChanges();
                     }
                     else
                     {
                         qs.CheckOUT = value.CheckIN;
                         qs.LastUpdateDate = DateTime.Now;
-                        context.SubmitChanges();
+                        c.SubmitChanges();
                     }
 
                     scope.Complete();

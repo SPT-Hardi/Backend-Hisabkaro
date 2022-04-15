@@ -27,7 +27,7 @@ namespace HIsabKaro.Cores.Common
             using (TransactionScope scope = new TransactionScope())
             {
 
-                using (HisabKaroDBDataContext context = new HisabKaroDBDataContext())
+                using (DBContext c = new DBContext())
                 {
                     var authclaims = new List<Claim>
                         {
@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Common
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
                     var refreshToken = _tokenServices.GenerateRefreshToken();
 
-                    var check = context.SubUserTokens.Where(x => x.UId.ToString() == UID && x.DeviceToken == DToken).SingleOrDefault();
+                    var check = c.SubUserTokens.Where(x => x.UId.ToString() == UID && x.DeviceToken == DToken).SingleOrDefault();
 
                     //RefreshToken refreshToken1 = new RefreshToken();
                     if (check == null)
@@ -49,7 +49,7 @@ namespace HIsabKaro.Cores.Common
                     else
                     {
                         check.Token = refreshToken;
-                        context.SubmitChanges();
+                        c.SubmitChanges();
                         scope.Complete();
                        
                     }
