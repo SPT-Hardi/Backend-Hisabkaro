@@ -16,24 +16,24 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("WorkExperiences")]
         public IActionResult Post(Models.Employee.Resume.WorkExperinece value) 
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new WorkExperiences().Add(UID.ToString(),value));
+           int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new WorkExperiences().Add(UID,value));
         }
 
         [HttpGet]
         [Route("WorkExperiences")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new WorkExperiences().View(UID.ToString()));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new WorkExperiences().View(UID));
         }
 
         [HttpPatch]
         [Route("WorkExperiences/{Id}")]
         public IActionResult Patch(Models.Employee.Resume.WorkExperienceDetails value,int Id)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new WorkExperiences().Update(Id, UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new WorkExperiences().Update(Id, UID,value));
         }
 
        

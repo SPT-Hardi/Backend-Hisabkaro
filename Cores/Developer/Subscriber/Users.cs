@@ -124,7 +124,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     }
                     var user = c.SubUsers.Where(x => x.UId == qs.UId).SingleOrDefault();
                     var tokn = new Claims(_configuration, _tokenServices);
-                    var res = tokn.Add(usersigninrole.UId.ToString(), value.DeviceToken,usersigninrole.LoginTypeId.ToString());
+                    var res = tokn.Add(usersigninrole.UId, value.DeviceToken,(int)usersigninrole.LoginTypeId);
                     var checktoken = (from obj in c.SubUserTokens
                                       where obj.DeviceToken == qs.DeviceToken && obj.UId == qs.UId
                                       select obj).SingleOrDefault();

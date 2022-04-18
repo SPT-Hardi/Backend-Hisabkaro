@@ -16,24 +16,24 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Skills")]
         public IActionResult Add(Models.Employee.Resume.Skill value) 
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Skills().Add(UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Skills().Add(UID,value));
         }
 
         [HttpGet]
         [Route("Skills")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Skills().View(UID.ToString()));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Skills().View(UID));
         }
 
         [HttpPatch]
         [Route("Skills/{Id}")]
         public IActionResult Update(Models.Employee.Resume.SkillDetails value,int Id)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Skills().Update(Id, UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Skills().Update(Id, UID,value));
         }
     }
 }

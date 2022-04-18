@@ -10,13 +10,13 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Skills
     {
-        public Result Add(string UID,Models.Employee.Resume.Skill value) 
+        public Result Add(int UID,Models.Employee.Resume.Skill value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt Exist!");
@@ -44,13 +44,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(string UID)
+        public Result View(int UID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skills = c.EmpResumeSkills.Where(x => x.UId.ToString() == UID).ToList();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId == UID).ToList();
                     var res = (from obj in skills
                                select new Models.Employee.Resume.SkillDetails()
                                {
@@ -66,13 +66,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id, string UID,Models.Employee.Resume.SkillDetails value)
+        public Result Update(int Id,int UID,Models.Employee.Resume.SkillDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skills = c.EmpResumeSkills.Where(x => x.UId.ToString() == UID && x.EmpResumeSkillId == Id).SingleOrDefault();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId == UID && x.EmpResumeSkillId == Id).SingleOrDefault();
                     if (skills == null) 
                     {
                         throw new ArgumentException("No Skills details for this id,(enter valid token)");
