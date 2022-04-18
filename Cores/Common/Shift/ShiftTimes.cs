@@ -34,7 +34,6 @@ namespace HIsabKaro.Cores.Common.Shift
                 {
                     Status = Models.Common.Result.ResultStatus.success,
                     Message = string.Format("Contact Address Added Successfully!"),
-                    Data = id
                 };
             }
         }

@@ -25,7 +25,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
             //int UserID = (int)HttpContext.Items["UserID"];
-            int UserID = 50000001;
+            int UID = 50000001;
             int RId = 10000001;
             return Ok(new StaffDetails().Create(value));
         }
