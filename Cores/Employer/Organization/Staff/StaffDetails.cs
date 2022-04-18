@@ -115,7 +115,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         BranchId = value.Branch.ID == 0 ? null : value.Branch.ID,
                         ShiftTimeId = value.ShiftTiming.ID,
                         Salary = value.Salary,
-                        IsOnenWeek = value.IsOpenWeek,
+                        IsOpenWeek = value.IsOpenWeek,
                     };
                     if (value.IsOpenWeek == false)
                     {

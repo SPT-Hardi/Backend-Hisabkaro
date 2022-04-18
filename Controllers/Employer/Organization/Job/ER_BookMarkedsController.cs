@@ -12,11 +12,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
     [ApiController]
     public class ER_BookMarkedsController : ControllerBase
     {
-        [Route("ViewBookMark/{Oid}/{Jid}")]
+        [Route("ViewBookMark/{Jid}")]
         [HttpGet]
-        public IActionResult One(int Oid, int Jid)
+        public IActionResult One(int Jid)
         {
-            return Ok(new ER_BookMarkeds().Get(Oid,Jid));
+            int Uid = 50000001;
+            int Rid = 1000004;
+            return Ok(new ER_BookMarkeds().Get(Jid,Uid,Rid));
         }
     }
 }

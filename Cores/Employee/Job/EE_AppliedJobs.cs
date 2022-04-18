@@ -28,6 +28,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 {
                     throw new ArgumentException("Job Already Applied");
                 }
+                var f = job.BranchID.Value;
                 c.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
                 {
                     UId = Uid,

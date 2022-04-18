@@ -18,20 +18,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             _images = images;
         }
 
-        public Result Create( int Uid,Models.Employer.Organization.Job.ER_JobDetail value)
+        public Result Create( int Uid,int Rid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
             using(DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user =  c.SubUsers.SingleOrDefault(x => x.UId == Uid);
-
-                    if(user == null)
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                    if (user == null)
                     {
-                        throw new ArgumentException("No user Found");
+                        throw new ArgumentException("User not found!!");
                     }
 
-                    
                     var jDetails = (from j in c.EmprJobs
                                     where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.ID
                                     orderby j.JobId descending
@@ -52,9 +50,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 Description = value.Description,
                                 PostDate = DateTime.Now,
                                 EndDate = value.Enddate.ToLocalTime(),
-                                OId = value.Organisation.ID,
-                                BranchID = value.Branch.ID,
-                                UId = Uid,
+                                OId = (int)value.Organisation.ID,
+                                BranchID = value.Branch.ID == null ? null : value.Branch.ID,
+                                URId = user.URId,
                                 Status = "Open"
                             };
                             c.EmprJobs.InsertOnSubmit(_job);
@@ -79,6 +77,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                             {
                                 Message = string.Format("Job Details Added Successfully!!"),
                                 Status = Result.ResultStatus.success,
+                                Data = new
+                                {
+                                    Id = _job.JobId,
+                                    Title = _job.Title
+                                },
                             };
                         }
                         else
@@ -97,9 +100,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         Description = value.Description,
                         PostDate = DateTime.Now,
                         EndDate = value.Enddate.ToLocalTime(),
-                        OId = value.Organisation.ID,
-                        BranchID = value.Branch.ID,
-                        UId = Uid,
+                        OId = (int)value.Organisation.ID,
+                        BranchID = value.Branch.ID == null ? null : value.Branch.ID,
+                        URId = user.URId,
                         Status = "Open"
                     };
                     c.EmprJobs.InsertOnSubmit(job);
@@ -123,13 +126,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format("Job Details Added Successfully!!"),
-                        Data = job.JobId,
+                        Data = new  { 
+                              Id = job.JobId,
+                              Title = job.Title
+                        },
                     };
                 }
             }
         }
 
-        public Result Update(int Uid, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
+        public Result Update(int Uid,int Rid,int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -141,6 +147,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("JobDeatils doesn't exist");
                     }
 
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                    if (user == null)
+                    {
+                        throw new ArgumentException("User not found!!");
+                    }
+
                     job.Title = value.Title;
                     job.FileId = value.Imageid;
                     job.Location = value.Location;
@@ -150,9 +162,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.Description = value.Description;
                     job.PostDate = DateTime.Now;
                     job.EndDate = value.Enddate.ToLocalTime();
-                    job.OId = value.Organisation.ID;
+                    job.OId = (int)value.Organisation.ID;
                     job.BranchID = value.Branch.ID;
-                    job.UId = Uid;
+                    job.URId = user.URId;
                     job.Status = "Open";
                     c.SubmitChanges();
 
@@ -192,24 +204,29 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format("Job Details Updated Successfully!!"),
+                        Data = new
+                        {
+                            Id = job.JobId,
+                            Title = job.Title
+                        }
                     };
                 }
             }
         }
 
         //user view specific organization job
-        public Result One(int OId)
+        public Result One(int Uid,int Rid)
         {
             using (DBContext c = new DBContext())
             {
-                var org = c.DevOrganisations.SingleOrDefault(x => x.OId == OId);
-                if (org == null)
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                if (user == null)
                 {
-                    throw new ArgumentException("No Organization Found");
+                    throw new ArgumentException("User not found!!");
                 }
-                //status = (x.OId == org ? "currently working" : "looking for job")
+
                 var query = (from x in c.EmprJobs
-                             where x.OId == org.OId
+                             where x.OId == user.OId
                              orderby x.JobId descending
                              select new
                              {
@@ -236,7 +253,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  EndDate = x.EndDate,
                                  Organization = x.DevOrganisation.OrganisationName,
                                  count = (from y in c.EmpBookmarkJobsDetails
-                                          where y.EmprJob.DevOrganisation.OId == OId && y.JobId == x.JobId
+                                          where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId
                                           select y.UId).Count(),
                              });
 
@@ -301,7 +318,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result RemovePost(int Jid)
+        public Result RemovePost(int Uid,int Rid,int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -312,19 +329,30 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("No Job Found");
                 }
 
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                if (user == null)
+                {
+                    throw new ArgumentException("User not found!!");
+                }
+
                 job.Status = "Remove";
+                job.URId = user.URId;
                 c.SubmitChanges();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Job Remove Successfully!!"),
-
+                    Data = new
+                    {
+                        Id = job.JobId,
+                        Title = job.Title
+                    }
                 };
             }
         }
 
-        public Result DisablePost(int Jid)
+        public Result DisablePost(int Uid,int Rid,int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -335,14 +363,25 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("No Job Found");
                 }
 
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                if (user == null)
+                {
+                    throw new ArgumentException("User not found!!");
+                }
+
                 job.Status = "Disable";
+                job.URId = user.URId;
                 c.SubmitChanges();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Job Disable Successfully!!"),
-
+                    Data = new
+                    {
+                        Id = job.JobId,
+                        Title = job.Title
+                    }
                 };
             }
         }

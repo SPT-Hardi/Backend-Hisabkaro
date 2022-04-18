@@ -1,5 +1,7 @@
 using HIsabKaro.Cores.Common;
+using HIsabKaro.Cores.Common.File;
 using HIsabKaro.Cores.Developer.Subscriber;
+using HIsabKaro.Cores.Employer.Organization.Job;
 using HIsabKaro.Middleware;
 using HIsabKaro.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,6 +57,8 @@ namespace HIsabKaro
             services.AddSingleton<Users>();
             services.AddTransient<ITokenServices, TokenServices>();
             services.AddTransient<Tokens>();
+            services.AddTransient<Uploads>();
+            services.AddTransient<ER_JobDetails>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>
