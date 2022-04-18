@@ -13,13 +13,14 @@ namespace HIsabKaro.Models.Employer.Organization
         public Common.IntegerNullString Organization { get; set; } = new Common.IntegerNullString();
         [RegularExpression(@"^[0-9]{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[A-Z]{1}\d{1}$", ErrorMessage = "Invalid GST Number!")]
         public string GSTNumber { get; set; }
-        public int GST { get; set; }
+        public string GST { get; set; }
         public ShitTime ShiftTime { get; set; }
         public Address Address { get; set; }
         [Required(ErrorMessage = "Pan Card Number Is Required!")]
         [RegularExpression(@"^[A-Z]{5}\d{4}[A-Z]{1}$", ErrorMessage = "Invalid Pan Card Number!")] 
         public string PanCardNumber { get; set; }
-        public int PanCard { get; set; }
+        [Required(ErrorMessage = "Pan Card Is Required!")]
+        public string PanCard { get; set; }
         public string Email { get; set; }
         public string MobileNumber { get; set; }
         public List<Partner> Partners { get; set; } = new List<Partner>();

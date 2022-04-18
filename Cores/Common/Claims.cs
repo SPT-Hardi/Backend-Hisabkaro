@@ -30,12 +30,12 @@ namespace HIsabKaro.Cores.Common
                 using (DBContext c = new DBContext())
                 {
                     var authclaims = new List<Claim>
-                        {
-                     new Claim(ClaimTypes.Sid,UID.ToString()),
-                     new Claim(ClaimTypes.Name,DToken.ToString()),
-                     new Claim(ClaimTypes.Role,RID.ToString()),
-                     new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
-                         };
+                    {
+                         new Claim(ClaimTypes.Sid,UID.ToString()),
+                         new Claim(ClaimTypes.Name,DToken.ToString()),
+                         new Claim(ClaimTypes.Role,RID.ToString()),
+                         new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
+                    };
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
                     var refreshToken = _tokenServices.GenerateRefreshToken();
 

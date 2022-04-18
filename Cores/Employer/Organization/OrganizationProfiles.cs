@@ -69,14 +69,14 @@ namespace HIsabKaro.Cores.Employer.Organization
                 };
             }
         }
-        public Result Create(int UserID,Models.Employer.Organization.OrganizationProfile value)
+        public Result Create(int URId,Models.Employer.Organization.OrganizationProfile value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope=new TransactionScope())
                 {
-                    var _UserID = c.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
-                    if (_UserID is null)
+                    var _URId = c.SubUserOrganisations.Where(u => u.URId == URId).SingleOrDefault();
+                    if (_URId is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
@@ -100,12 +100,14 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
                     var _AId = _contactAddress.Create(value.Address);
+                    var _GSTFileId = (from x in c.CommonFiles where x.FGUID == value.GST select x).FirstOrDefault();
+                    var _PANFileId = (from x in c.CommonFiles where x.FGUID == value.PanCard select x).FirstOrDefault();
 
-                    _OId.GSTFileId = value.GST;
+                    _OId.GSTFileId = _GSTFileId==null ? null : _GSTFileId.FileId;
                     _OId.GSTIN = value.GSTNumber;
                     _OId.ContactAddressId = _AId.Data;
                     _OId.PAN = value.PanCardNumber;
-                    _OId.PANFileId = value.PanCard;
+                    _OId.PANFileId = _PANFileId.FileId;
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
                     
@@ -129,65 +131,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                     };
                 }
             }
-        }
-
-        public Result Update(Models.Employer.Organization.OrganizationProfile value, int UserID)
-        {
-            using (DBContext c = new DBContext())
-            {
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    var _UserID = c.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
-                    if (_UserID is null)
-                    {
-                        throw new ArgumentException("User Does Not Exits!");
-                    }
-
-                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
-                    if (_OId is null)
-                    {
-                        throw new ArgumentException("Organization Does Not Exits!");
-                    }
-
-                    if (!value.Partners.Any())
-                    {
-                        throw new ArgumentException("Enter Silai Staff Details !");
-                    }
-                    var list = value.Partners.Select(x => new { Email = x.Email, MobileNumber = x.Mobilenumber }).ToList();
-                    if (list.Distinct().Count() != list.Count())
-                    {
-                        throw new ArgumentException($"Duplecate Entry In Partners!");
-                    }
-
-                    var _AId = _contactAddress.Create(value.Address);
-
-                    _OId.GSTFileId = value.GST;
-                    _OId.GSTIN = value.GSTNumber;
-                    _OId.ContactAddressId = _AId.Data;
-                    _OId.PAN = value.PanCardNumber;
-                    _OId.PANFileId = value.PanCard;
-                    _OId.Email = value.Email;
-                    _OId.MobileNumber = value.MobileNumber;
-
-                    c.SubmitChanges();
-
-                    c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
-                    {
-                        OId = value.Organization.ID,
-                        OwnershipTypeId = x.OwnershipTypeID.ID,
-                        Email = x.Email,
-                        MobleNumber = x.Mobilenumber,
-                    }).ToList());
-                    c.SubmitChanges();
-                    scope.Complete();
-                    return new Result()
-                    {
-                        Status = Result.ResultStatus.success,
-                        Message = string.Format($"Organization Add Successfully"),
-                        Data = _OId.OId
-                    };
-                }
-            }
-        }
+        }  
     }
 }
