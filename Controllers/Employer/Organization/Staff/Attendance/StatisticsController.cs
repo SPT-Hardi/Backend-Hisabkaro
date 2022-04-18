@@ -16,7 +16,8 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         [Route("Statistics/{date}")]
         public IActionResult Get(DateTime date) 
         {
-            int URId = (int)HttpContext.Items["URId"];
+            /*int URId = (int)HttpContext.Items["URId"];*/
+            int URId = 10000024;
             return Ok(new Statistics().Get(URId,date));
         }
     }

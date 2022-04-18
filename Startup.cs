@@ -1,7 +1,13 @@
 using HIsabKaro.Cores.Common;
+using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.File;
+using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Cores.Developer.Subscriber;
+using HIsabKaro.Cores.Employee.Job;
+using HIsabKaro.Cores.Employer.Organization;
+using HIsabKaro.Cores.Employer.Organization.Branch;
 using HIsabKaro.Cores.Employer.Organization.Job;
+using HIsabKaro.Cores.Employer.Organization.Staff;
 using HIsabKaro.Middleware;
 using HIsabKaro.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,6 +65,18 @@ namespace HIsabKaro
             services.AddTransient<Tokens>();
             services.AddTransient<Uploads>();
             services.AddTransient<ER_JobDetails>();
+            services.AddSingleton<Users>();
+            services.AddTransient<ITokenServices, TokenServices>();
+            services.AddTransient<Tokens>();
+            services.AddTransient<Uploads>();
+            services.AddTransient<EE_AppliedJobs>();
+            services.AddTransient<BranchDetails>();
+            services.AddTransient<ER_AppliedJobs>();
+            services.AddTransient<OrganizationDetails>();
+            services.AddTransient<OrganizationProfiles>();
+            services.AddTransient<StaffDetails>();
+            services.AddTransient<ContactAddress>();
+            services.AddTransient<ShiftTimes>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>

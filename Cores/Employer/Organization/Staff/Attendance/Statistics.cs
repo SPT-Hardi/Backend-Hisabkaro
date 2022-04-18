@@ -17,10 +17,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 using (DBContext c = new DBContext())
                 {
                     int presentcount = 0;
+                    int latecount = 0;
                     var totalemp = (from obj in c.SubUserOrganisations
                                     join obj1 in c.SubRoles
                                     on obj.OId equals obj1.OId
-                                    where obj.URId == URId && obj1.RId == 1000001
+                                    where obj.URId == URId && obj1.RId == 1000003
                                     select obj).ToList();
                     foreach (var item in totalemp) 
                     {
@@ -29,6 +30,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             presentcount += presentcount;
                             var lateafter = c.DevOrganisationsShiftTimes.Where(x => x.OId == item.OId).SingleOrDefault();
+                            if (checkpresent.ChekIN.Value.TimeOfDay > lateafter.MarkLate) 
+                            {
+                                latecount += latecount;
+                            }
                             
                         }
                     }
@@ -41,6 +46,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             TotalEmployee=totalemp.Count(),
                             Present=presentcount,
                             Absent=totalemp.Count()-presentcount,
+                            Late=latecount,
                           
                         },
                     };
