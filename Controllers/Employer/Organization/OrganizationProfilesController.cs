@@ -36,9 +36,8 @@ namespace HIsabKaro.Controllers.Employer.Organization
 
         public IActionResult Create([FromBody] Models.Employer.Organization.OrganizationProfile value)
         {
-            //int UserID = (int)HttpContext.Items["UserID"];
-            int UserID = 50000001;
-            return Ok(_organizationProfiles.Create(UserID, value ));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_organizationProfiles.Create(URId, value ));
         }
     }
 }

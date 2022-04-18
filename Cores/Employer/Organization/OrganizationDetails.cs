@@ -1,10 +1,13 @@
 ﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employer.Organization;
+using HIsabKaro.Services;
 using HisabKaroDBContext;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -12,6 +15,12 @@ namespace HIsabKaro.Cores.Employer.Organization
 {
     public class OrganizationDetails
     {
+        private readonly ITokenServices _tokenServices;
+
+        public OrganizationDetails(ITokenServices tokenServices)
+        {
+            _tokenServices = tokenServices;
+        }
         public Result Create(int UserID,OrganizationDetail value)
         {
             using (DBContext c = new DBContext())
@@ -27,10 +36,10 @@ namespace HIsabKaro.Cores.Employer.Organization
                     var _orgname = c.DevOrganisations.Where(o => o.OrganisationName == value.OrgName).SingleOrDefault();
                     if (_orgname is not null)
                     {
-                        throw new ArgumentException($"Organization Are Alredy Exits With Same Name :{value.OrgName}.");
+                        throw new ArgumentException($"Organisation Alredy Exits With Same Name :{value.OrgName}.");
                     }
 
-                    var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault() ;
+                    var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault();
 
                     var Org = new DevOrganisation()
                     {
@@ -44,7 +53,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     c.DevOrganisations.InsertOnSubmit(Org);
                     c.SubmitChanges();
 
-                    var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName == "admin" && x.OId== Org.OId);
+                    var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId== Org.OId);
                     if (_OrgRole is null)
                     {
                         var _role = new SubRole()
@@ -56,7 +65,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         c.SubRoles.InsertOnSubmit(_role);
                         c.SubmitChanges();
                     }
-                    var _ORole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "Admin" && x.OId == Org.OId);
+                    var _ORole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == Org.OId);
                     var _subOrg = new SubUserOrganisation()
                     {
                         UId=UserID,
@@ -66,13 +75,23 @@ namespace HIsabKaro.Cores.Employer.Organization
                     c.SubUserOrganisations.InsertOnSubmit(_subOrg);
                     c.SubmitChanges();
 
+                    var authclaims = new List<Claim>
+                    {
+                         new Claim(ClaimTypes.Role,_subOrg.URId.ToString()),
+                         new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
+                    };
+                    var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
+
                     scope.Complete();
 
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = string.Format($"Organization Add Successfully"),
-                        Data = new { Id = Org.OId }
+                        Message = string.Format($"Organisation Add Successfully"),
+                        Data = new { 
+                            OrganisationId = Org.OId,
+                            JWT = jwtToken,
+                        }
                     };
                 }
             }

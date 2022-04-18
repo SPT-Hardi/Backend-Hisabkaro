@@ -18,6 +18,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                               where x.OId == OId
                               select new
                               {
+                                  URId=x.URId,
                                   Name = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                   Profile = (from y in c.CommonFiles
                                              where y.FileId == x.SubUserOrganisation.SubUser.SubUsersDetail.FileId
