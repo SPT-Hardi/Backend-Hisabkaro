@@ -9,24 +9,24 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 {
     public class ER_BookMarkeds
     {
-        public Result Get(int Oid,int Jid)
+        public Result Get(int Jid,int Uid,int Rid)
         {
             using (DBContext c = new DBContext())
             {
-                var org = c.DevOrganisations.SingleOrDefault(x => x.OId == Oid);
-                if (org == null)
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.UId == Uid && x.RId == Rid);
+                if (user == null)
                 {
-                    throw new ArgumentException("Org Doesn't Exist");
+                    throw new ArgumentException("User Doesn't Exist");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == Oid );
+                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
 
                 var save = (from x in c.EmpBookmarkJobsDetails
-                            where x.DevOrganisation.OId == Oid && x.JobId == Jid
+                            where x.DevOrganisation.OId == user.OId && x.JobId == Jid
                             select new
                             {
                                 UserName = x.SubUser.SubUsersDetail.FullName,

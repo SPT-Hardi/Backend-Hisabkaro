@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpPost]
         public IActionResult Create(int Jid)
         {
-            int Uid = 3;
+            int Uid = 50000002;
             return Ok(new EE_AppliedJobs().Create(Uid, Jid));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpGet]
         public IActionResult One()
         {
-            int Uid = 3;
+            int Uid = 50000002;
             return Ok(new EE_AppliedJobs().One(Uid));
         }
     }

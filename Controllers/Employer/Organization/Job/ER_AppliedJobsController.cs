@@ -12,11 +12,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
     [ApiController]
     public class ER_AppliedJobsController : ControllerBase
     {
-        [Route("ViewAppliedJob/{Oid}/{Jid}")]
+        [Route("ViewAppliedJob/{Jid}")]
         [HttpGet]
-        public IActionResult One(int Oid, int Jid)
+        public IActionResult One(int Jid)
         {
-            return Ok(new ER_AppliedJobs().Get(Oid, Jid));
+            int Uid = 50000001;
+            int Rid = 1000004;
+            return Ok(new ER_AppliedJobs().Get(Jid, Uid, Rid));
         }
     }
 }
