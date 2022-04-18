@@ -30,10 +30,11 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException($"Organization Are Alredy Exits With Same Name :{value.OrgName}.");
                     }
 
-                    var _FileId = c.CommonFiles.SingleOrDefault(x => x.FGUID == value.Image);
+                    var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault() ;
+
                     var Org = new DevOrganisation()
                     {
-                        LogoFileId = _FileId.FileId,
+                        LogoFileId = _FileId ==null ? null : _FileId.FileId,
                         OrganisationName = value.OrgName,
                         InudstrySectorId = value.InudstrySector.ID,
                         Latitude = value.Latitude,
