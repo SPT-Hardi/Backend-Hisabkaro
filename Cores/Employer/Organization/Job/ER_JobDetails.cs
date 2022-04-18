@@ -54,7 +54,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 EndDate = value.Enddate.ToLocalTime(),
                                 OId = value.Organisation.ID,
                                 BranchID = value.Branch.ID,
-                                UId = Uid,
+                                URId = Uid,
                                 Status = "Open"
                             };
                             c.EmprJobs.InsertOnSubmit(_job);
@@ -99,7 +99,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         EndDate = value.Enddate.ToLocalTime(),
                         OId = value.Organisation.ID,
                         BranchID = value.Branch.ID,
-                        UId = Uid,
+                        URId = Uid,
                         Status = "Open"
                     };
                     c.EmprJobs.InsertOnSubmit(job);
@@ -152,7 +152,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.EndDate = value.Enddate.ToLocalTime();
                     job.OId = value.Organisation.ID;
                     job.BranchID = value.Branch.ID;
-                    job.UId = Uid;
+                    job.URId = Uid;
                     job.Status = "Open";
                     c.SubmitChanges();
 

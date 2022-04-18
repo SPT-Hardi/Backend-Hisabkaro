@@ -49,7 +49,7 @@ namespace HIsabKaro.Middleware
                
                 string DeviceToken = jwtToken.Claims.First(x => x.Type == ClaimTypes.Name).Value;
                 c.Items["DeviceToken"] = DeviceToken;
-                string UserID = jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid).Value;
+                int UserID = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid).Value);
                 c.Items["UserID"] = UserID;
 
             }
