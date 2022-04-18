@@ -18,21 +18,28 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     int presentcount = 0;
                     int latecount = 0;
+                    var findorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
                     var totalemp = (from obj in c.SubUserOrganisations
-                                    join obj1 in c.SubRoles
-                                    on obj.OId equals obj1.OId
-                                    where obj.URId == URId && obj1.RId == 1000003
+                                    where obj.OId== findorg.OId && obj.RId == findstaffroleid.RId
                                     select obj).ToList();
                     foreach (var item in totalemp) 
                     {
-                        var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.URId == item.URId && x.ChekIN.Value.ToString("dd/MM/yyyy") == date.ToString("dd/MM/yyyy")).SingleOrDefault();
-                        if (checkpresent != null) 
+                        var todaydate = date.ToString("dd/MM/yyyy");
+                        
+                        var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.URId == item.URId).SingleOrDefault();
+                        if (checkpresent.ChekIN.Value.ToString("dd/MM/yyyy")==todaydate) 
                         {
-                            presentcount += presentcount;
-                            var lateafter = c.DevOrganisationsShiftTimes.Where(x => x.OId == item.OId).SingleOrDefault();
+                            presentcount += 1;
+
+                            var lateafter = (from obj in c.DevOrganisationsStaffs
+                                             join obj1 in c.DevOrganisationsShiftTimes
+                                             on obj.ShiftTimeId equals obj1.ShiftTimeId
+                                             where obj.OId==item.OId
+                                             select obj1).SingleOrDefault();
                             if (checkpresent.ChekIN.Value.TimeOfDay > lateafter.MarkLate) 
                             {
-                                latecount += latecount;
+                                latecount += 1;
                             }
                             
                         }
