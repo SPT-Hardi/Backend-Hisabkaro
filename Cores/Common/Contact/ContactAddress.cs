@@ -16,25 +16,30 @@ namespace HIsabKaro.Cores.Common.Contact
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var add = new CommonContactAddress()
+                    var _add = c.CommonContactAddresses.SingleOrDefault(x=> x.AddressLine1 == value.AddressLine1 && x.AddressLine2 == value.AddressLine2 && x.City == value.City && x.State == value.State &&x.PinCode == value.PinCode && x.Landmark == value.LandMark);
+                    if(_add is null)
                     {
-                        AddressLine1 = value.AddressLine1,
-                        AddressLine2 = value.AddressLine2,
-                        City = value.City,
-                        State = value.State,
-                        PinCode = value.PinCode,
-                        Landmark = value.LandMark,
-                    };
-                    c.CommonContactAddresses.InsertOnSubmit(add);
-                    c.SubmitChanges();
+                        var add = new CommonContactAddress()
+                        {
+                            AddressLine1 = value.AddressLine1,
+                            AddressLine2 = value.AddressLine2,
+                            City = value.City,
+                            State = value.State,
+                            PinCode = value.PinCode,
+                            Landmark = value.LandMark,
+                        };
+                        c.CommonContactAddresses.InsertOnSubmit(add);
+                        c.SubmitChanges();
+                    }
+                    var _adds = c.CommonContactAddresses.SingleOrDefault(x => x.AddressLine1 == value.AddressLine1 && x.AddressLine2 == value.AddressLine2 && x.City == value.City && x.State == value.State && x.PinCode == value.PinCode && x.Landmark == value.LandMark);
                     scope.Complete();
 
-                    var id = add.ContactAddressId;
+                    var id = _adds.ContactAddressId;
                     return new Models.Common.Result
                     {
                         Status = Models.Common.Result.ResultStatus.success,
                         Message = string.Format("Contact Address Added Successfully!"),
-                        Data = add.ContactAddressId
+                        Data = _adds.ContactAddressId
                     };
                 }
             }            

@@ -46,7 +46,7 @@ namespace HIsabKaro.Middleware
                 }, out SecurityToken validatedToken
                    );
                 var jwtToken = (JwtSecurityToken)validatedToken;
-               
+
                 string DeviceToken = jwtToken.Claims.First(x => x.Type == ClaimTypes.Name).Value;
                 c.Items["DeviceToken"] = DeviceToken;
                 int UserID = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid).Value);
