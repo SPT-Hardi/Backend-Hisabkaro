@@ -16,16 +16,16 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("About")]
         public IActionResult Post(Models.Employee.Resume.About value) 
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Abouts().Add(UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Abouts().Add(UID,value));
         }
 
         [HttpGet]
         [Route("About")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Abouts().View(UID.ToString()));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Abouts().View(UID));
         }
     }
 }

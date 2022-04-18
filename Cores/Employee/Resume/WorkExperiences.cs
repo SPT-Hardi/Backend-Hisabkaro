@@ -10,13 +10,13 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class WorkExperiences
     {
-        public Result Add(string UID,Models.Employee.Resume.WorkExperinece value) 
+        public Result Add(int UID,Models.Employee.Resume.WorkExperinece value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist!,(enter valid token)");
@@ -24,7 +24,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var workexperience = (from obj in value.workExperienceDetails
                                           select new EmpResumeWorkExperience()
                                           {
-                                              UId=int.Parse(UID),
+                                              UId=UID,
                                               StartDate=obj.StartDate,
                                               EndDate=obj.EndDate,
                                               JobTitle=obj.JobTitle,
@@ -53,18 +53,18 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(string UID)
+        public Result View(int UID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User Doesnt Exist!,(Enter valid token)");
                     }
-                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId.ToString() == UID).ToList();
+                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId== UID).ToList();
                     var res= (from obj in workExperience
                               select new Models.Employee.Resume.WorkExperienceDetails()
                               {
@@ -84,13 +84,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id, string UID,Models.Employee.Resume.WorkExperienceDetails value)
+        public Result Update(int Id,int UID,Models.Employee.Resume.WorkExperienceDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId.ToString() == UID && x.EmpResumeWorkExperienceId == Id).SingleOrDefault();
+                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId == UID && x.EmpResumeWorkExperienceId == Id).SingleOrDefault();
                     if (workExperience == null) 
                     {
                         throw new ArgumentException("Enter valid WorkExperienceId,(enter valid token)");

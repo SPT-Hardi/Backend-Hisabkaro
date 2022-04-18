@@ -64,14 +64,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(string UID) 
+        public Result View(int UID) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     var res = (from obj in c.EmpResumeEducations
-                               where obj.UId.ToString() == UID
+                               where obj.UId == UID
                                select new Models.Employee.Resume.EducationDetail()
                                {
                                    EmpResumeEducationId = obj.EmpResumeEducationId,
@@ -103,14 +103,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id, string UID,Models.Employee.Resume.EducationDetail value) 
+        public Result Update(int Id,int UID,Models.Employee.Resume.EducationDetail value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     
-                    var education = c.EmpResumeEducations.Where(x => x.UId.ToString() == UID && x.EmpResumeEducationId == Id).SingleOrDefault();
+                    var education = c.EmpResumeEducations.Where(x => x.UId == UID && x.EmpResumeEducationId == Id).SingleOrDefault();
                     if (education == null) 
                     {
                         throw new ArgumentException("Enter valid EducationId");

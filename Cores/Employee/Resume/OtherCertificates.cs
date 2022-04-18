@@ -14,14 +14,14 @@ namespace HIsabKaro.Cores.Employee.Resume
     {
        
 
-        public Result Add(string UID,Models.Employee.Resume.OtherCertificate value) 
+        public Result Add(int UID,Models.Employee.Resume.OtherCertificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     
-                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist,(enter valid token)");
@@ -29,7 +29,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var othercertificate = (from obj in value.OtherCertificateDetails
                                             select new EmpResumeOtherCertificate()
                                             {
-                                                UId=int.Parse(UID),
+                                                UId=UID,
                                                 CertificateName=obj.CertificateName,
                                                 StartDate=obj.StartDate,
                                                 EndDate=obj.EndDate,
@@ -55,13 +55,13 @@ namespace HIsabKaro.Cores.Employee.Resume
             }
         }
        
-        public Result UploadCertificate(int Id,string UID,Models.Employee.Resume.Certificate value) 
+        public Result UploadCertificate(int Id,int UID,Models.Employee.Resume.Certificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (certificate == null) 
                     {
                         throw new ArgumentException($"There are no details for OtherCertificateId:{Id}");
@@ -89,7 +89,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(string UID)
+        public Result View(int UID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -97,7 +97,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 {
                     
                     var res = (from obj in c.EmpResumeOtherCertificates
-                               where obj.UId.ToString()==UID
+                               where obj.UId==UID
                                select new 
                                {
                                    EmpResumeOtherCertificateId = obj.EmpResumeOtherCertificateId,
@@ -116,13 +116,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id, string UID,Models.Employee.Resume.OtherCertificateDetails value)
+        public Result Update(int Id, int UID,Models.Employee.Resume.OtherCertificateDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId.ToString() == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (othercertificates == null) 
                     {
                         throw new ArgumentException("No othercertificate details for this Id,(enter valid token)");

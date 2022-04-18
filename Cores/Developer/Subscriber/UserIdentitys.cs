@@ -10,19 +10,19 @@ namespace HIsabKaro.Cores.Developer.Subscriber
 {
     public class UserIdentitys
     {
-        public Result Add(string UID,Models.Developer.Subscriber.UserIdentity value) 
+        public Result Add(int UID,Models.Developer.Subscriber.UserIdentity value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.SubUserTokens.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var qs = c.SubUserTokens.Where(x => x.UId == UID).SingleOrDefault();
                     if (qs == null) 
                     {
                         throw new ArgumentException("User Doesnt exist!");
                     }
                     SubUsersIdentity identity = new SubUsersIdentity();
-                    identity.UId = int.Parse(UID);
+                    identity.UId =UID;
                     identity.PanNumber = value.PanNumber;
                     identity.PanFileId = value.PanFileId;
                     identity.AadharNumber = value.AadharNumber;

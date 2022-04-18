@@ -18,32 +18,32 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("OtherCertificates")]
         public IActionResult Post(Models.Employee.Resume.OtherCertificate value)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().Add(UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new OtherCertificates().Add(UID,value));
         }
 
         [HttpGet]
         [Route("OtherCertificates")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().View(UID.ToString()));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new OtherCertificates().View(UID));
         }
 
         [HttpPatch]
         [Route("OtherCertificates/{Id}")]
         public IActionResult Patch([FromBody] Models.Employee.Resume.OtherCertificateDetails value, [FromRoute] int Id)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().Update(Id, UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new OtherCertificates().Update(Id, UID,value));
         }
 
         [HttpPost]
         [Route("OtherCertificates/Upload/{Id}")]
         public IActionResult PostCertificate([FromBody] Models.Employee.Resume.Certificate value,[FromRoute] int Id)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().UploadCertificate(Id,UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new OtherCertificates().UploadCertificate(Id,UID,value));
         }
     }
 }

@@ -24,14 +24,14 @@ namespace HIsabKaro.Cores.Developer.Subscriber
             _tokenServices = tokenServices;
            
         }
-        public Result Add(string UID,string DeviceToken,Models.Developer.Subscriber.UserDetails value)
+        public Result Add(int UID,string DeviceToken,Models.Developer.Subscriber.UserDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
 
-                    var user = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
                     //we need to change this insertion one time only after,change inside app
                     //20 for employee
                     //21 for employer
@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("User not Exist!");
                     }
-                    var usersDetail = c.SubUsersDetails.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var usersDetail = c.SubUsersDetails.Where(x => x.UId == UID).SingleOrDefault();
                     if(usersDetail!=null && user.LoginTypeId != null) 
                     {
                         throw new ArgumentException("User details already exist!");
@@ -52,9 +52,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     udetails.Email = value.userdetails.Email;
                     udetails.FileId = file==null ? null : file.FileId;
                     udetails.FullName = value.userdetails.FullName;
-                    udetails.UId = int.Parse(UID);
+                    udetails.UId = UID;
                     Claims claims = new Claims(_configuration, _tokenServices);
-                    var res = claims.Add(UID, DeviceToken,user.LoginTypeId.ToString());
+                    int URId = 0;
+                    var res = claims.Add(UID, DeviceToken,URId);
                     c.SubUsersDetails.InsertOnSubmit(udetails);
                     c.SubmitChanges();
 

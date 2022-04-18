@@ -23,19 +23,19 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Educations")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
-            if (UID == null) 
+            int UID = (int)HttpContext.Items["UserID"];
+            if (UID == 0) 
             {
                 throw new ArgumentException("Not authorized!,(enter valid token)");
             }
-            return Ok(new Educations().View(UID.ToString()));
+            return Ok(new Educations().View(UID));
         }
         [HttpPatch]
         [Route("Educations/{Id}")]
         public IActionResult Patch([FromBody]Models.Employee.Resume.EducationDetail value,[FromRoute]int Id) 
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Educations().Update(Id, UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Educations().Update(Id, UID,value));
         }
     }
 }

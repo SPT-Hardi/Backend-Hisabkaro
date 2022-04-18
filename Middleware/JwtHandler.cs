@@ -51,6 +51,8 @@ namespace HIsabKaro.Middleware
                 c.Items["DeviceToken"] = DeviceToken;
                 int UserID = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid).Value);
                 c.Items["UserID"] = UserID;
+                int URId = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Role).Value);
+                c.Items["URId"] = URId;
 
             }
             catch (Exception)
