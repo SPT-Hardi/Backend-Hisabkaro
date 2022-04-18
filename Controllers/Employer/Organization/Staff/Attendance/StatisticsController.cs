@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         public IActionResult Get(DateTime date) 
         {
             int URId = (int)HttpContext.Items["URId"];
-            return Ok(new Statistics().Get(URId));
+            return Ok(new Statistics().Get(URId,date));
         }
     }
 }
