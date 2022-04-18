@@ -42,17 +42,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
                     }
-                    //var _BId = c.DevOrganisationBranches.SingleOrDefault(o => o.OId == value.Organization.ID && o.BranchId == value.Branch.ID);
-                    //if (_BId is null)
-                    //{
-                    //    throw new ArgumentException($"Branch Does Not Exits For {_OId.OrganisationName}!");
-                    //}
+
                     var _Number = value.MobileNumber == value.AMobileNumber;
                     if (_Number is true)
                     {
                         throw new ArgumentException("MoileNumber and AlternerNumaber Are Same!");
                     }
-                    var _OrgRole = c.SubRoles.Where(x => x.RoleName == "Staff").SingleOrDefault(x => x.OId == _OId.OId);
+                    var _OrgRole = c.SubRoles.Where(x => x.RoleName == "Staff".ToLower()).SingleOrDefault(x => x.OId == _OId.OId);
 
                     var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
                     if (_subUser is not null)
@@ -104,9 +100,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                         c.SubmitChanges();
                     }
-                    var _OrgRol = c.SubRoles.Where(x => x.RoleName == "Staff").SingleOrDefault(x => x.OId == _OId.OId);
+
                     var _users=c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRol.RId);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
 
                     var staff = new DevOrganisationsStaff()
                     {
