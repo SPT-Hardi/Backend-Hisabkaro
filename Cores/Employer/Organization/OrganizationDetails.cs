@@ -77,8 +77,10 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     var authclaims = new List<Claim>
                     {
-                         new Claim(ClaimTypes.Role,_subOrg.URId.ToString()),
-                         new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
+                        new Claim(ClaimTypes.Role,_subOrg.URId.ToString()),
+                        new Claim(ClaimTypes.Sid,_subOrg.UId.ToString()),
+                        new Claim(ClaimTypes.Name,_subOrg.SubUser.SubUsersDetail.FullName),
+                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
                     };
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
 
