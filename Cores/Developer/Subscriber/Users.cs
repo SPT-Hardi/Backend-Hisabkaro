@@ -55,7 +55,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         sotp.UId = qs.UId;
                     }
-                    var newotp = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==qs.UId).SingleOrDefault();
+                    var newotp = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==(qs==null ? null : qs.UId)).SingleOrDefault();
                     if (newotp == null)
                     {
                         sotp.OTP = "456456";

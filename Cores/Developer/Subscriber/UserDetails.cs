@@ -33,7 +33,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
 
                     var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
                     //we need to change this insertion one time only after,change inside app
-                    //20 for employee
+                    //20 for Raj employee
                     //21 for employer
                     if (user == null)
                     {
