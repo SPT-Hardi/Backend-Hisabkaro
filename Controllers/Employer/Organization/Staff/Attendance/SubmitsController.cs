@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Cores.Common;
+using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,24 +9,17 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
 {
-    [Route("Employer/Staff")]
+    [Route("Employer/Organization/Staff/Attendance")]
     [ApiController]
     public class SubmitsController : ControllerBase
     {
-        //[HttpPost]
-        //[Route("Attendance/SubmitDaily")]
-        //public IActionResult Post(Models.Employer.Staff.Attendance.Submit value)
-        //{
-        //    var UID = HttpContext.Items["UserID"];
-        //    if (value.RId == 1 || value.RId == 2)
-        //    {
-        //        return Ok(new Submits().Add(value, UID.ToString()));
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentException("Not Authorized");
-        //    }
-        //}
+        [HttpPost]
+        [Route("SubmitDaily")]
+        public IActionResult Post()
+        {
+           return Ok(new Submits().Add());
+           
+        }
 
     }
 }

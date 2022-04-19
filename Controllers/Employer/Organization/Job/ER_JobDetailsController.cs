@@ -26,9 +26,10 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpPost]
         public IActionResult Create(Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            int Uid = 50000001;
-            int Rid = 1000004;
-            return Ok( _jobDetails.Create(Uid,Rid,value));
+            int URId = (int)HttpContext.Items["URId"];
+            //int Uid = 50000001;
+            //int Rid = 1000004;
+            return Ok( _jobDetails.Create(URId,value));
         }
 
         [Route("Job/{Jid}")]

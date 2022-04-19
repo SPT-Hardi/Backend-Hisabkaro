@@ -18,13 +18,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             _images = images;
         }
 
-        public Result Create( int Uid,int Rid,Models.Employer.Organization.Job.ER_JobDetail value)
+        public Result Create( int URId, Models.Employer.Organization.Job.ER_JobDetail value)
         {
             using(DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User not found!!");
@@ -241,7 +241,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                            id = t.JobTypeId,
                                            type = t.Type
                                          }).ToList().Distinct(),
-                                 Image = x.CommonFile.FilePath,
+                                 Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
                                  Location = x.Location,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Roles = x.Roles,
@@ -249,7 +249,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  PostDate = x.PostDate,
                                  EndDate = x.EndDate,
                                  Organization = x.DevOrganisation.OrganisationName,
-                                 count = (from y in c.EmpBookmarkJobsDetails
+                                 Applied = (from y in c.EmpBookmarkJobsDetails
                                           where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId
                                           select y.UId).Count(),
                              });
@@ -296,7 +296,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                              id = t.JobTypeId,
                                              type = t.Type
                                          }).ToList(),
-                                 Image = x.CommonFile.FilePath,
+                                 Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
                                  Location = x.Location,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Roles = x.Roles,

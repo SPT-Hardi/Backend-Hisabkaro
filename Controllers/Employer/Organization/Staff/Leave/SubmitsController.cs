@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
 {
-    [Route("Employer/Organization/Staff")]
+    [Route("Employer/Organization/Staff/Leave")]
     [ApiController]
     public class SubmitsController : ControllerBase
     {
         [HttpPost]
-        [Route("Leave/Submit/{URId}")]
+        [Route("Submit/{URId}")]
         public IActionResult Post([FromRoute] int URId, [FromBody] Models.Employer.Organization.Staff.Leave.Submit value)
         {
             int Uid = 50000003;

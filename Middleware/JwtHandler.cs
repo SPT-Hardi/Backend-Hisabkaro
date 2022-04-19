@@ -53,7 +53,6 @@ namespace HIsabKaro.Middleware
                 c.Items["UserID"] = UserID;
                 int URId = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Role).Value);
                 c.Items["URId"] = URId;
-
             }
             catch (Exception)
             { }

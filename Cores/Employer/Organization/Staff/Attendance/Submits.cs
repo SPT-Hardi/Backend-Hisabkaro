@@ -10,6 +10,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Submits
     {
+        public Result Add()
+        {
+            return new Result()
+            {
+                Status = Result.ResultStatus.success,
+                Message = "Employer-{ROLE-NAME} Daily Attendance Add Successfully!",
+                Data = "",
+            };
+        }
         //public Result Add(string UID,Models.Employer.Organization.Staff.Attendance.Submit value)
         //{
         //    using (TransactionScope scope = new TransactionScope())
