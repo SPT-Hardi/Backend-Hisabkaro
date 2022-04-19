@@ -16,18 +16,21 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Day == DateTime.Now.Day && x.URId== URId).SingleOrDefault();
-                    var OrgStaffAttendanceDailyId=0;
-                    if (qs == null)
-                    {
-                       OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Day == DateTime.Now.Day && x.URId == URId).SingleOrDefault();
+                    var OrgStaffAttendanceDailyId = 0;
+                     if (qs == null)
+                     {
+         
+                        OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                         attendance.URId = URId;
                         attendance.LastUpdateDate = DateTime.Now;
                         attendance.ChekIN = DateTime.Now;
+                        attendance.CheckOUT = DateTime.Now;
                         c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
-                    }
+                    
+                     }
                     else
                     {
                         qs.CheckOUT = DateTime.Now;

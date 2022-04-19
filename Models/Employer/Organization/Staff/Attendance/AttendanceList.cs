@@ -11,8 +11,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
       public string ImagePath { get; set; }
       public string Name { get; set; }
       public string Status { get; set; }
-      public DateTime CheckIN { get; set; }
-      public DateTime CheckOUT { get; set; }
-      public DateTime LateBy { get; set; }
+      public string CheckIN { get; set; }
+      public string CheckOUT { get; set; }
+      public string LateBy { get; set; }
     }
 }
