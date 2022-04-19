@@ -133,22 +133,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result Update(int Uid,int Rid,int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
+        public Result Update(int URId, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
-                    if (null == job)
-                    {
-                        throw new ArgumentException("JobDeatils doesn't exist");
-                    }
-
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User not found!!");
+                    }
+
+                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
+                    if (null == job)
+                    {
+                        throw new ArgumentException("JobDeatils doesn't exist");
                     }
 
                     job.Title = value.Title;
@@ -212,11 +212,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         }
 
         //user view specific organization job
-        public Result One(int Uid,int Rid)
+        public Result One(int URId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -264,11 +264,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         }
 
         //user view specific organization specific job
-        public Result GetJob(int Jid)
+        public Result GetJob(int URId,int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User not found!!");
+                }
+
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
 
                 if (job == null)
                 {
@@ -315,21 +321,21 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result RemovePost(int Uid,int Rid,int Jid)
+        public Result RemovePost(int URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
-
-                if (job == null)
-                {
-                    throw new ArgumentException("No Job Found");
-                }
-
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+              
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
+                }
+
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
+                if (job == null)
+                {
+                    throw new ArgumentException("No Job Found");
                 }
 
                 job.Status = "Remove";
@@ -349,21 +355,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result DisablePost(int Uid,int Rid,int Jid)
+        public Result DisablePost(int URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
-
-                if (job == null)
-                {
-                    throw new ArgumentException("No Job Found");
-                }
-
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
+                }
+
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
+                if (job == null)
+                {
+                    throw new ArgumentException("No Job Found");
                 }
 
                 job.Status = "Disable";

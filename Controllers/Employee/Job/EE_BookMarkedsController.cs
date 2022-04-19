@@ -16,16 +16,16 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpPost]
         public IActionResult Create(int Jid)
         {
-            int Uid = 5;
-            return Ok(new EE_BookmarkedJobs().Create(Uid,Jid));
+            int UserId = (int)HttpContext.Items["UserID"];
+            return Ok(new EE_BookmarkedJobs().Create(UserId, Jid));
         }
 
         [Route("save")]
         [HttpGet]
         public IActionResult One()
         {
-            int Uid = 1;
-            return Ok(new EE_BookmarkedJobs().One(Uid));
+            int UserId = (int)HttpContext.Items["UserID"];
+            return Ok(new EE_BookmarkedJobs().One(UserId));
         }
     }
 }

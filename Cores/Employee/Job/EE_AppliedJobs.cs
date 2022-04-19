@@ -9,7 +9,7 @@ namespace HIsabKaro.Cores.Employee.Job
 {
     public class EE_AppliedJobs
     {
-        public Result Create(int Uid, int Jid)
+        public Result Create(int UserId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -22,15 +22,15 @@ namespace HIsabKaro.Cores.Employee.Job
                 var apply = (from x in c.EmpApplyJobDetails
                              orderby x.JobId descending
                              where x.OId == job.OId && x.BranchId == job.BranchID
-                             && x.JobId == job.JobId && x.UId == Uid
-                            select x).FirstOrDefault();
+                             && x.JobId == job.JobId && x.UId == UserId
+                             select x).FirstOrDefault();
                 if (apply != null)
                 {
                     throw new ArgumentException("Job Already Applied");
                 }
                 c.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
                 {
-                    UId = Uid,
+                    UId = UserId,
                     JobId = job.JobId,
                     BranchId = job.BranchID,
                     OId = (int)job.OId,
@@ -45,19 +45,19 @@ namespace HIsabKaro.Cores.Employee.Job
             }
         }
 
-        public Result One(int Uid)
+        public Result One(int UserId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
                 }
 
                 var apply = (from x in c.EmpApplyJobDetails
-                            where x.UId == Uid
-                            select new
+                            where x.UId == UserId
+                             select new
                             {
                                 ApplyId = x.ApplyId,
                                 JobTitle = x.EmprJob.Title,

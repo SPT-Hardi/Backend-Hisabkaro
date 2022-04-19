@@ -37,10 +37,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Employer\Organization\Staff\Loan\" />
-    <Folder Include="Cores\Employer\Organization\Staff\Loan\" />
-    <Folder Include="Models\Employer\Organization\Staff\Loan\" />
-  </ItemGroup>
-
 </Project>

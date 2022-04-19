@@ -36,43 +36,40 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpPut]
         public IActionResult Update(int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            int Uid = 50000001;
-            int Rid = 1000004;
-            return Ok( _jobDetails.Update(Uid,Rid,Jid,value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok( _jobDetails.Update(URId, Jid,value));
         }
 
         [Route("OrgJob")]
         [HttpGet]
         public IActionResult Get()
         {
-            int Uid = 50000001;
-            int Rid = 1000004;
-            return Ok( _jobDetails.One(Uid,Rid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok( _jobDetails.One(URId));
         }
 
         [Route("Job/{Jid}")]
         [HttpGet]
         public IActionResult GetById([FromRoute]int Jid)
         {
-            return Ok( _jobDetails.GetJob(Jid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok( _jobDetails.GetJob(URId,Jid));
         }
 
         [Route("RemoveJob/{Jid}")]
         [HttpPost]
         public IActionResult Remove([FromRoute]int Jid)
         {
-            int Uid = 50000001;
-            int Rid = 1000004;
-            return Ok(_jobDetails.RemovePost(Uid,Rid,Jid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_jobDetails.RemovePost(URId, Jid));
         }
 
         [Route("DisableJob/{Jid}")]
         [HttpPost]
         public IActionResult DisableJob([FromRoute] int Jid)
         {
-            int Uid = 50000001;
-            int Rid = 1000004;
-            return Ok(_jobDetails.DisablePost(Uid,Rid,Jid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_jobDetails.DisablePost(URId, Jid));
         }
     }
 }

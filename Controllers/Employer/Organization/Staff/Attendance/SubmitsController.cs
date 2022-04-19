@@ -18,7 +18,6 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         public IActionResult Post()
         {
            return Ok(new Submits().Add());
-           
         }
 
     }
