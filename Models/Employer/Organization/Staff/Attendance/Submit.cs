@@ -12,6 +12,6 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
         public int EmprAttendanceDailyId { get; set; }
         public DateTime CheckIN { get; set; }
 
-        public int RId { get; set; }
+        public int URId { get; set; }
     }
 }
