@@ -28,12 +28,11 @@ namespace HIsabKaro.Cores.Employee.Job
                 {
                     throw new ArgumentException("Job Already Applied");
                 }
-                var f = job.BranchID.Value;
                 c.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
                 {
                     UId = Uid,
                     JobId = job.JobId,
-                    BranchId = (int)job.BranchID,
+                    BranchId = job.BranchID,
                     OId = (int)job.OId,
                     ApplyDate = DateTime.Now
                 });
@@ -60,6 +59,7 @@ namespace HIsabKaro.Cores.Employee.Job
                             where x.UId == Uid
                             select new
                             {
+                                ApplyId = x.ApplyId,
                                 JobTitle = x.EmprJob.Title,
                                 CompanyName = x.DevOrganisation.OrganisationName,
                                 BranchName = x.DevOrganisationBranch.BranchName,

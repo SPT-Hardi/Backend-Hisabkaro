@@ -29,6 +29,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                             where x.DevOrganisation.OId == user.OId && x.JobId == Jid
                             select new
                             {
+                                SaveId = x.BookMarkId,
                                 UserName = x.SubUser.SubUsersDetail.FullName,
                                 BranchName = x.DevOrganisationBranch.BranchName,
                                 Image = x.SubUser.SubUsersDetail.CommonFile.FilePath,

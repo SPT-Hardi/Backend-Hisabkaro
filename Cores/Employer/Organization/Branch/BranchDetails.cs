@@ -76,6 +76,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     {
                         Message = string.Format("Branch Added Successfully"),
                         Status = Result.ResultStatus.success,
+                        Data = new
+                        {
+                            BranchId = branch.BranchId,
+                            BranchName = branch.BranchName
+                        }
                     };
                 }
             }
@@ -112,6 +117,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     {
                         Message = string.Format("Branch Updated Successfully"),
                         Status = Result.ResultStatus.success,
+                        Data = new
+                        {
+                            BranchId = branch.BranchId,
+                            BranchName = branch.BranchName
+                        }
                     };
                 }
             }

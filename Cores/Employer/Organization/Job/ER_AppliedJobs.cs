@@ -29,8 +29,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                             where x.DevOrganisation.OId == user.OId && x.JobId == Jid
                             select new
                             {
+                                ApplyId = x.ApplyId,
                                 UserName = x.SubUser.SubUsersDetail.FullName,
-                                Experience = x.SubUser.SubUsersTotalworkexperiences.Where(y => y.UId == x.UId).Select(y => y.Duration),
+                                Experience = (from y in c.SubUsersTotalworkexperiences
+                                              where y.UId == x.SubUser.UId
+                                              select y.Duration).SingleOrDefault(),
                                 Image = x.SubUser.SubUsersDetail.CommonFile.FilePath,
                                 ApplyDate = x.ApplyDate,
                                 Status = (x.SubUser.SubUserOrganisations.Count(y => y.UId == x.UId) == 0 ? "looking for job" : "currently working"),

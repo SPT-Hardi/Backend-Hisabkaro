@@ -24,7 +24,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,
-                                 UserName = user.SubUser.SubUsersDetail.FullName,
+                                 UserName = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                  Leave = "From :" + x.StartDate + " To :" + x.EndDate
                              }).ToList();
                 return new Result()
@@ -60,6 +60,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Leave Approve Successfully"),
+                    Data = new
+                    {
+                        Id = leave.OrgStaffLeaveId
+                    }
                 };
             }
         }

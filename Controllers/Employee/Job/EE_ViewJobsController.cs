@@ -16,15 +16,15 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpPost]
         public IActionResult Search(Models.Employee.Job.EE_ViewJob value)
         {
-            int Uid = 1;
-            return Ok(new EE_ViewJobs().Create( Uid,value));
+            int Uid = 50000002;
+            return Ok(new EE_ViewJobs().Create(Uid,value));
         }
 
         [Route("ViewJobs")]
         [HttpGet]
         public IActionResult Get()
         {
-            int Uid = 5;
+            int Uid = 50000002;
             return Ok(new EE_ViewJobs().Get(Uid));
         }
     }

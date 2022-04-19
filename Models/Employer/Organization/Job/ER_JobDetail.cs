@@ -12,8 +12,6 @@ namespace HIsabKaro.Models.Employer.Organization.Job
 
         public Models.Common.IntegerNullString Branch { get; set; } = new Models.Common.IntegerNullString();
 
-        public int Imageid { get; set; }
-
         public string Title { get; set; }
 
         public string Location { get; set; }
