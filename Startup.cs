@@ -8,6 +8,7 @@ using HIsabKaro.Cores.Employer.Organization;
 using HIsabKaro.Cores.Employer.Organization.Branch;
 using HIsabKaro.Cores.Employer.Organization.Job;
 using HIsabKaro.Cores.Employer.Organization.Staff;
+using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 using HIsabKaro.Middleware;
 using HIsabKaro.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -77,6 +78,8 @@ namespace HIsabKaro
             services.AddTransient<StaffDetails>();
             services.AddTransient<ContactAddress>();
             services.AddTransient<ShiftTimes>();
+            services.AddTransient<Statistics>();
+            services.AddTransient<Submits>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>

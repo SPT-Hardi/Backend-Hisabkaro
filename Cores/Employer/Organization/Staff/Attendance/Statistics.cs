@@ -19,7 +19,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     int presentcount = 0;
                     int latecount = 0;
                     var findorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    if (findorg == null) 
+                    {
+                        throw new ArgumentException("Organization not exist,(enter valid token)");
+                    }
                     var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
+                    if (findstaffroleid == null) 
+                    {
+                        throw new ArgumentException("Currently no staff in your organization!");
+                    }
                     var totalemp = (from obj in c.SubUserOrganisations
                                     where obj.OId== findorg.OId && obj.RId == findstaffroleid.RId
                                     select obj).ToList();
@@ -28,15 +36,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         var todaydate = date.ToString("dd/MM/yyyy");
                         
                         var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.URId == item.URId).SingleOrDefault();
-                        if (checkpresent.ChekIN.Value.ToString("dd/MM/yyyy")==todaydate) 
+                        if ((checkpresent==null ? null : checkpresent.ChekIN.Value.ToString("dd/MM/yyyy"))==todaydate) 
                         {
                             presentcount += 1;
 
                             var lateafter = (from obj in c.DevOrganisationsStaffs
                                              join obj1 in c.DevOrganisationsShiftTimes
                                              on obj.ShiftTimeId equals obj1.ShiftTimeId
-                                             where obj.OId==item.OId
+                                             where obj.OId==item.OId && obj.URId==item.URId
                                              select obj1).SingleOrDefault();
+                            if (lateafter == null) 
+                            {
+                                throw new ArgumentException("Register user as staff,make shiftId entry!");
+                            }
                             if (checkpresent.ChekIN.Value.TimeOfDay > lateafter.MarkLate) 
                             {
                                 latecount += 1;
