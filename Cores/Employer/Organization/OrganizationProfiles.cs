@@ -1,10 +1,13 @@
 ﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Models.Common;
+using HIsabKaro.Services;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -12,11 +15,13 @@ namespace HIsabKaro.Cores.Employer.Organization
 {
     public class OrganizationProfiles
     {
+        private readonly ITokenServices _tokenService;
         private readonly ContactAddress _contactAddress;
         private readonly ShiftTimes _shiftTimes;
 
-        public OrganizationProfiles(ContactAddress contactAddress,ShiftTimes shiftTimes)
+        public OrganizationProfiles(ITokenServices tokenService,ContactAddress contactAddress,ShiftTimes shiftTimes)
         {
+            _tokenService = tokenService;
             _contactAddress = contactAddress;
             _shiftTimes = shiftTimes;
         }
@@ -69,19 +74,19 @@ namespace HIsabKaro.Cores.Employer.Organization
                 };
             }
         }
-        public Result Create(int URId,Models.Employer.Organization.OrganizationProfile value)
+        public Result Create(int UserId,int OId,Models.Employer.Organization.OrganizationProfile value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope=new TransactionScope())
                 {
-                    var _URId = c.SubUserOrganisations.Where(u => u.URId == URId).SingleOrDefault();
-                    if (_URId is null)
+                    var _User = c.SubUsers.Where(u => u.UId == UserId).SingleOrDefault();
+                    if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
 
-                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == OId);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
@@ -115,19 +120,33 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
                     {
-                        OId = value.Organization.ID,
+                        OId = OId,
                         OwnershipTypeId=x.OwnershipTypeID.ID,
                         Email=x.Email,
                         MobleNumber=x.Mobilenumber,
                     }).ToList());
                     c.SubmitChanges();
-                    scope.Complete();
 
+                    var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == UserId && x.OId == OId && x.RId == _OrgRole.RId);
+                    var authclaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Role,_URID.URId.ToString()),
+                        new Claim(ClaimTypes.Sid,UserId.ToString()),
+                        new Claim(ClaimTypes.Name,_User.SubUserTokens.Select(x=>x.DeviceToken).FirstOrDefault()),
+                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
+                    };
+                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);
+
+                    scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format($"Organization Add Successfully"),
-                        Data = new { Id = _OId.OId }
+                        Data = new {
+                            OId = _OId.OId,
+                            JWT = jwtToken,
+                        }
                     };
                 }
             }

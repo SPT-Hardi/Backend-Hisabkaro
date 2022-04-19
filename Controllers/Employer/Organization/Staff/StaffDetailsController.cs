@@ -1,4 +1,6 @@
 ﻿using HIsabKaro.Cores.Employer.Organization.Staff;
+using HIsabKaro.Models.Common;
+using HisabKaroDBContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,10 +26,24 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
-            //int UserID = (int)HttpContext.Items["UserID"];
-            int UID = 50000001;
-            int RId = 10000001;
             return Ok(new StaffDetails().Create(value));
+        }
+
+        [HttpGet]
+        [Route("StaffDetails/Drop")]
+        public List<IntegerNullString> Drop([FromQuery] int OId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                return (from x in c.DevOrganisationsShiftTimes
+                        where x.OId == OId
+                        select new IntegerNullString()
+                        {
+                            ID = x.ShiftTimeId,
+                            Text = x.StartTime.ToString(),
+                        }).ToList();
+            }
+
         }
     }
 }

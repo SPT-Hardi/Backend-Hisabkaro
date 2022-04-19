@@ -13,18 +13,12 @@ namespace HIsabKaro.Controllers.Employer.Organization
     [ApiController]
     public class OrganizationDetailsController : ControllerBase
     {
-        private readonly ITokenServices _tokenService;
-
-        public OrganizationDetailsController(ITokenServices tokenService)
-        {
-            _tokenService = tokenService;
-        }
         [HttpPost]
         [Route("OrganizationDetails/Create")]
         public IActionResult Create([FromBody] Models.Employer.Organization.OrganizationDetail value)
         {
             int UserID = (int)HttpContext.Items["UserID"];
-            return Ok(new OrganizationDetails(_tokenService).Create(UserID,value));
+            return Ok(new OrganizationDetails().Create(UserID,value));
         }
     }
 }
