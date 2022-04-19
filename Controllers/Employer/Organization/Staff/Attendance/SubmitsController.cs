@@ -13,13 +13,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class SubmitsController : ControllerBase
     {
-        [HttpPost]
+       [HttpPost]
         [Route("SubmitDaily")]
-
-        public IActionResult Post([FromBody] Models.Employer.Organization.Staff.Attendance.Submit value)
+        public IActionResult Post()
         {
-            int URId = (int)HttpContext.Items["URId"];
-            return Ok(new Submits().Add(URId, value));
+            //int URId = (int)HttpContext.Items["URId"];
+            int URId = 10000024;
+            return Ok(new Submits().Add(URId));
         }
 
     }
