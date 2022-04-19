@@ -18,6 +18,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     int presentcount = 0;
                     int latecount = 0;
+                    var attendancelist = new List<Models.Employer.Organization.Staff.Attendance.AttendanceList>();
                     var findorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
                     if (findorg == null) 
                     {
@@ -33,10 +34,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     select obj).ToList();
                     foreach (var item in totalemp) 
                     {
-                        var todaydate = date.ToString("dd/MM/yyyy");
-                        
-                        var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.URId == item.URId).SingleOrDefault();
-                        if ((checkpresent==null ? null : checkpresent.ChekIN.Value.ToString("dd/MM/yyyy"))==todaydate) 
+                        var todaydate = date.Date;
+                        var today = date.ToString("dd/MM/yyyy");
+                        var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.URId == item.URId && x.ChekIN.Value.Date==todaydate).SingleOrDefault();
+                        if ((checkpresent==null ? null : checkpresent.ChekIN.Value.ToString("dd/MM/yyyy"))==today) 
                         {
                             presentcount += 1;
 
@@ -56,18 +57,27 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             
                         }
                     }
+                    var statistics = new Models.Employer.Organization.Staff.Attendance.Statistics()
+                    {
+                        TotalEmployee=totalemp.Count(),
+                        Present=presentcount,
+                        Absent=totalemp.Count()-presentcount,
+                        Late=latecount,
+                        WeeklyOff=0,
+                    };
+                    attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
+                    {
+
+                    });
+                    
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = "Staff attendance-statistics get successfully!",
-                        Data = new 
+                        Data = new Models.Employer.Dashboard.Attendance.Report() 
                         {
-                            TotalEmployee=totalemp.Count(),
-                            Present=presentcount,
-                            Absent=totalemp.Count()-presentcount,
-                            Late=latecount,
-                          
-                        },
+                            
+                        }
                     };
                 }
             }

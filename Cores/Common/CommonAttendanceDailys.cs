@@ -12,7 +12,5 @@ namespace HIsabKaro.Cores.Common
     public class CommonAttendanceDailys
     {
        
-       
-        
     }
 }

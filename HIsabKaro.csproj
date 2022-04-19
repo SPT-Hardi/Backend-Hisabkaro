@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Employer\Organization\Staff\Loan\**" />
+    <Compile Remove="Cores\Employer\Organization\Staff\Loan\**" />
+    <Compile Remove="Models\Employer\Organization\Staff\Loan\**" />
+    <Content Remove="Controllers\Employer\Organization\Staff\Loan\**" />
+    <Content Remove="Cores\Employer\Organization\Staff\Loan\**" />
+    <Content Remove="Models\Employer\Organization\Staff\Loan\**" />
+    <EmbeddedResource Remove="Controllers\Employer\Organization\Staff\Loan\**" />
+    <EmbeddedResource Remove="Cores\Employer\Organization\Staff\Loan\**" />
+    <EmbeddedResource Remove="Models\Employer\Organization\Staff\Loan\**" />
+    <None Remove="Controllers\Employer\Organization\Staff\Loan\**" />
+    <None Remove="Cores\Employer\Organization\Staff\Loan\**" />
+    <None Remove="Models\Employer\Organization\Staff\Loan\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Devart.Data.SqlServer.Linq" Version="4.9.2403" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
@@ -35,12 +50,6 @@
       <Generator>DevartLinqToSqlGenerator</Generator>
       <LastGenOutput>DataContext.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Employer\Organization\Staff\Loan\" />
-    <Folder Include="Cores\Employer\Organization\Staff\Loan\" />
-    <Folder Include="Models\Employer\Organization\Staff\Loan\" />
   </ItemGroup>
 
 </Project>
