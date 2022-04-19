@@ -33,7 +33,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
 
         [Route("Job/{Jid}")]
         [HttpPut]
-        public IActionResult Update(Models.Employer.Organization.Job.ER_JobDetail value,int Jid)
+        public IActionResult Update(int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
             int Uid = 50000001;
             int Rid = 1000004;

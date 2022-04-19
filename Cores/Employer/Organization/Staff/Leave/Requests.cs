@@ -33,6 +33,10 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Leave Apply Successfully"),
+                    Data = new
+                    {
+                        Id = request.OrgStaffLeaveId
+                    }
                 };
             }
         }

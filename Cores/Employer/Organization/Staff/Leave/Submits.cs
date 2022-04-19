@@ -10,30 +10,43 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 {
     public class Submits
     {
-        public Result Create(Models.Employer.Organization.Staff.Leave.Submit value,int UID) 
+        public Result Create(int URId,int Uid,int Rid,Models.Employer.Organization.Staff.Leave.Submit value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                   // var roleid = c.SubUserOrganisations.Where(x => x.RId == value.StaffRId).SingleOrDefault();
-                    OrgStaffsLeaveApplication leavesubmit = new OrgStaffsLeaveApplication();
-                    leavesubmit.StartDate = value.StartDate;
-                    leavesubmit.EndDate = value.EndDate;
-                    leavesubmit.Reason = value.Reason;
-                    leavesubmit.IsPaidLeave = value.IsPaidLeave;
-                    leavesubmit.IsLeaveApproved = true;
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                    if (user == null)
+                    {
+                        throw new ArgumentException("User not found!!");
+                    }
 
-                    c.OrgStaffsLeaveApplications.InsertOnSubmit(leavesubmit);
+                    var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    if (staff == null)
+                    {
+                        throw new ArgumentException("Staff not found!!");
+                    }
+
+                    var request = new OrgStaffsLeaveApplication()
+                    {
+                        URId = URId,
+                        StartDate = value.StartDate,
+                        EndDate = value.EndDate,
+                        Reason = value.Reason,
+                        IsPaidLeave = value.IsPaidLeave,
+                        IsLeaveApproved = true
+                    };
+                    c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                     c.SubmitChanges();
-
                     scope.Complete();
-
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "StaffName-{} leave details added successfully!",
-                        Data = "",
+                        Message = "Staff leave details added successfully!",
+                        Data = new {
+                           Id = request.OrgStaffLeaveId,
+                        },
                     };
                 }
             }

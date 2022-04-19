@@ -42,7 +42,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                             var _job = new EmprJob()
                             {
                                 Title = value.Title,
-                                FileId = value.Imageid,
                                 Location = value.Location,
                                 MinSalary = value.MinSalary,
                                 MaxSalary = value.MaxSalary,
@@ -51,7 +50,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 PostDate = DateTime.Now,
                                 EndDate = value.Enddate.ToLocalTime(),
                                 OId = (int)value.Organisation.ID,
-                                BranchID = value.Branch.ID == null ? null : value.Branch.ID,
+                                BranchID = value.Branch.ID,
                                 URId = user.URId,
                                 Status = "Open"
                             };
@@ -92,7 +91,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     var job = new EmprJob()
                     {
                         Title = value.Title,
-                        FileId = value.Imageid,
                         Location = value.Location,
                         MinSalary = value.MinSalary,
                         MaxSalary = value.MaxSalary,
@@ -154,7 +152,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     }
 
                     job.Title = value.Title;
-                    job.FileId = value.Imageid;
                     job.Location = value.Location;
                     job.MinSalary = value.MinSalary;
                     job.MaxSalary = value.MaxSalary;

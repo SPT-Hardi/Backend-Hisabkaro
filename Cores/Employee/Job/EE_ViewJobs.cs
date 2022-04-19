@@ -13,6 +13,12 @@ namespace HIsabKaro.Cores.Employee.Job
         {
             using(DBContext c = new DBContext())
             {
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                if (user == null)
+                {
+                    throw new ArgumentException("User Doesn't Exist");
+                }
+
                 var job = (from x in c.EmprJobs
                            where x.DevOrganisation.OrganisationName.Contains(value.CName)
                            select new
@@ -60,6 +66,12 @@ namespace HIsabKaro.Cores.Employee.Job
         {
             using (DBContext c = new DBContext())
             {
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                if (user == null)
+                {
+                    throw new ArgumentException("User Doesn't Exist");
+                }
+
                 var job = (from x in c.EmprJobs
                            select new
                            {

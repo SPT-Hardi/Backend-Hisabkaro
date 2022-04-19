@@ -29,7 +29,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpPost]
         public IActionResult Create([FromBody]Models.Employer.Organization.Branch.BranchDetail value)
         {
-            int Uid = 1;
+            int Uid = 50000001;
             return Ok(_branchDetails.Create(Uid,value));
         }
 
@@ -37,7 +37,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpPut]
         public IActionResult Update([FromBody]Models.Employer.Organization.Branch.BranchDetail value,int BId)
         {
-            int Uid = 1;
+            int Uid = 50000001;
             return Ok(_branchDetails.Update(Uid, BId,value));
         }
 

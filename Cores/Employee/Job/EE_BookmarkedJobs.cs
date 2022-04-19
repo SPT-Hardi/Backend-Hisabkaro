@@ -66,6 +66,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 var save = (from x in c.EmpBookmarkJobsDetails
                             where x.UId == Uid
                             select new { 
+                              SaveId = x.BookMarkId,
                               JobTitle = x.EmprJob.Title,
                               CompanyName = x.DevOrganisation.OrganisationName,
                               BranchName = x.DevOrganisationBranch.BranchName,
