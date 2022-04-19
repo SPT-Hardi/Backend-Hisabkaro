@@ -42,7 +42,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                             var _job = new EmprJob()
                             {
                                 Title = value.Title,
-                                FileId = value.Imageid,
                                 Location = value.Location,
                                 MinSalary = value.MinSalary,
                                 MaxSalary = value.MaxSalary,
@@ -92,7 +91,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     var job = new EmprJob()
                     {
                         Title = value.Title,
-                        FileId = value.Imageid,
                         Location = value.Location,
                         MinSalary = value.MinSalary,
                         MaxSalary = value.MaxSalary,
@@ -154,7 +152,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     }
 
                     job.Title = value.Title;
-                    job.FileId = value.Imageid;
                     job.Location = value.Location;
                     job.MinSalary = value.MinSalary;
                     job.MaxSalary = value.MaxSalary;
@@ -244,7 +241,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                            id = t.JobTypeId,
                                            type = t.Type
                                          }).ToList().Distinct(),
-                                 Image = x.CommonFile.FilePath,
                                  Location = x.Location,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Roles = x.Roles,
@@ -299,7 +295,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                              id = t.JobTypeId,
                                              type = t.Type
                                          }).ToList(),
-                                 Image = x.CommonFile.FilePath,
                                  Location = x.Location,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Roles = x.Roles,

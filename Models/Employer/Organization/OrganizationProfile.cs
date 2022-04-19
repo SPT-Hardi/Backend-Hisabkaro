@@ -10,7 +10,6 @@ namespace HIsabKaro.Models.Employer.Organization
 {
     public class OrganizationProfile
     {
-        public Common.IntegerNullString Organization { get; set; } = new Common.IntegerNullString();
         [RegularExpression(@"^[0-9]{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[A-Z]{1}\d{1}$", ErrorMessage = "Invalid GST Number!")]
         public string GSTNumber { get; set; }
         public string GST { get; set; }
@@ -24,7 +23,6 @@ namespace HIsabKaro.Models.Employer.Organization
         public string Email { get; set; }
         public string MobileNumber { get; set; }
         public List<Partner> Partners { get; set; } = new List<Partner>();
-        public DateTime Time { get; set; }
     }
     
     public class Partner

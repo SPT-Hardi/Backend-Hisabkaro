@@ -1,6 +1,7 @@
 ﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Cores.Employer.Organization;
+using HIsabKaro.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,13 +15,15 @@ namespace HIsabKaro.Controllers.Employer.Organization
     [ApiController]
     public class OrganizationProfilesController : ControllerBase
     {
-        private readonly OrganizationProfiles _organizationProfiles;
+        private readonly OrganizationProfiles _organizationProfiles; 
+        private readonly ITokenServices _tokenService;
         private readonly ContactAddress _contactAddress;
         private readonly ShiftTimes _shiftTimes;
 
-        public OrganizationProfilesController(OrganizationProfiles organizationProfiles,ContactAddress contactAddress,ShiftTimes shiftTimes )
+        public OrganizationProfilesController(OrganizationProfiles organizationProfiles, ITokenServices tokenService, ContactAddress contactAddress,ShiftTimes shiftTimes )
         {
             _organizationProfiles = organizationProfiles;
+            _tokenService = tokenService;
             _contactAddress = contactAddress;
             _shiftTimes = shiftTimes;
         }
@@ -31,13 +34,13 @@ namespace HIsabKaro.Controllers.Employer.Organization
         {
             return Ok(_organizationProfiles.One(OId));
         }
-        [HttpPost]
-        [Route("OrganizationProfiles/Create")]
 
-        public IActionResult Create([FromBody] Models.Employer.Organization.OrganizationProfile value)
+        [HttpPost]
+        [Route("OrganizationProfiles/Create/{OId}")]
+        public IActionResult Create([FromRoute] int OId,[FromBody] Models.Employer.Organization.OrganizationProfile value)
         {
-            int URId = (int)HttpContext.Items["URId"];
-            return Ok(_organizationProfiles.Create(URId, value ));
+            int UserId = (int)HttpContext.Items["UserID"];
+            return Ok(_organizationProfiles.Create(UserId,OId, value ));
         }
     }
 }

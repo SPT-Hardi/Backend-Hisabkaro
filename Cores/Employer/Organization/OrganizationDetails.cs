@@ -15,12 +15,6 @@ namespace HIsabKaro.Cores.Employer.Organization
 {
     public class OrganizationDetails
     {
-        private readonly ITokenServices _tokenServices;
-
-        public OrganizationDetails(ITokenServices tokenServices)
-        {
-            _tokenServices = tokenServices;
-        }
         public Result Create(int UserID,OrganizationDetail value)
         {
             using (DBContext c = new DBContext())
@@ -74,25 +68,20 @@ namespace HIsabKaro.Cores.Employer.Organization
                     };
                     c.SubUserOrganisations.InsertOnSubmit(_subOrg);
                     c.SubmitChanges();
-
-                    var authclaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Role,_subOrg.URId.ToString()),
-                        new Claim(ClaimTypes.Sid,_subOrg.UId.ToString()),
-                        new Claim(ClaimTypes.Name,_subOrg.SubUser.SubUsersDetail.FullName),
-                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
-                    };
-                    var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
-
+                    
                     scope.Complete();
 
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format($"Organisation Add Successfully"),
-                        Data = new { 
-                            OrganisationId = Org.OId,
-                            JWT = jwtToken,
+                        Data = new {
+                            Organization = new IntegerNullString
+                            {
+                                ID = Org.OId,
+                                Text = Org.OrganisationName
+                            },
+                            URId= _subOrg.URId,
                         }
                     };
                 }

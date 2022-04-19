@@ -33,7 +33,6 @@ namespace HIsabKaro.Cores.Employee.Job
                                            id = t.JobTypeId,
                                            type = t.Type
                                        }).ToList().Distinct(),
-                               Image = x.CommonFile.FilePath,
                                Location = x.Location,
                                Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                Roles = x.Roles,
@@ -79,7 +78,6 @@ namespace HIsabKaro.Cores.Employee.Job
                                            id = t.JobTypeId,
                                            type = t.Type
                                        }).ToList().Distinct(),
-                               Image = x.CommonFile.FilePath,
                                Location = x.Location,
                                Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                Roles = x.Roles,
