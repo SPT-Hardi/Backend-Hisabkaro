@@ -40,7 +40,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                      select new EmpResumeEducation()
                                      {
                                          EducationNameId=obj.EducationName.ID,
-                                         //EducationSteamName=obj.EducationStreamName,
+                                         EducationSteamName=obj.EducationStreamName,
                                          InstituteName=obj.InstituteName,
                                          UId=int.Parse(UID),
                                          StartDate=obj.StartDate,
@@ -76,7 +76,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                {
                                    EmpResumeEducationId = obj.EmpResumeEducationId,
                                    EducationName = new IntegerNullString() { ID = obj.EducationNameId, Text = obj.SubFixedLookup.FixedLookup },
-                                   //EducationStreamName = obj.EducationSteamName,
+                                   EducationStreamName = obj.EducationSteamName,
                                    InstituteName = obj.InstituteName,
                                    StartDate = Convert.ToDateTime(obj.StartDate),
                                    EndDate = Convert.ToDateTime(obj.EndDate),
@@ -118,7 +118,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     if (education.EducationNameId == value.EducationName.ID)
                     {
 
-                       // education.EducationSteamName = value.EducationStreamName;
+                        education.EducationSteamName = value.EducationStreamName;
                         education.InstituteName = value.InstituteName;
                         education.EndDate = value.EndDate;
                         education.StartDate = value.StartDate;
@@ -140,7 +140,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                         {
                             EmpResumeEducationId = education.EmpResumeEducationId,
                             EducationName = new IntegerNullString() { ID = education.EducationNameId, Text = text },
-                            //EducationStreamName = education.EducationSteamName,
+                            EducationStreamName = education.EducationSteamName,
                         }
                     };
                 }

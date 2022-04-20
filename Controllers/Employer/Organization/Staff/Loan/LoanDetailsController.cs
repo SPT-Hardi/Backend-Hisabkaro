@@ -19,5 +19,21 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
             int URId = (int)HttpContext.Items["URId"];
             return Ok(new LoanDetails().Create(URId,StaffId, value));
         }
+
+        [Route("Orgloan")]
+        [HttpGet]
+        public IActionResult GetOrg()
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new LoanDetails().GetOrgLoan(URId));
+        }
+
+        [Route("Staffloan")]
+        [HttpGet]
+        public IActionResult GetStaff()
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new LoanDetails().GetStaffLoan(URId));
+        }
     }
 }

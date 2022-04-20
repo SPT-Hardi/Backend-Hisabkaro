@@ -11,9 +11,9 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Loan
 
         public DateTime EndDate { get; set; }
 
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
 
-        public float Monthlypay { get; set; }
+        public decimal Monthlypay { get; set; }
 
         public string Description { get; set; }
     }
