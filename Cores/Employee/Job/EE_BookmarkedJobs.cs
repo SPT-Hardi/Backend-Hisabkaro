@@ -9,7 +9,7 @@ namespace HIsabKaro.Cores.Employee.Job
 {
     public class EE_BookmarkedJobs
     {
-        public Result Create(int Uid,int Jid)
+        public Result Create(int UserId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -20,11 +20,11 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
 
                 var save = (from x in c.EmpBookmarkJobsDetails
-                            where x.EmprJob.DevOrganisation.OId == job.OId && x.JobId == job.JobId && x.UId == Uid
+                            where x.EmprJob.DevOrganisation.OId == job.OId && x.JobId == job.JobId && x.UId == UserId
                             select x).SingleOrDefault();
                 if (save != null)
                 {
-                    save.UId = Uid;
+                    save.UId = UserId;
                     save.JobId = job.JobId;
                     save.OId = job.OId;
                     save.BranchId = job.BranchID;
@@ -38,7 +38,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
                 c.EmpBookmarkJobsDetails.InsertOnSubmit(new EmpBookmarkJobsDetail()
                 {
-                    UId = Uid,
+                    UId = UserId,
                     JobId = job.JobId,
                     OId = job.OId,
                     BranchId = job.BranchID,
@@ -53,18 +53,18 @@ namespace HIsabKaro.Cores.Employee.Job
             }
         }
 
-        public Result One(int Uid)
+        public Result One(int UserId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
                 }
 
                 var save = (from x in c.EmpBookmarkJobsDetails
-                            where x.UId == Uid
+                            where x.UId == UserId
                             select new { 
                               SaveId = x.BookMarkId,
                               JobTitle = x.EmprJob.Title,

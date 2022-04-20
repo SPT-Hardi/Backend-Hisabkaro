@@ -9,11 +9,11 @@ namespace HIsabKaro.Cores.Employee.Job
 {
     public class EE_ViewJobs
     {
-        public Result Create(int Uid,Models.Employee.Job.EE_ViewJob value)
+        public Result Create(int UserId, Models.Employee.Job.EE_ViewJob value)
         {
             using(DBContext c = new DBContext())
             {
-                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
@@ -47,7 +47,7 @@ namespace HIsabKaro.Cores.Employee.Job
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
                                Organization = x.DevOrganisation.OrganisationName,
-                               Status = (x.EmpApplyJobDetails.Count(y => y.UId == Uid) != 0 ? "Applied" : ""),
+                               Status = (x.EmpApplyJobDetails.Count(y => y.UId == UserId) != 0 ? "Applied" : ""),
                            }).ToList();
                 if (job.Count == 0)
                 {
@@ -62,11 +62,11 @@ namespace HIsabKaro.Cores.Employee.Job
             }
         }
 
-        public Result Get(int Uid)
+        public Result Get(int UserId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUsers.SingleOrDefault(x => x.UId == Uid);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
@@ -99,7 +99,7 @@ namespace HIsabKaro.Cores.Employee.Job
                                PostDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.PostDate),
                                EndDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.EndDate),
                                Organization = x.DevOrganisation.OrganisationName,
-                               Status = (x.EmpApplyJobDetails.Count(y => y.UId == Uid) != 0 ? "Applied" : ""),
+                               Status = (x.EmpApplyJobDetails.Count(y => y.UId == UserId) != 0 ? "Applied" : ""),
                            }).ToList();
                 if (job.Count == 0)
                 {

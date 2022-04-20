@@ -24,9 +24,11 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var skills = (from obj in value.skillDetails
                                   select new EmpResumeSkill
                                   {
-                                      
+                                      UId = UID,
                                       SkillName=obj.SkillName,
                                   }).ToList();
+                    c.EmpResumeSkills.InsertAllOnSubmit(skills);
+                    c.SubmitChanges();
                     var res = (from obj in skills
                                select new Models.Employee.Resume.SkillDetails()
                                {

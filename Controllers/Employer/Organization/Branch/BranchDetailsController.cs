@@ -29,32 +29,32 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpPost]
         public IActionResult Create([FromBody]Models.Employer.Organization.Branch.BranchDetail value)
         {
-            int Uid = 50000001;
-            return Ok(_branchDetails.Create(Uid,value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_branchDetails.Create(URId, value));
         }
 
         [Route("Branch/{BId}")]
         [HttpPut]
         public IActionResult Update([FromBody]Models.Employer.Organization.Branch.BranchDetail value,int BId)
         {
-            int Uid = 50000001;
-            return Ok(_branchDetails.Update(Uid, BId,value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_branchDetails.Update(URId, BId,value));
         }
 
-        [Route("OrgBranch/{Oid}")]
+        [Route("OrgBranch")]
         [HttpGet]
-        public IActionResult GetOrg([FromRoute]int Oid)
+        public IActionResult GetOrgBranch()
         {
-            int Uid = 1;
-            return Ok(_branchDetails.GetOrg(Oid,Uid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_branchDetails.GetOrg(URId));
         }
 
         [Route("Branch/{Bid}")]
         [HttpGet]
         public IActionResult GetBranch([FromRoute]int Bid)
         {
-            int Uid = 1;
-            return Ok(_branchDetails.GetBranch(Bid,Uid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_branchDetails.GetBranch(Bid, URId));
         }
     }
 }
