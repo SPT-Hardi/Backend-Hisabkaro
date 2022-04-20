@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
 {
-    public class Statistics
+    public class Statistic
     {
         public int TotalEmployee { get; set; }
         public int Present { get; set; }

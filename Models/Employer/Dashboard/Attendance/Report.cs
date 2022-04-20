@@ -8,7 +8,7 @@ namespace HIsabKaro.Models.Employer.Dashboard.Attendance
 {
     public class Report
     {
-        public Statistics statistics { get; set; } = new Statistics();
+        public Statistic statistics { get; set; } = new Statistic();
         public List<AttendanceList> attendanceLists { get; set; } = new List<AttendanceList>();
     }
 }

@@ -89,7 +89,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
                         }
                     }
-                    var name = staffattendance == null ? null : c.SubUsersDetails.Where(x=>x.UId==staffexist.UId).SingleOrDefault().FullName;
+                    var name = c.SubUsersDetails.Where(x=>x.UId==staffexist.UId).SingleOrDefault().FullName;
                     
                     scope.Complete();
                     return new Result()

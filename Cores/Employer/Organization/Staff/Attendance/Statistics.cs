@@ -59,6 +59,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
                             {
                                 URId = item.URId,
+                                AttendanceDate=todaydate.ToString("dd/MM/yyyy"),
                                 CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                 CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                 Status = "Present",
@@ -74,6 +75,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
                             {
                                 URId = item.URId,
+                                AttendanceDate = todaydate.ToString("dd/MM/yyyy"),
                                 CheckIN = "00:00",
                                 CheckOUT = "00:00",
                                 Status = "Absent",
@@ -83,7 +85,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             });
                         }
                     }
-                    var statistics = new Models.Employer.Organization.Staff.Attendance.Statistics()
+                    var statistics = new Models.Employer.Organization.Staff.Attendance.Statistic()
                     {
                         TotalEmployee=totalemp.Count(),
                         Present=presentcount,
