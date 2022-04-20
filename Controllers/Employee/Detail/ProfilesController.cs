@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Employee.Details
 {
-    [Route("Employee/Details")]
+    /*[Route("Employee/Details")]
     [ApiController]
     public class ProfilesController : ControllerBase
     {
@@ -83,5 +83,5 @@ namespace HIsabKaro.Controllers.Employee.Details
         {
             return Ok();
         }
-    }
+    }*/
 }

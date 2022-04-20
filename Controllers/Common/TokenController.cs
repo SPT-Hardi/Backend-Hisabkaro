@@ -2,6 +2,7 @@
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Common
@@ -11,16 +12,18 @@ namespace HIsabKaro.Controllers.Common
     public class TokenController : ControllerBase
     {
         private readonly ITokenServices _tokenService;
+        private readonly IConfiguration _configuration;
 
-        public TokenController(ITokenServices tokenService)
+        public TokenController(ITokenServices tokenService, IConfiguration configuration)
         {
             _tokenService = tokenService;
+            _configuration = configuration;
         }
 
-        [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh(Token value)
+        [HttpPost("Refresh/{URId}")]
+        public async  Task<IActionResult> Refresh(int URId,Token value)
         {
-            return Ok(new Tokens(_tokenService).RefreshToken(value));   
+            return Ok(new Tokens(_tokenService,_configuration).RefreshToken(URId,value));   
         }
 
         /*[Authorize]
