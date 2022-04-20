@@ -1,5 +1,6 @@
 ﻿using HIsabKaro.Cores.Employer.Organization.Staff;
 using HIsabKaro.Models.Common;
+using HIsabKaro.Services;
 using HisabKaroDBContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,19 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
     [ApiController]
     public class StaffDetailsController : ControllerBase
     {
+        private readonly StaffDetails _staffDetails;
+        private readonly ITokenServices _tokenService;
+
+        public StaffDetailsController(StaffDetails staffDetails,ITokenServices tokenService)
+        {
+            _staffDetails = staffDetails;
+            _tokenService = tokenService;
+        }
         [HttpGet]
         [Route("StaffDetails/One")]
         public IActionResult One([FromQuery] int OId)
         {
-            return Ok(new StaffDetails().One(OId));
+            return Ok(_staffDetails.One(OId));
         }
 
         [HttpPost]
@@ -26,7 +35,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
-            return Ok(new StaffDetails().Create(value));
+            return Ok(_staffDetails.Create(value));
         }
 
         [HttpGet]

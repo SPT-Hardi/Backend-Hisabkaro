@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Models.Common;
+using HIsabKaro.Services;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 {
     public class StaffDetails
     {
+        private readonly ITokenServices _tokenService;
+        
+        public StaffDetails(ITokenServices tokenService)
+        {
+            _tokenService = tokenService;
+        }
         public Result One(int OId)
         {
             using (DBContext c = new DBContext())
@@ -52,11 +59,23 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         throw new ArgumentException("MoileNumber and AlternerNumaber Are Same!");
                     }
                     var _OrgRole = c.SubRoles.Where(x => x.RoleName == "Staff".ToLower()).SingleOrDefault(x => x.OId == _OId.OId);
+                    if (_OrgRole is null)
+                    {
+                        var _role = new SubRole()
+                        {
+                            OId = _OId.OId,
+                            RoleName = "staff",
+                            LoginTypeId = 20,
+                        };
+                        c.SubRoles.InsertOnSubmit(_role);
+                        c.SubmitChanges();
+                    }
 
+                    var _OrgRoles = c.SubRoles.Where(x => x.RoleName == "Staff".ToLower()).SingleOrDefault(x => x.OId == _OId.OId);
                     var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
                     if (_subUser is not null)
                     {
-                        var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
+                        var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
                         if (_subUserOrg is not null)
                         {
                             throw new ArgumentException($"Staff Member Are Alredy Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
@@ -67,7 +86,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             {
                                 UId = _subUser.UId,
                                 OId = _OId.OId,
-                                RId = _OrgRole.RId
+                                RId = _OrgRoles.RId
                             };
                             c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                             c.SubmitChanges();
@@ -104,8 +123,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         c.SubmitChanges();
                     }
 
-                    var _users=c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
+                    var _users = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
 
                     var staff = new DevOrganisationsStaff()
                     {
@@ -123,13 +142,30 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     }
                     c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                     c.SubmitChanges();
+                    int sid = staff.StaffId;
+
+                    var authclaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Role,_URID.URId.ToString()),
+                        new Claim(ClaimTypes.Sid,_users.UId.ToString()),
+                        new Claim(ClaimTypes.Name,_users.SubUsersDetail.FullName),
+                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                    };
+                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);
                     scope.Complete();
+
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = string.Format("Staff Add Successfully!"),
+                        Data = new
+                        {
+                            OId = value.Organization.ID,
+                            StaffId = sid,
+                            JWT = jwtToken,
+                        }
+                    };
                 }
-                return new Result()
-                {
-                    Status = Result.ResultStatus.success,
-                    Message = string.Format("Staff Add Successfully!"),
-                };
             }
         }
     }

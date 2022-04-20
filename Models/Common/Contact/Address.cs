@@ -12,6 +12,6 @@ namespace HIsabKaro.Models.Common.Contact
         public string City { get; set; }
         public string State { get; set; }
         public int PinCode { get; set; }
-        public string LandMark { get; set; }
+        public string ? LandMark { get; set; }
     }
 }
