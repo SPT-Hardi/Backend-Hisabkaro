@@ -4,6 +4,7 @@ using HIsabKaro.Cores.Common.File;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Cores.Developer.Subscriber;
 using HIsabKaro.Cores.Employee.Job;
+using HIsabKaro.Cores.Employee.Staff;
 using HIsabKaro.Cores.Employer.Organization;
 using HIsabKaro.Cores.Employer.Organization.Branch;
 using HIsabKaro.Cores.Employer.Organization.Job;
@@ -80,6 +81,7 @@ namespace HIsabKaro
             services.AddTransient<ShiftTimes>();
             services.AddTransient<Statistics>();
             services.AddTransient<Submits>();
+            services.AddTransient<StaffPersonalDetails>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>

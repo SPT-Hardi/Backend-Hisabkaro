@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Common.Contact
                     {
                         Status = Models.Common.Result.ResultStatus.success,
                         Message = string.Format("Contact Address Added Successfully!"),
-                        Data = _adds.ContactAddressId
+                        Data =_adds.ContactAddressId
                     };
                 }
             }            

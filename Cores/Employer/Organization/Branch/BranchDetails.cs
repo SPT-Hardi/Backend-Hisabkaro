@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     {
                         BranchName = value.BranchName,
                         ContactAddressId = _AId.Data,
-                        UId = Uid,
+                        URId = Uid,
                         Latitude = value.latitude,
                         Longitude = value.longitude,
                         OId = value.Organization.ID
@@ -107,7 +107,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     var _AId = _contactAddress.Create(value.Address);
                     branch.BranchName = value.BranchName;
                     branch.ContactAddressId = _AId.Data;
-                    branch.UId = Uid;
+                    branch.URId = Uid;
                     branch.Latitude = value.latitude;
                     branch.Longitude = value.longitude;
                     branch.OId = value.Organization.ID;
@@ -132,7 +132,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
             using (DBContext c = new DBContext())
             {
                 var query = (from x in c.DevOrganisationBranches
-                             where x.OId == Oid && x.UId == Uid
+                             where x.OId == Oid && x.URId == Uid
                              orderby x.OId ascending
                              select new
                              {
@@ -155,7 +155,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
             using (DBContext c = new DBContext())
             {
                 var query = (from x in c.DevOrganisationBranches
-                             where x.BranchId == Bid && x.UId == Uid
+                             where x.BranchId == Bid && x.URId == Uid
                              orderby x.OId ascending
                              select new
                              {
