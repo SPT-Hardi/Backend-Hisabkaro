@@ -14,7 +14,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff
         public string MobileNumber { get; set; }
         public string AMobileNumber { get; set; }
         public Common.IntegerNullString Organization { get; set; } = new Common.IntegerNullString();
-        public Common.IntegerNullString? Branch { get; set; } = new Common.IntegerNullString();
+        public Common.IntegerNullString ? Branch { get; set; } = new Common.IntegerNullString();
         public Common.IntegerNullString ShiftTiming { get; set; } = new Common.IntegerNullString();
         public bool IsOpenWeek { get; set; }
         public Common.IntegerNullString WeekOff1 { get; set; } = new Common.IntegerNullString();

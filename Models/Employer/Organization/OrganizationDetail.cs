@@ -8,7 +8,7 @@ namespace HIsabKaro.Models.Employer.Organization
 {
     public class OrganizationDetail
     {
-        public string? Image { get; set; }
+        public string ? Image { get; set; }
         [Required(ErrorMessage = "Organization Name Is Required!")]
         public string OrgName { get; set; }
         public Common.IntegerNullString InudstrySector { get; set; } = new Common.IntegerNullString();
