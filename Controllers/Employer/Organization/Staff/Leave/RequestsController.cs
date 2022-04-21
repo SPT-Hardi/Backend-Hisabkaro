@@ -16,9 +16,16 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
         [Route("Request")]
         public IActionResult Create(Models.Employer.Organization.Staff.Leave.Request value)
         {
-            int Uid = 50000012;
-            int Rid = 1000001;
-            return Ok(new Requests().Create(Uid, Rid, value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new Requests().Create(URId, value));
+        }
+
+        [HttpGet]
+        [Route("Request/View")]
+        public IActionResult Get()
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new Requests().Get(URId));
         }
     }
 }
