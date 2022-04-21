@@ -29,6 +29,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                             where x.StaffEmpId == _Staff.StaffEmpId
                             select new
                             {
+                                URId=URId,
                                 DOJ=x.DOJ,
                                 Designation = x.Designation,
                                 Department = x.Department,
