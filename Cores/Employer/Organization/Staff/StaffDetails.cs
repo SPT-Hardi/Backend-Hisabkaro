@@ -117,7 +117,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             UId = _user.UId,
                             OId = _OId.OId,
-                            RId = _OrgRole.RId
+                            RId = _OrgRoles.RId
                         };
                         c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                         c.SubmitChanges();
@@ -125,6 +125,23 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
                     var _users = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
+
+                    //var _s = (from x in c.DevOrganisationsStaffs
+                    //          where x.OId == _OId.OId && x.URId == _URID.URId
+                    //          select x).FirstOrDefault();
+                    var _Sid = (from x in c.DevOrganisationsStaffs
+                              where x.OId == _OId.OId
+                              select x).Max(x => x.SId);
+                    var i = _Sid;
+                    if (_Sid == null)
+                    {
+                        _Sid = 1;
+                    }
+                    else
+                    {
+                        _Sid += 1;
+                    }
+                    var id = _Sid;
 
                     var staff = new DevOrganisationsStaff()
                     {
@@ -134,6 +151,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         ShiftTimeId = value.ShiftTiming.ID,
                         Salary = value.Salary,
                         IsOpenWeek = value.IsOpenWeek,
+                        SId= _Sid
                     };
                     if (value.IsOpenWeek == false)
                     {
