@@ -26,9 +26,10 @@ namespace HIsabKaro.Models.Employee.Resume
     }
     public class Certificate
     {
-        [JsonIgnore]
+       
         public int EmpResumeOtherCertificateId { get; set; }
-        [Required]
+     
         public string CertificateFGUID { get;set; }
     }
+    
 }

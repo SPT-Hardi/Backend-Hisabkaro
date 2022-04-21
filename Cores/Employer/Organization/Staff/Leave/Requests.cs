@@ -9,11 +9,11 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
 {
     public class Requests
     {
-        public Result Create(int Uid, int Rid, Models.Employer.Organization.Staff.Leave.Request value)
+        public Result Create(int URId, Models.Employer.Organization.Staff.Leave.Request value)
         {
             using(DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.RId == Rid && x.UId == Uid);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -25,7 +25,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     StartDate = value.StartDate,
                     EndDate = value.EndDate,
                     Reason = value.reason,
-                    IsPaidLeave = value.Ispaid
+                    IsPaidLeave = value.Ispaid,
+                    IsLeaveApproved = "Pending"
                 };
                 c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                 c.SubmitChanges();
@@ -35,8 +36,44 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     Message = string.Format("Leave Apply Successfully"),
                     Data = new
                     {
-                        Id = request.OrgStaffLeaveId
+                        Id = request.OrgStaffLeaveId,
+                        Name = user.SubUser.SubUsersDetail.FullName
                     }
+                };
+            }
+        }
+
+        public Result Get(int URId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User not found!!");
+                }
+
+                var leave = (from x in c.OrgStaffsLeaveApplications
+                             where x.URId == user.URId
+                             select new
+                             {
+                                 Id = x.OrgStaffLeaveId,
+                                 Reason = x.Reason,
+                                 StartDate = "From :" + x.StartDate,
+                                 EndDate = "To :" + x.EndDate,
+                                 Paid = x.IsPaidLeave == true ? "Paid" : "Unpaid",
+                                 IsApprove = x.IsLeaveApproved
+                             }).ToList();
+                if (leave == null)
+                {
+                    throw new ArgumentException("No Data found!!");
+                }
+
+                return new Result()
+                {
+                    Message = string.Format("Leave Request"),
+                    Status = Result.ResultStatus.success,
+                    Data = leave,
                 };
             }
         }

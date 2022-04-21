@@ -14,21 +14,27 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
     public class ApprovesController : ControllerBase
     {
         [HttpGet]
-        [Route("ViewRequest")]
+        [Route("Approve/View")]
         public IActionResult Get()
         {
-            int Uid = 50000003;
-            int Rid = 1000002;
-            return Ok(new Approves().Get(Uid, Rid));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new Approves().Get(URId));
         }
 
         [HttpPut]
         [Route("Approve/{leaveId}")]
         public IActionResult Update([FromRoute] int leaveId, [FromBody] Models.Employer.Organization.Staff.Leave.Approve value)
         {
-            int Uid = 50000001;
-            int Rid = 1000001;
-            return Ok(new Approves().Update(Uid, Rid, leaveId, value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new Approves().Update(URId,leaveId, value));
+        }
+
+        [HttpPost]
+        [Route("Remove/{leaveId}")]
+        public IActionResult Delete([FromRoute] int leaveId)
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new Approves().Remove(URId, leaveId));
         }
     }
 }

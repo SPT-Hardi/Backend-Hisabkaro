@@ -13,12 +13,11 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
     public class SubmitsController : ControllerBase
     {
         [HttpPost]
-        [Route("Submit/{URId}")]
-        public IActionResult Post([FromRoute] int URId, [FromBody] Models.Employer.Organization.Staff.Leave.Submit value)
+        [Route("Submit/{StaffId}")]
+        public IActionResult Post([FromRoute] int StaffId, [FromBody] Models.Employer.Organization.Staff.Leave.Submit value)
         {
-            int Uid = 50000003;
-            int Rid = 1000002;
-            return Ok(new Submits().Create(URId,Uid,Rid,value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(new Submits().Create(URId,StaffId,value));
         }
     }
 }
