@@ -45,5 +45,13 @@ namespace HIsabKaro.Controllers.Employee.Resume
             int UID = (int)HttpContext.Items["UserID"];
             return Ok(new OtherCertificates().UploadCertificate(Id,UID,value));
         }
+
+        [HttpDelete]
+        [Route("OtherCertificates/{Id}")]
+        public IActionResult Delete([FromRoute] int Id)
+        {
+            int UId = (int)HttpContext.Items["UserID"];
+            return Ok(new OtherCertificates().Delete(UId,Id));
+        }
     }
 }

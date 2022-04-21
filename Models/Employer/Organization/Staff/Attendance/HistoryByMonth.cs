@@ -8,6 +8,9 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
     public class HistoryByMonth
     {
         public int URId { get; set; }
+        public string Name { get; set; }
+        public string ImagePath { get; set; }
+        public string MobileNumber { get; set; }
         public string AttendanceMonth { get; set; }
         public string TotalWorkingHourPerMonth { get; set; }
         public int Present { get; set; }

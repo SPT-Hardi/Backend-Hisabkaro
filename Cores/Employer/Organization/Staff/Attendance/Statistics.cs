@@ -30,8 +30,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         throw new ArgumentException("Currently no staff in your organization!");
                     }
                     var totalemp = (from obj in c.SubUserOrganisations
+                                    join obj1 in c.DevOrganisationsStaffs
+                                    on obj.URId equals obj1.URId
                                     where obj.OId== findorg.OId && obj.RId == findstaffroleid.RId
-                                    select obj).ToList();
+                                    select obj1).ToList();
                     foreach (var item in totalemp) 
                     {
                         var lateby = new TimeSpan();
@@ -64,8 +66,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                 Status = "Present",
                                 LateBy = lateby.ToString(@"hh\:mm"),
-                                Name = item.SubUser.SubUsersDetail.FullName,
-                                ImagePath = item.SubUser.SubUsersDetail.FileId == null ? null : item.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                Name = item.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                ImagePath = item.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : item.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
                             });
 
                         }
@@ -80,8 +82,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 CheckOUT = "00:00",
                                 Status = "Absent",
                                 LateBy = "00:00",
-                                Name = item.SubUser.SubUsersDetail.FullName,
-                                ImagePath = item.SubUser.SubUsersDetail.FileId == null ? null : item.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                Name = item.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                ImagePath = item.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : item.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
                             });
                         }
                     }

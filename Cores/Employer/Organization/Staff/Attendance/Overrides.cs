@@ -28,6 +28,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     //35-HalfDay
                     var checkindate = value.AttendanceDate.ToString("dd/MM/yyyy");
                     var org = c.DevOrganisationsStaffs.Where(x => x.URId == value.URId).SingleOrDefault();
+                    if (org==null) 
+                    {
+                        throw new ArgumentException("Staff not exist in any organization!");
+                    }
                     
                     if (staffattendance == null)
                     {
