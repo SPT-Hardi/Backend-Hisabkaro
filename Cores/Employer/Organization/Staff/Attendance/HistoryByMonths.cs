@@ -22,88 +22,152 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var lateby = new TimeSpan();
                     var presentcount = 0;
                     var latecount = 0;
-                    var currentmonth = date.Month;
-                    var currentyear = date.Year;
+                    var currentdate = DateTime.Now;
+                    var requestmonth = date.Month;
+                    var requestyear = date.Year;
                     var totalworkinghourmonth = new TimeSpan();
-                    var days = getTotalDays(date.Date);
+                    //var days = getTotalDays(date.Date);
+                    HistoryByMonth historyByMonth = new HistoryByMonth();
                     var Org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
-                    for (var i = 1; i <= days; i++)
+                    if (Org == null) 
                     {
-                        var checkindate = DateTime.Parse($"{currentyear}-{currentmonth}-{i}");
-                        var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Date == checkindate).SingleOrDefault();
-                        if (checkpresent != null)
+                        throw new ArgumentException("Staff not exist in organization!");
+                    }
+                    if (date.Date < DateTime.Now.Date && date.Year < DateTime.Now.Year)
+                    {
+
+                        var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
+                        int days = DateTime.DaysInMonth(date.Year, date.Month);
+                        for (var i = 1; i <= days; i++)
                         {
-                            presentcount += 1;
+                            var checkindate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
+                            var checkpresent = checkpresentlist.Where(x => x.ChekIN.Value.Date == checkindate.Date).SingleOrDefault();
+                            if (checkpresent != null)
+                            {
+                                presentcount += 1;
 
-                            var lateafter = (from obj in c.DevOrganisationsStaffs
-                                             join obj1 in c.DevOrganisationsShiftTimes
-                                             on obj.ShiftTimeId equals obj1.ShiftTimeId
-                                             where obj.URId == URId
-                                             select obj1).SingleOrDefault();
-                            if (lateafter == null)
-                            {
-                                throw new ArgumentException("Register user as staff,make shiftId entry!");
-                            }
-                            if (checkpresent.ChekIN.Value.TimeOfDay > lateafter.MarkLate)
-                            {
-                                latecount += 1;
-                                lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)lateafter.MarkLate;
-                            }
-                            var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
-                            var monthname = checkindate.ToString("MMMM").Substring(0, 3);
-                            attendanceHistory.Add(new AttendanceHistory()
-                            {
-                                URId =URId,
-                                AttendanceDate =$"{i} {monthname} | {dayname}",
-                                Status ="Present",
-                                CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                CheckOUT = checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                LateBy = lateby.ToString(@"hh\:mm"),
-                                TotalWorkingHourPerDay =(checkpresent.CheckOUT.Value.TimeOfDay-checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
+                                
+                                if (checkpresent.IsLate==true)
+                                {
+                                    latecount += 1;
+                                    lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)Org.DevOrganisationsShiftTime.MarkLate;
+                                }
+                                var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
+                                var monthname = checkindate.ToString("MMMM").Substring(0, 3);
+                                attendanceHistory.Add(new AttendanceHistory()
+                                {
+                                    URId = URId,
+                                    AttendanceDate = $"{i} {monthname} | {dayname}",
+                                    Date = checkindate,
+                                    Status = "Present",
+                                    CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                    CheckOUT = checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                    LateBy = lateby.ToString(@"hh\:mm"),
+                                    TotalWorkingHourPerDay = (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
 
-                            });
-                            totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                });
+                                totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                            }
+                            else
+                            {
+                                var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
+                                var monthname = checkindate.ToString("MMMM").Substring(0, 3);
+                                attendanceHistory.Add(new AttendanceHistory()
+                                {
+                                    URId = URId,
+                                    AttendanceDate = $"{i} {monthname} | {dayname}",
+                                    Date = checkindate,
+                                    Status = "Absent",
+                                    CheckIN = "00:00",
+                                    CheckOUT = "00:00",
+                                    LateBy = "00:00",
+                                    TotalWorkingHourPerDay = "00:00",
+
+                                });
+                            }
+
                         }
-                        else 
+                        historyByMonth.Present = presentcount;
+                        historyByMonth.Absent = days - presentcount;
+                        historyByMonth.Late = latecount;
+                    }
+                    else
+                    {
+                        DateTime startDate = new DateTime(date.Year, date.Month, day: 1);
+                        int days = (int)(((DateTime.Now - startDate).TotalDays));
+                        var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
+                        for (var i = 1; i <= days; i++)
                         {
-                            var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
-                            var monthname = checkindate.ToString("MMMM").Substring(0, 3);
-                            attendanceHistory.Add(new AttendanceHistory()
+                            var checkindate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
+                            var checkpresent = checkpresentlist.Where(x => x.ChekIN.Value.Date == checkindate.Date).SingleOrDefault();
+                            if (checkpresent != null)
                             {
-                                URId = URId,
-                                AttendanceDate = $"{i} {monthname} | {dayname}",
-                                Status = "Absent",
-                                CheckIN = "00:00",
-                                CheckOUT = "00:00",
-                                LateBy = "00:00",
-                                TotalWorkingHourPerDay = "00:00",
+                                presentcount += 1;
 
-                            });
+                                if (checkpresent.IsLate == true)
+                                {
+                                    latecount += 1;
+                                    lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)Org.DevOrganisationsShiftTime.MarkLate;
+                                }
+                                var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
+                                var monthname = checkindate.ToString("MMMM").Substring(0, 3);
+                                attendanceHistory.Add(new AttendanceHistory()
+                                {
+                                    URId = URId,
+                                    AttendanceDate = $"{i} {monthname} | {dayname}",
+                                    Date = checkindate,
+                                    Status = "Present",
+                                    CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                    CheckOUT = checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                    LateBy = lateby.ToString(@"hh\:mm"),
+                                    TotalWorkingHourPerDay = (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
+
+                                });
+                                totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                            }
+                            else
+                            {
+                                var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
+                                var monthname = checkindate.ToString("MMMM").Substring(0, 3);
+                                attendanceHistory.Add(new AttendanceHistory()
+                                {
+                                    URId = URId,
+                                    AttendanceDate = $"{i} {monthname} | {dayname}",
+                                    Date = checkindate,
+                                    Status = "Absent",
+                                    CheckIN = "00:00",
+                                    CheckOUT = "00:00",
+                                    LateBy = "00:00",
+                                    TotalWorkingHourPerDay = "00:00",
+
+                                });
+                            }
+
+                            historyByMonth.Present = presentcount;
+                            historyByMonth.Absent = days - presentcount;
+                            historyByMonth.Late = latecount;
                         }
-                      
+                        
+
                     }
                     var totalhour = Math.Floor((totalworkinghourmonth.TotalMinutes) / 60);
-                    var remainminute = (totalworkinghourmonth.TotalMinutes) - (totalhour*60);
-                    Models.Employer.Organization.Staff.Attendance.HistoryByMonth historyByMonth = new HistoryByMonth();
+                    var remainminute = (totalworkinghourmonth.TotalMinutes) - (totalhour * 60);
+
                     historyByMonth.attendanceHistory = attendanceHistory;
                     historyByMonth.AttendanceMonth = $"{date.ToString("MMMM").Substring(0, 3)},{date.Year}";
                     historyByMonth.TotalWorkingHourPerMonth = $"{totalhour}:{remainminute}";
                     historyByMonth.URId = URId;
                     historyByMonth.Name = Org.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
-                    historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath ;
+                    historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath;
                     historyByMonth.MobileNumber = Org.SubUserOrganisation.SubUser.MobileNumber;
-                    historyByMonth.Present = presentcount;
-                    historyByMonth.Absent = days - presentcount;
-                    historyByMonth.Late = latecount;
                     return new Result()
-                    {
-                        Status = Result.ResultStatus.success,
-                        Message = "Staff attendance-history by month get successfully!",
-                        Data = historyByMonth,
-                    };
+                        {
+                            Status = Result.ResultStatus.success,
+                            Message = "Staff attendance-history by month get successfully!",
+                            Data = historyByMonth,
+                        };
                 }
             }
-
         }
         public int getTotalDays(DateTime month) 
         {
@@ -124,6 +188,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 return 30;
             }
         }
-       
+       /* public TimeSpan getCheckout(DateTime checkout)
+        {
+            if (checkout == null)
+            {
+                return 0;
+            }
+            else 
+            {
+                return checkout.TimeOfDay;
+            }
+        }*/
+
     }
 }
