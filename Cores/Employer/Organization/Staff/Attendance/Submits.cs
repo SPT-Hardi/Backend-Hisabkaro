@@ -13,19 +13,31 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
     {
         public Result Add(int URId,SubmitDaily value)
         {
+            
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Day == DateTime.Now.Day && x.URId == URId).SingleOrDefault();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == DateTime.Now.Date && x.URId == URId).SingleOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
-                     if (qs == null)
+                    bool late=false;
+                    if (qs == null)
                      {
-         
+
+                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
+                        if (org == null) 
+                        {
+                            throw new ArgumentException("Staff not exist in organization!");
+                        }
+                        if (DateTime.Now.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate) 
+                        {
+                            late = true;
+                        }
                         OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                         attendance.URId = URId;
-                        attendance.LastUpdateDate = value.CheckIN;
-                        attendance.ChekIN = value.CheckIN;
+                        attendance.LastUpdateDate = DateTime.Now;
+                        attendance.ChekIN = DateTime.Now;
+                        attendance.IsLate = late;
                         c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
@@ -33,8 +45,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                      }
                     else
                     {
-                        qs.CheckOUT = value.CheckIN;
-                        qs.LastUpdateDate = value.CheckIN;
+                        qs.CheckOUT = DateTime.Now;
+                        qs.LastUpdateDate = DateTime.Now;
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = qs.OrgStaffAttendanceDailyId;
                     }

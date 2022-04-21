@@ -18,6 +18,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     int presentcount = 0;
                     int latecount = 0;
+                    
                     var attendancelist = new List<Models.Employer.Organization.Staff.Attendance.AttendanceList>();
                     var findorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
                     if (findorg == null) 
@@ -44,19 +45,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             presentcount += 1;
 
-                            var lateafter = (from obj in c.DevOrganisationsStaffs
-                                             join obj1 in c.DevOrganisationsShiftTimes
-                                             on obj.ShiftTimeId equals obj1.ShiftTimeId
-                                             where obj.OId == item.OId && obj.URId == item.URId
-                                             select obj1).SingleOrDefault();
-                            if (lateafter == null)
-                            {
-                                throw new ArgumentException("Register user as staff,make shiftId entry!");
-                            }
-                            if (checkpresent.ChekIN.Value.TimeOfDay > lateafter.MarkLate)
+                            if (checkpresent.IsLate == true) 
                             {
                                 latecount += 1;
-                                lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)lateafter.MarkLate;
+                                lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)item.DevOrganisationsShiftTime.MarkLate;
                             }
                             attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
                             {
