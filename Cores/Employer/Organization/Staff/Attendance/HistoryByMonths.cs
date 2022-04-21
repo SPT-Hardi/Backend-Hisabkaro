@@ -61,9 +61,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     Date = checkindate,
                                     Status = "Present",
                                     CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                    CheckOUT = checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                    CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     LateBy = lateby.ToString(@"hh\:mm"),
-                                    TotalWorkingHourPerDay = (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
+                                    TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(),
 
                                 });
                                 totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
@@ -94,7 +94,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     else
                     {
                         DateTime startDate = new DateTime(date.Year, date.Month, day: 1);
-                        int days = (int)(((DateTime.Now - startDate).TotalDays));
+                        int days = (int)(((DateTime.Now - startDate).TotalDays)+1);
                         var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
                         for (var i = 1; i <= days; i++)
                         {
@@ -111,6 +111,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 }
                                 var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                 var monthname = checkindate.ToString("MMMM").Substring(0, 3);
+                                var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? new TimeSpan() : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
                                 attendanceHistory.Add(new AttendanceHistory()
                                 {
                                     URId = URId,
@@ -118,12 +119,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     Date = checkindate,
                                     Status = "Present",
                                     CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                    CheckOUT = checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                    CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     LateBy = lateby.ToString(@"hh\:mm"),
-                                    TotalWorkingHourPerDay = (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
+                                    TotalWorkingHourPerDay = checkpresent.CheckOUT==null? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(),
 
                                 });
-                                totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                //@"hh\:mm"
+                                totalworkinghourmonth += TotalWorkingHourPerDay;
                             }
                             else
                             {
