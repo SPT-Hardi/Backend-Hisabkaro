@@ -24,11 +24,13 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
     {
         public int URId { get; set; }
         public string AttendanceDate { get; set; }
+        public DateTime Date { get; set; }
         public string TotalWorkingHourPerDay { get; set; }
         public string Status { get; set; }
         public string CheckIN { get; set; }
         public string CheckOUT { get; set; }
         public string LateBy { get; set; }
     }
+   
 }
 
