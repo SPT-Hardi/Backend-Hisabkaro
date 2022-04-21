@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Models.Common;
+using HIsabKaro.Models.Employer.Organization.Staff.Attendance;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Submits
     {
-        public Result Add(int URId)
+        public Result Add(int URId,SubmitDaily value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -23,9 +24,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
          
                         OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                         attendance.URId = URId;
-                        attendance.LastUpdateDate = DateTime.Now;
-                        attendance.ChekIN = DateTime.Now;
-                        attendance.CheckOUT = DateTime.Now;
+                        attendance.LastUpdateDate = value.CheckIN;
+                        attendance.ChekIN = value.CheckIN;
                         c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
@@ -33,8 +33,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                      }
                     else
                     {
-                        qs.CheckOUT = DateTime.Now;
-                        qs.LastUpdateDate = DateTime.Now;
+                        qs.CheckOUT = value.CheckIN;
+                        qs.LastUpdateDate = value.CheckIN;
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = qs.OrgStaffAttendanceDailyId;
                     }

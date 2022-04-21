@@ -1,5 +1,6 @@
 using HIsabKaro.Cores.Common;
 using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
+using HIsabKaro.Models.Employer.Organization.Staff.Attendance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,11 +16,11 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     {
        [HttpPost]
         [Route("SubmitDaily")]
-        public IActionResult Post()
+        public IActionResult Post([FromBody]SubmitDaily value)
         {
             //int URId = (int)HttpContext.Items["URId"];
             int URId = 10000024;
-            return Ok(new Submits().Add(URId));
+            return Ok(new Submits().Add(URId,value));
         }
 
     }

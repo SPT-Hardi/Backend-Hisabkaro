@@ -35,5 +35,13 @@ namespace HIsabKaro.Controllers.Employee.Resume
             int UID = (int)HttpContext.Items["UserID"];
             return Ok(new Skills().Update(Id, UID,value));
         }
+
+        [HttpDelete]
+        [Route("Skills/{Id}")]
+        public IActionResult Update([FromRoute]int Id)
+        {
+            int UId = (int)HttpContext.Items["UserID"];
+            return Ok(new Skills().Delete(UId,Id));
+        }
     }
 }

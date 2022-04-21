@@ -16,8 +16,8 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Eductions")]
         public IActionResult Post([FromBody]Models.Employee.Resume.Education value)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Educations().Add(UID.ToString(),value));
+            int UID = (int)HttpContext.Items["UserID"];
+            return Ok(new Educations().Add(UID,value));
         }
         [HttpGet]
         [Route("Educations")]
@@ -36,6 +36,14 @@ namespace HIsabKaro.Controllers.Employee.Resume
         {
             int UID = (int)HttpContext.Items["UserID"];
             return Ok(new Educations().Update(Id, UID,value));
+        }
+
+        [HttpDelete]
+        [Route("Educations/{Id}")]
+        public IActionResult Delete([FromRoute] int Id)
+        {
+            int UId = (int)HttpContext.Items["UserID"];
+            return Ok(new Educations().Delete(UId,Id));
         }
     }
 }

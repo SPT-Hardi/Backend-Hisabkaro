@@ -36,6 +36,14 @@ namespace HIsabKaro.Controllers.Employee.Resume
             return Ok(new WorkExperiences().Update(Id, UID,value));
         }
 
-       
+        [HttpDelete]
+        [Route("WorkExperiences/{Id}")]
+        public IActionResult Delete(int Id)
+        {
+            int UId = (int)HttpContext.Items["UserID"];
+            return Ok(new WorkExperiences().Delete(UId,Id));
+        }
+
+
     }
 }

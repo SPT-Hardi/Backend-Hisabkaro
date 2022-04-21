@@ -12,8 +12,6 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class OtherCertificates
     {
-       
-
         public Result Add(int UID,Models.Employee.Resume.OtherCertificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
@@ -147,6 +145,34 @@ namespace HIsabKaro.Cores.Employee.Resume
                         Status = Result.ResultStatus.success,
                         Message = "Employee Resume-OtherCertificates added successfully!",
                         Data = res,
+                    };
+                }
+            }
+        }
+        public Result Delete(int UId,int Id) 
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var othercertificate = c.EmpResumeOtherCertificates.Where(x => x.UId == UId && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    if (othercertificate == null) 
+                    {
+                        throw new ArgumentException("There are no any data for current ID!,(enter valid token)");
+                    }
+                    c.EmpResumeOtherCertificates.DeleteOnSubmit(othercertificate);
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = $"Employee's {othercertificate.CertificateName} cetificate details deleted successfully!",
+                        Data = new
+                        {
+                            EmpResumeOtherCertificateId =othercertificate.EmpResumeOtherCertificateId,
+                            CertificateName =othercertificate.CertificateName,
+                        }
                     };
                 }
             }

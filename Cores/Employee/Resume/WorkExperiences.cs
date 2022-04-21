@@ -122,5 +122,33 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
+        public Result Delete(int UId,int Id) 
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var workexperience = c.EmpResumeWorkExperiences.Where(x => x.UId == UId && x.EmpResumeWorkExperienceId == Id).SingleOrDefault();
+                    if (workexperience == null) 
+                    {
+                        throw new ArgumentException("Employee workexperience not exist for current Id!,(enter valid token)");
+                    }
+                    c.EmpResumeWorkExperiences.DeleteOnSubmit(workexperience);
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = $"User's {workexperience.JobTitle} workexperience deleted successfully!",
+                        Data = new
+                        {
+                            EmpResumeWorkExperienceId =workexperience.EmpResumeWorkExperienceId,
+                            JobTitle =workexperience.JobTitle,
+                        }
+                    };
+                }
+            }
+        }
     }
 }

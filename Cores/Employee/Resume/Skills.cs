@@ -96,5 +96,33 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
+        public Result Delete(int UId,int Id) 
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var skill = c.EmpResumeSkills.Where(x => x.UId == UId && x.EmpResumeSkillId == Id).SingleOrDefault();
+                    if (skill == null) 
+                    {
+                        throw new ArgumentException("There is no any skill details for current Id!");
+                    }
+                    c.EmpResumeSkills.DeleteOnSubmit(skill);
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = $"Employee's {skill.SkillName} skill details deleted successfully!",
+                        Data = new
+                        {
+                            EmpResumeSkillId =skill.EmpResumeSkillId,
+                            Skill =skill.SkillName,
+                        }
+                    };
+                }
+            }
+        }
     }
 }

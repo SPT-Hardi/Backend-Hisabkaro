@@ -26,6 +26,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var currentyear = date.Year;
                     var totalworkinghourmonth = new TimeSpan();
                     var days = getTotalDays(date.Date);
+                    var Org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
                     for (var i = 1; i <= days; i++)
                     {
                         var checkindate = DateTime.Parse($"{currentyear}-{currentmonth}-{i}");
@@ -88,6 +89,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     historyByMonth.AttendanceMonth = $"{date.ToString("MMMM").Substring(0, 3)},{date.Year}";
                     historyByMonth.TotalWorkingHourPerMonth = $"{totalhour}:{remainminute}";
                     historyByMonth.URId = URId;
+                    historyByMonth.Name = Org.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
+                    historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath ;
+                    historyByMonth.MobileNumber = Org.SubUserOrganisation.SubUser.MobileNumber;
                     historyByMonth.Present = presentcount;
                     historyByMonth.Absent = days - presentcount;
                     historyByMonth.Late = latecount;

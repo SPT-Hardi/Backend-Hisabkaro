@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Educations
     {
-        public Result Add(string UID,Models.Employee.Resume.Education value) 
+        public Result Add(int UID,Models.Employee.Resume.Education value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -23,14 +23,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                     //28-ITI
                     //1-salesman
                     //2-electrician
-                    var check = c.SubUsers.Where(x => x.UId.ToString() == UID).SingleOrDefault();
+                    var check = c.SubUsers.Where(x => x.UId== UID).SingleOrDefault();
                     if (check == null) 
                     {
                         throw new ArgumentException("User Doesnt Exist!,(enter valid token)");
                     }
                     foreach (var item in value.educationlist)
                     {
-                        var edu = c.EmpResumeEducations.Where(x => x.UId.ToString() == UID && x.EducationNameId == item.EducationName.ID).SingleOrDefault();
+                        var edu = c.EmpResumeEducations.Where(x => x.UId == UID && x.EducationNameId == item.EducationName.ID).SingleOrDefault();
                         if (edu != null) 
                         {
                             throw new ArgumentException($"Users {edu.SubFixedLookup.FixedLookup} education details already exist!");
@@ -42,7 +42,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                          EducationNameId=obj.EducationName.ID,
                                          EducationSteamName=obj.EducationStreamName,
                                          InstituteName=obj.InstituteName,
-                                         UId=int.Parse(UID),
+                                         UId=UID,
                                          StartDate=obj.StartDate,
                                          EndDate=obj.EndDate,
                                      }).ToList();
@@ -141,6 +141,35 @@ namespace HIsabKaro.Cores.Employee.Resume
                             EmpResumeEducationId = education.EmpResumeEducationId,
                             EducationName = new IntegerNullString() { ID = education.EducationNameId, Text = text },
                             EducationStreamName = education.EducationSteamName,
+                        }
+                    };
+                }
+            }
+        }
+        public Result Delete(int UId,int Id) 
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var education = c.EmpResumeEducations.Where(x => x.UId == UId && x.EmpResumeEducationId == Id).SingleOrDefault();
+                    if (education == null) 
+                    {
+                        throw new ArgumentException("There is no any education details for current Id!,(enter valid token)");
+                    }
+                    c.EmpResumeEducations.DeleteOnSubmit(education);
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = $"Employee's {education.SubFixedLookup.FixedLookup} education details deleted successfully!",
+                        Data = new
+                        {
+                            EmpResumeEducationId =education.EmpResumeEducationId,
+                            EducationName =education.SubFixedLookup.FixedLookup,
+
                         }
                     };
                 }
