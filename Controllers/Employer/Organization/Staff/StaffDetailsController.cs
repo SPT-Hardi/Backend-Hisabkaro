@@ -49,7 +49,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
                         where x.OId == OId
                         select new IntegerNullString()
                         {
-                            ID = x.ShiftTimeId,
+                            Id = x.ShiftTimeId,
                             Text = x.StartTime.ToString(),
                         }).ToList();
             }

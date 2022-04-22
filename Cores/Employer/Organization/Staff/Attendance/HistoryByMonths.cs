@@ -12,7 +12,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class HistoryByMonths
     {
-        public Result Get(int URId,DateTime date)
+        public Result Get(int URId,int Id,DateTime date)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -28,7 +28,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var totalworkinghourmonth = new TimeSpan();
                     //var days = getTotalDays(date.Date);
                     HistoryByMonth historyByMonth = new HistoryByMonth();
-                    var Org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
+                    var userorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+
+                    URId = Id == 0 ? URId : Id;
+                    var Org = c.DevOrganisationsStaffs.Where(x => x.URId == URId && x.DevOrganisation.OId==userorg.OId).SingleOrDefault();
                     if (Org == null) 
                     {
                         throw new ArgumentException("Staff not exist in organization!");
@@ -63,7 +66,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     LateBy = lateby.ToString(@"hh\:mm"),
-                                    TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(),
+                                    TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
 
                                 });
                                 totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
@@ -121,7 +124,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     LateBy = lateby.ToString(@"hh\:mm"),
-                                    TotalWorkingHourPerDay = checkpresent.CheckOUT==null? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(),
+                                    TotalWorkingHourPerDay = checkpresent.CheckOUT==null? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
 
                                 });
                                 //@"hh\:mm"

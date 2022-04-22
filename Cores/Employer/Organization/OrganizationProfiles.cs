@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                          where x.OId == OId
                          select new
                          {
-                             Organization = new IntegerNullString { ID = x.OId, Text = x.OrganisationName },
+                             Organization = new IntegerNullString { Id = x.OId, Text = x.OrganisationName },
                              Image = (from f in c.CommonFiles
                                       where f.FileId == x.LogoFileId
                                       select f.FilePath).SingleOrDefault(),
@@ -61,7 +61,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                                              Mobilenumber = p.MobleNumber,
                                              OwnershipTypeID = (from l in c.SubLookups
                                                                 where l.LookupId == p.OwnershipTypeId
-                                                                select new IntegerNullString { ID = l.LookupId, Text = l.Lookup }).SingleOrDefault()
+                                                                select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()
                                          }).ToList()
                          }).ToList();
 
@@ -121,7 +121,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
                     {
                         OId = OId,
-                        OwnershipTypeId=x.OwnershipTypeID.ID,
+                        OwnershipTypeId=x.OwnershipTypeID.Id,
                         Email=x.Email,
                         MobleNumber=x.Mobilenumber,
                     }).ToList());

@@ -31,7 +31,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     }
 
                     var jDetails = (from j in c.EmprJobs
-                                    where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.ID
+                                    where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id
                                     orderby j.JobId descending
                                     select j).FirstOrDefault();
                    
@@ -49,8 +49,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 Description = value.Description,
                                 PostDate = DateTime.Now,
                                 EndDate = value.Enddate.ToLocalTime(),
-                                OId = (int)value.Organisation.ID,
-                                BranchID = value.Branch.ID,
+                                OId = (int)value.Organisation.Id,
+                                BranchID = value.Branch.Id,
                                 URId = user.URId,
                                 Status = "Open"
                             };
@@ -98,8 +98,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         Description = value.Description,
                         PostDate = DateTime.Now,
                         EndDate = value.Enddate.ToLocalTime(),
-                        OId = (int)value.Organisation.ID,
-                        BranchID = value.Branch.ID == null ? null : value.Branch.ID,
+                        OId = (int)value.Organisation.Id,
+                        BranchID = value.Branch.Id == null ? null : value.Branch.Id,
                         URId = user.URId,
                         Status = "Open"
                     };
@@ -159,8 +159,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.Description = value.Description;
                     job.PostDate = DateTime.Now;
                     job.EndDate = value.Enddate.ToLocalTime();
-                    job.OId = (int)value.Organisation.ID;
-                    job.BranchID = value.Branch.ID;
+                    job.OId = (int)value.Organisation.Id;
+                    job.BranchID = value.Branch.Id;
                     job.URId = user.URId;
                     job.Status = "Open";
                     c.SubmitChanges();

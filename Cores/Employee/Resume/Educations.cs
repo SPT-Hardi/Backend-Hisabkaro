@@ -30,7 +30,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     }
                     foreach (var item in value.educationlist)
                     {
-                        var edu = c.EmpResumeEducations.Where(x => x.UId == UID && x.EducationNameId == item.EducationName.ID).SingleOrDefault();
+                        var edu = c.EmpResumeEducations.Where(x => x.UId == UID && x.EducationNameId == item.EducationName.Id).SingleOrDefault();
                         if (edu != null) 
                         {
                             throw new ArgumentException($"Users {edu.SubFixedLookup.FixedLookup} education details already exist!");
@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var education = (from obj in value.educationlist
                                      select new EmpResumeEducation()
                                      {
-                                         EducationNameId=obj.EducationName.ID,
+                                         EducationNameId=obj.EducationName.Id,
                                          EducationSteamName=obj.EducationStreamName,
                                          InstituteName=obj.InstituteName,
                                          UId=UID,
@@ -52,7 +52,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                select new 
                                {
                                    EmpResumeEducationId=obj.EmpResumeEducationId,
-                                   EducationName=new IntegerNullString() { ID=(int)obj.EducationNameId,Text=obj.SubFixedLookup.FixedLookup},
+                                   EducationName=new IntegerNullString() { Id=(int)obj.EducationNameId,Text=obj.SubFixedLookup.FixedLookup},
                                }).ToList();
                     scope.Complete();
                     return new Result()
@@ -75,7 +75,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                select new Models.Employee.Resume.EducationDetail()
                                {
                                    EmpResumeEducationId = obj.EmpResumeEducationId,
-                                   EducationName = new IntegerNullString() { ID = obj.EducationNameId, Text = obj.SubFixedLookup.FixedLookup },
+                                   EducationName = new IntegerNullString() { Id = obj.EducationNameId, Text = obj.SubFixedLookup.FixedLookup },
                                    EducationStreamName = obj.EducationSteamName,
                                    InstituteName = obj.InstituteName,
                                    StartDate = Convert.ToDateTime(obj.StartDate),
@@ -115,7 +115,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     {
                         throw new ArgumentException("Enter valid EducationId");
                     }
-                    if (education.EducationNameId == value.EducationName.ID)
+                    if (education.EducationNameId == value.EducationName.Id)
                     {
 
                         education.EducationSteamName = value.EducationStreamName;
@@ -139,7 +139,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                         Data = new 
                         {
                             EmpResumeEducationId = education.EmpResumeEducationId,
-                            EducationName = new IntegerNullString() { ID = education.EducationNameId, Text = text },
+                            EducationName = new IntegerNullString() { Id = education.EducationNameId, Text = text },
                             EducationStreamName = education.EducationSteamName,
                         }
                     };

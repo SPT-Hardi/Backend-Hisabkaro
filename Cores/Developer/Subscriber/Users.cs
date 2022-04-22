@@ -149,6 +149,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
 
                     qs.IsUsed = true;
                     c.SubmitChanges();
+
                     var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
                     var udetails = c.SubUsersDetails.Where(x => x.UId == user.UId).SingleOrDefault();
 
@@ -162,7 +163,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                            
                             JWT=res.JWT,
                             RToken=res.RToken,
-                            LoginTypeID = new IntegerNullString() { ID = role.FixedLookupId, Text = role.FixedLookup },
+                            LoginType = new IntegerNullString() { Id = role.FixedLookupId, Text = role.FixedLookup },
                             Name = udetails == null ? null : udetails.FullName,
                             MobileNumber = user.MobileNumber,
                             AMobileNumber = udetails == null ? null : udetails.AMobileNumber,
