@@ -26,12 +26,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 
                 var leave = (from x in c.OrgStaffsLeaveApplications
                              where x.SubUserOrganisation.OId == user.OId && x.IsLeaveApproved == "Pending"
+                             orderby x.OrgStaffLeaveId descending
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,
                                  UserName = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                  StartDate = x.StartDate,
-                                 EndDate = x.EndDate,
+                                 EndDate = x.EndDate
                              }).ToList();
                 if (leave == null)
                 {
@@ -69,7 +70,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     throw new ArgumentException("Access not allow!!");
                 }
 
+                var duration = leave.EndDate.Subtract(leave.StartDate).Days;
+                var total = (value.Paid == null ? 0 : value.Paid) + (value.UnPaid == null ? 0 : value.UnPaid);
+                if(total > duration || total < duration)
+                {
+                    throw new ArgumentException("Approve days not match with leave duration");
+                }
                 leave.IsLeaveApproved = "Accepted";
+                leave.PaidDays = (value.Paid == null ? 0 : value.Paid);
+                leave.UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid);
                 c.SubmitChanges();
                 return new Result()
                 {
@@ -107,6 +116,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 leave.IsLeaveApproved = "Reject";
+                leave.PaidDays = 0;
+                leave.UnPaidDays = 0;
                 c.SubmitChanges();
                 return new Result()
                 {

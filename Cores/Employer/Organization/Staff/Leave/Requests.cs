@@ -53,13 +53,14 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                 }
 
                 var leave = (from x in c.OrgStaffsLeaveApplications
+                             orderby x.OrgStaffLeaveId descending
                              where x.URId == user.URId
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,
                                  Reason = x.Reason,
-                                 StartDate = "From :" + x.StartDate,
-                                 EndDate = "To :" + x.EndDate,
+                                 StartDate =  x.StartDate,
+                                 EndDate = x.EndDate,
                                  IsApprove = x.IsLeaveApproved
                              }).ToList();
                 if (leave == null)

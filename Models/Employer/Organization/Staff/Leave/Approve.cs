@@ -7,6 +7,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
 {
     public class Approve
     {
-        public bool Ispaid { get; set; }
+        public int? Paid { get; set; }
+
+        public int? UnPaid { get; set; }
     }
 }

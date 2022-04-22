@@ -16,5 +16,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Loan
         public decimal Monthlypay { get; set; }
 
         public string Description { get; set; }
+
+        public Models.Common.IntegerNullString Interest = new Common.IntegerNullString();
     }
 }
