@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Models.Employer.Organization.Staff.Bonus
 {
-    public class BounsDetail
+    public class BonusDetail
     {     
         public DateTime Date { get; set; }
         public Decimal Amount { get; set; }

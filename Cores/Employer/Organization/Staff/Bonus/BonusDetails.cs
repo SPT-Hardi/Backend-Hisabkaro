@@ -8,7 +8,7 @@ using System.Transactions;
 
 namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
 {
-    public class BounsDetails
+    public class BonusDetails
     {
         public Result One(int URId)
         {
@@ -50,7 +50,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
             }
         }
 
-        public Result Create(int URId,int StaffId, Models.Employer.Organization.Staff.Bonus.BounsDetail value)
+        public Result Create(int URId,int StaffId, Models.Employer.Organization.Staff.Bonus.BonusDetail value)
         {
             using (DBContext c = new DBContext())
             {
