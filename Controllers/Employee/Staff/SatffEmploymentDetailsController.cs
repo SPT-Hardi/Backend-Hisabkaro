@@ -22,7 +22,7 @@ namespace HIsabKaro.Controllers.Employee.Staff
 
         [HttpPost]
         [Route("SatffEmploymentDetails/Create")]
-        public IActionResult Create([FromBody] Models.Employee.Staff.SatffEmploymentDetail value)
+        public IActionResult PostPut([FromBody] Models.Employee.Staff.SatffEmploymentDetail value)
         {
             int URId = (int)HttpContext.Items["URId"];
             return Ok(new SatffEmploymentDetails().Create(URId, value));

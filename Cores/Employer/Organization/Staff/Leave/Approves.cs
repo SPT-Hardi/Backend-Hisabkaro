@@ -70,7 +70,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 leave.IsLeaveApproved = "Accepted";
-                leave.IsPaidLeave = value.Ispaid;
                 c.SubmitChanges();
                 return new Result()
                 {

@@ -162,7 +162,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                            
                             JWT=res.JWT,
                             RToken=res.RToken,
-                            LoginTypeID = new IntegerNullString() { ID = role.FixedLookupId, Text = role.FixedLookup },
+                            LoginTypeID = new IntegerNullString() { Id = role.FixedLookupId, Text = role.FixedLookup },
                             Name = udetails == null ? null : udetails.FullName,
                             MobileNumber = user.MobileNumber,
                             AMobileNumber = udetails == null ? null : udetails.AMobileNumber,

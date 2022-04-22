@@ -39,7 +39,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                         StartDate = value.StartDate,
                         EndDate = value.EndDate,
                         Reason = value.Reason,
-                        IsPaidLeave = value.IsPaidLeave,
                         IsLeaveApproved = "Accepted"
                     };
                     c.OrgStaffsLeaveApplications.InsertOnSubmit(request);

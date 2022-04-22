@@ -35,11 +35,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     
                     if (staffattendance == null)
                     {
-                        if (value.Status.ID ==34) 
+                        if (value.Status.Id ==34) 
                         {
                             throw new ArgumentException($"Staff already absent at {value.AttendanceDate.ToString("dd/MM/yyyy")} day!");
                         }
-                        else if (value.Status.ID == 33)
+                        else if (value.Status.Id == 33)
                         {
                             OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                             attendance.ChekIN = DateTime.Parse($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
@@ -50,7 +50,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
                         }
-                        else if (value.Status.ID == 35) 
+                        else if (value.Status.Id == 35) 
                         {
                             OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                             var total_org_runnigtime = (org.DevOrganisationsShiftTime.EndTime-org.DevOrganisationsShiftTime.StartTime)/2;
@@ -68,16 +68,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     }
                     else 
                     {
-                        if (value.Status.ID == 33)
+                        if (value.Status.Id == 33)
                         {
                             throw new ArgumentException($"Staff already present at {value.AttendanceDate.ToString("dd/MM/yyyy")} day!");
                         }
-                        else if (value.Status.ID == 34)
+                        else if (value.Status.Id == 34)
                         {
                             c.OrgStaffsAttendancesDailies.DeleteOnSubmit(staffattendance);
                             c.SubmitChanges();
                         }
-                        else if (value.Status.ID == 35)
+                        else if (value.Status.Id == 35)
                         {
                             
                             
@@ -103,7 +103,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         Data = new
                         {
                             StaffName =name,
-                            Status =value.Status.ID,
+                            Status =value.Status.Id,
                         }
                     };
                 }

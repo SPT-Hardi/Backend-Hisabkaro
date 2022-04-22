@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("User details already exist!");
                     }
-                    user.LoginTypeId = value.role.ID;
+                    user.LoginTypeId = value.role.Id;
                     c.SubmitChanges();
                     var file = c.CommonFiles.Where(x => x.FGUID == value.userdetails.ProfilePhotoFGUID).SingleOrDefault();
                     SubUsersDetail udetails = new SubUsersDetail();

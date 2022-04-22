@@ -90,5 +90,68 @@ namespace HIsabKaro.Cores.Employee.Staff
                 }
             }
         }
+
+        public Result GetOne(int URId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == URId);
+                if (_SId is null)
+                {
+                    throw new ArgumentException("Satff Does Not Exits!");
+                }
+
+                var _Org = (from x in c.DevOrganisationsStaffs
+                            where x.URId == URId
+                            select new
+                            {
+                                URId = URId,
+                                FullName=x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                MobileNumber= x.SubUserOrganisation.SubUser.MobileNumber,
+                                Image= x.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                            }).ToList();
+
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = string.Format("Success"),
+                    Data = _Org,
+
+                };
+            }
+        }
+
+        public Result GetPut(int URId, Models.Employee.Staff.StaffProfile value)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == URId);
+                    if (_User is null)
+                    {
+                        throw new ArgumentException("User Does Not Exits!");
+                    }
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == URId);
+                    if (_Staff is null)
+                    {
+                        throw new ArgumentException("Staff Does Not Exits!");
+                    }
+
+                    var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault();
+                    _Staff.SubUserOrganisation.SubUser.SubUsersDetail.FullName = value.Name;
+                    _Staff.SubUserOrganisation.SubUser.SubUsersDetail.FileId = _FileId == null ? null : _FileId.FileId;
+
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = string.Format($"Personal Detail Add Successfully!"),
+                    };
+                }
+            }
+        }
     }
 }

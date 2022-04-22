@@ -33,7 +33,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         throw new ArgumentException("User Doesn't exist");
                     }
 
-                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.Id);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
@@ -47,7 +47,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         URId = URId,
                         Latitude = value.latitude,
                         Longitude = value.longitude,
-                        OId = value.Organization.ID
+                        OId = value.Organization.Id
                     };
                     c.DevOrganisationBranches.InsertOnSubmit(branch);
                     c.SubmitChanges();
@@ -110,7 +110,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     branch.URId = URId;
                     branch.Latitude = value.latitude;
                     branch.Longitude = value.longitude;
-                    branch.OId = value.Organization.ID;
+                    branch.OId = value.Organization.Id;
                     c.SubmitChanges();
                     scope.Complete();
                     return new Result()

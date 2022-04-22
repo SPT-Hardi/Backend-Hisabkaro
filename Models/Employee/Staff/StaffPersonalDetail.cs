@@ -15,4 +15,11 @@ namespace HIsabKaro.Models.Employee.Staff
         public string Gender { get; set; } 
         public Address Address { get; set; }                   
     }
+    public class StaffProfile
+    {
+        public string Name { get; set; }
+        public string ? Image { get; set; }
+    }
+
+
 }

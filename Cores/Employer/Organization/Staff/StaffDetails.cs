@@ -47,7 +47,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.ID);
+                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.Id);
                     if (_OId is null)
                     {
                         throw new ArgumentException("Organization Does Not Exits!");
@@ -143,17 +143,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     var staff = new DevOrganisationsStaff()
                     {
                         URId = _URID.URId,
-                        OId = (int)value.Organization.ID,
-                        BranchId = value.Branch.ID == 0 ? null : value.Branch.ID,
-                        ShiftTimeId = value.ShiftTiming.ID,
+                        OId = (int)value.Organization.Id,
+                        BranchId = value.Branch.Id == 0 ? null : value.Branch.Id,
+                        ShiftTimeId = value.ShiftTiming.Id,
                         Salary = value.Salary,
                         IsOpenWeek = value.IsOpenWeek,
                         SId= _Sid
                     };
                     if (value.IsOpenWeek == false)
                     {
-                        staff.WeekOffOneDay = value.WeekOff1.ID;
-                        staff.WeekOffSecondDay = value.WeekOff2.ID;
+                        staff.WeekOffOneDay = value.WeekOff1.Id;
+                        staff.WeekOffSecondDay = value.WeekOff2.Id;
                     }
                     c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                     c.SubmitChanges();
@@ -175,7 +175,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         Message = string.Format("Staff Add Successfully!"),
                         Data = new
                         {
-                            OId = value.Organization.ID,
+                            OId = value.Organization.Id,
                             StaffId = sid,
                             JWT = jwtToken,
                         }

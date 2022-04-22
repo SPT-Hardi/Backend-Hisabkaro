@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     {
                         LogoFileId = _FileId ==null ? null : _FileId.FileId,
                         OrganisationName = value.OrgName,
-                        InudstrySectorId = value.InudstrySector.ID,
+                        InudstrySectorId = value.InudstrySector.Id,
                         Latitude = value.Latitude,
                         Longitude = value.Longitude,
                         UId = UserID,
@@ -78,7 +78,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         Data = new {
                             Organization = new IntegerNullString
                             {
-                                ID = Org.OId,
+                                Id = Org.OId,
                                 Text = Org.OrganisationName
                             },
                             URId= _subOrg.URId,

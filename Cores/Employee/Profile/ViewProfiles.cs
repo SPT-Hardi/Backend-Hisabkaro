@@ -105,7 +105,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                     {
                         EmpResumeEducationId = item.EmpResumeEducationId,
                         InstituteName = item.InstituteName,
-                        EducationName = new IntegerNullString() { ID = item.EducationNameId, Text = item.SubFixedLookup.FixedLookup },
+                        EducationName = new IntegerNullString() { Id = item.EducationNameId, Text = item.SubFixedLookup.FixedLookup },
                         EducationStreamName = item.EducationSteamName,
                         TotalDuration = syear + "-" + eyear,
                     });
