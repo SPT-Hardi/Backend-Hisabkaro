@@ -126,9 +126,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     var _users = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
 
-                    //var _s = (from x in c.DevOrganisationsStaffs
-                    //          where x.OId == _OId.OId && x.URId == _URID.URId
-                    //          select x).FirstOrDefault();
                     var _Sid = (from x in c.DevOrganisationsStaffs
                               where x.OId == _OId.OId
                               select x).Max(x => x.SId);

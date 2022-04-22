@@ -16,9 +16,10 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
         public DateTime EndDate { get; set; }
 
         [Required]
-        public string Reason { get; set; }    
-        
-        [Required]
-        public bool IsPaidLeave { get; set; }
+        public string Reason { get; set; }  
+
+        public int? Paid { get; set; }
+
+        public int? UnPaid { get; set; }
     }
 }

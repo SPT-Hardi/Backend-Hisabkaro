@@ -32,16 +32,24 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     {
                         throw new ArgumentException("Access not allow!!");
                     }
-
+                  
                     var request = new OrgStaffsLeaveApplication()
                     {
                         URId = staff.URId,
-                        StartDate = value.StartDate,
-                        EndDate = value.EndDate,
+                        StartDate = value.StartDate.ToLocalTime(),
+                        EndDate = value.EndDate.ToLocalTime(),
                         Reason = value.Reason,
-                        IsPaidLeave = value.IsPaidLeave,
+                        PaidDays = (value.Paid == null ? 0 : value.Paid),
+                        UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid),
                         IsLeaveApproved = "Accepted"
                     };
+                    var duration = request.EndDate.Subtract(request.StartDate).Days;
+                    var total = request.PaidDays + request.UnPaidDays;
+                    if (total > duration || total < duration)
+                    {
+                        throw new ArgumentException("Approve days not match with leave duration");
+                    }
+
                     c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                     c.SubmitChanges();
                     var name = request.SubUserOrganisation.SubUser.SubUsersDetail.FullName;

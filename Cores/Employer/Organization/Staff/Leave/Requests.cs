@@ -25,7 +25,6 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     StartDate = value.StartDate,
                     EndDate = value.EndDate,
                     Reason = value.reason,
-                    IsPaidLeave = value.Ispaid,
                     IsLeaveApproved = "Pending"
                 };
                 c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
@@ -54,14 +53,14 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                 }
 
                 var leave = (from x in c.OrgStaffsLeaveApplications
+                             orderby x.OrgStaffLeaveId descending
                              where x.URId == user.URId
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,
                                  Reason = x.Reason,
-                                 StartDate = "From :" + x.StartDate,
-                                 EndDate = "To :" + x.EndDate,
-                                 Paid = x.IsPaidLeave == true ? "Paid" : "Unpaid",
+                                 StartDate =  x.StartDate,
+                                 EndDate = x.EndDate,
                                  IsApprove = x.IsLeaveApproved
                              }).ToList();
                 if (leave == null)
