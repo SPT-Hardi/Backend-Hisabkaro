@@ -47,11 +47,11 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
             using (DBContext c = new DBContext())
             {
                 return (from x in c.DevOrganisationsShiftTimes
-                        where x.OId == c.SubUserOrganisations.Where(x=>x.URId==URId).SingleOrDefault().OId
+                        where x.OId == c.SubUserOrganisations.Where(x=>x.URId==URId).FirstOrDefault().OId
                         select new IntegerNullString()
                         {
                             Id = x.ShiftTimeId,
-                            Text = x.StartTime.ToString(),
+                            Text = Convert.ToDateTime(x.StartTime.ToString()).ToString("hh:mm tt")
                         }).ToList();
             }
         }

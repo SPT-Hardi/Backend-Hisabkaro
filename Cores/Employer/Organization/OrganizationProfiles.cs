@@ -52,7 +52,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                                         where f.FileId == x.PANFileId
                                         select f.FilePath).SingleOrDefault(),
                              Email = x.Email,
-                             AddressId=x.ContactAddressId,
                              Address= (from a in c.CommonContactAddresses
                                        where a.ContactAddressId == x.ContactAddressId
                                        select new Models.Common.Contact.Address
@@ -77,6 +76,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                                          where p.OId == x.OId
                                          select new Models.Employer.Organization.Partner
                                          {
+                                             PartnerId = p.PId,
                                              Email = p.Email,
                                              Mobilenumber = p.MobleNumber,
                                              OwnershipTypeID = (from l in c.SubLookups
@@ -133,16 +133,8 @@ namespace HIsabKaro.Cores.Employer.Organization
                         var _AId = _contactAddress.Update((int)_OId.ContactAddressId,value.Address);
                         _OId.ContactAddressId = _AId.Data;
                     }
-                    //var _shift = value.ShiftTime.Select(x => x.ShiftTimeId).ToList();
-                    //if (_shift is null)
-                    //{
-                        var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
-                    //}
-                    //else
-                    //{
-                    //    //var shifttime = _shiftTimes.Update(_OId.OId, value.ShiftTime);
-                    //}
-
+                    var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
+                    
                     var _LogoFileId = (from x in c.CommonFiles where x.FGUID == value.LogoFile select x).FirstOrDefault();
                     var _GSTFileId = (from x in c.CommonFiles where x.FGUID == value.GST select x).FirstOrDefault();
                     var _PANFileId = (from x in c.CommonFiles where x.FGUID == value.PanCard select x).FirstOrDefault();
@@ -157,14 +149,16 @@ namespace HIsabKaro.Cores.Employer.Organization
                     
                     c.SubmitChanges();
 
-                    c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
-                    {
-                        OId = OId,
-                        OwnershipTypeId=x.OwnershipTypeID.Id,
-                        Email=x.Email,
-                        MobleNumber=x.Mobilenumber,
-                    }).ToList());
-                    c.SubmitChanges();
+                    var _Partner = PartnerCreate(_OId.OId, value.Partners);
+
+                    //c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
+                    //{
+                    //    OId = _OId.OId,
+                    //    OwnershipTypeId=x.OwnershipTypeID.Id,
+                    //    Email=x.Email,
+                    //    MobleNumber=x.Mobilenumber,
+                    //}).ToList());
+                    //c.SubmitChanges();
 
                     var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == UserId && x.OId == OId && x.RId == _OrgRole.RId);
@@ -189,6 +183,54 @@ namespace HIsabKaro.Cores.Employer.Organization
                     };
                 }
             }
-        }  
+        }
+
+        internal Result PartnerCreate(int OId, List<Models.Employer.Organization.Partner> value)
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var listPartner = value.Select(x => new { Email = x.Email, MobileNumber = x.Mobilenumber }).ToList();
+                    if (listPartner.Distinct().Count() != listPartner.Count())
+                    {
+                        throw new ArgumentException($"Duplecate Entry In Partners!");
+                    }
+
+                    value.ForEach((x) =>
+                    {
+                        if (x.PartnerId is null)
+                        {
+                            var partner = new DevOrganisationsPartner()
+                            {
+                                Email=x.Email,
+                                MobleNumber=x.Mobilenumber,
+                                OwnershipTypeId=x.OwnershipTypeID.Id,
+                                OId = OId
+                            };
+                            c.DevOrganisationsPartners.InsertOnSubmit(partner);
+                            c.SubmitChanges();
+                        }
+                        else
+                        {
+                            var _partner = c.DevOrganisationsPartners.SingleOrDefault(y => y.PId == x.PartnerId);
+                            _partner.Email = x.Email;
+                            _partner.MobleNumber = x.Mobilenumber;
+                            _partner.OwnershipTypeId = x.OwnershipTypeID.Id;
+                            _partner.OId = OId;
+                            c.SubmitChanges();
+                        }
+                    });
+                    scope.Complete();
+                    return new Models.Common.Result
+                    {
+                        Status = Models.Common.Result.ResultStatus.success,
+                        Message = string.Format("Partners Added Successfully!"),
+                    };
+                }
+            }
+        }
+
+
     }
 }

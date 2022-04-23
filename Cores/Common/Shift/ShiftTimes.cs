@@ -50,7 +50,7 @@ namespace HIsabKaro.Cores.Common.Shift
                     return new Models.Common.Result
                     {
                         Status = Models.Common.Result.ResultStatus.success,
-                        Message = string.Format("Contact Address Added Successfully!"),
+                        Message = string.Format("Shift Time Added Successfully!"),
                     };
                 }
             }

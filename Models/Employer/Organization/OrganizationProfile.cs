@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace HIsabKaro.Models.Employer.Organization
@@ -28,6 +29,8 @@ namespace HIsabKaro.Models.Employer.Organization
     
     public class Partner
     {
+        [JsonIgnore]
+        public int? PartnerId { get; set; }
         public string Email { get; set; }
         public string Mobilenumber { get; set; }
         public Common.IntegerNullString OwnershipTypeID { get; set; } = new Common.IntegerNullString();
