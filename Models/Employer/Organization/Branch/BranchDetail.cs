@@ -15,7 +15,7 @@ namespace HIsabKaro.Models.Employer.Organization.Branch
 
         public bool status { get; set; }
 
-        public ShitTime ShitTime { get; set; }
+        public List<ShitTime> ShitTime { get; set; } = new List<ShitTime>();
 
         public Address Address { get; set; }
 

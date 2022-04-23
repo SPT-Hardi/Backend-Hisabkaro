@@ -54,22 +54,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
 
                     if (value.status == true)
                     {
-                        var shiftTime = new Models.Common.Shift.ShitTime();
+                        var shiftTime = new List<Models.Common.Shift.ShitTime>();
                         var shift = (from x in c.DevOrganisationsShiftTimes
                                      where x.OId == _OId.OId
-                                     select
-                                     new Models.Common.Shift.TimeList()
+                                     select new Models.Common.Shift.ShitTime()
                                      {
+                                         ShiftTimeId=x.ShiftTimeId,
                                          StartTime = x.StartTime,
                                          EndTime = x.EndTime,
                                          MarkLate = x.MarkLate,
                                      }).ToList();
-                        shiftTime.TimeLists = shift;
-                        var shifttime = _shiftTimes.CreateBranchShift(shiftTime, _OId.OId, branch.BranchId);
+                        shiftTime = shift;
+                        var shifttime = _shiftTimes.CreateBranchShift(_OId.OId, branch.BranchId, shiftTime);
                     }
                     else
                     {
-                        var shifttime = _shiftTimes.CreateBranchShift(value.ShitTime, _OId.OId, branch.BranchId);
+                        var shifttime = _shiftTimes.CreateBranchShift( _OId.OId, branch.BranchId, value.ShitTime);
                     }
                     scope.Complete();
                     return new Result()
