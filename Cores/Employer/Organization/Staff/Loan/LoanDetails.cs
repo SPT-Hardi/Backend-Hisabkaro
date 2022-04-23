@@ -27,19 +27,45 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     {
                         throw new ArgumentException("Staff Doesn't exist");
                     }
-                   
-                    var month = 0.0;
-                    var totaldays =(value.EndDate - value.StartDate).TotalDays;
-                    month = (int)Math.Floor(totaldays / 30);
+
+                    var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == staff.URId);
+                    if (org_staff == null)
+                    {
+                        throw new ArgumentException("Staff Doesn't exist in org");
+                    }
+
+                    //decimal MontlyPay = PrincipalAmt / month;
+                    //var t = (value.EndDate.Year - value.StartDate.Year);
+                    //double totaldays =(value.EndDate - value.StartDate).TotalDays;
+                    ////month = (int)Math.Floor(totaldays / 30);
+                    //////var total = Convert.ToDouble(value.Amount) * totaldays;
+                    //////var interest = (total / int.Parse(value.Interest.Text)) +  (total % int.Parse(value.Interest.Text));
+                    //////var monthlypay = total + interest;
+                    //var interestRate = 0.12;
+                    //////var i = //Convert.ToDecimal(int.Parse(value.Interest.Text) / 100);
+                    ////var interest = Convert.ToDouble(value.Amount) * (totaldays / 365) * interestRate;
+                    ////var monthlypay = (interest + Convert.ToDouble(value.Amount)) / totaldays ;
+
+                    int totalMonth = 12 * (value.StartDate.Year - value.EndDate.Year) + value.StartDate.Month - value.EndDate.Month;
+                    int month = (Math.Abs(totalMonth));
+                    var d = $"{(month / 12)}year{(month % 12)}month";
+                    decimal principal = value.Amount;
+                    decimal rate = decimal.Parse(value.Interest.Text);
+                    double no = Math.Round(((float)month / 12), 2);
+                    decimal interestPaid = principal * (rate / 100) * Convert.ToDecimal(no);
+                    decimal PrincipalAmt = principal + interestPaid;
+                    decimal monthlypay = PrincipalAmt / month;
                     var loan = new OrgStaffsLoanDetail()
                     {
                         StartDate = value.StartDate.ToLocalTime(),
                         EndDate = value.EndDate.ToLocalTime(),
                         Amount = value.Amount,
-                        Duration = $"{Math.Floor(month/12)}year{(month%12)}month",
-                        MonthlyPay = value.Monthlypay,
+                        Duration = d,
+                        MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
                         Description = value.Description,
-                        URId = StaffId
+                        URId = StaffId,
+                        InterestId = value.Interest.Id,
+                        PrincipalAmt = PrincipalAmt
                     };
                     c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
                     c.SubmitChanges();
@@ -52,7 +78,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         Data = new
                         {
                             Id = loan.LoanId,
-                            Name = name
+                            Name = "name"
                         },
                     };
                 }
