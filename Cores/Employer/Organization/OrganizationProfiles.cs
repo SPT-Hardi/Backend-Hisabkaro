@@ -52,6 +52,26 @@ namespace HIsabKaro.Cores.Employer.Organization
                                         where f.FileId == x.PANFileId
                                         select f.FilePath).SingleOrDefault(),
                              Email = x.Email,
+                             AddressId=x.ContactAddressId,
+                             Address= (from a in c.CommonContactAddresses
+                                       where a.ContactAddressId == x.ContactAddressId
+                                       select new Models.Common.Contact.Address
+                                       {
+                                           AddressLine1=a.AddressLine1,
+                                           AddressLine2=a.AddressLine2,
+                                           City=a.City,
+                                           State=a.State,
+                                           PinCode= (int)a.PinCode,
+                                           LandMark=a.Landmark
+                                       }).SingleOrDefault(),
+                             ShitTime = (from s in c.DevOrganisationsShiftTimes
+                                         where s.OId == x.OId
+                                         select new Models.Common.Shift.ShitTime
+                                         {
+                                             ShiftTimeId = s.ShiftTimeId,
+                                             StartTime = s.StartTime,
+                                             EndTime = s.EndTime,
+                                             MarkLate = s.MarkLate}).ToList(),
                              MobileNumber = x.MobileNumber,
                              Partners = (from p in c.DevOrganisationsPartners
                                          where p.OId == x.OId
@@ -103,14 +123,33 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException($"Duplecate Entry In Partners!");
                     }
 
-                    var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
-                    var _AId = _contactAddress.Create(value.Address);
+                    if(_OId.ContactAddressId is null)
+                    {
+                        var _AId = _contactAddress.Create(value.Address);
+                        _OId.ContactAddressId = _AId.Data;
+                    }
+                    else
+                    {
+                        var _AId = _contactAddress.Update((int)_OId.ContactAddressId,value.Address);
+                        _OId.ContactAddressId = _AId.Data;
+                    }
+                    //var _shift = value.ShiftTime.Select(x => x.ShiftTimeId).ToList();
+                    //if (_shift is null)
+                    //{
+                        var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
+                    //}
+                    //else
+                    //{
+                    //    //var shifttime = _shiftTimes.Update(_OId.OId, value.ShiftTime);
+                    //}
+
+                    var _LogoFileId = (from x in c.CommonFiles where x.FGUID == value.LogoFile select x).FirstOrDefault();
                     var _GSTFileId = (from x in c.CommonFiles where x.FGUID == value.GST select x).FirstOrDefault();
                     var _PANFileId = (from x in c.CommonFiles where x.FGUID == value.PanCard select x).FirstOrDefault();
 
+                    _OId.LogoFileId = _LogoFileId == null ? null : _LogoFileId.FileId;
                     _OId.GSTFileId = _GSTFileId==null ? null : _GSTFileId.FileId;
                     _OId.GSTIN = value.GSTNumber;
-                    _OId.ContactAddressId = _AId.Data;
                     _OId.PAN = value.PanCardNumber;
                     _OId.PANFileId = _PANFileId.FileId;
                     _OId.Email = value.Email;

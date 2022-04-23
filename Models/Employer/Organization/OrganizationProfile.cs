@@ -10,10 +10,11 @@ namespace HIsabKaro.Models.Employer.Organization
 {
     public class OrganizationProfile
     {
+        public string LogoFile { get; set; }
         [RegularExpression(@"^[0-9]{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[A-Z]{1}\d{1}$", ErrorMessage = "Invalid GST Number!")]
         public string GSTNumber { get; set; }
         public string GST { get; set; }
-        public ShitTime ShiftTime { get; set; }
+        public List<ShitTime> ShiftTime { get; set; } = new List<ShitTime>();        
         public Address Address { get; set; }
         [Required(ErrorMessage = "Pan Card Number Is Required!")]
         [RegularExpression(@"^[A-Z]{5}\d{4}[A-Z]{1}$", ErrorMessage = "Invalid Pan Card Number!")] 

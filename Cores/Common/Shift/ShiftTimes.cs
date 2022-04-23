@@ -4,51 +4,69 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace HIsabKaro.Cores.Common.Shift
 {
     public class ShiftTimes
     {
-        internal Result Create(int OId ,Models.Common.Shift.ShitTime value)
+        internal Result Create(int OId ,List<Models.Common.Shift.ShitTime> value)
         {
-            using (DBContext c = new DBContext())
+            using (TransactionScope scope = new TransactionScope())
             {
-                var listShift = value.TimeLists.Select(x => new { starttime = x.StartTime, Endtime = x.EndTime, marklate = x.MarkLate }).ToList();
-                if (listShift.Distinct().Count() != listShift.Count())
+                using (DBContext c = new DBContext())
                 {
-                    throw new ArgumentException($"Duplicate Entry In Times!");
+                    var listShift = value.Select(x => new { starttime = x.StartTime, Endtime = x.EndTime, marklate = x.MarkLate }).ToList();
+                    if (listShift.Distinct().Count() != listShift.Count())
+                    {
+                        throw new ArgumentException($"Duplicate Entry In Times!");
+                    }
+
+                    value.ForEach((x) =>
+                    {
+                        if (x.ShiftTimeId is null)
+                        {
+                            var shifttime = new DevOrganisationsShiftTime()
+                            {
+                                StartTime = (TimeSpan)x.StartTime,
+                                EndTime = (TimeSpan)x.EndTime,
+                                MarkLate = x.MarkLate,
+                                OId = OId
+                            };
+                            c.DevOrganisationsShiftTimes.InsertOnSubmit(shifttime);
+                            c.SubmitChanges();
+                        }
+                        else
+                        {
+                            var _Shift = c.DevOrganisationsShiftTimes.SingleOrDefault(y => y.ShiftTimeId == x.ShiftTimeId);
+                            _Shift.StartTime = (TimeSpan)x.StartTime;
+                            _Shift.EndTime = (TimeSpan)x.EndTime;
+                            _Shift.MarkLate = x.MarkLate;
+                            _Shift.OId = OId;
+                            c.SubmitChanges();
+                        }
+                    });
+                    scope.Complete();
+                    return new Models.Common.Result
+                    {
+                        Status = Models.Common.Result.ResultStatus.success,
+                        Message = string.Format("Contact Address Added Successfully!"),
+                    };
                 }
-
-                var shifttime = value.TimeLists.Select(x => new DevOrganisationsShiftTime()
-                {
-                    StartTime = (TimeSpan)x.StartTime,
-                    EndTime = (TimeSpan)x.EndTime,
-                    MarkLate = x.MarkLate,
-                    OId = OId
-                });
-                c.DevOrganisationsShiftTimes.InsertAllOnSubmit(shifttime);
-                c.SubmitChanges();
-
-                var id = shifttime.Select(x => x.OId == OId).ToList();
-                return new Models.Common.Result
-                {
-                    Status = Models.Common.Result.ResultStatus.success,
-                    Message = string.Format("Contact Address Added Successfully!"),
-                };
             }
         }
 
-        internal Result CreateBranchShift(Models.Common.Shift.ShitTime value, int OId, int BId)
+        internal Result CreateBranchShift(int OId, int BId, List<Models.Common.Shift.ShitTime> value)
         {
             using (DBContext c = new DBContext())
             {
-                var listShift = value.TimeLists.Select(x => new { starttime = x.StartTime, Endtime = x.EndTime, marklate = x.MarkLate }).ToList();
+                var listShift = value.Select(x => new { starttime = x.StartTime, Endtime = x.EndTime, marklate = x.MarkLate }).ToList();
                 if (listShift.Distinct().Count() != listShift.Count())
                 {
                     throw new ArgumentException($"Duplicate Entry In Times!");
                 }
 
-                var shifttime = value.TimeLists.Select(x => new DevOrganisationsBranchesShiftTime()
+                var shifttime = value.Select(x => new DevOrganisationsBranchesShiftTime()
                 {
                     StartTime = (TimeSpan)x.StartTime,
                     EndTime = (TimeSpan)x.EndTime,
