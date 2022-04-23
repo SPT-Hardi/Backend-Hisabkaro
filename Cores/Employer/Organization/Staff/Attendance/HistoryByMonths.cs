@@ -19,7 +19,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 using (DBContext c = new DBContext())
                 {
                     List<AttendanceHistory> attendanceHistory = new List<AttendanceHistory>();
-                    var lateby = new TimeSpan();
+                    //var lateby = new TimeSpan();
                     var presentcount = 0;
                     var latecount = 0;
                     var currentdate = DateTime.Now;
@@ -36,7 +36,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         throw new ArgumentException("Staff not exist in organization!");
                     }
-                    if (date.Date < DateTime.Now.Date && date.Year < DateTime.Now.Year)
+                    //for past month 
+                    if (date.Month < DateTime.Now.Month && date.Year <= DateTime.Now.Year)
                     {
 
                         var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
@@ -50,10 +51,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 presentcount += 1;
 
                                 
-                                if (checkpresent.IsLate==true)
+                                if (checkpresent.Lateby!=null)
                                 {
                                     latecount += 1;
-                                    lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)Org.DevOrganisationsShiftTime.MarkLate;
+                                    
                                 }
                                 var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                 var monthname = checkindate.ToString("MMMM").Substring(0, 3);
@@ -65,7 +66,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     Status = "Present",
                                     CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                    LateBy = lateby.ToString(@"hh\:mm"),
+                                    LateBy = checkpresent.Lateby==null ? null  :checkpresent.Lateby.Value.ToString(@"hh\:mm"),
                                     TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
 
                                 });
@@ -94,6 +95,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         historyByMonth.Absent = days - presentcount;
                         historyByMonth.Late = latecount;
                     }
+                    //for current month
                     else
                     {
                         DateTime startDate = new DateTime(date.Year, date.Month, day: 1);
@@ -107,10 +109,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             {
                                 presentcount += 1;
 
-                                if (checkpresent.IsLate == true)
+                                if (checkpresent.Lateby !=null)
                                 {
                                     latecount += 1;
-                                    lateby = checkpresent.ChekIN.Value.TimeOfDay - (TimeSpan)Org.DevOrganisationsShiftTime.MarkLate;
+                                    
                                 }
                                 var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                 var monthname = checkindate.ToString("MMMM").Substring(0, 3);
@@ -123,7 +125,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     Status = "Present",
                                     CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                     CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                    LateBy = lateby.ToString(@"hh\:mm"),
+                                    LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
                                     TotalWorkingHourPerDay = checkpresent.CheckOUT==null? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
 
                                 });
@@ -155,12 +157,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         
 
                     }
-                    var totalhour = Math.Floor((totalworkinghourmonth.TotalMinutes) / 60);
-                    var remainminute = (totalworkinghourmonth.TotalMinutes) - (totalhour * 60);
+                    var totalhour = (Math.Floor((totalworkinghourmonth.TotalMinutes) / 60));
+                    var remainminute = Math.Floor((totalworkinghourmonth.TotalMinutes) - (totalhour * 60));
 
                     historyByMonth.attendanceHistory = attendanceHistory;
                     historyByMonth.AttendanceMonth = $"{date.ToString("MMMM").Substring(0, 3)},{date.Year}";
-                    historyByMonth.TotalWorkingHourPerMonth = $"{totalhour}:{remainminute}";
+                    historyByMonth.TotalWorkingHourPerMonth = ($"{totalhour}:{remainminute}");
                     historyByMonth.URId = URId;
                     historyByMonth.Name = Org.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
                     historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath;

@@ -20,7 +20,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == DateTime.Now.Date && x.URId == URId).SingleOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
-                    bool late=false;
+                    TimeSpan lateby=new TimeSpan();
                     if (qs == null)
                      {
 
@@ -31,13 +31,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         }
                         if (DateTime.Now.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate) 
                         {
-                            late = true;
+                            lateby = DateTime.Now.TimeOfDay-(TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
                         }
                         OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                         attendance.URId = URId;
                         attendance.LastUpdateDate = DateTime.Now;
                         attendance.ChekIN = DateTime.Now;
-                        attendance.IsLate = late;
+                        attendance.Lateby = lateby;
                         c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
