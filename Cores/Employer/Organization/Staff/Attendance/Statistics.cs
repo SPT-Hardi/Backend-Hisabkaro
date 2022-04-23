@@ -42,7 +42,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                            URId = obj1.URId,
                                            CheckIN = obj1.ChekIN,
                                            CheckOUT = obj1.CheckOUT,
-                                           IsLate = obj1.IsLate,
+                                           Lateby= obj1.Lateby,
                                            MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
                                            Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                            ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
@@ -73,14 +73,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                       }).ToList();
                     foreach (var item in presentlist)
                     {
-                        var lateby = new TimeSpan();
+                        
                         //var today = date.ToString("dd/MM/yyyy");
                         presentcount += 1;
 
-                        if (item.IsLate == true)
+                        if (item.Lateby !=null)
                         {
                             latecount += 1;
-                            lateby = item.CheckIN.Value.TimeOfDay - (TimeSpan)item.MarkLate;
                         }
                         attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
                         {
@@ -89,7 +88,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             CheckIN = item.CheckIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                             CheckOUT = item.CheckOUT == null ? null : item.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                             Status = "Present",
-                            LateBy = lateby.ToString(@"hh\:mm"),
+                            LateBy = item.Lateby==null ? null : item.Lateby.Value.ToString(@"hh\:mm"),
                             Name = item.Name,
                             ImagePath = item.ImagePath,
                         });
@@ -112,18 +111,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             ImagePath = item.ImagePath,
                         });
 
+                        
                     }
                     var statistics = new Models.Employer.Organization.Staff.Attendance.Statistic()
                     {
+                        Organization = new IntegerNullString() { Id = findorg.OId, Text = findorg.DevOrganisation.OrganisationName },
                         TotalEmployee = totalemp.Count(),
                         Present = presentlist.Count(),
                         Absent = absentlist.Count(),
                         Late = latecount,
                         WeeklyOff = 0,
                     };
-
-
-
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,

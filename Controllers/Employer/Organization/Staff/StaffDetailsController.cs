@@ -41,12 +41,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         [HttpGet]
         [Route("StaffDetails/Drop")]
-        public List<IntegerNullString> Drop([FromQuery] int OId)
+        public List<IntegerNullString> Drop()
         {
+            int URId = (int)HttpContext.Items["URId"];
             using (DBContext c = new DBContext())
             {
                 return (from x in c.DevOrganisationsShiftTimes
-                        where x.OId == OId
+                        where x.OId == c.SubUserOrganisations.Where(x=>x.URId==URId).SingleOrDefault().OId
                         select new IntegerNullString()
                         {
                             Id = x.ShiftTimeId,

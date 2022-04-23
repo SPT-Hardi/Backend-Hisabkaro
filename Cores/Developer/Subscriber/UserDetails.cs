@@ -40,9 +40,14 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         throw new ArgumentException("User not Exist!");
                     }
                     var usersDetail = c.SubUsersDetails.Where(x => x.UId == UID).SingleOrDefault();
+                   
                     if(usersDetail!=null && user.LoginTypeId != null) 
                     {
                         throw new ArgumentException("User details already exist!");
+                    }
+                    if (user.MobileNumber == value.userdetails.AMobileNumber) 
+                    {
+                        throw new ArgumentException("Alternate Mobilenumber and Mobilenumber should be different!");
                     }
                     user.LoginTypeId = value.role.Id;
                     c.SubmitChanges();
