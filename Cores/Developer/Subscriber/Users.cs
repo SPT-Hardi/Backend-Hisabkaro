@@ -153,7 +153,15 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
                     var udetails = c.SubUsersDetails.Where(x => x.UId == user.UId).SingleOrDefault();
 
-                    
+                var organizationlist = (from obj in c.DevOrganisations
+                                        where obj.UId == user.UId
+                                        select new IntegerNullString()
+                                        {
+                                            Id=obj.OId,
+                                            Text=obj.OrganisationName,
+
+                                        }).ToList();
+                
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
@@ -169,6 +177,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                             AMobileNumber = udetails == null ? null : udetails.AMobileNumber,
                             Email = udetails == null ? null : udetails.Email,
                             PhotoId = udetails == null ? null : udetails.FileId,
+                            Organization=organizationlist,
 
                         },
                     };

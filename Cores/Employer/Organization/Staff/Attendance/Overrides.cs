@@ -17,6 +17,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 using (DBContext c = new DBContext())
                 {
                     var findrole = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    //remove after contoller added
+                   /* if (findrole.SubRole.RoleName.ToLower() != "admin") 
+                    {
+                        throw new ArgumentException("You are not authorize!");
+                    }*/
                     var staffexist = c.SubUserOrganisations.Where(x => x.OId == findrole.OId && x.URId == value.URId).SingleOrDefault();
                     if (staffexist == null) 
                     {
@@ -26,7 +31,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     //33-present
                     //34-absent
                     //35-HalfDay
-                    var checkindate = value.AttendanceDate.ToString("dd/MM/yyyy");
+                    var checkindate = value.AttendanceDate.ToString("yyyy/MM/dd");
                     var org = c.DevOrganisationsStaffs.Where(x => x.URId == value.URId).SingleOrDefault();
                     if (org==null) 
                     {
@@ -42,8 +47,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         else if (value.Status.Id == 33)
                         {
                             OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
-                            attendance.ChekIN = DateTime.Parse($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
-                            attendance.CheckOUT = DateTime.Parse($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
+                            attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
+                            attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
                             attendance.URId = value.URId;
                             attendance.LastUpdateDate = DateTime.Now;
                             attendance.IsAccessible = false;
@@ -55,8 +60,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                             var total_org_runnigtime = (org.DevOrganisationsShiftTime.EndTime-org.DevOrganisationsShiftTime.StartTime)/2;
                             var checkouttime= org.DevOrganisationsShiftTime.EndTime-total_org_runnigtime;
-                            attendance.ChekIN = DateTime.Parse($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
-                            attendance.CheckOUT = DateTime.Parse($"{checkindate} {checkouttime}");
+                            attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
+                            attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             attendance.URId = value.URId;
                             attendance.LastUpdateDate = DateTime.Now;
                             attendance.IsAccessible = false;
@@ -83,8 +88,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             
                             var total_org_runnigtime = (org.DevOrganisationsShiftTime.EndTime - org.DevOrganisationsShiftTime.StartTime) / 2;
                             var checkouttime = org.DevOrganisationsShiftTime.EndTime - total_org_runnigtime;
-                            staffattendance.ChekIN = DateTime.Parse($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
-                            staffattendance.CheckOUT = DateTime.Parse($"{checkindate} {checkouttime}");
+                            staffattendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
+                            staffattendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             staffattendance.URId = value.URId;
                             staffattendance.LastUpdateDate = DateTime.Now;
                             staffattendance.IsAccessible = false;

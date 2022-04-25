@@ -21,6 +21,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
                     var attendancelist = new List<Models.Employer.Organization.Staff.Attendance.AttendanceList>();
                     var findorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    //remove after controller logic added
+                    /*if (findorg.SubRole.RoleName.ToLower() != "admin") 
+                    {
+                        throw new ArgumentException("You are not authorize!");
+                    }*/
                     if (findorg == null)
                     {
                         throw new ArgumentException("Organization not exist,(enter valid token)");
