@@ -64,7 +64,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
                         Description = value.Description,
                         URId = StaffId,
-                        InterestId = value.Interest.Id,
+                        InterestId = (int)value.Interest.Id,
                         PrincipalAmt = PrincipalAmt
                     };
                     c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
