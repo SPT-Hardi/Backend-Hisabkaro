@@ -12,32 +12,39 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
     {
         public Result One(int URId)
         {
-            using (DBContext c = new DBContext())
+            using (DBContext c = new DBContext())                                                          
             {
-                var _SId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == URId);
+                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
-                var _Bonus = (from x in c.OrgStaffsBonusDetails
-                                 where x.URId == URId
-                                 select new
-                                 {
-                                     StaffURId = x.StaffURId,
-                                     FullName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
-                                     Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FilePath,
-                                     Date=x.Date,
-                                     Description = x.Description,
-                                     Amount = x.Amount,
-                                     URId = URId,
-                                 }).ToList();
+                var _Org = (from x in c.DevOrganisationsStaffs
+                            where x.URId == URId
+                            select new
+                            {
+                                URId = URId,
+                                DOB = x.DOB,
+                                Gender = x.Gender,
+                                Address = (from y in c.CommonContactAddresses
+                                           where y.ContactAddressId == x.SubUserOrganisation.SubUser.SubUsersDetail.AddressID
+                                           select new
+                                           {
+                                               AddressLine1 = y.AddressLine1,
+                                               AddressLine2 = y.AddressLine2,
+                                               City = y.City,
+                                               State = y.State,
+                                               PinCode = y.PinCode,
+                                               LandMark = y.Landmark
+                                           }).FirstOrDefault(),
+                            }).ToList();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Success"),
-                    Data = _Bonus,
+                    Data = _Org,
 
                 };
             }
@@ -67,11 +74,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
 
                     var _Bouns = new OrgStaffsBonusDetail()
                     {
-                        StaffURId=StaffId,
+                        URId=StaffId,
                         Date = value.Date,
                         Amount=value.Amount,
                         Description=value.Description,
-                        URId= URId,
                     };
                     c.OrgStaffsBonusDetails.InsertOnSubmit(_Bouns);
                     c.SubmitChanges();
