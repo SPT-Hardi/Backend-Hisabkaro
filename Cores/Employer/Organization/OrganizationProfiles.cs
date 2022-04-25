@@ -34,57 +34,56 @@ namespace HIsabKaro.Cores.Employer.Organization
                 {
                     throw new ArgumentException("Organization Does Not Exits!");
                 }
-
                 var _Org = (from x in c.DevOrganisations
-                         where x.OId == OId
-                         select new
-                         {
-                             Organization = new IntegerNullString { Id = x.OId, Text = x.OrganisationName },
-                             Image = (from f in c.CommonFiles
-                                      where f.FileId == x.LogoFileId
-                                      select f.FilePath).SingleOrDefault(),
-                             GSTNumber = x.GSTIN,
-                             GST = (from f in c.CommonFiles
-                                    where f.FileId == x.GSTFileId
-                                    select f.FilePath).SingleOrDefault(),
-                             PanCardNumber = x.PAN,
-                             PanCard = (from f in c.CommonFiles
-                                        where f.FileId == x.PANFileId
-                                        select f.FilePath).SingleOrDefault(),
-                             Email = x.Email,
-                             Address= (from a in c.CommonContactAddresses
-                                       where a.ContactAddressId == x.ContactAddressId
-                                       select new Models.Common.Contact.Address
-                                       {
-                                           AddressLine1=a.AddressLine1,
-                                           AddressLine2=a.AddressLine2,
-                                           City=a.City,
-                                           State=a.State,
-                                           PinCode= (int)a.PinCode,
-                                           LandMark=a.Landmark
-                                       }).SingleOrDefault(),
-                             ShitTime = (from s in c.DevOrganisationsShiftTimes
-                                         where s.OId == x.OId
-                                         select new Models.Common.Shift.ShitTime
-                                         {
-                                             ShiftTimeId = s.ShiftTimeId,
-                                             StartTime = s.StartTime,
-                                             EndTime = s.EndTime,
-                                             MarkLate = s.MarkLate}).ToList(),
-                             MobileNumber = x.MobileNumber,
-                             Partners = (from p in c.DevOrganisationsPartners
-                                         where p.OId == x.OId
-                                         select new Models.Employer.Organization.Partner
-                                         {
-                                             PartnerId = p.PId,
-                                             Email = p.Email,
-                                             Mobilenumber = p.MobleNumber,
-                                             OwnershipTypeID = (from l in c.SubLookups
-                                                                where l.LookupId == p.OwnershipTypeId
-                                                                select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()
-                                         }).ToList()
-                         }).ToList();
+                            where x.OId == OId
+                            select new Models.Employer.Organization.OrganizationProfile
+                            {
 
+                                LogoFile = (from f in c.CommonFiles
+                                            where f.FileId == x.LogoFileId
+                                            select f.FilePath).SingleOrDefault(),
+                                GSTNumber = x.GSTIN,
+                                GST = (from f in c.CommonFiles
+                                       where f.FileId == x.GSTFileId
+                                       select f.FilePath).SingleOrDefault(),
+                                ShiftTime = (from s in c.DevOrganisationsShiftTimes
+                                             where s.OId == x.OId
+                                             select new Models.Common.Shift.ShitTime
+                                             {
+                                                 ShiftTimeId = s.ShiftTimeId,
+                                                 StartTime = s.StartTime,
+                                                 EndTime = s.EndTime,
+                                                 MarkLate = s.MarkLate
+                                             }).ToList(),
+                                Address = (from a in c.CommonContactAddresses
+                                           where a.ContactAddressId == x.ContactAddressId
+                                           select new Models.Common.Contact.Address
+                                           {
+                                               AddressLine1 = a.AddressLine1,
+                                               AddressLine2 = a.AddressLine2,
+                                               City = a.City,
+                                               State = a.State,
+                                               PinCode = (int)a.PinCode,
+                                               LandMark = a.Landmark
+                                           }).SingleOrDefault(),
+                                PanCardNumber = x.PAN,
+                                PanCard = (from f in c.CommonFiles
+                                           where f.FileId == x.PANFileId
+                                           select f.FilePath).SingleOrDefault(),
+                                Email = x.Email,
+
+                                MobileNumber = x.MobileNumber,
+                                Partners = (from p in c.DevOrganisationsPartners
+                                            where p.OId == x.OId
+                                            select new Models.Employer.Organization.Partner
+                                            {
+                                                Email = p.Email,
+                                                Mobilenumber = p.MobleNumber,
+                                                OwnershipTypeID = (from l in c.SubLookups
+                                                                   where l.LookupId == p.OwnershipTypeId
+                                                                   select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()
+                                            }).ToList()
+                            }).FirstOrDefault();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
