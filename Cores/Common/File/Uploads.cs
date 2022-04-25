@@ -30,9 +30,9 @@ namespace HIsabKaro.Cores.Common.File
                 }
                 if (objFile.files.Length > 0)
                 {
-                    if (!Directory.Exists(_environment.WebRootPath + "\\Upload\\"))
+                    if (!Directory.Exists(_environment.WebRootPath + "/Upload/"))
                     {
-                        Directory.CreateDirectory(_environment.WebRootPath + "\\Upload\\");
+                        Directory.CreateDirectory(_environment.WebRootPath + "/Upload/");
                     }
                     var supportedTypes = new[] { ".jpg", ".jpeg", ".pdf",".png" };
                     var fileExt = "." + System.IO.Path.GetExtension(objFile.files.FileName).Substring(1);
@@ -43,7 +43,7 @@ namespace HIsabKaro.Cores.Common.File
 
                     var fileName = DateTime.Now.Ticks + fileExt; 
                     
-                    using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\Upload\\" + fileName))
+                    using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/Upload/" + fileName))
                     {
                         objFile.files.CopyTo(fileStream);
                         fileStream.Flush();
@@ -51,7 +51,7 @@ namespace HIsabKaro.Cores.Common.File
                         var file = new CommonFile()
                         {
                             FGUID = FGUID.ToString(),
-                            FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "\\Upload\\",fileName),
+                            FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "/Upload/",fileName),
                             FileSize = objFile.files.Length.ToString(),
                             FileType = fileExt,
                         };

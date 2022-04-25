@@ -25,7 +25,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                      {
 
                         var org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
-                        if (org == null) 
+                        if (org == null)
                         {
                             throw new ArgumentException("Staff not exist in organization!");
                         }
@@ -45,6 +45,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                      }
                     else
                     {
+                        if (qs.IsAccessible == false) 
+                        {
+                            throw new ArgumentException("Permission revoked!");
+                        }
                         qs.CheckOUT = DateTime.Now;
                         qs.LastUpdateDate = DateTime.Now;
                         c.SubmitChanges();
