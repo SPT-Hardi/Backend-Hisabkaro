@@ -52,7 +52,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                                         where f.FileId == x.PANFileId
                                         select f.FilePath).SingleOrDefault(),
                              Email = x.Email,
-                             AddressId=x.ContactAddressId,
+                             /* AddressId=x.ContactAddressId,*/
                              Address= (from a in c.CommonContactAddresses
                                        where a.ContactAddressId == x.ContactAddressId
                                        select new Models.Common.Contact.Address

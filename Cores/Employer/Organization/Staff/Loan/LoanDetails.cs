@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Models.Common;
+using HIsabKaro.Models.Employer.Organization.Staff.Loan;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -34,21 +35,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         throw new ArgumentException("Staff Doesn't exist in org");
                     }
 
-                    //decimal MontlyPay = PrincipalAmt / month;
-                    //var t = (value.EndDate.Year - value.StartDate.Year);
-                    //double totaldays =(value.EndDate - value.StartDate).TotalDays;
-                    ////month = (int)Math.Floor(totaldays / 30);
-                    //////var total = Convert.ToDouble(value.Amount) * totaldays;
-                    //////var interest = (total / int.Parse(value.Interest.Text)) +  (total % int.Parse(value.Interest.Text));
-                    //////var monthlypay = total + interest;
-                    //var interestRate = 0.12;
-                    //////var i = //Convert.ToDecimal(int.Parse(value.Interest.Text) / 100);
-                    ////var interest = Convert.ToDouble(value.Amount) * (totaldays / 365) * interestRate;
-                    ////var monthlypay = (interest + Convert.ToDouble(value.Amount)) / totaldays ;
-
                     int totalMonth = 12 * (value.StartDate.Year - value.EndDate.Year) + value.StartDate.Month - value.EndDate.Month;
                     int month = (Math.Abs(totalMonth));
-                    var d = $"{(month / 12)}year{(month % 12)}month";
+                    var t = (month / 12)  == 0 ? 0 : (month / 12);
                     decimal principal = value.Amount;
                     decimal rate = decimal.Parse(value.Interest.Text);
                     double no = Math.Round(((float)month / 12), 2);
@@ -60,12 +49,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         StartDate = value.StartDate.ToLocalTime(),
                         EndDate = value.EndDate.ToLocalTime(),
                         Amount = value.Amount,
-                        Duration = d,
+                        Duration = (t == 0 ? $"{(month % 12)}month" : $"{(month / 12)}year{(month % 12)}month"),
                         MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
                         Description = value.Description,
                         URId = StaffId,
-                        InterestId = value.Interest.Id,
-                        PrincipalAmt = PrincipalAmt
+                        InterestId = (int)value.Interest.Id,
+                        PrincipalAmt = PrincipalAmt,
+                        RemainingAmt = PrincipalAmt,
+                        Status = "Approved"
                     };
                     c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
                     c.SubmitChanges();
@@ -78,7 +69,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         Data = new
                         {
                             Id = loan.LoanId,
-                            Name = "name"
+                            Name = name
                         },
                     };
                 }
@@ -89,6 +80,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
         {
             using (DBContext c = new DBContext())
             {
+                LoanDetail loanDetail = new LoanDetail();
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                 if (user == null)
                 {
@@ -99,12 +91,32 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                             where x.URId == user.URId
                             select new
                             {
-                                StartDate = x.StartDate,
-                                EndDate = x.EndDate,
-                                Amount = x.Amount,
+                                LoanId = x.LoanId,
+                                Intrestrate = x.SubFixedLookup.FixedLookup,
+                                DueOn = x.EndDate,
+                                PrincipalAmount = x.PrincipalAmt,
                                 MontlyPay = x.MonthlyPay,
-                                Duration = x.Duration
+                                Duration = x.Duration,
+                                InstallmentPaid = (Math.Abs(DateTime.Now.Month - x.StartDate.Month)),
+                                RemainingAmount = x.PrincipalAmt - x.Amount,
+                                Payment = (from y in c.OrgStaffsLoanDetails
+                                           where y.URId == x.URId
+                                           select new
+                                           {
+                                               month = y.StartDate.Month,
+                                               pay = y.MonthlyPay
+                                           }),
                             }).ToList();
+
+                var Payment = c.OrgStaffsLoanDetails.Where(x => x.URId == URId ).ToList();
+                foreach (var item in Payment)
+                {
+                    var totalmonth = item.StartDate.Month - item.EndDate.Month;
+                    var l = (new LoanDetail()
+                    {
+                      
+                    });
+                }
                 var name = user.SubUser.SubUsersDetail.FullName;
                 return new Result()
                 {
@@ -129,18 +141,79 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                             where x.SubUserOrganisation.OId == user.OId
                             select new
                             {
+                                LoanId = x.LoanId,
                                 UserName = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                 StartDate = x.StartDate,
                                 EndDate = x.EndDate,
-                                Amount = x.Amount,
+                                PrincipalAmount = x.PrincipalAmt,
                                 MontlyPay = x.MonthlyPay,
-                                Duration = x.Duration
+                                RemainingAmount = x.RemainingAmt,
+                                Duration = x.Duration,
+                                InstallmentPaid = (Math.Abs(DateTime.Now.Month - x.StartDate.Month)),
                             }).ToList();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = "Loan List",
                     Data = loan
+                };
+            }
+        }
+
+        public Result Get(int URId,int LoanId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                LoanView loanView = new LoanView();
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User Doesn't exist");
+                }
+
+                var loan = c.OrgStaffsLoanDetails.Where(x => x.URId == URId && x.LoanId == LoanId).ToList();
+                foreach (var item in loan)
+                {
+                    int totalMonth = 12 * (item.StartDate.Year - item.EndDate.Year) + item.StartDate.Month - item.EndDate.Month;
+                    int month = (Math.Abs(totalMonth));
+                    decimal principal = item.Amount;
+                    decimal rate = decimal.Parse(item.SubFixedLookup.FixedLookup);
+                    decimal no = (decimal)Math.Round(((float)month / 12), 2);
+                    decimal interestPaid = principal * (rate / 100) * (no);
+                    loanView.loan.Add(new LoanDetailView()
+                    {
+                        LoanId = item.LoanId,
+                        LoanAmount = item.Amount,
+                        Duration = item.Duration,
+                        Interestrate = item.SubFixedLookup.FixedLookup,
+                        DueOn = item.EndDate,
+                        PrincipalAmount = item.PrincipalAmt,
+                        Interest = interestPaid,
+                        lastMonth = item.MonthlyPay,
+                        InstallmentPaid = (Math.Abs(DateTime.Now.Month - item.StartDate.Month)),
+                    });
+                }
+              
+                var payment = c.OrgStaffsLoanDetails.Where(x => x.URId == URId && x.LoanId == LoanId).SingleOrDefault();
+                for (DateTime dt = payment.StartDate.AddMonths(1) ; dt <= payment.EndDate; dt = dt.AddMonths(1))
+                {
+                    var m = (Math.Abs(dt.Month - payment.EndDate.Month));
+                    var duration = (payment.EndDate.Month - payment.StartDate.Month) - 1;
+                    var r = (decimal)payment.PrincipalAmt - ((payment.MonthlyPay) * duration);
+                    decimal v = ((decimal)(m == 0 ? r : payment.MonthlyPay));
+                    loanView.payment.Add(new PaymentView()
+                    {
+                        month = dt.ToString("MMM"),
+                        amount = v,
+                        InstallmentPaid = ((DateTime.Now.Month - dt.Month) <= 0 ? "Unpaid" : "Paid").ToString() 
+                    });
+                }
+                var name = user.SubUser.SubUsersDetail.FullName;
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "Loan List",
+                    Data = loanView
                 };
             }
         }
