@@ -36,7 +36,8 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
-            return Ok(_staffDetails.Create(value));
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_staffDetails.Create(URId,value));
         }
 
         [HttpGet]
@@ -54,6 +55,14 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
                             Text = Convert.ToDateTime(x.StartTime.ToString()).ToString("hh:mm tt")
                         }).ToList();
             }
+        }
+
+        [HttpPost]
+        [Route("StaffDetails/JoinOrganization")]
+
+        public IActionResult JoinOrganizationCreate([FromBody] Models.Employer.Organization.Staff.JoinOrganizationCreate value)
+        {
+            return Ok(_staffDetails.JoinOrganizationCreate(value));
         }
     }
 }

@@ -33,15 +33,18 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException($"Organisation Alredy Exits With Same Name :{value.OrgName}.");
                     }
 
+                    Random OrgCode = new Random();
+
                     var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault();
 
                     var Org = new DevOrganisation()
                     {
-                        LogoFileId = _FileId ==null ? null : _FileId.FileId,
+                        LogoFileId = _FileId == null ? null : _FileId.FileId,
                         OrganisationName = value.OrgName,
                         InudstrySectorId = value.InudstrySector.Id,
                         Latitude = value.Latitude,
                         Longitude = value.Longitude,
+                        OrgCode = (OrgCode.Next(100000, 999999)).ToString(),
                         UId = UserID,
                     };
                     c.DevOrganisations.InsertOnSubmit(Org);

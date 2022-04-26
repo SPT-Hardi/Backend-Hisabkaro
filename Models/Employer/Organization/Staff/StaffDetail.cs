@@ -21,4 +21,10 @@ namespace HIsabKaro.Models.Employer.Organization.Staff
         public Common.IntegerNullString WeekOff2 { get; set; } = new Common.IntegerNullString();
         public float Salary { get; set; }
     }
+    public class JoinOrganizationCreate
+    {    
+        public string Name { get; set; }
+        public string OrgCode { get; set; }
+        public string MobileNumber { get; set; }
+    }
 }
