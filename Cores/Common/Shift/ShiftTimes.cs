@@ -46,6 +46,7 @@ namespace HIsabKaro.Cores.Common.Shift
                             c.SubmitChanges();
                         }
                     });
+
                     scope.Complete();
                     return new Models.Common.Result
                     {
