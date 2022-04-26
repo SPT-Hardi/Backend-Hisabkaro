@@ -23,5 +23,14 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
             return Ok(new Submits().Add(URId,value));
         }
 
+        [HttpGet]
+        [Route("SubmitDaily")]
+        public IActionResult Get()
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            //int URId = 10000024;
+            return Ok(new Submits().Get(URId));
+        }
+
     }
 }
