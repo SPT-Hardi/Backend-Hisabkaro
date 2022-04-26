@@ -19,6 +19,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
         {
             _tokenService = tokenService;
         }
+
         public Result One(int OId)
         {
             using (DBContext c = new DBContext())
@@ -41,7 +42,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                 };
             }
         }
-        public Result Create(Models.Employer.Organization.Staff.StaffDetail value)
+
+        public Result Create(int URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -148,7 +150,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         ShiftTimeId = value.ShiftTiming.Id,
                         Salary = value.Salary,
                         IsOpenWeek = value.IsOpenWeek,
-                        SId= _Sid
+                        SId= _Sid ,
+                        Status=false,
                     };
                     if (value.IsOpenWeek == false)
                     {
@@ -157,7 +160,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     }
                     c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                     c.SubmitChanges();
-                    int sid = staff.StaffId;
 
                     var authclaims = new List<Claim>
                     {
@@ -175,8 +177,64 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         Message = string.Format("Staff Add Successfully!"),
                         Data = new
                         {
+                            OrgCode=_OId.OrgCode,
                             OId = value.Organization.Id,
-                            StaffId = sid,
+                            JWT = jwtToken,
+                        }
+                    };
+                }
+            }
+        }
+
+        public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var _User = c.SubUsers.SingleOrDefault(x =>x.MobileNumber == value.MobileNumber);
+                    if (_User is null)
+                    {
+                        throw new ArgumentException("User Does Not Exits!");
+                    }
+
+                    var _Org = c.DevOrganisations.SingleOrDefault(x => x.OrgCode == value.OrgCode); 
+                    if (_Org is null)
+                    {
+                        throw new ArgumentException("Organisation Not Found!");
+                    }
+
+                    var _UserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId==_User.UId && x.OId == _Org.OId);
+                    if (_UserOrg is null)
+                    {
+                        throw new ArgumentException("Unauthorized!");
+                    }
+
+                    var _staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.URId == _UserOrg.URId);
+                    if(_staff is null)
+                    {  
+                        throw new ArgumentException("Unauthorized!");
+                    }
+
+                    _staff.Status = true;
+                    c.SubmitChanges();
+
+                    var authclaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Role,_UserOrg.URId.ToString()),
+                        new Claim(ClaimTypes.Sid,_User.UId.ToString()),
+                        new Claim(ClaimTypes.Name,_User.SubUsersDetail.FullName),
+                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                    };
+                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);
+                    scope.Complete();
+
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = string.Format("Staff Add Successfully!"),
+                        Data = new
+                        {
                             JWT = jwtToken,
                         }
                     };

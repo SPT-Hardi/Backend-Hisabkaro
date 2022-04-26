@@ -22,6 +22,7 @@ namespace HIsabKaro.Cores.Common.File
 
         public Result Upload(Models.Common.File.Upload objFile)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c= new DBContext())
             {
                 if (objFile.files == null) 
@@ -41,7 +42,7 @@ namespace HIsabKaro.Cores.Common.File
                         throw new ArgumentException("File Extension Is InValid - Only Upload jpg/jpeg/pdf/png File");
                     }
 
-                    var fileName = DateTime.Now.Ticks + fileExt; 
+                    var fileName = ISDT.Ticks + fileExt; 
                     
                     using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/Upload/" + fileName))
                     {

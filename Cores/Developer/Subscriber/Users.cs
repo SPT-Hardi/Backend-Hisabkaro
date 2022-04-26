@@ -17,7 +17,8 @@ namespace HIsabKaro.Cores.Developer.Subscriber
     {
         private readonly IConfiguration _configuration;
         private readonly ITokenServices _tokenServices;
-
+        
+        
         public Users(IConfiguration configuration, ITokenServices tokenServices) 
         {
             _configuration = configuration;
@@ -25,7 +26,8 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         }
         public Result Add(Models.Developer.Subscriber.User value) 
         {
-            using (TransactionScope scope = new TransactionScope())
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
@@ -59,7 +61,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     if (newotp == null)
                     {
                         sotp.OTP = "456456";
-                        sotp.ExpiryDate = DateTime.Now.AddMinutes(15);
+                        sotp.ExpiryDate = ISDT.AddMinutes(15);
                         sotp.IsUsed = false;
                         sotp.DeviceToken = value.DeviceToken;
                         c.SubOTPs.InsertOnSubmit(sotp);
@@ -69,7 +71,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     else 
                     {
                         newotp.OTP = "456456";
-                        newotp.ExpiryDate = DateTime.Now.AddMinutes(15);
+                        newotp.ExpiryDate = ISDT.AddMinutes(15);
                         newotp.IsUsed = false;
                         newotp.DeviceToken = value.DeviceToken;
                         
@@ -97,6 +99,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         }
         public Result VerifyOtp(Models.Developer.Subscriber.UserMobile value) 
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
 
@@ -118,7 +121,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("Otp Already Used!");
                     }
-                    else if (qs.OTP == value.OTP && qs.ExpiryDate < DateTime.Now)
+                    else if (qs.OTP == value.OTP && qs.ExpiryDate < ISDT)
                     {
                         throw new ArgumentException("OTP Time Expired!");
                     }

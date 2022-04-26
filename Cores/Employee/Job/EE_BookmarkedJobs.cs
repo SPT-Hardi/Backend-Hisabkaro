@@ -11,6 +11,7 @@ namespace HIsabKaro.Cores.Employee.Job
     {
         public Result Create(int UserId, int Jid)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
@@ -28,7 +29,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     save.JobId = job.JobId;
                     save.OId = job.OId;
                     save.BranchId = job.BranchID;
-                    save.SaveDate = DateTime.Now;
+                    save.SaveDate = ISDT;
                     c.SubmitChanges();
                     return new Result()
                     {
@@ -42,7 +43,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     JobId = job.JobId,
                     OId = job.OId,
                     BranchId = job.BranchID,
-                    SaveDate = DateTime.Now
+                    SaveDate = ISDT
                 });
                 c.SubmitChanges();
                 return new Result()

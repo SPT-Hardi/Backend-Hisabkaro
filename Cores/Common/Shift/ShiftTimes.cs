@@ -46,6 +46,7 @@ namespace HIsabKaro.Cores.Common.Shift
                             c.SubmitChanges();
                         }
                     });
+
                     scope.Complete();
                     return new Models.Common.Result
                     {
@@ -66,13 +67,15 @@ namespace HIsabKaro.Cores.Common.Shift
                     throw new ArgumentException($"Duplicate Entry In Times!");
                 }
 
+               
                 var shifttime = value.Select(x => new DevOrganisationsBranchesShiftTime()
                 {
                     StartTime = (TimeSpan)x.StartTime,
                     EndTime = (TimeSpan)x.EndTime,
                     MarkLate = x.MarkLate,
                     OId = OId,
-                    BranchId = BId
+                    BranchId = BId,
+                    IsSameAsOrg = x.IsSameAsOrg == true ? true : false
                 });
                 c.DevOrganisationsBranchesShiftTimes.InsertAllOnSubmit(shifttime);
                 c.SubmitChanges();

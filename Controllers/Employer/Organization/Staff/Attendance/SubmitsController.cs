@@ -18,9 +18,18 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         [Route("SubmitDaily")]
         public IActionResult Post([FromBody]SubmitDaily value)
         {
-            //int URId = (int)HttpContext.Items["URId"];
-            int URId = 10000024;
+            int URId = (int)HttpContext.Items["URId"];
+            //int URId = 10000024;
             return Ok(new Submits().Add(URId,value));
+        }
+
+        [HttpGet]
+        [Route("SubmitDaily")]
+        public IActionResult Get()
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            //int URId = 10000024;
+            return Ok(new Submits().Get(URId));
         }
 
     }

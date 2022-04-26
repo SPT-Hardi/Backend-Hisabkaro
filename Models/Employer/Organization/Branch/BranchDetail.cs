@@ -2,6 +2,7 @@
 using HIsabKaro.Models.Common.Shift;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace HIsabKaro.Models.Employer.Organization.Branch
     {
         public Models.Common.IntegerNullString Organization { get; set; } = new Models.Common.IntegerNullString();
 
+        [Required(ErrorMessage = "Branch name is required")]
         public string BranchName { get; set; }
 
         public bool status { get; set; }

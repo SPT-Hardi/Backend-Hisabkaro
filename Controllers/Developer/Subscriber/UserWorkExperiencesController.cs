@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Developer.Subscriber
 {
-    [Route("Development/Subscriber")]
+    [Route("Developer/Subscriber")]
     [ApiController]
     public class UserWorkExperiencesController : ControllerBase
     {

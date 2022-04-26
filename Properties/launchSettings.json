@@ -19,7 +19,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "nativeDebugging": false
     },
     "HIsabKaro": {
       "commandName": "Project",
@@ -36,7 +37,7 @@
       "launchBrowser": true,
       "launchUrl": "Swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "development"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "nativeDebugging": true
     }

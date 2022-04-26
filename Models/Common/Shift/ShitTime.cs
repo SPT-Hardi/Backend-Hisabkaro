@@ -13,5 +13,7 @@ namespace HIsabKaro.Models.Common.Shift
         public TimeSpan? StartTime { get; set; }
         public TimeSpan? EndTime { get; set; }
         public TimeSpan? MarkLate { get; set; }
+        [JsonIgnore]
+        public bool? IsSameAsOrg { get; set; }
     }
 }

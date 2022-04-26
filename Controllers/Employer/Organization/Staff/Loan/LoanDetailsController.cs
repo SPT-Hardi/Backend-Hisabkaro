@@ -20,7 +20,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
             return Ok(new LoanDetails().Create(URId,StaffId, value));
         }
 
-        [Route("Orgloan")]
+        [Route("Orgloandetail")]
         [HttpGet]
         public IActionResult GetOrg()
         {
@@ -28,12 +28,12 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
             return Ok(new LoanDetails().GetOrgLoan(URId));
         }
 
-        [Route("Staffloan")]
+        [Route("Staffloandetail/{LoanId}")]
         [HttpGet]
-        public IActionResult GetStaff()
+        public IActionResult GetStaff([FromRoute]int LoanId)
         {
             int URId = (int)HttpContext.Items["URId"];
-            return Ok(new LoanDetails().GetStaffLoan(URId));
+            return Ok(new LoanDetails().GetStaffLoan(URId,LoanId));
         }
     }
 }

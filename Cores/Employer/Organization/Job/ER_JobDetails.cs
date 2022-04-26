@@ -20,7 +20,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
         public Result Create( int URId, Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            using(DBContext c = new DBContext())
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+            using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
@@ -37,7 +38,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                    
                     if (jDetails != null)
                     {
-                        if (jDetails.EndDate < DateTime.Now)
+                        if (jDetails.EndDate < ISDT)
                         {
                             var _job = new EmprJob()
                             {
@@ -47,7 +48,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 MaxSalary = value.MaxSalary,
                                 Roles = value.Roles,
                                 Description = value.Description,
-                                PostDate = DateTime.Now,
+                                PostDate = ISDT,
                                 EndDate = value.Enddate.ToLocalTime(),
                                 OId = (int)value.Organisation.Id,
                                 BranchID = value.Branch.Id,
@@ -96,7 +97,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         MaxSalary = value.MaxSalary,
                         Roles = value.Roles,
                         Description = value.Description,
-                        PostDate = DateTime.Now,
+                        PostDate = ISDT,
                         EndDate = value.Enddate.ToLocalTime(),
                         OId = (int)value.Organisation.Id,
                         BranchID = value.Branch.Id == null ? null : value.Branch.Id,
@@ -135,6 +136,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
         public Result Update(int URId, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -157,7 +159,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.MaxSalary = value.MaxSalary;
                     job.Roles = value.Roles;
                     job.Description = value.Description;
-                    job.PostDate = DateTime.Now;
+                    job.PostDate = ISDT;
                     job.EndDate = value.Enddate.ToLocalTime();
                     job.OId = (int)value.Organisation.Id;
                     job.BranchID = value.Branch.Id;

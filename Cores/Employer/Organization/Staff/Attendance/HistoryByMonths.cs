@@ -14,6 +14,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
     {
         public Result Get(int URId,int Id,DateTime date)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
@@ -22,7 +23,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     //var lateby = new TimeSpan();
                     var presentcount = 0;
                     var latecount = 0;
-                    var currentdate = DateTime.Now;
+                    var currentdate = ISDT;
                     var requestmonth = date.Month;
                     var requestyear = date.Year;
                     var totalworkinghourmonth = new TimeSpan();
@@ -37,7 +38,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         throw new ArgumentException("Staff not exist in organization!");
                     }
                     //for past month 
-                    if (date.Month < DateTime.Now.Month && date.Year <= DateTime.Now.Year)
+                    if (date.Month < ISDT.Month && date.Year <= ISDT.Year)
                     {
 
                         var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
@@ -99,7 +100,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     else
                     {
                         DateTime startDate = new DateTime(date.Year, date.Month, day: 1);
-                        int days = (int)(((DateTime.Now - startDate).TotalDays)+1);
+                        int days = (int)(((ISDT - startDate).TotalDays)+1);
                         var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
                         for (var i = 1; i <= days; i++)
                         {
