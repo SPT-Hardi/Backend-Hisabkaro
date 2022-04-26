@@ -150,15 +150,6 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     var _Partner = PartnerCreate(_OId.OId, value.Partners);
 
-                    //c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Select(x => new DevOrganisationsPartner()
-                    //{
-                    //    OId = _OId.OId,
-                    //    OwnershipTypeId=x.OwnershipTypeID.Id,
-                    //    Email=x.Email,
-                    //    MobleNumber=x.Mobilenumber,
-                    //}).ToList());
-                    //c.SubmitChanges();
-
                     var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == UserId && x.OId == OId && x.RId == _OrgRole.RId);
                     var authclaims = new List<Claim>
