@@ -33,7 +33,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
         public IActionResult GetStaff([FromRoute]int LoanId)
         {
             int URId = (int)HttpContext.Items["URId"];
-            return Ok(new LoanDetails().Get(URId,LoanId));
+            return Ok(new LoanDetails().GetStaffLoan(URId,LoanId));
         }
     }
 }

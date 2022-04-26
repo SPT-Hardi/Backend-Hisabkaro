@@ -33,6 +33,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         throw new ArgumentException("User Doesn't exist");
                     }
 
+                    if (user.SubRole.RoleName.ToLower() != "admin")
+                    {
+                        throw new ArgumentException("Access not allow!!");
+                    }
+
                     var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.Id);
                     if (_OId is null)
                     {
@@ -63,6 +68,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                                          StartTime = x.StartTime,
                                          EndTime = x.EndTime,
                                          MarkLate = x.MarkLate,
+                                         IsSameAsOrg = true
                                      }).ToList();
                         shiftTime = shift;
                         var shifttime = _shiftTimes.CreateBranchShift(_OId.OId, branch.BranchId, shiftTime);

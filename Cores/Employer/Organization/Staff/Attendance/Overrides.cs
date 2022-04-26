@@ -18,10 +18,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     var findrole = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
                     //remove after contoller added
-                   /* if (findrole.SubRole.RoleName.ToLower() != "admin") 
+                    if (findrole.SubRole.RoleName.ToLower() != "admin")
                     {
                         throw new ArgumentException("You are not authorize!");
-                    }*/
+                    }
                     var staffexist = c.SubUserOrganisations.Where(x => x.OId == findrole.OId && x.URId == value.URId).SingleOrDefault();
                     if (staffexist == null) 
                     {

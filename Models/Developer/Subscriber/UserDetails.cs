@@ -24,7 +24,6 @@ namespace HIsabKaro.Models.Developer.Subscriber
         public string Email { get; set; }
         [Required]
         public string MobileNumber { get; set; }
-        [Required]
         public string AMobileNumber { get; set; }
 
 

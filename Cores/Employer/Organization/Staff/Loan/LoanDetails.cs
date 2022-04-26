@@ -76,57 +76,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
             }
         }
 
-        public Result GetStaffLoan(int URId)
-        {
-            using (DBContext c = new DBContext())
-            {
-                LoanDetail loanDetail = new LoanDetail();
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
-                if (user == null)
-                {
-                    throw new ArgumentException("User Doesn't exist");
-                }
-
-                var loan = (from x in c.OrgStaffsLoanDetails
-                            where x.URId == user.URId
-                            select new
-                            {
-                                LoanId = x.LoanId,
-                                Intrestrate = x.SubFixedLookup.FixedLookup,
-                                DueOn = x.EndDate,
-                                PrincipalAmount = x.PrincipalAmt,
-                                MontlyPay = x.MonthlyPay,
-                                Duration = x.Duration,
-                                InstallmentPaid = (Math.Abs(DateTime.Now.Month - x.StartDate.Month)),
-                                RemainingAmount = x.PrincipalAmt - x.Amount,
-                                Payment = (from y in c.OrgStaffsLoanDetails
-                                           where y.URId == x.URId
-                                           select new
-                                           {
-                                               month = y.StartDate.Month,
-                                               pay = y.MonthlyPay
-                                           }),
-                            }).ToList();
-
-                var Payment = c.OrgStaffsLoanDetails.Where(x => x.URId == URId ).ToList();
-                foreach (var item in Payment)
-                {
-                    var totalmonth = item.StartDate.Month - item.EndDate.Month;
-                    var l = (new LoanDetail()
-                    {
-                      
-                    });
-                }
-                var name = user.SubUser.SubUsersDetail.FullName;
-                return new Result()
-                {
-                    Status = Result.ResultStatus.success,
-                    Message = "Loan List",
-                    Data = loan
-                };
-            }
-        }
-
         public Result GetOrgLoan(int URId)
         {
             using (DBContext c = new DBContext())
@@ -160,7 +109,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
             }
         }
 
-        public Result Get(int URId,int LoanId)
+        public Result GetStaffLoan(int URId,int LoanId)
         {
             using (DBContext c = new DBContext())
             {

@@ -17,8 +17,8 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         [Route("Override")]
         public IActionResult Post(Override value) 
         {
-            //int URId = (int)HttpContext.Items["URId"];
-            int URId = 10000024;
+            int URId = (int)HttpContext.Items["URId"];
+            //int URId = 10000024;
             return Ok(new Overrides().Add(URId,value));
         }
     }
