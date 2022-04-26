@@ -11,6 +11,7 @@ namespace HIsabKaro.Cores.Employee.Job
     {
         public Result Create(int UserId, int Jid)
         {
+            var ISDT=new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
@@ -34,7 +35,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     JobId = job.JobId,
                     BranchId = job.BranchID,
                     OId = (int)job.OId,
-                    ApplyDate = DateTime.Now.ToLocalTime()
+                    ApplyDate = ISDT
                 });
                 c.SubmitChanges();
                 return new Result()

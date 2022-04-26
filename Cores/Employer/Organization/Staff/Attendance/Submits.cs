@@ -13,12 +13,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
     {
         public Result Add(int URId, SubmitDaily value)
         {
-
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == DateTime.Now.ToLocalTime().Date && x.URId == URId).SingleOrDefault();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == URId).SingleOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
                     TimeSpan lateby = new TimeSpan();
                     if (qs == null)
@@ -29,14 +29,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             throw new ArgumentException("Staff not exist in organization!");
                         }
-                        if (DateTime.Now.ToLocalTime().TimeOfDay > org.DevOrganisationsShiftTime.MarkLate)
+                        if (ISDT.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate)
                         {
-                            lateby = DateTime.Now.ToLocalTime().TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
+                            lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
                         }
                         OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                         attendance.URId = URId;
-                        attendance.LastUpdateDate = DateTime.Now.ToLocalTime();
-                        attendance.ChekIN = DateTime.Now.ToLocalTime();
+                        attendance.LastUpdateDate = ISDT;
+                        attendance.ChekIN = ISDT;
                         attendance.Lateby = lateby;
                         c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                         c.SubmitChanges();
@@ -49,8 +49,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             throw new ArgumentException("Permission revoked!");
                         }
-                        qs.CheckOUT = DateTime.Now.ToLocalTime();
-                        qs.LastUpdateDate = DateTime.Now.ToLocalTime();
+                        qs.CheckOUT = ISDT;
+                        qs.LastUpdateDate = ISDT;
                         c.SubmitChanges();
                         OrgStaffAttendanceDailyId = qs.OrgStaffAttendanceDailyId;
                     }
@@ -63,7 +63,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         Data = new
                         {
                             OrgStaffsAttendancesDailyId = OrgStaffAttendanceDailyId,
-                            LastUpdate = DateTime.Now.ToLocalTime().ToString("hh:mm tt"),
+                            LastUpdate = ISDT.ToString("hh:mm tt"),
                         },
                     };
                 }
@@ -71,11 +71,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
         }
         public Result Get(int URId) 
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Date == DateTime.Now.ToLocalTime().Date).SingleOrDefault();
+                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Date == ISDT.Date).SingleOrDefault();
                     bool IsPresent = false;
                     string LastUpdate = null;
                     if (staffattendance != null) 
@@ -90,7 +91,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         Data = new
                         {
                             URId = URId,
-                            TodayDate =DateTime.Now.ToLocalTime().ToString("dd/MM/yyyy"),
+                            TodayDate =ISDT.ToString("dd/MM/yyyy"),
                             IsPresent =IsPresent,
                             LastUpdate = LastUpdate,
                         },

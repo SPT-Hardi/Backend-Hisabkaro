@@ -12,6 +12,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
     {
         public Result Add(int URId,Models.Employer.Organization.Staff.Attendance.Override value) 
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
@@ -50,7 +51,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
                             attendance.URId = value.URId;
-                            attendance.LastUpdateDate = DateTime.Now.ToLocalTime();
+                            attendance.LastUpdateDate =ISDT;
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -63,7 +64,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             attendance.URId = value.URId;
-                            attendance.LastUpdateDate = DateTime.Now.ToLocalTime();
+                            attendance.LastUpdateDate = ISDT;
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -91,7 +92,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             staffattendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             staffattendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             staffattendance.URId = value.URId;
-                            staffattendance.LastUpdateDate = DateTime.Now.ToLocalTime();
+                            staffattendance.LastUpdateDate = ISDT;
                             staffattendance.IsAccessible = false;
                             
                             c.SubmitChanges();

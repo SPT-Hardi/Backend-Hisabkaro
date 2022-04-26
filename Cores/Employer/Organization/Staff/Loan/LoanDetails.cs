@@ -78,6 +78,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 
         public Result GetOrgLoan(int URId)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
@@ -98,7 +99,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                                 MontlyPay = x.MonthlyPay,
                                 RemainingAmount = x.RemainingAmt,
                                 Duration = x.Duration,
-                                InstallmentPaid = (Math.Abs(DateTime.Now.ToLocalTime().Month - x.StartDate.Month)),
+                                InstallmentPaid = (Math.Abs(ISDT.Month - x.StartDate.Month)),
                             }).ToList();
                 return new Result()
                 {
@@ -111,6 +112,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 
         public Result GetStaffLoan(int URId,int LoanId)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 LoanView loanView = new LoanView();
@@ -139,7 +141,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         PrincipalAmount = item.PrincipalAmt,
                         Interest = interestPaid,
                         lastMonth = item.MonthlyPay,
-                        InstallmentPaid = (Math.Abs(DateTime.Now.ToLocalTime().Month - item.StartDate.Month)),
+                        InstallmentPaid = (Math.Abs(ISDT.Month - item.StartDate.Month)),
                     });
                 }
               
@@ -154,7 +156,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     {
                         month = dt.ToString("MMM"),
                         amount = v,
-                        InstallmentPaid = ((DateTime.Now.ToLocalTime().Month - dt.Month) <= 0 ? "Unpaid" : "Paid").ToString() 
+                        InstallmentPaid = ((ISDT.Month - dt.Month) <= 0 ? "Unpaid" : "Paid").ToString() 
                     });
                 }
                 var name = user.SubUser.SubUsersDetail.FullName;
