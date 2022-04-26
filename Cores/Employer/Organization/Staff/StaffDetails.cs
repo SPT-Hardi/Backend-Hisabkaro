@@ -19,6 +19,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
         {
             _tokenService = tokenService;
         }
+
         public Result One(int OId)
         {
             using (DBContext c = new DBContext())
@@ -41,6 +42,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                 };
             }
         }
+
         public Result Create(int URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
             using (DBContext c = new DBContext())
