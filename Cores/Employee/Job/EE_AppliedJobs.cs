@@ -34,7 +34,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     JobId = job.JobId,
                     BranchId = job.BranchID,
                     OId = (int)job.OId,
-                    ApplyDate = DateTime.Now
+                    ApplyDate = DateTime.Now.ToLocalTime()
                 });
                 c.SubmitChanges();
                 return new Result()

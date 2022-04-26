@@ -59,7 +59,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     if (newotp == null)
                     {
                         sotp.OTP = "456456";
-                        sotp.ExpiryDate = DateTime.Now.AddMinutes(15);
+                        sotp.ExpiryDate = DateTime.Now.ToLocalTime().AddMinutes(15);
                         sotp.IsUsed = false;
                         sotp.DeviceToken = value.DeviceToken;
                         c.SubOTPs.InsertOnSubmit(sotp);
@@ -69,7 +69,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     else 
                     {
                         newotp.OTP = "456456";
-                        newotp.ExpiryDate = DateTime.Now.AddMinutes(15);
+                        newotp.ExpiryDate = DateTime.Now.ToLocalTime().AddMinutes(15);
                         newotp.IsUsed = false;
                         newotp.DeviceToken = value.DeviceToken;
                         
@@ -118,7 +118,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("Otp Already Used!");
                     }
-                    else if (qs.OTP == value.OTP && qs.ExpiryDate < DateTime.Now)
+                    else if (qs.OTP == value.OTP && qs.ExpiryDate < DateTime.Now.ToLocalTime())
                     {
                         throw new ArgumentException("OTP Time Expired!");
                     }

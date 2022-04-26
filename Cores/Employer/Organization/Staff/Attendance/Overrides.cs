@@ -50,7 +50,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
                             attendance.URId = value.URId;
-                            attendance.LastUpdateDate = DateTime.Now;
+                            attendance.LastUpdateDate = DateTime.Now.ToLocalTime();
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -63,7 +63,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             attendance.URId = value.URId;
-                            attendance.LastUpdateDate = DateTime.Now;
+                            attendance.LastUpdateDate = DateTime.Now.ToLocalTime();
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -91,7 +91,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             staffattendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             staffattendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             staffattendance.URId = value.URId;
-                            staffattendance.LastUpdateDate = DateTime.Now;
+                            staffattendance.LastUpdateDate = DateTime.Now.ToLocalTime();
                             staffattendance.IsAccessible = false;
                             
                             c.SubmitChanges();

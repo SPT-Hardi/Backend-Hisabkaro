@@ -26,8 +26,8 @@ namespace HIsabKaro.Services
             var jwttoken = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["Jwt:ValidAudience"],
-                notBefore: DateTime.Now,
-                expires: DateTime.Now.AddDays(15),
+                notBefore: DateTime.Now.ToLocalTime(),
+                expires: DateTime.Now.ToLocalTime().AddDays(15),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSignKey, SecurityAlgorithms.HmacSha256)
             );

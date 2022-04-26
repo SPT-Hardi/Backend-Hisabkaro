@@ -28,7 +28,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     save.JobId = job.JobId;
                     save.OId = job.OId;
                     save.BranchId = job.BranchID;
-                    save.SaveDate = DateTime.Now;
+                    save.SaveDate = DateTime.Now.ToLocalTime();
                     c.SubmitChanges();
                     return new Result()
                     {
@@ -42,7 +42,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     JobId = job.JobId,
                     OId = job.OId,
                     BranchId = job.BranchID,
-                    SaveDate = DateTime.Now
+                    SaveDate = DateTime.Now.ToLocalTime()
                 });
                 c.SubmitChanges();
                 return new Result()

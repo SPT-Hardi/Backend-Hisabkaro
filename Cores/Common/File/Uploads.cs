@@ -41,7 +41,7 @@ namespace HIsabKaro.Cores.Common.File
                         throw new ArgumentException("File Extension Is InValid - Only Upload jpg/jpeg/pdf/png File");
                     }
 
-                    var fileName = DateTime.Now.Ticks + fileExt; 
+                    var fileName = DateTime.Now.ToLocalTime().Ticks + fileExt; 
                     
                     using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/Upload/" + fileName))
                     {

@@ -37,7 +37,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                    
                     if (jDetails != null)
                     {
-                        if (jDetails.EndDate < DateTime.Now)
+                        if (jDetails.EndDate < DateTime.Now.ToLocalTime())
                         {
                             var _job = new EmprJob()
                             {
@@ -47,7 +47,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 MaxSalary = value.MaxSalary,
                                 Roles = value.Roles,
                                 Description = value.Description,
-                                PostDate = DateTime.Now,
+                                PostDate = DateTime.Now.ToLocalTime(),
                                 EndDate = value.Enddate.ToLocalTime(),
                                 OId = (int)value.Organisation.Id,
                                 BranchID = value.Branch.Id,
@@ -96,7 +96,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         MaxSalary = value.MaxSalary,
                         Roles = value.Roles,
                         Description = value.Description,
-                        PostDate = DateTime.Now,
+                        PostDate = DateTime.Now.ToLocalTime(),
                         EndDate = value.Enddate.ToLocalTime(),
                         OId = (int)value.Organisation.Id,
                         BranchID = value.Branch.Id == null ? null : value.Branch.Id,
@@ -157,7 +157,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.MaxSalary = value.MaxSalary;
                     job.Roles = value.Roles;
                     job.Description = value.Description;
-                    job.PostDate = DateTime.Now;
+                    job.PostDate = DateTime.Now.ToLocalTime();
                     job.EndDate = value.Enddate.ToLocalTime();
                     job.OId = (int)value.Organisation.Id;
                     job.BranchID = value.Branch.Id;

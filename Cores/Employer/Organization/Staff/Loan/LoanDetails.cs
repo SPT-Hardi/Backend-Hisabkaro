@@ -98,7 +98,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                                 MontlyPay = x.MonthlyPay,
                                 RemainingAmount = x.RemainingAmt,
                                 Duration = x.Duration,
-                                InstallmentPaid = (Math.Abs(DateTime.Now.Month - x.StartDate.Month)),
+                                InstallmentPaid = (Math.Abs(DateTime.Now.ToLocalTime().Month - x.StartDate.Month)),
                             }).ToList();
                 return new Result()
                 {
@@ -139,7 +139,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         PrincipalAmount = item.PrincipalAmt,
                         Interest = interestPaid,
                         lastMonth = item.MonthlyPay,
-                        InstallmentPaid = (Math.Abs(DateTime.Now.Month - item.StartDate.Month)),
+                        InstallmentPaid = (Math.Abs(DateTime.Now.ToLocalTime().Month - item.StartDate.Month)),
                     });
                 }
               
@@ -154,7 +154,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     {
                         month = dt.ToString("MMM"),
                         amount = v,
-                        InstallmentPaid = ((DateTime.Now.Month - dt.Month) <= 0 ? "Unpaid" : "Paid").ToString() 
+                        InstallmentPaid = ((DateTime.Now.ToLocalTime().Month - dt.Month) <= 0 ? "Unpaid" : "Paid").ToString() 
                     });
                 }
                 var name = user.SubUser.SubUsersDetail.FullName;
