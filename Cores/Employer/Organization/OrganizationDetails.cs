@@ -85,6 +85,8 @@ namespace HIsabKaro.Cores.Employer.Organization
                                 Text = Org.OrganisationName
                             },
                             URId= _subOrg.URId,
+                            OrgCode=Org.OrgCode,
+
                         }
                     };
                 }
