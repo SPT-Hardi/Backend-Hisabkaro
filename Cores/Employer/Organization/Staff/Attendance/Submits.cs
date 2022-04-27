@@ -144,11 +144,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Date == ISDT.Date).SingleOrDefault();
                     bool IsPresent = false;
-                    string LastUpdate = null;
+                    DateTime? LastUpdate =null;
                     if (staffattendance != null) 
                     {
                         IsPresent = true;
-                        LastUpdate = staffattendance.CheckOUT == null ? Convert.ToDateTime(staffattendance.ChekIN.ToString()).ToString("hh:mm tt") : Convert.ToDateTime(staffattendance.CheckOUT.ToString()).ToString("hh:mm tt");
+                        LastUpdate = staffattendance.CheckOUT == null ? staffattendance.ChekIN : staffattendance.CheckOUT;
                     }
                     return new Result()
                     {
