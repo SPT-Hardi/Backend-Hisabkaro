@@ -15,6 +15,7 @@ namespace HIsabKaro.Models.Employer.Organization
         [RegularExpression(@"^[0-9]{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[A-Z]{1}\d{1}$", ErrorMessage = "Invalid GST Number!")]
         public string GSTNumber { get; set; }
         public string GST { get; set; }
+        [Required(ErrorMessage = "Shift Time Is Required!")]
         public List<ShitTime> ShiftTime { get; set; } = new List<ShitTime>();        
         public Address Address { get; set; }
         [Required(ErrorMessage = "Pan Card Number Is Required!")]

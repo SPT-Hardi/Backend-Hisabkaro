@@ -57,7 +57,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
 
-                    var _CountAtted = Attendance(StaffId);
+                    var _AttendDeduction = AttendDeduction(StaffId);
+                    var _CountAttend = Attendance(StaffId);
 
 
 
@@ -66,7 +67,35 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format($"Bouns Give Successfully!"),
+                        Data = new
+                        {
+                            AttedDeduction = _AttendDeduction,
+
+                        }
                     };
+                }
+            }
+        }
+
+        public int AttendDeduction(int StaffURId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var salary = (from x in c.DevOrganisationsStaffs
+                                 where x.URId == StaffURId
+                                 select x.Salary).SingleOrDefault();
+
+                    var leave = (from x in c.OrgStaffsLeaveApplications
+                                 where x.URId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved== "Accepted"
+                                 select x.UnPaidDays).Sum();
+
+                    var Deduction=(leave * (salary/ 30));
+
+                    scope.Complete();
+                    return (int)Deduction ;
+
                 }
             }
         }
@@ -83,9 +112,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
 
                     var leave = (from x in c.OrgStaffsLeaveApplications
                                  where x.URId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 
-                                 select x.UnPaidDays);
+                                 select x.PaidDays).Sum();
+                    var totaldays =atte + leave;
                     scope.Complete();
-                    return atte ;
+                    return (int)totaldays;
 
                 }
             }

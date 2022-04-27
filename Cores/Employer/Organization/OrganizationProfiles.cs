@@ -111,11 +111,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException("Organization Does Not Exits!");
                     }
 
-                    if (!value.Partners.Any())
-                    {
-                        throw new ArgumentException("Enter Partner Details !");
-                    }
-
                     var listPartner = value.Partners.Select(x => new { Email = x.Email, MobileNumber = x.Mobilenumber }).ToList();
                     if (listPartner.Distinct().Count() != listPartner.Count())
                     {

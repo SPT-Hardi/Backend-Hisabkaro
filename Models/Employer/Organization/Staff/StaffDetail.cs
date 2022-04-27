@@ -11,6 +11,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff
         [Required(ErrorMessage = "Name Is Required!")]
         public string Name { get; set; }
         public string Email { get; set; }
+        [Required(ErrorMessage = "Mobile Number Is Required!")]
         public string MobileNumber { get; set; }
         public string AMobileNumber { get; set; }
         public Common.IntegerNullString Organization { get; set; } = new Common.IntegerNullString();
@@ -19,6 +20,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff
         public bool IsOpenWeek { get; set; }
         public Common.IntegerNullString WeekOff1 { get; set; } = new Common.IntegerNullString();
         public Common.IntegerNullString WeekOff2 { get; set; } = new Common.IntegerNullString();
+        [Required(ErrorMessage = "Salary Is Required!")]
         public float Salary { get; set; }
     }
     public class JoinOrganizationCreate
