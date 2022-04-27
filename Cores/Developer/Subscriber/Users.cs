@@ -32,7 +32,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 using (DBContext c = new DBContext())
                 {
                     var qs = c.SubUsers.Where(x => x.MobileNumber == value.MobileNumber).SingleOrDefault();
-                    
+                    var smsres = new SMSServices();
                     CustomOTPs customOTPs = new CustomOTPs();
                     var otp = customOTPs.GenerateOTP();
                     SubOTP sotp = new SubOTP();
@@ -60,22 +60,26 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     var newotp = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId==(qs==null ? null : qs.UId)).SingleOrDefault();
                     if (newotp == null)
                     {
-                        sotp.OTP = "456456";
+
+                        sotp.OTP = otp;
                         sotp.ExpiryDate = ISDT.AddMinutes(15);
                         sotp.IsUsed = false;
                         sotp.DeviceToken = value.DeviceToken;
                         c.SubOTPs.InsertOnSubmit(sotp);
                         c.SubmitChanges();
+                        smsres.Get(value.MobileNumber,otp);
 
                     }
                     else 
                     {
-                        newotp.OTP = "456456";
+                       
+                        newotp.OTP = otp;
                         newotp.ExpiryDate = ISDT.AddMinutes(15);
                         newotp.IsUsed = false;
                         newotp.DeviceToken = value.DeviceToken;
                         
                         c.SubmitChanges();
+                        smsres.Get(value.MobileNumber, otp);
                     }
                     
 
@@ -86,10 +90,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         Status = Result.ResultStatus.success,
                         Message = $"Otp send on {value.MobileNumber} mobile number",
-                        Data = new Models.Developer.Subscriber.UserMobile()
+                        Data = new
                         {
                             MobileNumber =value.MobileNumber,
-                            OTP="456456",
+                            OTP=otp,
                             
 
                         }

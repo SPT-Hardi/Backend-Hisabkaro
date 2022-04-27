@@ -13,7 +13,7 @@ namespace HIsabKaro.Cores.Common
             string otp = string.Empty;
             string numbers = "0123456789";
             Random random = new Random();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i <=5; i++)
             {
                 int tempval = random.Next(0, numbers.Length);
                 otp += tempval;
