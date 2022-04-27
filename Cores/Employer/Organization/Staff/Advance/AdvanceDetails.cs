@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
+namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
 {
-    public class BonusDetails
+    public class AdvanceDetails
     {
         public Result One(int URId)
         {
@@ -20,11 +20,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
-                var _Bonus = (from x in c.OrgStaffsBonusDetails
+                var _Bonus = (from x in c.OrgStaffsAdvanceDetails
                                  where x.URId == URId
                                  select new
                                  {
-                                     BonusId=x.BonusId,
+                                     AdvanceId = x.AdvanceId,
                                      StaffURId = x.StaffURId,
                                      FullName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
                                      Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FilePath,
@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
             }
         }
 
-        public Result Create(int URId,int StaffId, Models.Employer.Organization.Staff.Bonus.BonusDetail value)
+        public Result Create(int URId,int StaffId, Models.Employer.Organization.Staff.Advance.AdvanceDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -66,7 +66,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
 
-                    var _Bouns = new OrgStaffsBonusDetail()
+                    var _Advance = new OrgStaffsAdvanceDetail()
                     {
                         StaffURId=StaffId,
                         Date = value.Date,
@@ -74,14 +74,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
                         Description=value.Description,
                         URId= URId,
                     };
-                    c.OrgStaffsBonusDetails.InsertOnSubmit(_Bouns);
+                    c.OrgStaffsAdvanceDetails.InsertOnSubmit(_Advance);
                     c.SubmitChanges();
 
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = string.Format($"Bouns Give Successfully!"),
+                        Message = string.Format($"Advance Give Successfully!"),
                     };
                 }
             }
