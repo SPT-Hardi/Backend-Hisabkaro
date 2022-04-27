@@ -69,6 +69,72 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
             }
         }
+        public Result AddFromQr(int URId,Models.Employer.Organization.Staff.Attendance.SubmitDailyThroughQR value) 
+        {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == URId).SingleOrDefault();
+                    var OrgStaffAttendanceDailyId = 0;
+                    TimeSpan lateby = new TimeSpan();
+                    if (qs == null)
+                    {
+
+                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
+                        if (org == null)
+                        {
+                            throw new ArgumentException("Staff not exist in organization!");
+                        }
+                        if (ISDT.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate)
+                        {
+                            lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
+                        }
+                        OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
+                        var qrvalid = c.DevOrganisations.Where(x => x.QRString == value.QRString && x.OId == org.DevOrganisation.OId).SingleOrDefault();
+                        if (qrvalid == null) 
+                        {
+                            throw new ArgumentException("QR Invalid!");
+                        }
+                        var fileid = c.CommonFiles.Where(x => x.FGUID == value.FGUID).SingleOrDefault();
+                        if (fileid == null) 
+                        {
+                            throw new ArgumentException("File not exist!");
+                        }
+                        attendance.URId = URId;
+                        attendance.LastUpdateDate = ISDT;
+                        attendance.ChekIN = ISDT;
+                        attendance.PhotoFileId = fileid.FileId;
+                        attendance.Lateby = lateby;
+                        c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
+                        c.SubmitChanges();
+                        OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
+
+                    }
+                    else
+                    {
+                        if (qs.IsAccessible == false)
+                        {
+                            throw new ArgumentException("Permission revoked!");
+                        }
+                        throw new ArgumentException("You only checkin through qr!");
+                    }
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "Staff Daily Attendance Add Successfully!",
+                        Data = new
+                        {
+                            OrgStaffsAttendancesDailyId = OrgStaffAttendanceDailyId,
+                            LastUpdate = ISDT.ToString("hh:mm tt"),
+                        },
+                    };
+                }
+            }
+        }
         public Result Get(int URId) 
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
