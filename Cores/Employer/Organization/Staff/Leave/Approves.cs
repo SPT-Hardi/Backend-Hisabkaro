@@ -25,12 +25,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 var leave = (from x in c.OrgStaffsLeaveApplications
-                             where x.SubUserOrganisation.OId == user.OId && x.IsLeaveApproved == "Pending"
+                             where x.SubUserOrganisation_StaffURId.OId == user.OId && x.IsLeaveApproved == "Pending"
                              orderby x.OrgStaffLeaveId descending
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,
-                                 UserName = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                 UserName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
                                  StartDate = x.StartDate,
                                  EndDate = x.EndDate
                              }).ToList();
@@ -59,7 +59,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 var leave = c.OrgStaffsLeaveApplications.SingleOrDefault(x => x.OrgStaffLeaveId == leaveId
-                                                                          && x.SubUserOrganisation.OId == user.OId);
+                                                                          && x.SubUserOrganisation_URId.OId == user.OId);
                 if (leave == null)
                 {
                     throw new ArgumentException("Data not found!!");
@@ -87,7 +87,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     Data = new
                     {
                         Id = leave.OrgStaffLeaveId,
-                        Name = leave.SubUserOrganisation.SubUser.SubUsersDetail.FullName
+                        Name = leave.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName
                     }
                 };
             }
@@ -104,7 +104,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 var leave = c.OrgStaffsLeaveApplications.SingleOrDefault(x => x.OrgStaffLeaveId == leaveId
-                                                                          && x.SubUserOrganisation.OId == user.OId);
+                                                                          && x.SubUserOrganisation_URId.OId == user.OId);
                 if (leave == null)
                 {
                     throw new ArgumentException("Data not found!!");
@@ -126,7 +126,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     Data = new
                     {
                         Id = leave.OrgStaffLeaveId,
-                        Name = leave.SubUserOrganisation.SubUser.SubUsersDetail.FullName
+                        Name = leave.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName
                     }
                 };
             }

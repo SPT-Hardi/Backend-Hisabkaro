@@ -52,7 +52,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 
                     c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                     c.SubmitChanges();
-                    var name = request.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
+                    var name = request.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName;
                     scope.Complete();
                     return new Result()
                     {

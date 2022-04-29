@@ -111,6 +111,12 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException("Organization Does Not Exits!");
                     }
 
+                    var _UserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _User.UId && x.OId == _OId.OId);
+                    if (_UserOrg is null)
+                    {
+                        throw new ArgumentException("Unauthorized!");
+                    }
+
                     var listPartner = value.Partners.Select(x => new { Email = x.Email, MobileNumber = x.Mobilenumber }).ToList();
                     if (listPartner.Distinct().Count() != listPartner.Count())
                     {

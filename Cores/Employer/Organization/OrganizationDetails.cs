@@ -34,6 +34,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     }
 
                     Random OrgCode = new Random();
+                    
 
                     var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault();
 
@@ -45,6 +46,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         Latitude = value.Latitude,
                         Longitude = value.Longitude,
                         OrgCode = (OrgCode.Next(100000, 999999)).ToString(),
+                        QRString = Guid.NewGuid().ToString(),
                         UId = UserID,
                     };
                     c.DevOrganisations.InsertOnSubmit(Org);
@@ -82,11 +84,11 @@ namespace HIsabKaro.Cores.Employer.Organization
                             Organization = new IntegerNullString
                             {
                                 Id = Org.OId,
-                                Text = Org.OrganisationName
+                                Text = Org.OrganisationName,
                             },
                             URId= _subOrg.URId,
                             OrgCode=Org.OrgCode,
-
+                            QRString=Org.QRString,
                         }
                     };
                 }
