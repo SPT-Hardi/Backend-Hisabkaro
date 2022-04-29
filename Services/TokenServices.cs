@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -22,12 +21,15 @@ namespace HIsabKaro.Services
 
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
+            
+            var tokentime = DateTime.Now.TimeOfDay-TimeSpan.FromMinutes(10);
+            //var ISDT = new HIsabKaro.Cores.Common.ISDT().GetISDT(DateTime.Now);
             var authSignKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
             var jwttoken = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["Jwt:ValidAudience"],
-                notBefore: DateTime.Now,
-                expires: DateTime.Now.ToLocalTime().AddDays(15),
+                notBefore: DateTime.Parse($"{DateTime.Now.ToString("yyyy/MM/dd")} {tokentime}"),
+                expires: DateTime.Now.AddMonths(1),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSignKey, SecurityAlgorithms.HmacSha256)
             );
