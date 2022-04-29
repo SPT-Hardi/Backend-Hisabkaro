@@ -14,6 +14,12 @@ namespace HIsabKaro.Cores.Employee.Job
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User Doesn't Exist");
+                }
+
                 var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
                 if(job == null)
                 {
@@ -28,13 +34,18 @@ namespace HIsabKaro.Cores.Employee.Job
                     save.UId = UserId;
                     save.JobId = job.JobId;
                     save.OId = job.OId;
-                    save.BranchId = job.BranchID;
-                    save.SaveDate = ISDT;
+                    save.BranchId = job.BranchID == null ? null : job.BranchID;
+                    save.SaveDate = DateTime.Now.ToLocalTime();
                     c.SubmitChanges();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format("Job Saved Successfully"),
+                        Data = new
+                        {
+                            Id = job.JobId,
+                            Title = job.Title
+                        }
                     };
                 }
                 c.EmpBookmarkJobsDetails.InsertOnSubmit(new EmpBookmarkJobsDetail()
@@ -42,14 +53,19 @@ namespace HIsabKaro.Cores.Employee.Job
                     UId = UserId,
                     JobId = job.JobId,
                     OId = job.OId,
-                    BranchId = job.BranchID,
-                    SaveDate = ISDT
+                    BranchId = job.BranchID == null ? null : job.BranchID,
+                    SaveDate = DateTime.Now.ToLocalTime()
                 });
                 c.SubmitChanges();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Job Saved Successfully"),
+                    Data = new
+                    {
+                        Id = job.JobId,
+                        Title = job.Title
+                    }
                 };
             }
         }
@@ -66,19 +82,17 @@ namespace HIsabKaro.Cores.Employee.Job
 
                 var save = (from x in c.EmpBookmarkJobsDetails
                             where x.UId == UserId
+                            orderby x.BookMarkId descending
                             select new { 
                               SaveId = x.BookMarkId,
                               JobTitle = x.EmprJob.Title,
                               CompanyName = x.DevOrganisation.OrganisationName,
                               BranchName = x.DevOrganisationBranch.BranchName,
-                              EndDate = String.Format("{0:dd,MMM}", x.EmprJob.EndDate),
-                              //String.Format("{0:dd MMM yyyy hh:mm tt}", x.EmprJob.EndDate),
-                              //SaveDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.SaveDate),
-                              //Location = x.EmprJob.Location,
-                                //count = (from y in c.EmprJobs
-                                //         where y.UId == Uid
-                                //         select y.JobId).Count(),
-
+                              EndDate = x.EmprJob.EndDate,
+                              Type = (from y in c.EmprJobTypes
+                                      where y.JobId == x.JobId
+                                      select y.Type).ToList(),
+                              Salary = "₹" + x.EmprJob.MinSalary + " - ₹" + x.EmprJob.MaxSalary + "/yearly",
                             }).ToList();
                 
                 return new Result()
@@ -86,6 +100,44 @@ namespace HIsabKaro.Cores.Employee.Job
                     Status = Result.ResultStatus.success,
                     Message = string.Format($"{save.Count} Job Saved "),
                     Data = save,
+                };
+            }
+        }
+
+        public Result Remove(int UserId, int SaveId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User Doesn't Exist");
+                }
+
+                var job = c.EmpBookmarkJobsDetails.SingleOrDefault(x => x.BookMarkId == SaveId);
+                if (job == null)
+                {
+                    throw new ArgumentException("Job Doesn't Exist");
+                }
+
+                var save = (from x in c.EmpBookmarkJobsDetails
+                            where  x.BookMarkId == SaveId && x.UId == UserId
+                            select x).SingleOrDefault();
+                if (save == null)
+                {
+                    throw new ArgumentException("Job not found!!");
+                }
+                c.EmpBookmarkJobsDetails.DeleteOnSubmit(save);
+                c.SubmitChanges();
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = string.Format("Saved Job Remove Successfully"),
+                    Data = new
+                    {
+                        Id = job.JobId,
+                        Title = job.EmprJob.Title
+                    }
                 };
             }
         }

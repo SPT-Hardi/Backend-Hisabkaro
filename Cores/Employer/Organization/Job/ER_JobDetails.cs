@@ -11,13 +11,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 {
     public class ER_JobDetails
     {
-        private readonly Uploads _images;
-
-        public ER_JobDetails(Uploads images)
-        {
-            _images = images;
-        }
-
         public Result Create( int URId, Models.Employer.Organization.Job.ER_JobDetail value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
@@ -31,11 +24,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("User not found!!");
                     }
 
+                    if (user.SubRole.RoleName.ToLower() != "admin")
+                    {
+                        throw new ArgumentException("Access not allow!!");
+                    }
+
+                    var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == value.Branch.Id && x.OId == value.Organisation.Id);
+                    if(branch == null)
+                    {
+                        throw new ArgumentException("Branch doesn't exist");
+                    }
+
                     var jDetails = (from j in c.EmprJobs
-                                    where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id
+                                    where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id && j.BranchID == (value.Branch.Id == null ? null : value.Branch.Id)
                                     orderby j.JobId descending
                                     select j).FirstOrDefault();
-                   
+
                     if (jDetails != null)
                     {
                         if (jDetails.EndDate < ISDT)
@@ -51,7 +55,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 PostDate = ISDT,
                                 EndDate = value.Enddate.ToLocalTime(),
                                 OId = (int)value.Organisation.Id,
-                                BranchID = value.Branch.Id,
+                                BranchID = value.Branch.Id == null ? null : value.Branch.Id,
                                 URId = user.URId,
                                 Status = "Open"
                             };
@@ -127,7 +131,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         Message = string.Format("Job Details Added Successfully!!"),
                         Data = new  { 
                               Id = job.JobId,
-                              Title = job.Title
+                              Title = job.Title,
+                              Date = DateTime.Now.ToLocalTime()
                         },
                     };
                 }
@@ -147,6 +152,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("User not found!!");
                     }
 
+                    if (user.SubRole.RoleName.ToLower() != "admin")
+                    {
+                        throw new ArgumentException("Access not allow!!");
+                    }
+
                     var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
                     if (null == job)
                     {
@@ -159,10 +169,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.MaxSalary = value.MaxSalary;
                     job.Roles = value.Roles;
                     job.Description = value.Description;
-                    job.PostDate = ISDT;
                     job.EndDate = value.Enddate.ToLocalTime();
                     job.OId = (int)value.Organisation.Id;
-                    job.BranchID = value.Branch.Id;
+                    job.BranchID = value.Branch.Id == null ? null : value.Branch.Id;
                     job.URId = user.URId;
                     job.Status = "Open";
                     c.SubmitChanges();
@@ -224,6 +233,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("User not found!!");
                 }
 
+                if (user.SubRole.RoleName.ToLower() != "admin")
+                {
+                    throw new ArgumentException("Access not allow!!");
+                }
+
                 var query = (from x in c.EmprJobs
                              where x.OId == user.OId
                              orderby x.JobId descending
@@ -231,12 +245,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                              {
                                  JobID = x.JobId,
                                  JobTitle = x.Title,
-                                 Skill = (from s in c.EmprJobSkills
-                                          where s.JobId == x.JobId
-                                          select new { 
-                                              id = s.SkillId,
-                                              skill = s.Skill
-                                          }).ToList().Distinct(),
                                  Type = (from t in c.EmprJobTypes
                                          where t.JobId == x.JobId
                                          select new { 
@@ -244,22 +252,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                            type = t.Type
                                          }).ToList().Distinct(),
                                  Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
-                                 Location = x.Location,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
-                                 Roles = x.Roles,
-                                 Description = x.Description,
-                                 PostDate = x.PostDate,
-                                 EndDate = x.EndDate,
                                  Organization = x.DevOrganisation.OrganisationName,
+                                 status = x.Status,
                                  Applied = (from y in c.EmpBookmarkJobsDetails
-                                          where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId
+                                          where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId 
                                           select y.UId).Count(),
+                                 PostedOn = x.PostDate
                              });
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
-                    Message = string.Format("View Org all Job!!"),
+                    Message = string.Format("Org Job List!!"),
                     Data = query.ToList(),
                 };
             }
@@ -276,11 +281,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("User not found!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
+                if (user.SubRole.RoleName.ToLower() != "admin")
+                {
+                    throw new ArgumentException("Access not allow!!");
+                }
 
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
                 if (job == null)
                 {
-                    throw new ArgumentException("No Job Found");
+                    throw new ArgumentException("Job Not Found!!");
                 }
 
                 var query = (from x in c.EmprJobs
@@ -288,8 +297,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                              orderby x.JobId descending
                              select new
                              {
-                                 id = x.JobId,
-                                 JobTitle = x.Title,
+                                 //id = x.JobId,
+                                 //JobTitle = x.Title,
+                                 //Type = (from t in c.EmprJobTypes
+                                 //        where t.JobId == Jid
+                                 //        select new
+                                 //        {
+                                 //            id = t.JobTypeId,
+                                 //            type = t.Type
+                                 //        }).ToList(),
+                                 //Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
+                                 //Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
+                                 //Organization = x.DevOrganisation.OrganisationName,
+                                 //PostedOn = x.PostDate.ToString("d MMMM"),
+                                 Applybefore = x.EndDate,
                                  Skill = (from s in c.EmprJobSkills
                                           where s.JobId == Jid
                                           select new
@@ -297,21 +318,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                               id = s.SkillId,
                                               skill = s.Skill
                                           }).ToList(),
-                                 Type = (from t in c.EmprJobTypes
-                                         where t.JobId == Jid
-                                         select new
-                                         {
-                                             id = t.JobTypeId,
-                                             type = t.Type
-                                         }).ToList(),
-                                 Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
                                  Location = x.Location,
-                                 Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Roles = x.Roles,
-                                 Description = x.Description,
-                                 PostDate = x.PostDate,
-                                 EndDate = x.EndDate,
-                                 Organization = x.DevOrganisation.OrganisationName
+                                 Description = x.Description
                              }).SingleOrDefault();
 
                 return new Result()
@@ -327,17 +336,21 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         {
             using (DBContext c = new DBContext())
             {
-              
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
                 }
 
+                if (user.SubRole.RoleName.ToLower() != "admin")
+                {
+                    throw new ArgumentException("Access not allow!!");
+                }
+
                 var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
                 if (job == null)
                 {
-                    throw new ArgumentException("No Job Found");
+                    throw new ArgumentException("Job Not Found!!");
                 }
 
                 job.Status = "Remove";
@@ -370,7 +383,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
                 if (job == null)
                 {
-                    throw new ArgumentException("No Job Found");
+                    throw new ArgumentException("Job Not Found!!");
                 }
 
                 job.Status = "Disable";

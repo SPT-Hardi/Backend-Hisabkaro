@@ -21,7 +21,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
 
                 var request = new OrgStaffsLeaveApplication()
                 {
-                    URId = user.URId,
+                    StaffURId = user.URId,
                     StartDate = value.StartDate,
                     EndDate = value.EndDate,
                     Reason = value.reason,
@@ -50,11 +50,11 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
-                }
+                }   
 
                 var leave = (from x in c.OrgStaffsLeaveApplications
                              orderby x.OrgStaffLeaveId descending
-                             where x.URId == user.URId
+                             where x.StaffURId == user.URId
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,

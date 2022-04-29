@@ -20,7 +20,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
 
                 var job = (from x in c.EmprJobs
-                           where x.DevOrganisation.OrganisationName.Contains(value.CName)
+                           where x.DevOrganisation.OrganisationName.Contains(value.CName) && x.Status.ToLower() == "Open"
                            select new
                            {
                                JobID = x.JobId,
@@ -73,6 +73,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
 
                 var job = (from x in c.EmprJobs
+                           where x.Status.ToLower() == "Open"
                            select new
                            {
                                JobID = x.JobId,
@@ -96,8 +97,8 @@ namespace HIsabKaro.Cores.Employee.Job
                                Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                Roles = x.Roles,
                                Description = x.Description,
-                               PostDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.PostDate),
-                               EndDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.EndDate),
+                               PostDate = x.PostDate,
+                               EndDate = x.EndDate,
                                Organization = x.DevOrganisation.OrganisationName,
                                Status = (x.EmpApplyJobDetails.Count(y => y.UId == UserId) != 0 ? "Applied" : ""),
                            }).ToList();

@@ -104,6 +104,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         throw new ArgumentException("User Doesn't exist");
                     }
 
+                    if (user.SubRole.RoleName.ToLower() != "admin")
+                    {
+                        throw new ArgumentException("Access not allow!!");
+                    }
+
                     var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == BId && x.OId == user.OId);
                     if (branch == null)
                     {
@@ -143,13 +148,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     throw new ArgumentException("User Doesn't exist");
                 }
 
+                if (user.SubRole.RoleName.ToLower() != "admin")
+                {
+                    throw new ArgumentException("Access not allow!!");
+                }
+
                 var query = (from x in c.DevOrganisationBranches
                              where x.OId == user.OId
                              orderby x.OId ascending
                              select new
                              {
                                  BranchId = x.BranchId,
-                                 Organization = x.DevOrganisation.OrganisationName,
                                  BranchName = x.BranchName
                              });
 
@@ -157,7 +166,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Organization Branch Details!!"),
-                    Data = query.ToList(),
+                    Data = new { 
+                        Organization = user.DevOrganisation.OrganisationName,
+                        Branch = query.ToList() },
                 };
             }
         }
@@ -170,6 +181,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't exist");
+                }
+
+
+                if (user.SubRole.RoleName.ToLower() != "admin")
+                {
+                    throw new ArgumentException("Access not allow!!");
                 }
 
                 var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.OId == user.OId && x.BranchId == Bid);

@@ -27,5 +27,13 @@ namespace HIsabKaro.Controllers.Employee.Job
             int UserId = (int)HttpContext.Items["UserID"];
             return Ok(new EE_BookmarkedJobs().One(UserId));
         }
+
+        [Route("save/{SaveId}")]
+        [HttpDelete]
+        public IActionResult Delete(int SaveId)
+        {
+            int UserId = (int)HttpContext.Items["UserID"];
+            return Ok(new EE_BookmarkedJobs().Remove(UserId, SaveId));
+        }
     }
 }
