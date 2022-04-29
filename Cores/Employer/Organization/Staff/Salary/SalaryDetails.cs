@@ -58,9 +58,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     }
 
                     var _AttendDeduction = AttendDeduction(StaffId);
-                    var _CountAttend = Attendance(StaffId);
-
-
+                    var _Bonus = Bonus(StaffId);
+                    var _Advance = Advance(StaffId);
+                    //var _Loan = Loan(StaffId);
+                    //var _CountAttend = Attendance(StaffId);
 
                     scope.Complete();
                     return new Result()
@@ -70,14 +71,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         Data = new
                         {
                             AttedDeduction = _AttendDeduction,
-
+                            Bouns=_Bonus,
+                            Advance=_Advance,
                         }
                     };
                 }
             }
         }
 
-        public int AttendDeduction(int StaffURId)
+        public decimal AttendDeduction(int StaffURId)
         {
             using (DBContext c = new DBContext())
             {
@@ -88,37 +90,105 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                  select x.Salary).SingleOrDefault();
 
                     var leave = (from x in c.OrgStaffsLeaveApplications
-                                 where x.URId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved== "Accepted"
+                                 where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved== "Accepted"
                                  select x.UnPaidDays).Sum();
 
                     var Deduction=(leave * (salary/ 30));
 
                     scope.Complete();
-                    return (int)Deduction ;
+                    return (decimal)Deduction ;
 
+                }
+            }
+        }
+
+        public decimal Bonus(int StaffURId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var _bonus = (from x in c.OrgStaffsBonusDetails
+                                 where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1 
+                                 select x.Amount).Sum();
+                    
+                    scope.Complete();
+                    return (decimal)_bonus;
+
+                }
+            }
+        }
+
+        public decimal Advance(int StaffURId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var _Advance = (from x in c.OrgStaffsAdvanceDetails
+                                  where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1
+                                  select x.Amount).Sum();
+
+                    scope.Complete();
+                    return (decimal)_Advance;
+
+                }
+            }
+        }
+
+        public int Loan(int StaffURId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var _Loan = (from x in c.OrgStaffsLoanDetails
+                                    where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.Status=="Completed"
+                                    select x).SingleOrDefault();
+                    if (_Loan is null)
+                    {
+                        return 0;
+                    }
+                    int totalMonth = Math.Abs( 12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
+                                        
+                    var t = _Loan.RemainingAmt - _Loan.MonthlyPay;
+
+                    if (t <= _Loan.MonthlyPay)
+                    {
+                        _Loan.RemainingAmt = 0;
+                    }
+                    else
+                    {
+                        _Loan.RemainingAmt = t;
+                    }
+                    
+                    c.SubmitChanges();
+                    scope.Complete();
+                    return 1;  
                 }
             }
         }
 
         public int Attendance(int StaffURId)
         {
-            using (DBContext c = new DBContext())
-            {
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    var atte = (from x in c.OrgStaffsAttendancesDailies
-                                where x.URId == StaffURId && x.ChekIN.Value.Month == DateTime.Now.Month - 1
-                                select x).Count();
+            return 1;
+            //using (DBContext c = new DBContext())
+            //{
+            //    using (TransactionScope scope = new TransactionScope())
+            //    {
+            //        var atte = (from x in c.OrgStaffsAttendancesDailies
+            //                    where x.URId == StaffURId && x.ChekIN.Value.Month == DateTime.Now.Month - 1
+            //                    select x).ToList();
 
-                    var leave = (from x in c.OrgStaffsLeaveApplications
-                                 where x.URId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 
-                                 select x.PaidDays).Sum();
-                    var totaldays =atte + leave;
-                    scope.Complete();
-                    return (int)totaldays;
+            //        var leave = (from x in c.OrgStaffsLeaveApplications
+            //                     where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1
+            //                     select x.PaidDays).Sum();
+            //        var totaldays = atte.Count() + leave;
+            //        scope.Complete();
+            //        return (int)totaldays;
 
-                }
-            }
+            //    }
+            //}
         }
     }
 }
