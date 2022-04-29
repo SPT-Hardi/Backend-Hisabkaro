@@ -60,7 +60,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     var _AttendDeduction = AttendDeduction(StaffId);
                     var _Bonus = Bonus(StaffId);
                     var _Advance = Advance(StaffId);
-                    //var _Loan = Loan(StaffId);
+                    var _Loan = Loan(StaffId);
                     //var _CountAttend = Attendance(StaffId);
 
                     scope.Complete();
@@ -143,7 +143,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var _Loan = (from x in c.OrgStaffsLoanDetails
-                                    where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.Status=="Completed"
+                                    where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.Status==true
                                     select x).SingleOrDefault();
                     if (_Loan is null)
                     {
