@@ -56,5 +56,20 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
             int URId = (int)HttpContext.Items["URId"];
             return Ok(_branchDetails.GetBranch(Bid, URId));
         }
+
+        [Route("date")]
+        [HttpGet]
+        public IActionResult Date()
+        {
+            TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("Asia/Kolkata");
+            DateTime ISTDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Now.ToUniversalTime(), INDIAN_ZONE);
+            DateTime localDate = DateTime.Now;
+            DateTime utcDate = DateTime.UtcNow;
+            //DateTime localTime = DateTime.Now.ToLocalTime();
+
+            DateTime utcTime = TimeZoneInfo.ConvertTimeToUtc(localDate);
+            var db = Convert.ToDateTime(utcDate);
+            return Ok(localDate + " , " + utcDate + " , " + ISTDate + " , " + db);
+        }
     }
 }

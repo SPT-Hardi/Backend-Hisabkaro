@@ -19,6 +19,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("User Doesn't Exist");
                 }
 
+                if (user.SubRole.RoleName.ToLower() != "admin")
+                {
+                    throw new ArgumentException("Access not allow!!");
+                }
+
                 var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
                 if (job == null)
                 {

@@ -22,7 +22,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                         throw new ArgumentException("User not found!!");
                     }
 
-                    var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId);
+                    var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId && x.OId == user.OId);
                     if (staff == null)
                     {
                         throw new ArgumentException("Staff not found!!");
@@ -35,7 +35,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                   
                     var request = new OrgStaffsLeaveApplication()
                     {
-                        URId = staff.URId,
+                        URId = user.URId,
+                        StaffURId = staff.URId,
                         StartDate = value.StartDate.ToLocalTime(),
                         EndDate = value.EndDate.ToLocalTime(),
                         Reason = value.Reason,
@@ -52,7 +53,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 
                     c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                     c.SubmitChanges();
-                    var name = request.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
+                    var name = request.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName;
                     scope.Complete();
                     return new Result()
                     {

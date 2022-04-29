@@ -41,6 +41,11 @@ namespace HIsabKaro.Cores.Employee.Job
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Job Apply Successfully"),
+                    Data = new
+                    {
+                        Id = job.JobId,
+                        Title = job.Title
+                    }
                 };
             }
         }
@@ -63,10 +68,11 @@ namespace HIsabKaro.Cores.Employee.Job
                                 JobTitle = x.EmprJob.Title,
                                 CompanyName = x.DevOrganisation.OrganisationName,
                                 BranchName = x.DevOrganisationBranch.BranchName,
-                                EndDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.EmprJob.EndDate),
-                                ApplyDate = String.Format("{0:dd MMM yyyy hh:mm tt}", x.ApplyDate),
-                                Location = x.EmprJob.Location
-                            }).ToList();
+                                Type = (from y in c.EmprJobTypes
+                                        where y.JobId == x.JobId
+                                        select y.Type).ToList(),
+                                Salary = "₹" + x.EmprJob.MinSalary + " - ₹" + x.EmprJob.MaxSalary + "/yearly"
+                             }).ToList();
 
                 return new Result()
                 {
