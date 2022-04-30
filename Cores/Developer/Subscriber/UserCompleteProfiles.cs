@@ -12,19 +12,19 @@ namespace HIsabKaro.Cores.Developer.Subscriber
 {
     public class UserCompleteProfiles
     {
-        public Result Add(int UID,UserCompleteProfile value )
+        public Result Add(object UID,UserCompleteProfile value )
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
+                    var qs = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (qs == null)
                     {
                         throw new ArgumentException("User Doesnt exist!");
                     }
                     //------user address---------------------//
-                    var userdetail = c.SubUsersDetails.Where(x => x.UId == UID).SingleOrDefault();
+                    var userdetail = c.SubUsersDetails.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (userdetail.AddressID == null)
                     {
                         CommonContactAddress contactaddress = new CommonContactAddress()
@@ -50,7 +50,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     //--------user TotalWorkExperience------------//
                     SubUsersTotalworkexperience totalworkexperience = new SubUsersTotalworkexperience()
                     {
-                        UId = UID,
+                        UId =(int)UID,
                         Duration = value.totalWorkExperience.Duration.Year + " year" + value.totalWorkExperience.Duration.Month + " month",
                         Description = value.totalWorkExperience.Description,
                         LookingForJob = value.totalWorkExperience.LookingForJob,

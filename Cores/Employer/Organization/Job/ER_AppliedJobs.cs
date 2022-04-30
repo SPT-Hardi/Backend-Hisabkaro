@@ -9,11 +9,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 {
     public class ER_AppliedJobs
     {
-        public Result Get(int URId,int Jid)
+        public Result Get(object URId,int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");

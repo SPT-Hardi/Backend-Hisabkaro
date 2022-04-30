@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Statistics
     {
-        public Result Get(int URId,DateTime date) 
+        public Result Get(object URId,DateTime date) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -20,7 +20,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     int latecount = 0;
 
                     var attendancelist = new List<Models.Employer.Organization.Staff.Attendance.AttendanceList>();
-                    var findorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    var findorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                     //remove after controller logic added
                     if (findorg.SubRole.RoleName.ToLower() != "admin")
                     {

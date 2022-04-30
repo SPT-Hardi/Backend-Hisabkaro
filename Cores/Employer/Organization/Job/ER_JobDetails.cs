@@ -11,14 +11,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 {
     public class ER_JobDetails
     {
-        public Result Create( int URId, Models.Employer.Organization.Job.ER_JobDetail value)
+        public Result Create( object URId, Models.Employer.Organization.Job.ER_JobDetail value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User not found!!");
@@ -29,11 +29,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("Access not allow!!");
                     }
 
-                    var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == value.Branch.Id && x.OId == value.Organisation.Id);
-                    if(branch == null)
-                    {
-                        throw new ArgumentException("Branch doesn't exist");
-                    }
+                    //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == value.Branch.Id && x.OId == value.Organisation.Id);
+                    //if(branch == null)
+                    //{
+                    //    throw new ArgumentException("Branch doesn't exist");
+                    //}
 
                     var jDetails = (from j in c.EmprJobs
                                     where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id && j.BranchID == (value.Branch.Id == null ? null : value.Branch.Id)
@@ -139,14 +139,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result Update(int URId, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
+        public Result Update(object URId, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User not found!!");
@@ -223,11 +223,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         }
 
         //user view specific organization job
-        public Result One(int URId)
+        public Result One(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -271,11 +271,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         }
 
         //user view specific organization specific job
-        public Result GetJob(int URId,int Jid)
+        public Result GetJob(object URId,int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -332,11 +332,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result RemovePost(int URId, int Jid)
+        public Result RemovePost(object URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -370,11 +370,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result DisablePost(int URId, int Jid)
+        public Result DisablePost(object URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");

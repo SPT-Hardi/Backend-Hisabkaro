@@ -29,9 +29,9 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("UserDetails")]
         public IActionResult DetailsPost(Models.Developer.Subscriber.UserDetails value) 
         {
-            int UID = (int)HttpContext.Items["UserID"];
-            string DeviceToken= HttpContext.Items["DeviceToken"].ToString();
-            return Ok(new UserDetails(_configuration,_tokenServices).Add(UID,DeviceToken.ToString(),value));
+            var UID = HttpContext.Items["UserID"];
+            var DeviceToken= HttpContext.Items["DeviceToken"];
+            return Ok(new UserDetails(_configuration,_tokenServices).Add(UID,DeviceToken,value));
         }
 
 

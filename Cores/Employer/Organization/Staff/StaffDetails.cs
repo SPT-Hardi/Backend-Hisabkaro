@@ -43,7 +43,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             }
         }
 
-        public Result Create(int URId,Models.Employer.Organization.Staff.StaffDetail value)
+        public Result Create(object URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
             using (DBContext c = new DBContext())
             {

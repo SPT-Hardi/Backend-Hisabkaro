@@ -9,7 +9,7 @@ namespace HIsabKaro.Cores.Employee.Job
 {
     public class EE_AppliedJobs
     {
-        public Result Create(int UserId, int Jid)
+        public Result Create(object UserId, int Jid)
         {
             var ISDT=new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
@@ -23,7 +23,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 var apply = (from x in c.EmpApplyJobDetails
                              orderby x.JobId descending
                              where x.OId == job.OId && x.BranchId == job.BranchID
-                             && x.JobId == job.JobId && x.UId == UserId
+                             && x.JobId == job.JobId && x.UId == (int)UserId
                              select x).FirstOrDefault();
                 if (apply != null)
                 {
@@ -31,7 +31,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
                 c.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
                 {
-                    UId = UserId,
+                    UId = (int)UserId,
                     JobId = job.JobId,
                     BranchId = job.BranchID,
                     OId = (int)job.OId,
@@ -51,18 +51,18 @@ namespace HIsabKaro.Cores.Employee.Job
             }
         }
 
-        public Result One(int UserId)
+        public Result One(object UserId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUsers.SingleOrDefault(x => x.UId == UserId);
+                var user = c.SubUsers.SingleOrDefault(x => x.UId == (int)UserId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't Exist");
                 }
 
                 var apply = (from x in c.EmpApplyJobDetails
-                            where x.UId == UserId
+                            where x.UId == (int)UserId
                              select new
                             {
                                 ApplyId = x.ApplyId,

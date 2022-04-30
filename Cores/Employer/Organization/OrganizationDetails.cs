@@ -15,13 +15,13 @@ namespace HIsabKaro.Cores.Employer.Organization
 {
     public class OrganizationDetails
     {
-        public Result Create(int UserID,OrganizationDetail value)
+        public Result Create(object UserID,OrganizationDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _UserID = c.SubUsers.Where(u => u.UId == UserID).SingleOrDefault();
+                    var _UserID = c.SubUsers.Where(u => u.UId == (int)UserID).SingleOrDefault();
                     if (_UserID is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
@@ -47,7 +47,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         Longitude = value.Longitude,
                         OrgCode = (OrgCode.Next(100000, 999999)).ToString(),
                         QRString = Guid.NewGuid().ToString(),
-                        UId = UserID,
+                        UId = (int)UserID,
                     };
                     c.DevOrganisations.InsertOnSubmit(Org);
                     c.SubmitChanges();
@@ -67,7 +67,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     var _ORole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == Org.OId);
                     var _subOrg = new SubUserOrganisation()
                     {
-                        UId=UserID,
+                        UId=(int)UserID,
                         OId=Org.OId,
                         RId=_ORole.RId,
                     };

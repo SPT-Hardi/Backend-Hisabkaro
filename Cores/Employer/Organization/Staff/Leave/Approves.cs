@@ -9,11 +9,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 {
     public class Approves
     {
-        public Result Get(int URId)
+        public Result Get(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -48,11 +48,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
             }
         }
 
-        public Result Update(int URId, int leaveId, Models.Employer.Organization.Staff.Leave.Approve value)
+        public Result Update(object URId, int leaveId, Models.Employer.Organization.Staff.Leave.Approve value)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -79,7 +79,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 leave.IsLeaveApproved = "Accepted";
                 leave.PaidDays = (value.Paid == null ? 0 : value.Paid);
                 leave.UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid);
-                leave.URId = URId;
+                leave.URId = (int)URId;
                 c.SubmitChanges();
                 return new Result()
                 {
@@ -94,11 +94,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
             }
         }
 
-        public Result Remove(int URId, int leaveId)
+        public Result Remove(object URId, int leaveId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -119,7 +119,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 leave.IsLeaveApproved = "Reject";
                 leave.PaidDays = 0;
                 leave.UnPaidDays = 0;
-                leave.URId = URId;
+                leave.URId = (int)URId;
                 c.SubmitChanges();
                 return new Result()
                 {

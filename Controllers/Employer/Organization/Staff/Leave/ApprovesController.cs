@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
         [Route("Approve/View")]
         public IActionResult Get()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new Approves().Get(URId));
         }
 
@@ -25,7 +25,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
         [Route("Approve/{leaveId}")]
         public IActionResult Update([FromRoute] int leaveId, [FromBody] Models.Employer.Organization.Staff.Leave.Approve value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new Approves().Update(URId,leaveId, value));
         }
 
@@ -33,7 +33,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
         [Route("Remove/{leaveId}")]
         public IActionResult Delete([FromRoute] int leaveId)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new Approves().Remove(URId, leaveId));
         }
     }

@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Bonus
         [Route("BounsDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new BonusDetails().One(URId));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Bonus
         [Route("BounsDetails/Create/{StaffId}")]
         public IActionResult Create([FromRoute]int StaffId, [FromBody] Models.Employer.Organization.Staff.Bonus.BonusDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new BonusDetails().Create(URId, StaffId, value));
         }
     }

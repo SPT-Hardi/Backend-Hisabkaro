@@ -17,18 +17,18 @@ namespace HIsabKaro.Cores.Employee.Staff
         {
             _contactAddress = contactAddress;
         }
-        public Result One(int URId)
+        public Result One(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == URId);
+                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == (int)URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
                 var _Org = (from x in c.DevOrganisationsStaffs
-                            where x.URId == URId
+                            where x.URId == (int)URId
                             select new
                             {
                                 URId=URId,
@@ -57,18 +57,18 @@ namespace HIsabKaro.Cores.Employee.Staff
             }
         }
 
-        public Result Create(int URId,Models.Employee.Staff.StaffPersonalDetail value)
+        public Result Create(object URId,Models.Employee.Staff.StaffPersonalDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == URId);
+                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == (int)URId);
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == URId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId ==(int)URId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
@@ -91,18 +91,18 @@ namespace HIsabKaro.Cores.Employee.Staff
             }
         }
 
-        public Result GetOne(int URId)
+        public Result GetOne(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == URId);
+                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == (int)URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
                 var _Org = (from x in c.DevOrganisationsStaffs
-                            where x.URId == URId
+                            where x.URId == (int)URId
                             select new
                             {
                                 URId = URId,
@@ -121,18 +121,18 @@ namespace HIsabKaro.Cores.Employee.Staff
             }
         }
 
-        public Result GetPut(int URId, Models.Employee.Staff.StaffProfile value)
+        public Result GetPut(object URId, Models.Employee.Staff.StaffProfile value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == URId);
+                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == (int)URId);
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == URId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == (int)URId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");

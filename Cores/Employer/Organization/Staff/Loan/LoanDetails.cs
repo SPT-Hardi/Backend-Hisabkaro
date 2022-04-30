@@ -11,13 +11,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 {
     public class LoanDetails
     {
-        public Result Create(int URId,int StaffId,Models.Employer.Organization.Staff.Loan.LoanDetail value)
+        public Result Create(object URId,int StaffId,Models.Employer.Organization.Staff.Loan.LoanDetail value)
         {
             using(TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId ==(int)URId);
                     if(user == null)
                     {
                         throw new ArgumentException("User Doesn't exist");
@@ -52,7 +52,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         Duration = (t == 0 ? $"{(month % 12)}month" : $"{(month / 12)}year{(month % 12)}month"),
                         MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
                         Description = value.Description,
-                        URId = URId,
+                        URId = (int)URId,
                         StaffURId = staff.URId,
                         InterestId = (int)value.Interest.Id,
                         PrincipalAmt = PrincipalAmt,
@@ -77,12 +77,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
             }
         }
 
-        public Result GetOrgLoan(int URId)
+        public Result GetOrgLoan(object URId)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't exist");
@@ -116,19 +116,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
             }
         }
 
-        public Result GetStaffLoan(int URId,int LoanId)
+        public Result GetStaffLoan(object URId,int LoanId)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 LoanView loanView = new LoanView();
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't exist");
                 }
 
-                var loan = c.OrgStaffsLoanDetails.Where(x => x.StaffURId == URId && x.LoanId == LoanId).ToList();
+                var loan = c.OrgStaffsLoanDetails.Where(x => x.StaffURId == (int)URId && x.LoanId == LoanId).ToList();
                 if (loan.Count() == 0)
                 {
                     throw new ArgumentException("Loan Doesn't exist");
@@ -155,7 +155,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     });
                 }
               
-                var payment = c.OrgStaffsLoanDetails.Where(x => x.StaffURId == URId && x.LoanId == LoanId).SingleOrDefault();
+                var payment = c.OrgStaffsLoanDetails.Where(x => x.StaffURId == (int)URId && x.LoanId == LoanId).SingleOrDefault();
                 for (DateTime dt = payment.StartDate ; dt < payment.EndDate; dt = dt.AddMonths(1))
                 {
                     var m = (Math.Abs(dt.Month - payment.EndDate.Month));

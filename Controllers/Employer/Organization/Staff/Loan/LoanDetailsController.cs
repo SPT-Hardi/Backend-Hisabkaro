@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
         [HttpPost]
         public IActionResult Create([FromRoute]int StaffId,[FromBody]Models.Employer.Organization.Staff.Loan.LoanDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new LoanDetails().Create(URId,StaffId, value));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
         [HttpGet]
         public IActionResult GetOrg()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new LoanDetails().GetOrgLoan(URId));
         }
 
@@ -32,7 +32,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
         [HttpGet]
         public IActionResult GetStaff([FromRoute]int LoanId)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new LoanDetails().GetStaffLoan(URId,LoanId));
         }
     }

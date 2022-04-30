@@ -10,14 +10,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Overrides
     {
-        public Result Add(int URId,Models.Employer.Organization.Staff.Attendance.Override value) 
+        public Result Add(object URId,Models.Employer.Organization.Staff.Attendance.Override value) 
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var findrole = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    var findrole = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                     //remove after contoller added
                     if (findrole.SubRole.RoleName.ToLower() != "admin")
                     {

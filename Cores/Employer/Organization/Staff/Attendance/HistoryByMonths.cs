@@ -12,7 +12,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class HistoryByMonths
     {
-        public Result Get(int URId,int Id,DateTime date)
+        public Result Get(object URId,int Id,DateTime date)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
@@ -29,10 +29,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var totalworkinghourmonth = new TimeSpan();
                     //var days = getTotalDays(date.Date);
                     HistoryByMonth historyByMonth = new HistoryByMonth();
-                    var userorg = c.SubUserOrganisations.Where(x => x.URId == URId).SingleOrDefault();
+                    var userorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
 
                     URId = Id == 0 ? URId : Id;
-                    var Org = c.DevOrganisationsStaffs.Where(x => x.URId == URId && x.DevOrganisation.OId==userorg.OId).SingleOrDefault();
+                    var Org = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId && x.DevOrganisation.OId==userorg.OId).SingleOrDefault();
                     if (Org == null) 
                     {
                         throw new ArgumentException("Staff not exist in organization!");
@@ -41,7 +41,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     if (date.Month < ISDT.Month && date.Year <= ISDT.Year)
                     {
 
-                        var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
+                        var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
                         int days = DateTime.DaysInMonth(date.Year, date.Month);
                         for (var i = 1; i <= days; i++)
                         {
@@ -61,7 +61,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 var monthname = checkindate.ToString("MMMM").Substring(0, 3);
                                 attendanceHistory.Add(new AttendanceHistory()
                                 {
-                                    URId = URId,
+                                    URId = (int)URId,
                                     AttendanceDate = $"{i} {monthname} | {dayname}",
                                     Date = checkindate,
                                     Status = "Present",
@@ -79,7 +79,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 var monthname = checkindate.ToString("MMMM").Substring(0, 3);
                                 attendanceHistory.Add(new AttendanceHistory()
                                 {
-                                    URId = URId,
+                                    URId = (int)URId,
                                     AttendanceDate = $"{i} {monthname} | {dayname}",
                                     Date = checkindate,
                                     Status = "Absent",
@@ -101,7 +101,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         DateTime startDate = new DateTime(date.Year, date.Month, day: 1);
                         int days = (int)(((ISDT - startDate).TotalDays)+1);
-                        var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
+                        var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
                         for (var i = 1; i <= days; i++)
                         {
                             var checkindate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
@@ -120,7 +120,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? new TimeSpan() : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
                                 attendanceHistory.Add(new AttendanceHistory()
                                 {
-                                    URId = URId,
+                                    URId = (int)URId,
                                     AttendanceDate = $"{i} {monthname} | {dayname}",
                                     Date = checkindate,
                                     Status = "Present",
@@ -139,7 +139,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 var monthname = checkindate.ToString("MMMM").Substring(0, 3);
                                 attendanceHistory.Add(new AttendanceHistory()
                                 {
-                                    URId = URId,
+                                    URId = (int)URId,
                                     AttendanceDate = $"{i} {monthname} | {dayname}",
                                     Date = checkindate,
                                     Status = "Absent",
@@ -164,7 +164,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     historyByMonth.attendanceHistory = attendanceHistory;
                     historyByMonth.AttendanceMonth = $"{date.ToString("MMMM").Substring(0, 3)},{date.Year}";
                     historyByMonth.TotalWorkingHourPerMonth = ($"{totalhour}:{remainminute}");
-                    historyByMonth.URId = URId;
+                    historyByMonth.URId = (int)URId;
                     historyByMonth.Name = Org.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
                     historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath;
                     historyByMonth.MobileNumber = Org.SubUserOrganisation.SubUser.MobileNumber;

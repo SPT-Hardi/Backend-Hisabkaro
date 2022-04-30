@@ -29,7 +29,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpPost]
         public IActionResult Create([FromBody]Models.Employer.Organization.Branch.BranchDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.Create(URId, value));
         }
 
@@ -37,7 +37,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpPut]
         public IActionResult Update([FromBody]Models.Employer.Organization.Branch.BranchDetail value,int BId)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.Update(URId, BId,value));
         }
 
@@ -45,7 +45,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpGet]
         public IActionResult GetOrgBranch()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.GetOrg(URId));
         }
 
@@ -53,7 +53,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
         [HttpGet]
         public IActionResult GetBranch([FromRoute]int Bid)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.GetBranch(Bid, URId));
         }
 

@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Staff
         [Route("SatffEmploymentDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new SatffEmploymentDetails().One(URId));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Staff
         [Route("SatffEmploymentDetails/Create")]
         public IActionResult PostPut([FromBody] Models.Employee.Staff.SatffEmploymentDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new SatffEmploymentDetails().Create(URId, value));
         }
     }

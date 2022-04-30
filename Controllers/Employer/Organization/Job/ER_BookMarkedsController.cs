@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpGet]
         public IActionResult One(int Jid)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_BookMarkeds().Get(URId,Jid));
         }
     }

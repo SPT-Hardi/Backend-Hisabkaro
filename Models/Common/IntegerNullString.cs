@@ -10,4 +10,9 @@ namespace HIsabKaro.Models.Common
         public int? Id { get; set; }
         public string Text { get; set; }
     }
+    public class IntegerString
+    {
+        public int Id { get; set; }
+        public string Text { get; set; }
+    }
 }

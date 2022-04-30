@@ -46,7 +46,7 @@ namespace HIsabKaro.Cores.Common
                 if (userrefreshtoken == null)
                     throw new ArgumentException("Bad Request!");
                 var claim = new Claims(_configuration, _tokenService);
-                var res =claim.Add(UserID, DeviceToken, URId);
+                var res =claim.Add(UserID.ToString(), DeviceToken, URId.ToString());
                 //var newJwtToken = _tokenService.GenerateAccessToken(principal.Claims);
                 //var newRefreshToken = _tokenService.GenerateRefreshToken();
 

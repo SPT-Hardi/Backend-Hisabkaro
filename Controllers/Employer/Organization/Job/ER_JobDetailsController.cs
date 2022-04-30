@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpPost]
         public IActionResult Create(Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().Create(URId,value));
         }
 
@@ -25,7 +25,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpPut]
         public IActionResult Update(int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().Update(URId, Jid,value));
         }
 
@@ -33,7 +33,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpGet]
         public IActionResult Get()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().One(URId));
         }
 
@@ -41,7 +41,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpGet]
         public IActionResult GetById([FromRoute]int Jid)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().GetJob(URId,Jid));
         }
 
@@ -49,7 +49,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpPost]
         public IActionResult Remove([FromRoute]int Jid)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().RemovePost(URId, Jid));
         }
 
@@ -57,7 +57,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
         [HttpPost]
         public IActionResult DisableJob([FromRoute] int Jid)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().DisablePost(URId, Jid));
         }
     }

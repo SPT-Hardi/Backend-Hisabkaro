@@ -36,7 +36,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_staffDetails.Create(URId,value));
         }
 
@@ -44,11 +44,11 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
         [Route("StaffDetails/Drop")]
         public List<IntegerNullString> Drop()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             using (DBContext c = new DBContext())
             {
                 return (from x in c.DevOrganisationsShiftTimes
-                        where x.OId == c.SubUserOrganisations.Where(x=>x.URId==URId).FirstOrDefault().OId
+                        where x.OId == c.SubUserOrganisations.Where(x=>x.URId==(int)URId).FirstOrDefault().OId
                         select new IntegerNullString()
                         {
                             Id = x.ShiftTimeId,

@@ -11,20 +11,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Submits
     {
-        public Result Add(int URId, SubmitDaily value)
+        public Result Add(object URId, SubmitDaily value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == URId).SingleOrDefault();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
                     TimeSpan lateby = new TimeSpan();
                     if (qs == null)
                     {
 
-                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
+                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
                         if (org == null)
                         {
                             throw new ArgumentException("Staff not exist in organization!");
@@ -34,7 +34,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
                         }
                         OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
-                        attendance.URId = URId;
+                        attendance.URId = (int)URId;
                         attendance.LastUpdateDate = ISDT;
                         attendance.ChekIN = ISDT;
                         attendance.Lateby = lateby;
@@ -69,20 +69,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
             }
         }
-        public Result AddFromQr(int URId,Models.Employer.Organization.Staff.Attendance.SubmitDailyThroughQR value) 
+        public Result AddFromQr(object URId,Models.Employer.Organization.Staff.Attendance.SubmitDailyThroughQR value) 
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == URId).SingleOrDefault();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
                     TimeSpan lateby = new TimeSpan();
                     if (qs == null)
                     {
 
-                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == URId).SingleOrDefault();
+                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
                         if (org == null)
                         {
                             throw new ArgumentException("Staff not exist in organization!");
@@ -102,7 +102,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             throw new ArgumentException("File not exist!");
                         }
-                        attendance.URId = URId;
+                        attendance.URId = (int)URId;
                         attendance.LastUpdateDate = ISDT;
                         attendance.ChekIN = ISDT;
                         attendance.PhotoFileId = fileid.FileId;
@@ -135,14 +135,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
             }
         }
-        public Result Get(int URId) 
+        public Result Get(object URId) 
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == URId && x.ChekIN.Value.Date == ISDT.Date).SingleOrDefault();
+                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Date == ISDT.Date).SingleOrDefault();
                     bool IsPresent = false;
                     DateTime? LastUpdate =null;
                     if (staffattendance != null) 

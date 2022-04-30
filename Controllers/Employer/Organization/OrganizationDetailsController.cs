@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("OrganizationDetails/Create")]
         public IActionResult Create([FromBody] Models.Employer.Organization.OrganizationDetail value)
         {
-            int UserID = (int)HttpContext.Items["UserID"];
+            var UserID = HttpContext.Items["UserID"];
             return Ok(new OrganizationDetails().Create(UserID,value));
         }
     }

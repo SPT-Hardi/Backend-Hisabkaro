@@ -26,7 +26,7 @@ namespace HIsabKaro.Controllers.Employee.Staff
         [Route("SatffPersonalDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_staffPersonalDetails.One(URId));
         }
 
@@ -34,14 +34,14 @@ namespace HIsabKaro.Controllers.Employee.Staff
         [Route("SatffPersonalDetails/Create")]
         public IActionResult Create([FromBody] Models.Employee.Staff.StaffPersonalDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_staffPersonalDetails.Create(URId,value));
         }
         [HttpGet]
         [Route("SatffPersonalDetails/StaffProfile/One")]
         public IActionResult GetOne()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_staffPersonalDetails.GetOne(URId));
         }
 
@@ -49,7 +49,7 @@ namespace HIsabKaro.Controllers.Employee.Staff
         [Route("SatffPersonalDetails/StaffProfile/Create")]
         public IActionResult GetPut([FromBody] Models.Employee.Staff.StaffProfile value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(_staffPersonalDetails.GetPut(URId, value));
         }
     }

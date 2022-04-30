@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HIsabKaro.Cores.Common.Contact
+namespace HIsabKaro.Cores.Common.Context
 {
     public class ContactAddress
     {

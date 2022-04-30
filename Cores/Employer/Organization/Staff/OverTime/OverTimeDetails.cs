@@ -10,18 +10,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
 {
     public class OverTimeDetails
     {
-        public Result One(int URId)
+        public Result One(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var _SId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == URId);
+                var _SId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == (int)URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("User Does Not Exits!");
                 }
 
                 var _OverTime = (from x in c.OrgStaffsOverTimeDetails
-                            where x.URId == URId
+                            where x.URId == (int)URId
                             select new
                             {
                                 StaffURId = x.StaffURId,
@@ -44,18 +44,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
             }
         }
 
-        public Result Create(int URId, int StaffId, Models.Employer.Organization.Staff.OverTime.OverTimeDetail value)
+        public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.OverTime.OverTimeDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId && x.SubRole.RoleName == "admin");
+                    var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId ==(int)URId && x.SubRole.RoleName == "admin");
                     if (_URId is null)
                     {
                         throw new ArgumentException("Unathorized!");
@@ -75,7 +75,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                         OverTimeWage = value.OverTimeWage,
                         OverTime = (TimeSpan)value.Time,
                         Amount = Convert.ToDecimal((TimeSpan.Parse($"{value.Time}").Hours) + "." + (TimeSpan.Parse($"{value.Time}").Minutes)) * value.OverTimeWage,
-                        URId = URId,
+                        URId = (int)URId,
                     };
                     c.OrgStaffsOverTimeDetails.InsertOnSubmit(_OverTime);
                     c.SubmitChanges();

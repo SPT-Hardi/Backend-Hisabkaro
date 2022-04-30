@@ -9,11 +9,11 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
 {
     public class Requests
     {
-        public Result Create(int URId, Models.Employer.Organization.Staff.Leave.Request value)
+        public Result Create(object URId, Models.Employer.Organization.Staff.Leave.Request value)
         {
             using(DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
@@ -42,11 +42,11 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
             }
         }
 
-        public Result Get(int URId)
+        public Result Get(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");

@@ -137,7 +137,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 var URIdlist = c.SubUserOrganisations.Where(x => x.UId == user.UId).ToList();
                 var URId = URIdlist.LastOrDefault();
                 //------------------
-                    var res = tokn.Add(usersigninrole.UId, value.DeviceToken,URId==null ? 0 : URId.URId);
+                    var res = tokn.Add(usersigninrole.UId.ToString(), value.DeviceToken,URId==null ? null : URId.URId.ToString());
                     var checktoken = (from obj in c.SubUserTokens
                                       where obj.DeviceToken == qs.DeviceToken && obj.UId == qs.UId
                                       select obj).SingleOrDefault();

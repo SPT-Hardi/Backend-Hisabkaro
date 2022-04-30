@@ -10,13 +10,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 {
     public class Submits
     {
-        public Result Create(int URId,int StaffId, Models.Employer.Organization.Staff.Leave.Submit value) 
+        public Result Create(object URId,int StaffId, Models.Employer.Organization.Staff.Leave.Submit value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User not found!!");

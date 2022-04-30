@@ -10,18 +10,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
 {
     public class BonusDetails
     {
-        public Result One(int URId)
+        public Result One(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var _SId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == URId);
+                var _SId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == (int)URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
                 var _Bonus = (from x in c.OrgStaffsBonusDetails
-                                 where x.URId == URId
+                                 where x.URId == (int)URId
                                  select new
                                  {
                                      BonusId=x.BonusId,
@@ -44,18 +44,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
             }
         }
 
-        public Result Create(int URId,int StaffId, Models.Employer.Organization.Staff.Bonus.BonusDetail value)
+        public Result Create(object URId,int StaffId, Models.Employer.Organization.Staff.Bonus.BonusDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId && x.SubRole.RoleName=="admin");
+                    var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName=="admin");
                     if (_URId is null)
                     {
                         throw new ArgumentException("Unathorized!");
@@ -72,7 +72,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
                         Date = value.Date,
                         Amount=value.Amount,
                         Description=value.Description,
-                        URId= URId,
+                        URId= (int)URId,
                     };
                     c.OrgStaffsBonusDetails.InsertOnSubmit(_Bouns);
                     c.SubmitChanges();

@@ -21,13 +21,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
             _shiftTimes = shiftTimes;
         }
 
-        public Result Create(int URId, Models.Employer.Organization.Branch.BranchDetail value)
+        public Result Create(object URId, Models.Employer.Organization.Branch.BranchDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User Doesn't exist");
@@ -49,7 +49,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     {
                         BranchName = value.BranchName,
                         ContactAddressId = _AId == null ? null : _AId.Data,
-                        URId = URId,
+                        URId = (int)URId,
                         Latitude = value.latitude,
                         Longitude = value.longitude,
                         OId = value.Organization.Id
@@ -92,13 +92,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
             }
         }
 
-        public Result Update(int URId, int BId,Models.Employer.Organization.Branch.BranchDetail value)
+        public Result Update(object URId, int BId,Models.Employer.Organization.Branch.BranchDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (user == null)
                     {
                         throw new ArgumentException("User Doesn't exist");
@@ -118,7 +118,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     var _AId = _contactAddress.Create(value.Address);
                     branch.BranchName = value.BranchName;
                     branch.ContactAddressId = _AId == null ? null : _AId.Data;
-                    branch.URId = URId;
+                    branch.URId = (int)URId;
                     branch.Latitude = value.latitude;
                     branch.Longitude = value.longitude;
                     branch.OId = value.Organization.Id;
@@ -138,11 +138,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
             }
         }
 
-        public Result GetOrg(int URId)
+        public Result GetOrg(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't exist");
@@ -173,11 +173,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
             }
         }
 
-        public Result GetBranch(int Bid, int URId)
+        public Result GetBranch(int Bid, object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == URId);
+                var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User Doesn't exist");

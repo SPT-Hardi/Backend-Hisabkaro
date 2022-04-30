@@ -69,17 +69,17 @@ namespace HIsabKaro.Cores.Employee.Profile
         //    //}
         //}
 
-        public Result Get(int UserId)
+        public Result Get(object UserId)
         {
             using (DBContext c = new DBContext())
             {
                 DashboardView userprofile = new DashboardView();
-                var about = c.EmpResumeAbouts.Where(x => x.UId == UserId).SingleOrDefault();
+                var about = c.EmpResumeAbouts.Where(x => x.UId == (int)UserId).SingleOrDefault();
 
                 userprofile.about.EmpResumeAboutId = about.EmpResumeAboutId;
                 userprofile.about.AboutText = about.About;
 
-                var experiencelist = c.EmpResumeWorkExperiences.Where(x => x.UId == UserId).ToList();
+                var experiencelist = c.EmpResumeWorkExperiences.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in experiencelist)
                 {
                     var totaldays = (item.EndDate - item.StartDate).Value.TotalDays;
@@ -96,7 +96,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                     });
                 }
 
-                var educationlist = c.EmpResumeEducations.Where(x => x.UId == UserId).ToList();
+                var educationlist = c.EmpResumeEducations.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in educationlist)
                 {
                     var syear = string.Format("{0 : yyyy}", item.StartDate);
@@ -112,7 +112,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                 }
 
 
-                var skills = c.EmpResumeSkills.Where(x => x.UId == UserId).ToList();
+                var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in skills) 
                 {
                     userprofile.skills.Add(new SkillDetails()
@@ -122,7 +122,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                     });
                 }
 
-                var certificates = c.EmpResumeOtherCertificates.Where(x => x.UId == UserId).ToList();
+                var certificates = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in certificates) 
                 {
                     var totaldays = (item.EndDate - item.StartDate).Value.TotalDays;
@@ -137,7 +137,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                 var contact = (from obj in c.SubUsersDetails
                                join obj1 in c.SubUsers
                                on obj.UId equals obj1.UId
-                               where obj.UId == UserId
+                               where obj.UId == (int)UserId
                                select new ViewContact()
                                {
                                    UId = obj.UId,

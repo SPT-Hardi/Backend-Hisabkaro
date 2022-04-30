@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("User/CompleteProfile")]
         public IActionResult Post(UserCompleteProfile value) 
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new UserCompleteProfiles().Add(UID,value));
         }
     }

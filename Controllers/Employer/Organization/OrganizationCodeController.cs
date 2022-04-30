@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("Code")]
         public  IActionResult Get()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new OrganizationCodes().Get(URId));
         }
     }

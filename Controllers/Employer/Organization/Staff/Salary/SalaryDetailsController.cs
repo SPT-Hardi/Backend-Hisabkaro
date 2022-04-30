@@ -23,7 +23,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
         [Route("SalaryDetails/Create/{StaffId}")]
         public IActionResult Create([FromRoute] int StaffId, [FromBody] Models.Employer.Organization.Staff.Salary.SalaryDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new SalaryDetails().Create(URId, StaffId, value));
         }
     }

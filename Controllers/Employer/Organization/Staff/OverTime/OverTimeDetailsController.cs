@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.OverTime
         [Route("OverTimeDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new OverTimeDetails().One(URId));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.OverTime
         [Route("OverTimeDetails/Create/{StaffId}")]
         public IActionResult Create([FromRoute] int StaffId, [FromBody] Models.Employer.Organization.Staff.OverTime.OverTimeDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new OverTimeDetails().Create(URId, StaffId, value));
         }
     }

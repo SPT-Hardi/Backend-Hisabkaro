@@ -24,14 +24,14 @@ namespace HIsabKaro.Cores.Developer.Subscriber
             _tokenServices = tokenServices;
            
         }
-        public Result Add(int UID,string DeviceToken,Models.Developer.Subscriber.UserDetails value)
+        public Result Add(object UID,object DeviceToken,Models.Developer.Subscriber.UserDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
 
-                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     //we need to change this insertion one time only after,change inside app
                     //20 for  employee
                     //21 for employer
@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("User not Exist!");
                     }
-                    var usersDetail = c.SubUsersDetails.Where(x => x.UId == UID).SingleOrDefault();
+                    var usersDetail = c.SubUsersDetails.Where(x => x.UId == (int)UID).SingleOrDefault();
                    
                     if(usersDetail!=null && user.LoginTypeId != null) 
                     {
@@ -57,10 +57,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     udetails.Email = value.userdetails.Email;
                     udetails.FileId = file==null ? null : file.FileId;
                     udetails.FullName = value.userdetails.FullName;
-                    udetails.UId = UID;
+                    udetails.UId = (int)UID;
                     Claims claims = new Claims(_configuration, _tokenServices);
                     int URId = 0;
-                    var res = claims.Add(UID, DeviceToken,URId);
+                    var res = claims.Add(UID.ToString(), (string)DeviceToken,URId.ToString());
                     c.SubUsersDetails.InsertOnSubmit(udetails);
                     c.SubmitChanges();
 

@@ -18,7 +18,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         [Route("SubmitDaily")]
         public IActionResult Post([FromBody]SubmitDaily value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new Submits().Add(URId,value));
         }
@@ -27,7 +27,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         [Route("SubmitDaily")]
         public IActionResult Get()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new Submits().Get(URId));
         }
@@ -36,7 +36,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         [Route("SubmitDailyQR")]
         public IActionResult PostQR([FromBody] SubmitDailyThroughQR value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new Submits().AddFromQr(URId,value));
         }

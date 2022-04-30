@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Leave
         [Route("Submit/{StaffId}")]
         public IActionResult Post([FromRoute] int StaffId, [FromBody] Models.Employer.Organization.Staff.Leave.Submit value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new Submits().Create(URId,StaffId,value));
         }
     }

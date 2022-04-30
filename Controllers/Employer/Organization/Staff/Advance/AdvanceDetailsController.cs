@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Advance
         [Route("AdvanceDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new AdvanceDetails().One(URId));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Advance
         [Route("AdvanceDetails/Create/{StaffId}")]
         public IActionResult Create([FromRoute]int StaffId, [FromBody] Models.Employer.Organization.Staff.Advance.AdvanceDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new AdvanceDetails().Create(URId, StaffId, value));
         }
     }

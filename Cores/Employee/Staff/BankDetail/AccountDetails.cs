@@ -10,16 +10,16 @@ namespace HIsabKaro.Cores.Employee.Staff.BankDetail
 {
     public class AccountDetails
     {
-        public Result One(int URId)
+        public Result One(object URId)
         {
             using (DBContext c = new DBContext())
             {
-                var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == URId);
+                var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == (int)URId);
                 if (_User is null)
                 {
                     throw new ArgumentException("User Does Not Exits!");
                 }
-                var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == URId);
+                var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == (int)URId);
                 if (_Staff is null)
                 {
                     throw new ArgumentException("Staff Does Not Exits!");
@@ -45,18 +45,18 @@ namespace HIsabKaro.Cores.Employee.Staff.BankDetail
             }
         }
 
-        public Result Create(int URId, Models.Employee.Staff.BankDetail.AccountDetail value)
+        public Result Create(object URId, Models.Employee.Staff.BankDetail.AccountDetail value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == URId);
+                    var _User = c.SubUserOrganisations.SingleOrDefault(u => u.URId == (int)URId);
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == URId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == (int)URId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");

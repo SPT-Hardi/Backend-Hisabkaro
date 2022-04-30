@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Staff.BankDetail
         [Route("AccountDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new AccountDetails().One(URId));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Staff.BankDetail
         [Route("AccountDetails/Create")]
         public IActionResult Create([FromBody] Models.Employee.Staff.BankDetail.AccountDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new AccountDetails().Create(URId, value));
         }
     }

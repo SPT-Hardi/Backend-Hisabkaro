@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Staff.BankDetail
         [Route("UPIDetails/One")]
         public IActionResult One()
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new UPIDetails().One(URId));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Staff.BankDetail
         [Route("UPIDetails/Create")]
         public IActionResult Create([FromBody] Models.Employee.Staff.BankDetail.UPIDetail value)
         {
-            int URId = (int)HttpContext.Items["URId"];
+            var URId = HttpContext.Items["URId"];
             return Ok(new UPIDetails().Create(URId, value));
         }
     }
