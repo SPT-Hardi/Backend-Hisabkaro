@@ -1,4 +1,4 @@
-﻿using HIsabKaro.Cores.Common.Contact;
+﻿using HIsabKaro.Cores.Common.Context;
 using HIsabKaro.Models.Common;
 using HisabKaroDBContext;
 using System;

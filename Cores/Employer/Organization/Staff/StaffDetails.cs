@@ -62,24 +62,26 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     {
                         throw new ArgumentException("MoileNumber and AlternerNumaber Are Same!");
                     }
-                    var _OrgRole = c.SubRoles.Where(x => x.RoleName == "Staff".ToLower()).SingleOrDefault(x => x.OId == _OId.OId);
+
+                    var _OrgRole = (from x in c.SubRoles where x.OId == value.Organization.Id && x.RoleName.ToLower() == "staff" select new { x.RId, x.RoleName }).FirstOrDefault();
                     if (_OrgRole is null)
                     {
                         var _role = new SubRole()
                         {
                             OId = _OId.OId,
                             RoleName = "staff",
-                            LoginTypeId = 20,
+                            LoginTypeId = 20,                        
                         };
                         c.SubRoles.InsertOnSubmit(_role);
                         c.SubmitChanges();
                     }
 
-                    var _OrgRoles = c.SubRoles.Where(x => x.RoleName == "Staff".ToLower()).SingleOrDefault(x => x.OId == _OId.OId);
+                   
                     var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
+                    
                     if (_subUser is not null)
                     {
-                        var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
+                        var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
                         if (_subUserOrg is not null)
                         {
                             throw new ArgumentException($"Staff Member Are Alredy Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
@@ -90,7 +92,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             {
                                 UId = _subUser.UId,
                                 OId = _OId.OId,
-                                RId = _OrgRoles.RId
+                                RId = _OrgRole.RId
                             };
                             c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                             c.SubmitChanges();
@@ -121,14 +123,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             UId = _user.UId,
                             OId = _OId.OId,
-                            RId = _OrgRoles.RId
+                            RId = _OrgRole.RId
                         };
                         c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                         c.SubmitChanges();
                     }
 
                     var _users = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
 
                     var _Sid = (from x in c.DevOrganisationsStaffs
                               where x.OId == _OId.OId
@@ -189,7 +191,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             }
         }
 
-        public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value)
+        public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value)   
         {
             using (DBContext c = new DBContext())
             {
