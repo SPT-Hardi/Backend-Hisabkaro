@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using HIsabKaro.Controllers.Filters;
 using HIsabKaro.Cores.Helpers;
+using FilterDescriptor = Kendo.Mvc.FilterDescriptor;
 
 namespace TeamIN.ReckonIN.API.Helpers.Kendo
 {

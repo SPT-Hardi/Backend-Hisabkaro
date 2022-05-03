@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <Reference Include="Kendo.Mvc">
-      <HintPath>C:\onteamin\telerik\aspnetcore\16.0.22.119\Kendo.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\..\onteamin\telerik\aspnetcore\16.0.22.119\Kendo.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
 

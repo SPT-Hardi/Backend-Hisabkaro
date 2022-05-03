@@ -1,4 +1,4 @@
-﻿using HIsabKaro.Cores.Common.Context;
+﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employee.Resume;
 using HisabKaroDBContext;

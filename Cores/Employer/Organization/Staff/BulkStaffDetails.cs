@@ -31,7 +31,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     var csvTable = new DataTable();
                     using (var csvReader = new CsvReader(new StreamReader(System.IO.File.OpenRead(_FileId.FilePath)), true))
                     {
-                        csvTable.Load(csvReader);
+                        csvTable.Load((IDataReader)csvReader);
                     }
 
                     string Column1 = csvTable.Columns[0].ToString();

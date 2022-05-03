@@ -162,7 +162,7 @@ namespace HIsabKaro.Cores.Common.Subscriber.Users
         //    ConnectedRet = new Common.Result();
         //    using (var c = new DBDataContext())
         //    {
-        //        var UId = Core.Current.Context.UId;
+        //        var UId = Core.Current.Contact.UId;
         //        var uc = (from x in c.Users_Connections
         //                  where x.ConnectionId == connection.ConnectionId & x.UId == UId
         //                  select x).FirstOrDefault;
@@ -194,7 +194,7 @@ namespace HIsabKaro.Cores.Common.Subscriber.Users
         //    using (var c = new Core.DBDataContext())
         //    {
         //        var uc = (from x in c.Users_Connections
-        //                  where x.UId == Core.Current.Context.UId & x.ConnectionId == connection.ConnectionId & x.IsConnected == true
+        //                  where x.UId == Core.Current.Contact.UId & x.ConnectionId == connection.ConnectionId & x.IsConnected == true
         //                  select x).FirstOrDefault;
         //        if (uc is object)
         //        {
@@ -317,7 +317,7 @@ namespace HIsabKaro.Cores.Common.Subscriber.Users
         {
             using (var c = new DBContext())
             {
-                var Ids = Common.Context.Current.Ids;
+                var Ids = Common.Contact.Current.Ids;
                 var q = (from x in c.sub_Users
                          where x.UId == Ids.UId & x.OId == Ids.OId
                          select x).Single();

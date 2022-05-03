@@ -1,5 +1,5 @@
 using HIsabKaro.Cores.Common;
-using HIsabKaro.Cores.Common.Context;
+using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.File;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Cores.Developer.Subscriber;
