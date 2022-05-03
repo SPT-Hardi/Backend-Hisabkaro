@@ -29,7 +29,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("Access not allow!!");
                     }
 
-                    //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == value.Branch.Id && x.OId == value.Organisation.Id);
+                    //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == (value.Branch.Id == null ? null : value.Branch.Id) && x.OId == value.Organisation.Id);
                     //if(branch == null)
                     //{
                     //    throw new ArgumentException("Branch doesn't exist");

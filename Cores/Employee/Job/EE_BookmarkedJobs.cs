@@ -35,7 +35,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     save.JobId = job.JobId;
                     save.OId = job.OId;
                     save.BranchId = job.BranchID == null ? null : job.BranchID;
-                    save.SaveDate = DateTime.Now.ToLocalTime();
+                    save.SaveDate = ISDT;//DateTime.Now.ToLocalTime();
                     c.SubmitChanges();
                     return new Result()
                     {
