@@ -50,7 +50,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                            Lateby= obj1.Lateby,
                                            MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
                                            Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
-                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                                        }).ToList();
                     //var absentlist = (from obj in totalemp
                     //                  join obj1 in presentlist
@@ -73,7 +73,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                           CheckIN = new TimeSpan(),
                                           CheckOUT = new TimeSpan(),
                                           Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
-                                          ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                          ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                      
                                       }).ToList();
                     var overtime = (from obj in c.DevOrganisationsStaffs

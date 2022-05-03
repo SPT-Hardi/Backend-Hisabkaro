@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("About")]
         public IActionResult Post(Models.Employee.Resume.About value) 
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new Abouts().Add(UID,value));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("About")]
         public IActionResult Get()
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new Abouts().View(UID));
         }
     }

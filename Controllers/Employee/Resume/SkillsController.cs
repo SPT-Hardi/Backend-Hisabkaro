@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Skills")]
         public IActionResult Add(Models.Employee.Resume.Skill value) 
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new Skills().Add(UID,value));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Skills")]
         public IActionResult Get()
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new Skills().View(UID));
         }
 
@@ -32,7 +32,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Skills/{Id}")]
         public IActionResult Update(Models.Employee.Resume.SkillDetails value,int Id)
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new Skills().Update(Id, UID,value));
         }
 
@@ -40,8 +40,8 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Skills/{Id}")]
         public IActionResult Update([FromRoute]int Id)
         {
-            int UId = (int)HttpContext.Items["UserID"];
-            return Ok(new Skills().Delete(UId,Id));
+            var UID = HttpContext.Items["UserID"];
+            return Ok(new Skills().Delete(UID,Id));
         }
     }
 }

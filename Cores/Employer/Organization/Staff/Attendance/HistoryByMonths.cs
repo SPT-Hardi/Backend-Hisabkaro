@@ -166,7 +166,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     historyByMonth.TotalWorkingHourPerMonth = ($"{totalhour}:{remainminute}");
                     historyByMonth.URId = (int)URId;
                     historyByMonth.Name = Org.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
-                    historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath;
+                    historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID;
                     historyByMonth.MobileNumber = Org.SubUserOrganisation.SubUser.MobileNumber;
                     return new Result()
                         {

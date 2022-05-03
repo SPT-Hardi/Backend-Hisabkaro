@@ -37,7 +37,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 SaveId = x.BookMarkId,
                                 UserName = x.SubUser.SubUsersDetail.FullName,
                                 BranchName = x.DevOrganisationBranch.BranchName,
-                                Image = x.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                Image = x.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 SaveDate = x.SaveDate,
                                 Status = (x.SubUser.SubUserOrganisations.Count(y => y.UId == x.UId) == 0 ? "looking for job" : "currently working"),
                             }).ToList();

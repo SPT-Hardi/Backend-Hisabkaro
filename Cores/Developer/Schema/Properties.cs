@@ -14,15 +14,18 @@ namespace HIsabKaro.Cores.Developer.Schema
             {
                 using (var c = new DBContext())
                 {
-                    var Ids = Cores.Common.Context.Current.Ids;
-                    if (Ids is object)
-                    {
-                        return c.dev_fn_sc_Controller_Property_Value(ControllerName, PropertyName, Ids.UId, Ids.RId, Ids.OId);
-                    }
-                    else
-                    {
-                        return c.dev_fn_sc_Controller_Property_Value(ControllerName, PropertyName, 0, 0, 0);
-                    }
+                    var Ids = Common.Contact.Current.Ids;
+                        return (from x in c.DevControllers where x.ControllerName == ControllerName select 
+                                
+                                PropertyName == "URL" ? x.URL :
+                                PropertyName == "SqlCommand" ? x.SqlCommand :
+                                PropertyName == "SqlCommandKeys" ? x.SqlCommandKeys :
+                                PropertyName == "SqlCommandOrderBy" ? x.SqlCommandOrderBy :
+                                PropertyName == "DisplayText" ? x.DisplayText :
+                                PropertyName == "EditController" ? x.EditController
+                                : ""
+                                
+                                ).FirstOrDefault();
                 }
             }
         }

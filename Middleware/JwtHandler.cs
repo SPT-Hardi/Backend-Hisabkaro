@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HIsabKaro.Controllers.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -53,6 +54,22 @@ namespace HIsabKaro.Middleware
                 c.Items["UserID"] = UserID;
                 int URId = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Role).Value);
                 c.Items["URId"] = URId;
+                if (UserID == 0)
+                {
+                    throw new ArgumentException("Not authorized!");
+                }
+                else if (URId == 0)
+                {
+                    c.Items["Ids"] = new UserService().GetByUId(UserID);
+                    // attach user to context on successful jwt validation
+                }
+                else if (URId != 0)
+                {
+                    c.Items["Ids"] = new UserService().GetByURId(URId);
+                    // attach user to context on successful jwt validation
+                }
+
+
             }
             catch (Exception)
             { }

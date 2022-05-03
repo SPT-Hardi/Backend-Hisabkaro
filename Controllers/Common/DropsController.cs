@@ -1,10 +1,12 @@
 ﻿using HIsabKaro.Controllers.Filters;
+using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeamIN.ReckonIN.API.Helpers.Kendo;
 
 namespace HIsabKaro.Controllers.Common
 {
@@ -14,7 +16,7 @@ namespace HIsabKaro.Controllers.Common
     {
         [HttpPost]
         [Route("General/Data")]
-        public IActionResult General(string Con, string parentCon)
+        public IActionResult General(string Con, string parentCon, [DataSourceRequest] DataSourceRequest value)
         {
             try
             {
@@ -31,17 +33,17 @@ namespace HIsabKaro.Controllers.Common
 
                 if (exists.NeedLogin == true)
                 {
-                    if (Cores.Common.Context.Current.IsLoggedIn == true)
+                    if (Cores.Common.Contact.Current.IsLoggedIn == true)
                     {
-                        Cores.Common.Context.Current.SetCId(exists.CId);
-                        if (!Cores.Common.Context.Current.IsAuthorised(Con, parentCon))
+                        Cores.Common.Contact.Current.SetCId(exists.CId);
+                        if (!Cores.Common.Contact.Current.IsAuthorised(Con, parentCon))
                         {
                             throw new HttpResponseException() { Status = 403, Value = "You are not authorised to access this feature!" };
                         }
                     }
                     else
                     {
-                        var access_token = Cores.Common.Context.Current.httpContext.Request.Headers["Authorization"].ToString();
+                        var access_token = Cores.Common.Contact.Current.httpContext.Request.Headers["Authorization"].ToString();
                         if (String.IsNullOrEmpty(access_token))
                         {
                             throw new HttpResponseException() { Status = 401, Value = "invalid_token" };
@@ -52,8 +54,8 @@ namespace HIsabKaro.Controllers.Common
                         }
                     }
                 }
-
-                return Ok(new Cores.Common.Drops().General(Con, value.WhereClause().SqlParameters));
+                var Id = HttpContext.Items["Ids"];
+                return Ok(new Cores.Common.Drops().General(Con, value.WhereClause().SqlParameters,Id));
             }
             catch (System.Data.SqlClient.SqlException ex)
             {

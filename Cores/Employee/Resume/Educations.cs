@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Educations
     {
-        public Result Add(int UID,Models.Employee.Resume.Education value) 
+        public Result Add(object UID,Models.Employee.Resume.Education value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -23,14 +23,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                     //28-ITI
                     //1-salesman
                     //2-electrician
-                    var check = c.SubUsers.Where(x => x.UId== UID).SingleOrDefault();
+                    var check = c.SubUsers.Where(x => x.UId== (int)UID).SingleOrDefault();
                     if (check == null) 
                     {
                         throw new ArgumentException("User Doesnt Exist!,(enter valid token)");
                     }
                     foreach (var item in value.educationlist)
                     {
-                        var edu = c.EmpResumeEducations.Where(x => x.UId == UID && x.EducationNameId == item.EducationName.Id).SingleOrDefault();
+                        var edu = c.EmpResumeEducations.Where(x => x.UId == (int)UID && x.EducationNameId == item.EducationName.Id).SingleOrDefault();
                         if (edu != null) 
                         {
                             throw new ArgumentException($"Users {edu.SubFixedLookup.FixedLookup} education details already exist!");
@@ -42,7 +42,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                          EducationNameId=obj.EducationName.Id,
                                          EducationSteamName=obj.EducationStreamName,
                                          InstituteName=obj.InstituteName,
-                                         UId=UID,
+                                         UId=(int)UID,
                                          StartDate=obj.StartDate,
                                          EndDate=obj.EndDate,
                                      }).ToList();
@@ -64,14 +64,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(int UID) 
+        public Result View(object UID) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     var res = (from obj in c.EmpResumeEducations
-                               where obj.UId == UID
+                               where obj.UId == (int)UID
                                select new Models.Employee.Resume.EducationDetail()
                                {
                                    EmpResumeEducationId = obj.EmpResumeEducationId,
@@ -103,14 +103,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id,int UID,Models.Employee.Resume.EducationDetail value) 
+        public Result Update(int Id,object UID,Models.Employee.Resume.EducationDetail value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     
-                    var education = c.EmpResumeEducations.Where(x => x.UId == UID && x.EmpResumeEducationId == Id).SingleOrDefault();
+                    var education = c.EmpResumeEducations.Where(x => x.UId == (int)UID && x.EmpResumeEducationId == Id).SingleOrDefault();
                     if (education == null) 
                     {
                         throw new ArgumentException("Enter valid EducationId");
@@ -146,13 +146,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Delete(int UId,int Id) 
+        public Result Delete(object UId,int Id) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var education = c.EmpResumeEducations.Where(x => x.UId == UId && x.EmpResumeEducationId == Id).SingleOrDefault();
+                    var education = c.EmpResumeEducations.Where(x => x.UId == (int)UId && x.EmpResumeEducationId == Id).SingleOrDefault();
                     if (education == null) 
                     {
                         throw new ArgumentException("There is no any education details for current Id!,(enter valid token)");

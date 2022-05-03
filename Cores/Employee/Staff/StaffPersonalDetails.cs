@@ -108,7 +108,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                                 URId = URId,
                                 FullName=x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                 MobileNumber= x.SubUserOrganisation.SubUser.MobileNumber,
-                                Image= x.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                Image= x.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                             }).ToList();
 
                 return new Result()

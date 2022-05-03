@@ -26,7 +26,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                             {
                                 StaffURId = x.StaffURId,
                                 Name=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
-                                Image=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                Image=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 OverTimeDate = x.OverTimeDate,
                                 OverTimeWage = x.OverTimeWage,
                                 OverTime = x.OverTime,

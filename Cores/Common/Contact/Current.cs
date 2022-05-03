@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HIsabKaro.Cores.Common.Context
+namespace HIsabKaro.Cores.Common.Contact
 {
     public class Current
     {
@@ -36,6 +36,10 @@ namespace HIsabKaro.Cores.Common.Context
                 return Ids == null ? false : true;
             }
         }
+
+
+        
+       
         public static bool SetCId(int? CId)
         {
             Models.Common.Ids CurrentIds = httpContext.Items["Ids"] as Models.Common.Ids;

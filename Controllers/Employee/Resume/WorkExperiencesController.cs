@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("WorkExperiences")]
         public IActionResult Post(Models.Employee.Resume.WorkExperinece value) 
         {
-           int UID = (int)HttpContext.Items["UserID"];
+           var UID = HttpContext.Items["UserID"];
             return Ok(new WorkExperiences().Add(UID,value));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("WorkExperiences")]
         public IActionResult Get()
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new WorkExperiences().View(UID));
         }
 
@@ -32,7 +32,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("WorkExperiences/{Id}")]
         public IActionResult Patch(Models.Employee.Resume.WorkExperienceDetails value,int Id)
         {
-            int UID = (int)HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(new WorkExperiences().Update(Id, UID,value));
         }
 
@@ -40,8 +40,8 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("WorkExperiences/{Id}")]
         public IActionResult Delete(int Id)
         {
-            int UId = (int)HttpContext.Items["UserID"];
-            return Ok(new WorkExperiences().Delete(UId,Id));
+            var UID = HttpContext.Items["UserID"];
+            return Ok(new WorkExperiences().Delete(UID,Id));
         }
 
 

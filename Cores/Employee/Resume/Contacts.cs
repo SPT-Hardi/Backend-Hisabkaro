@@ -12,13 +12,13 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Contacts
     {
-        public Result Update(int UId,Contact value)
+        public Result Update(object UId,Contact value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var contact = c.SubUsersDetails.Where(x => x.UId == UId).SingleOrDefault();
+                    var contact = c.SubUsersDetails.Where(x => x.UId == (int)UId).SingleOrDefault();
                     if (contact == null) 
                     {
                         throw new ArgumentException("There are no any contact details for this Id!");
@@ -51,13 +51,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Get(int UId) 
+        public Result Get(object UId) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var contact = c.SubUsersDetails.Where(x => x.UId == UId).SingleOrDefault();
+                    var contact = c.SubUsersDetails.Where(x => x.UId == (int)UId).SingleOrDefault();
                     if (contact == null) 
                     {
                         throw new ArgumentException("There are no contact details for current user,(enter valid token)");
