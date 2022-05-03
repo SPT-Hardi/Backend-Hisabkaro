@@ -37,7 +37,16 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
             var URId = HttpContext.Items["URId"];
-            return Ok(_staffDetails.Create(URId,value));
+            return Ok(_staffDetails.Create(URId, value));
+        }
+
+        [HttpPost]
+        [Route("StaffDetails/BulkCreate")]
+
+        public IActionResult BulkCreate([FromBody] List<Models.Employer.Organization.Staff.StaffDetail> value)
+        {
+            var URId = HttpContext.Items["URId"];
+            return Ok(_staffDetails.BulkCreate(URId, value));
         }
 
         [HttpGet]
