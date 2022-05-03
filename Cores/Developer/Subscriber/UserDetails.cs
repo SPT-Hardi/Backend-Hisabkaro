@@ -41,7 +41,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     }
                     var usersDetail = c.SubUsersDetails.Where(x => x.UId == UID).SingleOrDefault();
                    
-                    if(usersDetail!=null && user.LoginTypeId != null) 
+                    if(usersDetail!=null && user.DefaultLoginTypeId != null) 
                     {
                         throw new ArgumentException("User details already exist!");
                     }
@@ -49,7 +49,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("Alternate Mobilenumber and Mobilenumber should be different!");
                     }
-                    user.LoginTypeId = value.role.Id;
+                    user.DefaultLoginTypeId = value.role.Id;
                     c.SubmitChanges();
                     var file = c.CommonFiles.Where(x => x.FGUID == value.userdetails.ProfilePhotoFGUID).SingleOrDefault();
                     SubUsersDetail udetails = new SubUsersDetail();
@@ -64,7 +64,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     c.SubUsersDetails.InsertOnSubmit(udetails);
                     c.SubmitChanges();
 
-                    var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
+                    var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.DefaultLoginTypeId).SingleOrDefault();
                     scope.Complete();
                     return new Result()
                     {

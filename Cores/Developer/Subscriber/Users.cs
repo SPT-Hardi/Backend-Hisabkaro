@@ -42,7 +42,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                
                         suser.MobileNumber = value.MobileNumber;
-                        suser.LoginTypeId = 23;
+                        suser.DefaultLoginTypeId = 23;
                         suser.DefaultLanguageId = value.DefaultLanguageID;
                         c.SubUsers.InsertOnSubmit(suser);
                         c.SubmitChanges();
@@ -131,7 +131,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     }
                     var user = c.SubUsers.Where(x => x.UId == qs.UId).SingleOrDefault();
                     var tokn = new Claims(_configuration, _tokenServices);
-                    var res = tokn.Add(usersigninrole.UId, value.DeviceToken,(int)usersigninrole.LoginTypeId);
+                    var res = tokn.Add(usersigninrole.UId, value.DeviceToken,(int)usersigninrole.DefaultLoginTypeId);
                     var checktoken = (from obj in c.SubUserTokens
                                       where obj.DeviceToken == qs.DeviceToken && obj.UId == qs.UId
                                       select obj).SingleOrDefault();
@@ -157,7 +157,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     qs.IsUsed = true;
                     c.SubmitChanges();
 
-                    var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.LoginTypeId).SingleOrDefault();
+                    var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.DefaultLoginTypeId).SingleOrDefault();
                     var udetails = c.SubUsersDetails.Where(x => x.UId == user.UId).SingleOrDefault();
 
                 var organizationlist = (from obj in c.DevOrganisations

@@ -29,11 +29,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("Access not allow!!");
                     }
 
-                    var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == value.Branch.Id && x.OId == value.Organisation.Id);
-                    if(branch == null)
-                    {
-                        throw new ArgumentException("Branch doesn't exist");
-                    }
+                    //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == (value.Branch.Id == null ? null : value.Branch.Id) && x.OId == value.Organisation.Id);
+                    //if(branch == null)
+                    //{
+                    //    throw new ArgumentException("Branch doesn't exist");
+                    //}
 
                     var jDetails = (from j in c.EmprJobs
                                     where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id && j.BranchID == (value.Branch.Id == null ? null : value.Branch.Id)

@@ -100,7 +100,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             MobileNumber = value.MobileNumber,
                             DefaultLanguageId = 1,
-                            LoginTypeId = 20
+                            DefaultLoginTypeId = 20
                         };
                         c.SubUsers.InsertOnSubmit(_user);
                         c.SubmitChanges();

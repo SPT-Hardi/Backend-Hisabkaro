@@ -72,5 +72,62 @@ namespace HIsabKaro.Cores.Common.File
                 }
             }
         }
+
+        public Result BulkCreate(Models.Common.File.Upload objFile)
+        {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+            using (DBContext c = new DBContext())
+            {
+                if (objFile.files == null)
+                {
+                    throw new ArgumentException("No file found!");
+                }
+                if (objFile.files.Length > 0)
+                {
+                    if (!Directory.Exists(_environment.WebRootPath + "/StaffDetail/"))
+                    {
+                        Directory.CreateDirectory(_environment.WebRootPath + "/StaffDetail/");
+                    }
+                    var supportedTypes = new[] { ".csv", ".xls", ".xlsx " };
+                    var fileExt = "." + System.IO.Path.GetExtension(objFile.files.FileName).Substring(1);
+                    //if (!supportedTypes.Contains(fileExt))
+                    //{
+                    //    throw new ArgumentException("File Extension Is InValid - Only Upload CSV/XLSX/XLS File");
+                    //}
+
+
+
+                    var fileName = ISDT.Ticks + fileExt;
+
+
+
+                    using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/StaffDetail/" + fileName))
+                    {
+                        objFile.files.CopyTo(fileStream);
+                        fileStream.Flush();
+                        var FGUID = Guid.NewGuid();
+                        var file = new CommonFile()
+                        {
+                            FGUID = FGUID.ToString(),
+                            FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "/StaffDetail/", fileName),
+                            FileSize = objFile.files.Length.ToString(),
+                            FileType = fileExt,
+                        };
+                        c.CommonFiles.InsertOnSubmit(file);
+                        c.SubmitChanges();
+                        return new Result()
+                        {
+                            Message = "File uploaded successfully!",
+                            Status = Result.ResultStatus.success,
+                            Data = FGUID,
+                        };
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Failed");
+                }
+            }
+        }
     }
 }
