@@ -12,14 +12,14 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class OtherCertificates
     {
-        public Result Add(int UID,Models.Employee.Resume.OtherCertificate value) 
+        public Result Add(object UID,Models.Employee.Resume.OtherCertificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     
-                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist,(enter valid token)");
@@ -27,7 +27,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var othercertificate = (from obj in value.OtherCertificateDetails
                                             select new EmpResumeOtherCertificate()
                                             {
-                                                UId=UID,
+                                                UId=(int)UID,
                                                 CertificateName=obj.CertificateName,
                                                 StartDate=obj.StartDate,
                                                 EndDate=obj.EndDate,
@@ -53,13 +53,13 @@ namespace HIsabKaro.Cores.Employee.Resume
             }
         }
        
-        public Result UploadCertificate(int Id,int UID,Models.Employee.Resume.Certificate value) 
+        public Result UploadCertificate(int Id,object UID,Models.Employee.Resume.Certificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (certificate == null) 
                     {
                         throw new ArgumentException($"There are no details for OtherCertificateId:{Id}");
@@ -87,7 +87,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(int UID)
+        public Result View(object UID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -95,14 +95,14 @@ namespace HIsabKaro.Cores.Employee.Resume
                 {
                     
                     var res = (from obj in c.EmpResumeOtherCertificates
-                               where obj.UId==UID
+                               where obj.UId==(int)UID
                                select new 
                                {
                                    EmpResumeOtherCertificateId = obj.EmpResumeOtherCertificateId,
                                    CertificateName = obj.CertificateName,
                                    StartDate = Convert.ToDateTime(obj.StartDate),
                                    EndDate = Convert.ToDateTime(obj.EndDate),
-                                   CertificateFilePath =obj.CertificateFileId==null ? null : obj.CommonFile.FilePath ,
+                                   CertificateFilePath =obj.CertificateFileId==null ? null : obj.CommonFile.FGUID ,
 
                                }).ToList();
                     return new Result()
@@ -114,13 +114,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id, int UID,Models.Employee.Resume.OtherCertificateDetails value)
+        public Result Update(int Id, object UID,Models.Employee.Resume.OtherCertificateDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId == UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (othercertificates == null) 
                     {
                         throw new ArgumentException("No othercertificate details for this Id,(enter valid token)");
@@ -149,13 +149,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Delete(int UId,int Id) 
+        public Result Delete(object UId,int Id) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var othercertificate = c.EmpResumeOtherCertificates.Where(x => x.UId == UId && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var othercertificate = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UId && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
                     if (othercertificate == null) 
                     {
                         throw new ArgumentException("There are no any data for current ID!,(enter valid token)");

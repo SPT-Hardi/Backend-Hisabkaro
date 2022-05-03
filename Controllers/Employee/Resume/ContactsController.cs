@@ -17,16 +17,16 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Contact")]
         public IActionResult Get() 
         {
-            int UId = (int)HttpContext.Items["UserID"];
-            return Ok(new Contacts().Get(UId));
+            var UID = HttpContext.Items["UserID"];
+            return Ok(new Contacts().Get(UID));
         }
 
         [HttpPatch]
         [Route("Contact")]
         public IActionResult Patch(Contact value)
         {
-            int UId = (int)HttpContext.Items["UserID"];
-            return Ok(new Contacts().Update(UId,value));
+            var UID = HttpContext.Items["UserID"];
+            return Ok(new Contacts().Update(UID,value));
         }
     }
 }

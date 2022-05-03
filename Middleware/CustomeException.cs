@@ -11,7 +11,7 @@ namespace HIsabKaro.Middleware
 {
     public class CustomeException
     {
-        private readonly RequestDelegate _next;
+        /*private readonly RequestDelegate _next;
 
         public CustomeException(RequestDelegate next)
         {
@@ -81,6 +81,6 @@ namespace HIsabKaro.Middleware
                     await c.Response.WriteAsync(errorJson);
                 }
             }
-        }
+        }*/
     }
 }

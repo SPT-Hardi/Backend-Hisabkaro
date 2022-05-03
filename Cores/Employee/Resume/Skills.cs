@@ -10,13 +10,13 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Skills
     {
-        public Result Add(int UID,Models.Employee.Resume.Skill value) 
+        public Result Add(object UID,Models.Employee.Resume.Skill value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var user = c.SubUsers.Where(x => x.UId == UID).SingleOrDefault();
+                    var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt Exist!");
@@ -24,7 +24,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var skills = (from obj in value.skillDetails
                                   select new EmpResumeSkill
                                   {
-                                      UId = UID,
+                                      UId = (int)UID,
                                       SkillName=obj.SkillName,
                                   }).ToList();
                     c.EmpResumeSkills.InsertAllOnSubmit(skills);
@@ -46,13 +46,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(int UID)
+        public Result View(object UID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skills = c.EmpResumeSkills.Where(x => x.UId == UID).ToList();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UID).ToList();
                     var res = (from obj in skills
                                select new Models.Employee.Resume.SkillDetails()
                                {
@@ -68,13 +68,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id,int UID,Models.Employee.Resume.SkillDetails value)
+        public Result Update(int Id,object UID,Models.Employee.Resume.SkillDetails value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skills = c.EmpResumeSkills.Where(x => x.UId == UID && x.EmpResumeSkillId == Id).SingleOrDefault();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UID && x.EmpResumeSkillId == Id).SingleOrDefault();
                     if (skills == null) 
                     {
                         throw new ArgumentException("No Skills details for this id,(enter valid token)");
@@ -96,13 +96,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Delete(int UId,int Id) 
+        public Result Delete(object UId,int Id) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skill = c.EmpResumeSkills.Where(x => x.UId == UId && x.EmpResumeSkillId == Id).SingleOrDefault();
+                    var skill = c.EmpResumeSkills.Where(x => x.UId == (int)UId && x.EmpResumeSkillId == Id).SingleOrDefault();
                     if (skill == null) 
                     {
                         throw new ArgumentException("There is no any skill details for current Id!");

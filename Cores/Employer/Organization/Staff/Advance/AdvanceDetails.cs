@@ -27,7 +27,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                                      AdvanceId = x.AdvanceId,
                                      StaffURId = x.StaffURId,
                                      FullName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
-                                     Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                     Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                      Date=x.Date,
                                      Description = x.Description,
                                      Amount = x.Amount,

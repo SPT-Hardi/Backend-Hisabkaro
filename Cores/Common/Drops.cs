@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Models.Common;
+﻿using HIsabKaro.Cores.Helpers;
+using HIsabKaro.Models.Common;
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
@@ -11,22 +12,25 @@ namespace HIsabKaro.Cores.Common
 {
     public class Drops
     {
-        public Models.Common.Response.Data General(string Con, List<SqlParameter> @params)
+        public Models.Common.Response.Data General(string Con, List<SqlParameter> @params,object id)
         {
             var selectQuery = new Developer.Schema.Properties.Property().Value(Con, "SqlCommand");
-            var Ids = Cores.Common.Context.Current.Ids;
+            //var Ids = Cores.Common.Contact.Current.Ids;
+            var Ids = (Ids)id;
             using (var sqlCon = new SqlConnection(DatabaseFunctions.ConnectionString()))
             {
                 var sqlCom = new System.Data.SqlClient.SqlCommand("", sqlCon);
-                var UId = Ids.UId is null ? null : Ids.UId;
-                sqlCom.Parameters.AddWithValue("OId", Ids.OId);
-                sqlCom.Parameters.AddWithValue("RId", Ids.RId);
-                sqlCom.Parameters.AddWithValue("UId", UId);
+                var OId = Ids.OId is null ? null : Ids.OId;
+                var RId = Ids.RId is null ? null : Ids.RId;
+                
+                sqlCom.Parameters.AddWithValue("OId", OId);
+                sqlCom.Parameters.AddWithValue("RId", RId);
+                sqlCom.Parameters.AddWithValue("UId", Ids.UId);
                 sqlCom.Parameters.AddWithValue("LId", Ids.LId);
                 var sqlComTotal = new System.Data.SqlClient.SqlCommand("", sqlCon);
-                sqlComTotal.Parameters.AddWithValue("OId", Ids.OId);
-                sqlComTotal.Parameters.AddWithValue("RId", Ids.RId);
-                sqlComTotal.Parameters.AddWithValue("UId", UId);
+                sqlComTotal.Parameters.AddWithValue("OId", OId);
+                sqlComTotal.Parameters.AddWithValue("RId", RId);
+               sqlComTotal.Parameters.AddWithValue("UId", Ids.UId);
                 sqlComTotal.Parameters.AddWithValue("LId", Ids.LId);
                 if (@params.Count != 0)
                 {

@@ -10,17 +10,17 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Abouts
     {
-        public Result Add(int UID,Models.Employee.Resume.About value) 
+        public Result Add(object UID,Models.Employee.Resume.About value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                   var qs = c.EmpResumeAbouts.Where(x => x.UId==UID).SingleOrDefault();
+                   var qs = c.EmpResumeAbouts.Where(x => x.UId==(int)UID).SingleOrDefault();
                     if (qs == null)
                     {
                         EmpResumeAbout about = new EmpResumeAbout();
-                        about.UId = UID;
+                        about.UId = (int)UID;
                         about.About = value.AboutText;
                         c.EmpResumeAbouts.InsertOnSubmit(about);
                         c.SubmitChanges();
@@ -42,13 +42,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result View(int UID) 
+        public Result View(object UID) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var about = c.EmpResumeAbouts.Where(x => x.UId == UID).SingleOrDefault();
+                    var about = c.EmpResumeAbouts.Where(x => x.UId == (int)UID).SingleOrDefault();
 
                     return new Result()
                     {

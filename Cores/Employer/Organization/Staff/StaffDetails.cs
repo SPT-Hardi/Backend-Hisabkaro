@@ -32,7 +32,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                                   Name = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                   Profile = (from y in c.CommonFiles
                                              where y.FileId == x.SubUserOrganisation.SubUser.SubUsersDetail.FileId
-                                             select y.FilePath).SingleOrDefault(),
+                                             select y.FGUID).SingleOrDefault(),
                               }).ToList();
                 return new Result()
                 {
@@ -100,7 +100,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             MobileNumber = value.MobileNumber,
                             DefaultLanguageId = 1,
-                            LoginTypeId = 20
+                            DefaultLoginTypeId = 20
                         };
                         c.SubUsers.InsertOnSubmit(_user);
                         c.SubmitChanges();

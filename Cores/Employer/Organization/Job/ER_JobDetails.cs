@@ -251,7 +251,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                            id = t.JobTypeId,
                                            type = t.Type
                                          }).ToList().Distinct(),
-                                 Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
+                                 Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Organization = x.DevOrganisation.OrganisationName,
                                  status = x.Status,

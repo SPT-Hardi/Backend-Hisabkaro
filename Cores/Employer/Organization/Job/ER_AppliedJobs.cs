@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 Experience = (from y in c.SubUsersTotalworkexperiences
                                               where y.UId == x.SubUser.UId
                                               select y.Duration).SingleOrDefault(),
-                                Image = x.SubUser.SubUsersDetail.CommonFile.FilePath,
+                                Image = x.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 ApplyDate = x.ApplyDate,
                                 Status = (x.SubUser.SubUserOrganisations.Count(y => y.UId == x.UId) == 0 ? "looking for job" : "currently working"),
                             }).ToList();

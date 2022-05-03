@@ -41,11 +41,11 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                                 LogoFile = (from f in c.CommonFiles
                                             where f.FileId == x.LogoFileId
-                                            select f.FilePath).SingleOrDefault(),
+                                            select f.FGUID).SingleOrDefault(),
                                 GSTNumber = x.GSTIN,
                                 GST = (from f in c.CommonFiles
                                        where f.FileId == x.GSTFileId
-                                       select f.FilePath).SingleOrDefault(),
+                                       select f.FGUID).SingleOrDefault(),
                                 ShiftTime = (from s in c.DevOrganisationsShiftTimes
                                              where s.OId == x.OId
                                              select new Models.Common.Shift.ShitTime
@@ -69,7 +69,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                                 PanCardNumber = x.PAN,
                                 PanCard = (from f in c.CommonFiles
                                            where f.FileId == x.PANFileId
-                                           select f.FilePath).SingleOrDefault(),
+                                           select f.FGUID).SingleOrDefault(),
                                 Email = x.Email,
 
                                 MobileNumber = x.MobileNumber,

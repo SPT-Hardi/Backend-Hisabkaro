@@ -2,6 +2,7 @@
 using HisabKaroDBContext;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,13 +43,13 @@ namespace HIsabKaro.Cores.Common.File
                         throw new ArgumentException("File Extension Is InValid - Only Upload jpg/jpeg/pdf/png File");
                     }
 
-                    var fileName = ISDT.Ticks + fileExt; 
+                    var FGUID = Guid.NewGuid();
+                    var fileName = FGUID+fileExt;
                     
                     using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/Upload/" + fileName))
                     {
                         objFile.files.CopyTo(fileStream);
                         fileStream.Flush();
-                        var FGUID = Guid.NewGuid();
                         var file = new CommonFile()
                         {
                             FGUID = FGUID.ToString(),
@@ -62,7 +63,7 @@ namespace HIsabKaro.Cores.Common.File
                         {
                             Message = "File uploaded successfully!",
                             Status = Result.ResultStatus.success,
-                            Data = FGUID,
+                            Data = FGUID+fileExt,
                         };
                     }
                 }
@@ -72,5 +73,23 @@ namespace HIsabKaro.Cores.Common.File
                 }
             }
         }
+       /* public Result Get(string fguid) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                var filepath = c.CommonFiles.Where(x => x.FGUID == fguid).SingleOrDefault();
+
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "File-path get successfully!",
+                    Data = new {
+                        filepath = filepath == null ? null :filepath.FilePath,
+                        
+                    }
+                    
+                };
+            }
+        }*/
     }
 }

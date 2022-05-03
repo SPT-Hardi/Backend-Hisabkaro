@@ -9,17 +9,17 @@ namespace HIsabKaro.Models.Common
     {
         public Ids()
         {
-            _UGUId = Guid.NewGuid();
+            //_UGUId = Guid.NewGuid();
             _RequestId = Guid.NewGuid();
         }
-
-        public int? UId { get; set; }
-        public int RId { get; set; }
-        public int OId { get; set; }
+        public int? URId { get; set; }
+        public int UId { get; set; }
+        public int? RId { get; set; }
+        public int? OId { get; set; }
 
         private Guid _UGUId;
 
-        public Guid UGUId
+       /* public Guid UGUId
         {
             get
             {
@@ -30,7 +30,7 @@ namespace HIsabKaro.Models.Common
             {
                 _UGUId = value;
             }
-        }
+        }*/
 
         private Guid _RequestId;
 

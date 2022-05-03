@@ -1,6 +1,7 @@
 ﻿using HIsabKaro.Cores.Common.File;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,5 +29,13 @@ namespace HIsabKaro.Controllers.Common.File
         {
             return Ok(new Uploads(_environment).Upload(files));
         }
+
+        /*[Route("Get/{fguid}")]
+        [HttpGet]*/
+       /* public IActionResult Get([FromRoute ] string fguid)
+        {
+           
+            return Ok(new Uploads(_environment).Get(fguid));
+        }*/
     }
 }

@@ -15,10 +15,13 @@ using HIsabKaro.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +29,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -83,6 +87,8 @@ namespace HIsabKaro
             services.AddTransient<Statistics>();
             services.AddTransient<Submits>();
             services.AddTransient<StaffPersonalDetails>();
+            //services.AddTransient<Cores.Common.Contact.Current>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>
@@ -109,12 +115,14 @@ namespace HIsabKaro
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HIsabKaro", Version = "v1" });
+                //c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHttpContextAccessor accessor)
         {
+            HIsabKaro.Cores.Common.Contact.Current.SetHttpContextAccessor(accessor); 
             app.UseCors("MyPolicy");
             if (env.IsDevelopment() || env.IsProduction())
             {
@@ -122,14 +130,30 @@ namespace HIsabKaro
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HIsabKaro v1"));
             }
-
+            /*            app.UseStaticFiles();
+                        app.UseDirectoryBrowser(new DirectoryBrowserOptions
+                        {
+                            FileProvider = new PhysicalFileProvider
+                        (
+                            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Upload")
+                        ),
+                            RequestPath = "/Upload"
+                        });*/
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                   Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Upload")),
+                RequestPath = "/Upload",
+                EnableDefaultFiles = true
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
             app.UseMiddleware<JwtHandler>();
-            app.UseMiddleware<CustomeException>();
+            //app.UseMiddleware<CustomeException>();
+            app.UseMiddleware<GlobalExceptionHandler>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

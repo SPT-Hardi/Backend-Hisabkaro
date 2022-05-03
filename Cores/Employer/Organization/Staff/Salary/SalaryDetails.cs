@@ -24,7 +24,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                   Name = x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                   Profile = (from y in c.CommonFiles
                                              where y.FileId == x.SubUserOrganisation.SubUser.SubUsersDetail.FileId
-                                             select y.FilePath).SingleOrDefault(),
+                                             select y.FGUID).SingleOrDefault(),
                               }).ToList();
                 return new Result()
                 {
