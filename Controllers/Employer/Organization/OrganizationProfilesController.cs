@@ -39,13 +39,11 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("OrganizationProfiles/Create/{OId}")]
         public IActionResult Create([FromRoute] int OId,[FromBody] Models.Employer.Organization.OrganizationProfile value)
         {
-<<<<<<< HEAD
-            //var UserId = HttpContext.Items["UserID"];
-            int UserId = 50000333;
-=======
-            int UserId = (int)HttpContext.Items["UserID"];
+
             //int UserId = 50000333;
->>>>>>> vijal
+
+            var UserId = HttpContext.Items["UserID"];
+
             return Ok(_organizationProfiles.Create(UserId,OId, value ));
         }
     }

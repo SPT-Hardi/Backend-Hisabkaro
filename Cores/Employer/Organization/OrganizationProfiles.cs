@@ -94,13 +94,13 @@ namespace HIsabKaro.Cores.Employer.Organization
                 };
             }
         }
-        public Result Create(int UserId,int OId,Models.Employer.Organization.OrganizationProfile value)
+        public Result Create(object UserId,int OId,Models.Employer.Organization.OrganizationProfile value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope=new TransactionScope())
                 {
-                    var _User = c.SubUsers.Where(u => u.UId == UserId).SingleOrDefault();
+                    var _User = c.SubUsers.Where(u => u.UId == (int)UserId).SingleOrDefault();
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
@@ -153,7 +153,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     var _Partner = PartnerCreate(_OId.OId, value.Partners);
 
                     var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == UserId && x.OId == OId && x.RId == _OrgRole.RId);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == (int)UserId && x.OId == OId && x.RId == _OrgRole.RId);
                     var authclaims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Role,_URID.URId.ToString()),
