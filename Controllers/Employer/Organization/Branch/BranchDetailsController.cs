@@ -1,4 +1,4 @@
-﻿using HIsabKaro.Cores.Common.Context;
+﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Cores.Employer.Organization.Branch;
 using Microsoft.AspNetCore.Http;
