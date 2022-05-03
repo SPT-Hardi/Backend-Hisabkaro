@@ -56,4 +56,10 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\..\..\..\..\onteamin\telerik\aspnetcore\16.0.22.119\Kendo.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
