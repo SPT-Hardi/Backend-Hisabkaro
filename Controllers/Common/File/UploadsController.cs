@@ -28,5 +28,14 @@ namespace HIsabKaro.Controllers.Common.File
         {
             return Ok(new Uploads(_environment).Upload(files));
         }
+
+
+        [Route("BulkStaffDetail")]
+        [HttpPost]
+        public IActionResult BulkCreate([FromForm] Models.Common.File.Upload files)
+        {
+            return Ok(new Uploads(_environment).BulkCreate(files));
+        }
+
     }
 }

@@ -2,7 +2,9 @@
 using HisabKaroDBContext;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -60,9 +62,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     var _AttendDeduction = AttendDeduction(StaffId);
                     var _Bonus = Bonus(StaffId);
                     var _Advance = Advance(StaffId);
-                    //var _Loan = Loan(StaffId);
+                    var _Loan = Loan(StaffId);
                     //var _CountAttend = Attendance(StaffId);
-
+                    
                     scope.Complete();
                     return new Result()
                     {

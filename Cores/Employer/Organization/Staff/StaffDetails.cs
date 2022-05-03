@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Models.Common;
+﻿using HIsabKaro.Cores.Common;
+using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
 using HisabKaroDBContext;
 using System;
@@ -45,6 +46,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
         public Result Create(object URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -150,8 +152,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         ShiftTimeId = value.ShiftTiming.Id,
                         Salary = value.Salary,
                         IsOpenWeek = value.IsOpenWeek,
-                        SId= _Sid ,
-                        Status=false,
+                        SId = _Sid,
+                        Status = false,
+                        CreateDate = ISDT,
                     };
                     if (value.IsOpenWeek == false)
                     {
