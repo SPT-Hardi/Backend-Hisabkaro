@@ -52,7 +52,7 @@ namespace HIsabKaro.Cores.Common.File
                         fileStream.Flush();
                         var file = new CommonFile()
                         {
-                            FGUID = FGUID.ToString(),
+                            FGUID = fileName,
                             FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "/Upload/",fileName),
                             FileSize = objFile.files.Length.ToString(),
                             FileType = fileExt,
@@ -63,7 +63,7 @@ namespace HIsabKaro.Cores.Common.File
                         {
                             Message = "File uploaded successfully!",
                             Status = Result.ResultStatus.success,
-                            Data = FGUID+fileExt,
+                            Data = fileName,
                         };
                     }
                 }

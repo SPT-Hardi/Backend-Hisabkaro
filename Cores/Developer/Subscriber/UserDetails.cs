@@ -60,7 +60,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     udetails.UId = (int)UID;
                     Claims claims = new Claims(_configuration, _tokenServices);
                     int URId = 0;
-                    var res = claims.Add((string)UID, (string)DeviceToken,URId.ToString());
+                    var res = claims.Add(((int)UID).ToString(), (string)DeviceToken,URId.ToString());
                     c.SubUsersDetails.InsertOnSubmit(udetails);
                     c.SubmitChanges();
 

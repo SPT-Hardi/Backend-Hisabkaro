@@ -46,7 +46,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
         public Result Create(object URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
-            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+            //var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -156,7 +156,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         IsOpenWeek = value.IsOpenWeek,
                         SId = _Sid,
                         Status = false,
-                        CreateDate = ISDT,
+                       // CreateDate = ISDT,
                     };
                     if (value.IsOpenWeek == false)
                     {
@@ -166,14 +166,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                     c.SubmitChanges();
 
-                    var authclaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Role,_URID.URId.ToString()),
-                        new Claim(ClaimTypes.Sid,_users.UId.ToString()),
-                        new Claim(ClaimTypes.Name,_users.SubUsersDetail.FullName),
-                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    };
-                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);
                     scope.Complete();
 
                     return new Result()
@@ -184,7 +176,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             OrgCode=_OId.OrgCode,
                             OId = value.Organization.Id,
-                            JWT = jwtToken,
                         }
                     };
                 }

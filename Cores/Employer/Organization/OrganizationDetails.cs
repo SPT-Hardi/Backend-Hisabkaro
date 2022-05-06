@@ -59,7 +59,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         {
                             OId = Org.OId,
                             RoleName="admin",
-                            LoginTypeId=_UserID.DefaultLoginTypeId,
+                            LoginTypeId=(int)_UserID.DefaultLoginTypeId,
                         };
                         c.SubRoles.InsertOnSubmit(_role);
                         c.SubmitChanges();

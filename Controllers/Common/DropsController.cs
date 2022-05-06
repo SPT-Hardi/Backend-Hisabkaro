@@ -54,8 +54,8 @@ namespace HIsabKaro.Controllers.Common
                         }
                     }
                 }
-                var Id = HttpContext.Items["Ids"];
-                return Ok(new Cores.Common.Drops().General(Con, value.WhereClause().SqlParameters,Id));
+               // var Id = HttpContext.Items["Ids"];
+                return Ok(new Cores.Common.Drops().General(Con, value.WhereClause().SqlParameters));
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
