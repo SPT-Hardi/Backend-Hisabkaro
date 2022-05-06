@@ -12,11 +12,11 @@ namespace HIsabKaro.Cores.Common
 {
     public class Drops
     {
-        public Models.Common.Response.Data General(string Con, List<SqlParameter> @params,object id)
+        public Models.Common.Response.Data General(string Con, List<SqlParameter> @params)
         {
             var selectQuery = new Developer.Schema.Properties.Property().Value(Con, "SqlCommand");
-            //var Ids = Cores.Common.Contact.Current.Ids;
-            var Ids = (Ids)id;
+            var Ids = Cores.Common.Contact.Current.Ids;
+           // var Ids = (Ids)id;
             using (var sqlCon = new SqlConnection(DatabaseFunctions.ConnectionString()))
             {
                 var sqlCom = new System.Data.SqlClient.SqlCommand("", sqlCon);

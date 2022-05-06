@@ -12,13 +12,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
     {
         public Result Get(object URId,DateTime date) 
         {
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
                     int presentcount = 0;
                     int latecount = 0;
-
+                    
                     var attendancelist = new List<Models.Employer.Organization.Staff.Attendance.AttendanceList>();
                     var findorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                     //remove after controller logic added
@@ -36,12 +37,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         throw new ArgumentException("Currently no staff in your organization!");
                     }
                     var totalemp = (from obj in c.DevOrganisationsStaffs
-                                    where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId
+                                    where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId && obj.CreateDate<= date.Date
                                     select obj).ToList();
                     var presentlist = (from obj in c.DevOrganisationsStaffs
                                        join obj1 in c.OrgStaffsAttendancesDailies
                                        on obj.URId equals obj1.URId
-                                       where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date
+                                       where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && obj.CreateDate<=date.Date
                                        select new
                                        {
                                            URId = obj1.URId,
@@ -50,7 +51,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                            Lateby= obj1.Lateby,
                                            MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
                                            Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
-                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
+                                           ImagePath = obj1.PhotoFileId==null ? (obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID) : obj1.CommonFile.FGUID,
                                        }).ToList();
                     //var absentlist = (from obj in totalemp
                     //                  join obj1 in presentlist
@@ -76,12 +77,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                      
                                       }).ToList();
-                    var overtime = (from obj in c.DevOrganisationsStaffs
+                   /* var overtime = (from obj in c.DevOrganisationsStaffs
                                     join obj1 in c.OrgStaffsAttendancesDailies
                                     on obj.URId equals obj1.URId
                                     where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && ((obj.WeekOffOneDay == null ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()) || (obj.WeekOffSecondDay == null ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()))
                                     select obj).ToList();
-                    var overtimecount = overtime.Count();
+                    var overtimecount = overtime.Count();*/
                     foreach (var item in presentlist)
                     {
                         

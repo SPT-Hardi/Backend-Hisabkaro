@@ -49,7 +49,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         var _stud = new Student()
                         {
                             Name = csvTable.Rows[i][0].ToString(),
-                            Age = csvTable.Rows[i][1].ToString(),
+                            Gender = csvTable.Rows[i][1].ToString(),
                             MobileNumber = csvTable.Rows[i][2].ToString()
 
                         };
