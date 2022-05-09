@@ -18,42 +18,52 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
+                    var joindate = (from x in c.DevOrganisationsStaffs where x.URId == (int)URId select x.CreateDate).FirstOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
-                    TimeSpan lateby = new TimeSpan();
-                    if (qs == null)
+                    if (joindate.Date <= ISDT.Date)
                     {
+                        var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
 
-                        var org = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
-                        if (org == null)
+                        TimeSpan lateby = new TimeSpan();
+                        if (qs == null)
                         {
-                            throw new ArgumentException("Staff not exist in organization!");
-                        }
-                        if (ISDT.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate)
-                        {
-                            lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
-                        }
-                        OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
-                        attendance.URId = (int)URId;
-                        attendance.LastUpdateDate = ISDT;
-                        attendance.ChekIN = ISDT;
-                        attendance.Lateby = lateby;
-                        c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
-                        c.SubmitChanges();
-                        OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
 
+                            var org = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
+                            if (org == null)
+                            {
+                                throw new ArgumentException("Staff not exist in organization!");
+                            }
+                            if (ISDT.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate)
+                            {
+                                lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
+                            }
+                            OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
+                            attendance.URId = (int)URId;
+                            attendance.LastUpdateDate = ISDT;
+                            attendance.ChekIN = ISDT;
+                            attendance.Lateby = lateby;
+                            c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
+                            c.SubmitChanges();
+                            OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
+
+                        }
+                        else
+                        {
+                            if (qs.IsAccessible == false)
+                            {
+                                throw new ArgumentException("Permission revoked!");
+                            }
+                            qs.CheckOUT = ISDT;
+                            qs.LastUpdateDate = ISDT;
+                            c.SubmitChanges();
+                            OrgStaffAttendanceDailyId = qs.OrgStaffAttendanceDailyId;
+                        }
                     }
-                    else
+                    else 
                     {
-                        if (qs.IsAccessible == false)
-                        {
-                            throw new ArgumentException("Permission revoked!");
-                        }
-                        qs.CheckOUT = ISDT;
-                        qs.LastUpdateDate = ISDT;
-                        c.SubmitChanges();
-                        OrgStaffAttendanceDailyId = qs.OrgStaffAttendanceDailyId;
+                        throw new ArgumentException("Not authorized!");
                     }
+
 
                     scope.Complete();
                     return new Result()

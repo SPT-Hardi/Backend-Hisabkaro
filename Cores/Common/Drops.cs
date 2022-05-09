@@ -82,23 +82,38 @@ namespace HIsabKaro.Cores.Common
             using (DBContext c = new DBContext())
             {
                 //var org = (from x in c.SubUserOrganisations where x.UId == (int)UId select x).ToList();
-                var res = (from x in c.SubUserOrganisations
-                           where x.UId == (int)UId && x.SubRole.LoginTypeId == Id
-                           select new
-                           {
-                               OrganizationName = x.DevOrganisation.OrganisationName,
-                               URId = x.URId,
-                           }).ToList();
-                if ((int)URId == 0)
+                var orglist = (from x in c.SubUserOrganisations
+                           where x.UId == (int)UId
+                           select x.OId).ToList().Distinct();
+                Models.Common.ProfileDrop profile = new ProfileDrop();
+                foreach (var item in orglist)
                 {
+                    var rolelist = (from x in c.SubUserOrganisations where x.OId==item && x.UId==(int)UId select x).ToList();
+                    var Orgrolelist=new List<IntegerNullString>();
+                    foreach (var x in rolelist)
+                    {
 
-                    if (res.Count() == 0)
+                        Orgrolelist.Add(new IntegerNullString()
+                        {
+                            Id =x.URId,
+                            Text = x.SubRole.RoleName,
+                        }); 
+                    }
+                    profile.Profiles.Add(new ProfileDropOrg()
+                    {
+                        OrgName =c.DevOrganisations.Where(x=>x.OId==item).SingleOrDefault().OrganisationName,
+                        Orgrolelist=Orgrolelist,
+                    });
+                }
+                if (URId == null)
+                {
+                    if (orglist.Count() == 0)
                     {
                         var data = (from x in c.SubUsers where x.UId == (int)UId select x.UId).FirstOrDefault();
                         return new Result()
                         {
                             Status = Result.ResultStatus.success,
-                            Message = "ProfileDrop get successfully!",
+                            Message = "ProfileDrop for UId get successfully!",
                             Data = data,
                         };
                     }
@@ -106,8 +121,8 @@ namespace HIsabKaro.Cores.Common
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
-                    Message = "ProfileDrop get successfully!",
-                    Data = res
+                    Message = "ProfileDrop for URId get successfully!",
+                    Data = profile,
                 };
             }
         }

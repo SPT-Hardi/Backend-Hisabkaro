@@ -19,7 +19,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
         public IActionResult Post([FromBody]SubmitDaily value)
         {
             var URId = HttpContext.Items["URId"];
-            //int URId = 10000024;
+            //int URId = 10000062;
             return Ok(new Submits().Add(URId,value));
         }
 
