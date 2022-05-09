@@ -17,12 +17,12 @@ namespace HIsabKaro.Models.Common.Contact
 
 
        /* [Required(ErrorMessage = "Cityname is required!")]
-        [RegularExpression("^[a-zA-Z]{1,50}$", ErrorMessage = "Maximum 50 character allowed containing only alphabet!")]*/
+        [RegularExpression("^[a-zA-Z\s]{1,50}$", ErrorMessage = "Maximum 50 character allowed containing only alphabet!")]*/
         public string City { get; set; }
 
 
        /* [Required(ErrorMessage = "Statename is required!")]
-        [RegularExpression("^[a-zA-Z]{1,50}$", ErrorMessage = "Maximum 50 character allowed containing only alphabet!")]*/
+        [RegularExpression("^[a-zA-Z\s]{1,50}$", ErrorMessage = "Maximum 50 character allowed containing only alphabet!")]*/
         public string State { get; set; }
 
 

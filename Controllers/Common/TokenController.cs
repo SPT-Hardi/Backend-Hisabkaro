@@ -21,9 +21,9 @@ namespace HIsabKaro.Controllers.Common
         }
 
         [HttpPost("Refresh/{Id}")]
-        public async  Task<IActionResult> RefreshURId(int URId,Token value)
+        public async  Task<IActionResult> RefreshURId(int Id,Token value)
         {
-            return Ok(new Tokens(_tokenService,_configuration).RefreshToken(URId,value));   
+            return Ok(new Tokens(_tokenService,_configuration).RefreshToken(Id,value));   
         }
 
         [HttpPost("Refresh")]

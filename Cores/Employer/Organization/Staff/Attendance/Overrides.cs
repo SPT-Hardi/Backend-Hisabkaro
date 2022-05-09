@@ -38,7 +38,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         throw new ArgumentException("Staff not exist in any organization!");
                     }
-                    
+                    if (value.AttendanceDate.Date <= org.CreateDate.Date) 
+                    {
+                        throw new ArgumentException("Not authorized!");
+                    }
                     if (staffattendance == null)
                     {
                         if (value.Status.Id ==34) 

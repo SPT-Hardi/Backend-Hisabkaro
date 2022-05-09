@@ -38,7 +38,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         throw new ArgumentException("Staff not exist in organization!");
                     }
-                    if (joindate.Month <= date.Date.Month && joindate.Year <= joindate.Year)
+                    if (joindate.Month <= date.Month && joindate.Year <= date.Year)
                     {
 
                         //for past month 

@@ -20,7 +20,7 @@ namespace HIsabKaro.Models.Developer.Subscriber
         public string ProfilePhotoFGUID { get; set; }
 
         [Required(ErrorMessage = "Fullname is required!")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Only character are allowed!")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Only character are allowed!")]
         public string FullName { get; set; }
 
         [EmailAddress(ErrorMessage ="Enter valid emailaddress!")]
