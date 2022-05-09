@@ -20,10 +20,17 @@ namespace HIsabKaro.Controllers.Common
             _configuration = configuration;
         }
 
-        [HttpPost("Refresh/{URId}")]
-        public async  Task<IActionResult> Refresh(int URId,Token value)
+        [HttpPost("Refresh/{Id}")]
+        public async  Task<IActionResult> RefreshURId(int URId,Token value)
         {
             return Ok(new Tokens(_tokenService,_configuration).RefreshToken(URId,value));   
+        }
+
+        [HttpPost("Refresh")]
+        public async Task<IActionResult> RefreshUId(Token value)
+        {
+            var URId = 0;
+            return Ok(new Tokens(_tokenService, _configuration).RefreshToken(URId, value));
         }
 
         /*[Authorize]
@@ -47,5 +54,5 @@ namespace HIsabKaro.Controllers.Common
                 return NoContent();
             }
         }*/
-        }
+    }
 }

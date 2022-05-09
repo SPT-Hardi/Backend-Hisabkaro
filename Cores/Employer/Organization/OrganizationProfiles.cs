@@ -4,6 +4,7 @@ using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
 using HisabKaroDBContext;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -94,7 +95,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                 };
             }
         }
-        public Result Create(object UserId,int OId,Models.Employer.Organization.OrganizationProfile value)
+        public Result Create(object UserId,int OId,Models.Employer.Organization.OrganizationProfile value, IConfiguration configuration, ITokenServices tokenServices)
         {
             using (DBContext c = new DBContext())
             {
@@ -154,14 +155,18 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == (int)UserId && x.OId == OId && x.RId == _OrgRole.RId);
-                    var authclaims = new List<Claim>
+                   /* var authclaims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Role,_URID.URId.ToString()),
                         new Claim(ClaimTypes.Sid,UserId.ToString()),
                         new Claim(ClaimTypes.Name,_User.SubUserTokens.Select(x=>x.DeviceToken).FirstOrDefault()),
                         new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
                     };
-                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);
+                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);*/
+
+                    Cores.Common.Claims claims = new Common.Claims(configuration,tokenServices);
+                    var res =claims.Add(UserId.ToString(), _User.SubUserTokens.Select(x => x.DeviceToken).FirstOrDefault(), _URID.URId.ToString());
+
 
                     scope.Complete();
                     return new Result()
@@ -170,7 +175,8 @@ namespace HIsabKaro.Cores.Employer.Organization
                         Message = string.Format($"Organization Add Successfully"),
                         Data = new {
                             OId = _OId.OId,
-                            JWT = jwtToken,
+                            JWT = res.JWT,
+                            RToken=res.RToken
                         }
                     };
                 }

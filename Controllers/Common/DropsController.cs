@@ -62,5 +62,13 @@ namespace HIsabKaro.Controllers.Common
                 throw new HttpResponseException() { Status = 400, Value = ex.Message };
             }
         }
+        [HttpGet]
+        [Route("Profile/{Id}")]
+        public IActionResult Get(int Id) 
+        {
+            var UId = HttpContext.Items["UserID"];
+            var URId = HttpContext.Items["URId"];
+            return Ok(new Cores.Common.Drops().ProfileDrop(UId,Id,URId));
+        }
     }
 }

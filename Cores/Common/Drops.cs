@@ -77,5 +77,39 @@ namespace HIsabKaro.Cores.Common
                 return data;
             }
         }
+        public Result ProfileDrop(object UId,int Id,object URId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                //var org = (from x in c.SubUserOrganisations where x.UId == (int)UId select x).ToList();
+                var res = (from x in c.SubUserOrganisations
+                           where x.UId == (int)UId && x.SubRole.LoginTypeId == Id
+                           select new
+                           {
+                               OrganizationName = x.DevOrganisation.OrganisationName,
+                               URId = x.URId,
+                           }).ToList();
+                if ((int)URId == 0)
+                {
+
+                    if (res.Count() == 0)
+                    {
+                        var data = (from x in c.SubUsers where x.UId == (int)UId select x.UId).FirstOrDefault();
+                        return new Result()
+                        {
+                            Status = Result.ResultStatus.success,
+                            Message = "ProfileDrop get successfully!",
+                            Data = data,
+                        };
+                    }
+                }
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "ProfileDrop get successfully!",
+                    Data = res
+                };
+            }
+        }
     }
 }

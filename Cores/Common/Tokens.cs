@@ -36,7 +36,7 @@ namespace HIsabKaro.Cores.Common
                     throw new ArgumentException("RefreshToken Not Found.");
                 }
                 var principal = _tokenService.GetPrincipalFromExpiredToken(token);
-                int URID = int.Parse(principal.Claims.First(x => x.Type == ClaimTypes.Role).Value);
+                //int URID = int.Parse(principal.Claims.First(x => x.Type == ClaimTypes.Role).Value);
                 int UserID = int.Parse(principal.Claims.First(x => x.Type == ClaimTypes.Sid).Value);
                 string DeviceToken = principal.Claims.First(x => x.Type == ClaimTypes.Name).Value;
                

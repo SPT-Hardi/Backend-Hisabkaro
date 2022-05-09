@@ -12,16 +12,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
         {
             using (HisabKaroDBContext.DBContext c = new HisabKaroDBContext.DBContext()) 
             {
-                var oid = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
-                var org = c.DevOrganisations.Where(x => x.OId ==(oid==null ? null : oid.OId)).SingleOrDefault();
+                var oid = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = "Staff organization details get successfully!",
-                    Data = new IntegerNullString()
+                    Data = new
                     {
-                        Id = org == null ? 0 : org.OId,
-                        Text = org == null ? null : org.OrganisationName,
+                        OrgId = oid.DevOrganisation.OId,
+                        OrgName = oid.DevOrganisation.OrganisationName,
+                        ORString = oid.DevOrganisation.QRString,
+                        UserName = oid.DevOrganisation.SubUser.SubUsersDetail.FullName,
+                        StaffId = oid.SId,
+                        JoiningDate = oid.StaffEmpId == null ? null : oid.DevOrganisationsStaffsEmploymentDetail.DOJ,
                     }
                 };
             }

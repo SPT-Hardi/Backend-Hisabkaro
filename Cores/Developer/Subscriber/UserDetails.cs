@@ -30,7 +30,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
             {
                 using (DBContext c = new DBContext())
                 {
-
+                    SubRole addrole = new SubRole();
                     var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     //we need to change this insertion one time only after,change inside app
                     //20 for  employee
@@ -49,8 +49,18 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("Alternate Mobilenumber and Mobilenumber should be different!");
                     }
+                    //update defaultloginid in user table
                     user.DefaultLoginTypeId = value.role.Id;
                     c.SubmitChanges();
+
+                    //add user role in subroles
+                  /*  addrole.RoleName = "Employee";
+                    addrole.LoginTypeId = (int)value.role.Id;
+                    c.SubRoles.InsertOnSubmit(addrole);
+                    c.SubmitChanges();*/
+                    
+
+                    //entry userdeatils
                     var file = c.CommonFiles.Where(x => x.FGUID == value.userdetails.ProfilePhotoFGUID).SingleOrDefault();
                     SubUsersDetail udetails = new SubUsersDetail();
                     udetails.AMobileNumber = value.userdetails.AMobileNumber;

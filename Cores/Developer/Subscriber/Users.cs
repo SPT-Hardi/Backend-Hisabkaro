@@ -166,12 +166,12 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     var role = c.SubFixedLookups.Where(x => x.FixedLookupId == user.DefaultLoginTypeId).SingleOrDefault();
                     var udetails = c.SubUsersDetails.Where(x => x.UId == user.UId).SingleOrDefault();
 
-                var organizationlist = (from obj in c.DevOrganisations
+                var organizationlist = (from obj in c.SubUserOrganisations
                                         where obj.UId == user.UId
                                         select new IntegerNullString()
                                         {
                                             Id=obj.OId,
-                                            Text=obj.OrganisationName,
+                                            Text=obj.DevOrganisation.OrganisationName,
 
                                         }).ToList();
                 if (organizationlist.Count() == 0)

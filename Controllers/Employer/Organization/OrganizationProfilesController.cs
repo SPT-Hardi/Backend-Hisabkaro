@@ -4,6 +4,7 @@ using HIsabKaro.Cores.Employer.Organization;
 using HIsabKaro.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,15 @@ namespace HIsabKaro.Controllers.Employer.Organization
         private readonly ITokenServices _tokenService;
         private readonly ContactAddress _contactAddress;
         private readonly ShiftTimes _shiftTimes;
+        private readonly IConfiguration _configuration;
 
-        public OrganizationProfilesController(OrganizationProfiles organizationProfiles, ITokenServices tokenService, ContactAddress contactAddress,ShiftTimes shiftTimes )
+        public OrganizationProfilesController(OrganizationProfiles organizationProfiles, ITokenServices tokenService, ContactAddress contactAddress,ShiftTimes shiftTimes, IConfiguration configuration)
         {
             _organizationProfiles = organizationProfiles;
             _tokenService = tokenService;
             _contactAddress = contactAddress;
             _shiftTimes = shiftTimes;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -41,7 +44,7 @@ namespace HIsabKaro.Controllers.Employer.Organization
         {
             var UserId = HttpContext.Items["UserID"];
             //int UserId = 50000333;
-            return Ok(_organizationProfiles.Create(UserId,OId, value ));
+            return Ok(_organizationProfiles.Create(UserId,OId,value,_configuration,_tokenService));
         }
     }
 }
