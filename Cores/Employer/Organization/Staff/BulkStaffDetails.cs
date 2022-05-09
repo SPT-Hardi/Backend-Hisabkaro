@@ -179,7 +179,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     for (int i = 0; i < csvTable.Rows.Count; i++)
                     {
                         //searchParameters.Add(new student { Name = csvTable.Rows[i][0].ToString(), Age = csvTable.Rows[i][1].ToString(), MobileNumber = csvTable.Rows[i][2].ToString() });
-                        var _subUser = c.Students.SingleOrDefault(x => x.MobileNumber == csvTable.Rows[i][2]);
+                        var _subUser = c.Students.SingleOrDefault(x => x.MobileNumber == csvTable.Rows[i][2].ToString());
                         if (_subUser is not null)
                         {
                             throw new ArgumentException($"{csvTable.Rows[i][0]} Alredy in This Class");

@@ -20,7 +20,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
-                var _Bonus = (from x in c.OrgStaffsAdvanceDetails
+                var _TotalAdvance = (from x in c.OrgStaffsAdvanceDetails
+                                     where x.URId == (int)URId
+                                     select new { Total = x.Amount }).Sum(x=>x.Total);
+
+                var _Advance = (from x in c.OrgStaffsAdvanceDetails
                                  where x.URId == (int)URId
                                  select new
                                  {
@@ -29,16 +33,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                                      FullName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
                                      Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                      Date=x.Date,
-                                     Description = x.Description,
                                      Amount = x.Amount,
-                                     URId = URId,
                                  }).ToList();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Success"),
-                    Data = _Bonus,
+                    Data = new { StaffDetails=_Advance ,Total=_TotalAdvance},
 
                 };
             }

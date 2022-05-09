@@ -95,7 +95,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                  where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved== "Accepted"
                                  select x.UnPaidDays).Sum();
 
-                    var Deduction=(leave * (salary/ 30));
+                    var Deduction=(leave* (salary/ 30));
 
                     scope.Complete();
                     return (decimal)Deduction ;
@@ -164,7 +164,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         _Loan.RemainingAmt = t;
                     }
                     
-                    c.SubmitChanges();
+                    //c.SubmitChanges();
                     scope.Complete();
                     return 1;  
                 }
