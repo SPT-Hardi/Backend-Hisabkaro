@@ -27,12 +27,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException("User Does Not Exits!");
                     }
 
-                    var _orgname = c.DevOrganisations.Where(o => o.OrganisationName == value.OrgName).SingleOrDefault();
-                    if (_orgname is not null)
-                    {
-                        throw new ArgumentException($"Organisation Alredy Exits With Same Name :{value.OrgName}.");
-                    }
-
                     Random OrgCode = new Random();
                     
 
@@ -59,7 +53,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         {
                             OId = Org.OId,
                             RoleName="admin",
-                            LoginTypeId=_UserID.DefaultLoginTypeId,
+                            LoginTypeId=21,//_UserID.DefaultLoginTypeId,
                         };
                         c.SubRoles.InsertOnSubmit(_role);
                         c.SubmitChanges();

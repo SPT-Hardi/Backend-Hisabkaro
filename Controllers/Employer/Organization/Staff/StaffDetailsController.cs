@@ -33,20 +33,29 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         [HttpPost]
         [Route("StaffDetails/Create")]
-
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_staffDetails.Create(URId, value));
         }
 
+        //Angular
         [HttpPost]
         [Route("StaffDetails/BulkCreate")]
-
         public IActionResult BulkCreate([FromBody] List<Models.Employer.Organization.Staff.StaffDetail> value)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_staffDetails.BulkCreate(URId, value));
+        }
+
+        //CSV
+        //[HttpPost]
+        [HttpPost]
+        [Route("StaffDetails/BulkStaffDetails/Create")]
+        public IActionResult Create([FromBody] Models.Employer.Organization.Staff.BulkStaffDetail value)
+        {
+            int URId = (int)HttpContext.Items["URId"];
+            return Ok(_staffDetails.Create(URId, value));
         }
 
         [HttpGet]
