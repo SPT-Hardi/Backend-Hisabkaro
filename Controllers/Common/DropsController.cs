@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Controllers.Filters;
+﻿
+using HIsabKaro.Controllers.Filters;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
