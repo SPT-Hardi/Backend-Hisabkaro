@@ -24,7 +24,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         ORString = oid.DevOrganisation.QRString,
                         UserName = oid.DevOrganisation.SubUser.SubUsersDetail.FullName,
                         StaffId = oid.SId,
-                        JoiningDate = oid.StaffEmpId == null ? null : oid.DevOrganisationsStaffsEmploymentDetail.DOJ,
+                        JoiningDate = oid.CreateDate,
                     }
                 };
             }

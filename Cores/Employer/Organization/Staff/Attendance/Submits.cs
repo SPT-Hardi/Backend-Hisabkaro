@@ -37,11 +37,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             {
                                 lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
                             }
+                            var check = ((org.WeekOffOneDay==null ? null : org.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()) == ISDT.DayOfWeek.ToString().ToLower() || (org.WeekOffSecondDay==null ? null : org.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()) == ISDT.DayOfWeek.ToString().ToLower());
+                            
                             OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                             attendance.URId = (int)URId;
                             attendance.LastUpdateDate = ISDT;
                             attendance.ChekIN = ISDT;
                             attendance.Lateby = lateby;
+                            if (check) 
+                            {
+                                attendance.IsOvertime = true;
+                            }
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
                             OrgStaffAttendanceDailyId = attendance.OrgStaffAttendanceDailyId;
@@ -112,9 +118,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             throw new ArgumentException("File not exist!");
                         }
+                        var check = ((org.WeekOffOneDay == null ? null : org.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()) == ISDT.DayOfWeek.ToString().ToLower() || (org.WeekOffSecondDay == null ? null : org.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()) == ISDT.DayOfWeek.ToString().ToLower());
+
                         attendance.URId = (int)URId;
                         attendance.LastUpdateDate = ISDT;
                         attendance.ChekIN = ISDT;
+                        if (check) 
+                        {
+                            attendance.IsOvertime = true;
+                        }
                         attendance.PhotoFileId = fileid.FileId;
                         attendance.Lateby = lateby;
                         c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);

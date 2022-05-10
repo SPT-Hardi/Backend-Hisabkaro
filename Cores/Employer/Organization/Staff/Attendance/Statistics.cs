@@ -48,6 +48,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                            URId = obj1.URId,
                                            CheckIN = obj1.ChekIN,
                                            CheckOUT = obj1.CheckOUT,
+                                           IsOvertime=obj1.IsOvertime,
                                            Lateby= obj1.Lateby,
                                            MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
                                            Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
@@ -77,12 +78,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                      
                                       }).ToList();
-                   /* var overtime = (from obj in c.DevOrganisationsStaffs
-                                    join obj1 in c.OrgStaffsAttendancesDailies
-                                    on obj.URId equals obj1.URId
-                                    where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && ((obj.WeekOffOneDay == null ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()) || (obj.WeekOffSecondDay == null ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()))
-                                    select obj).ToList();
-                    var overtimecount = overtime.Count();*/
+                    /* var overtime = (from obj in c.DevOrganisationsStaffs
+                                     join obj1 in c.OrgStaffsAttendancesDailies
+                                     on obj.URId equals obj1.URId
+                                     where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && ((obj.WeekOffOneDay == null ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()) || (obj.WeekOffSecondDay == null ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()))
+                                     select obj).ToList();
+                     var overtimecount = overtime.Count();*/
+                    var overtimelist = (from x in presentlist where x.IsOvertime == true select x).ToList();
                     foreach (var item in presentlist)
                     {
                         
@@ -93,13 +95,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         {
                             latecount += 1;
                         }
+                        
                         attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
                         {
                             URId = (int)item.URId,
                             AttendanceDate = date.Date,
                             CheckIN = item.CheckIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                             CheckOUT = item.CheckOUT == null ? null : item.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                            Status = "Present",
+                            Status = item.IsOvertime==true ? "Overtime" : "Present",
                             LateBy = item.Lateby==null ? null : item.Lateby.Value.ToString(@"hh\:mm"),
                             Name = item.Name,
                             ImagePath = item.ImagePath,
@@ -133,6 +136,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         Absent = absentlist.Count(),
                         Late = latecount,
                         WeeklyOff = 0,
+                        Overtime = overtimelist.Count(),
                     };
                     return new Result()
                     {

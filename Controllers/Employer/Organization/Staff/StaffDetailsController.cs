@@ -50,14 +50,14 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         //CSV
         //[HttpPost]
-        [HttpPost]
+  /*      [HttpPost]
         [Route("StaffDetails/BulkStaffDetails/Create")]
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.BulkStaffDetail value)
         {
             int URId = (int)HttpContext.Items["URId"];
             return Ok(_staffDetails.Create(URId, value));
         }
-
+*/
         [HttpGet]
         [Route("StaffDetails/Drop")]
         public List<IntegerNullString> Drop()

@@ -42,6 +42,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         throw new ArgumentException("Not authorized!");
                     }
+                    var check = ((org.WeekOffOneDay == null ? null : org.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()) == value.AttendanceDate.DayOfWeek.ToString().ToLower() || (org.WeekOffSecondDay == null ? null : org.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()) == value.AttendanceDate.DayOfWeek.ToString().ToLower());
+
                     if (staffattendance == null)
                     {
                         if (value.Status.Id ==34) 
@@ -55,6 +57,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
                             attendance.URId = value.URId;
                             attendance.LastUpdateDate =ISDT;
+                            if (check) 
+                            {
+                                attendance.IsOvertime = true;
+                            }
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -68,6 +74,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             attendance.URId = value.URId;
                             attendance.LastUpdateDate = ISDT;
+                            if (check)
+                            {
+                                attendance.IsOvertime = true;
+                            }
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -95,6 +105,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             staffattendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             staffattendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             staffattendance.URId = value.URId;
+                            if (check)
+                            {
+                                staffattendance.IsOvertime = true;
+                            }
                             staffattendance.LastUpdateDate = ISDT;
                             staffattendance.IsAccessible = false;
                             

@@ -321,7 +321,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             }
         }
 
-        public Result Create(int URId, Models.Employer.Organization.Staff.BulkStaffDetail value)
+       /* public Result Create(int URId, Models.Employer.Organization.Staff.BulkStaffDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -355,7 +355,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         var _stud = new Student()
                         {
                             Name = csvTable.Rows[i][0].ToString(),
-                            Age = csvTable.Rows[i][1].ToString(),
+                            Gender = csvTable.Rows[i][1].ToString(),
                             MobileNumber = csvTable.Rows[i][2].ToString()
 
                         };
@@ -374,7 +374,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     };
                 }
             }
-        }
+        }*/
 
         public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value)   
         {

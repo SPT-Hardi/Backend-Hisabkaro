@@ -153,7 +153,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             }
         }
 
-        public Result CreateEmployee(Models.Employer.Organization.Staff.BulkStaffDetail value)
+       /* public Result CreateEmployee(Models.Employer.Organization.Staff.BulkStaffDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -205,6 +205,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     };
                 }
             }
-        }
+        }*/
     }    
 }
