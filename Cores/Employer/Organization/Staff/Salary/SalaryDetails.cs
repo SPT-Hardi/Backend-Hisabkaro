@@ -58,8 +58,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
-
-                    var _AttendDeduction = AttendDeduction(StaffId);
+                    var s = new OrgStaffsSalaryDetail() { };
+                    var _Leave = Leave(StaffId);
                     var _Bonus = Bonus(StaffId);
                     var _Advance = Advance(StaffId);
                     var _Loan = Loan(StaffId);
@@ -72,7 +72,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         Message = string.Format($"Bouns Give Successfully!"),
                         Data = new
                         {
-                            AttedDeduction = _AttendDeduction,
+                            Leave = _Leave,
                             Bouns=_Bonus,
                             Advance=_Advance,
                         }
@@ -81,7 +81,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             }
         }
 
-        public decimal AttendDeduction(int StaffURId)
+        public decimal Leave(int StaffURId)
         {
             using (DBContext c = new DBContext())
             {
@@ -94,8 +94,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     var leave = (from x in c.OrgStaffsLeaveApplications
                                  where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved== "Accepted"
                                  select x.UnPaidDays).Sum();
-
-                    var Deduction=(leave* (salary/ 30));
+                                                                      
+                    var Deduction=((leave==null?0:leave)* (salary/ 30));
 
                     scope.Complete();
                     return (decimal)Deduction ;
@@ -115,7 +115,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                  select x.Amount).Sum();
                     
                     scope.Complete();
-                    return (decimal)_bonus;
+                    return (decimal)(_bonus == null ? 0 : _bonus);
 
                 }
             }
@@ -132,7 +132,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                   select x.Amount).Sum();
 
                     scope.Complete();
-                    return (decimal)_Advance;
+                    return (decimal)(_Advance==null?0:_Advance);
 
                 }
             }
@@ -147,22 +147,37 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     var _Loan = (from x in c.OrgStaffsLoanDetails
                                     where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.Status==true
                                     select x).SingleOrDefault();
-                    if (_Loan is null)
+                    if(_Loan is null)
                     {
+                        scope.Complete();
                         return 0;
                     }
-                    int totalMonth = Math.Abs( 12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
-                                        
-                    var t = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                    var sal = (from x in c.OrgStaffsSalaryDetails
+                               where x.LoanId == _Loan.LoanId
+                               select x).Count();//.ToList();
 
-                    if (t <= _Loan.MonthlyPay)
-                    {
-                        _Loan.RemainingAmt = 0;
-                    }
-                    else
-                    {
-                        _Loan.RemainingAmt = t;
-                    }
+                    int totalMonth = Math.Abs(12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
+
+                    var tot=0;// = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                    //for (int i = sal+1; i <= totalMonth; i++)
+                    //{
+                        
+                        if (sal+1 == totalMonth)
+                        {
+                             
+                            //insert new datain salary table
+                            _Loan.RemainingAmt = 0;
+                            //c.SubmitChanges();
+                        }
+                        else
+                        {
+                            _Loan.RemainingAmt = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                            //c.SubmitChanges();
+                        }
+                    //}
+
+                   
+                    
                     
                     //c.SubmitChanges();
                     scope.Complete();
