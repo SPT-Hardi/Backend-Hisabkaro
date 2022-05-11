@@ -9,11 +9,4 @@ namespace HIsabKaro.Models.Employer.Organization.Staff
     {
         public string CSV { get; set; }
     }
-    //public class student
-    //{
-    //    public string Name { get; set; }
-    //    public string Age { get; set; }
-    //    public string MobileNumber { get; set; }
-
-    //}
 }

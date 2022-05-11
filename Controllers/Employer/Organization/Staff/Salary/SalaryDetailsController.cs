@@ -13,10 +13,10 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
     public class SalaryDetailsController : ControllerBase
     {
         [HttpGet]
-        [Route("SalaryDetails/One")]
+        [Route("SalaryDetails/Pendding")]
         public IActionResult One([FromQuery] int OId)
         {
-            return Ok(new SalaryDetails().One(OId));
+            return Ok(new SalaryDetails().Pendding(OId));
         }
 
         [HttpPost]

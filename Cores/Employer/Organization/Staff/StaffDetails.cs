@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Cores.Common;
+﻿
+using HIsabKaro.Cores.Common;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
 using HisabKaroDBContext;
@@ -49,7 +50,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
         public Result Create(object URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
-            //var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -159,7 +160,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         IsOpenWeek = value.IsOpenWeek,
                         SId = _Sid,
                         Status = false,
-                       // CreateDate = ISDT,
+                        CreateDate = ISDT,
                     };
                     if (value.IsOpenWeek == false)
                     {
@@ -321,60 +322,61 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             }
         }
 
-       /* public Result Create(int URId, Models.Employer.Organization.Staff.BulkStaffDetail value)
-        {
-            using (DBContext c = new DBContext())
-            {
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    var _OId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == URId);
-                    if (_OId is null)
-                    {
-                        throw new ArgumentException("Organization Does Not Exits!");
-                    }
-                    var _FileId = (from x in c.CommonFiles where x.FGUID == value.CSV select x).FirstOrDefault();
+        //Example of student csv file 
+        //public Result Create(int URId, Models.Employer.Organization.Staff.BulkStaffDetail value)
+        //{
+        //    using (DBContext c = new DBContext())
+        //    {
+        //        using (TransactionScope scope = new TransactionScope())
+        //        {
+        //            var _OId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == URId);
+        //            if (_OId is null)
+        //            {
+        //                throw new ArgumentException("Organization Does Not Exits!");
+        //            }
+        //            var _FileId = (from x in c.CommonFiles where x.FGUID == value.CSV select x).FirstOrDefault();
 
-                    var csvTable = new DataTable();
-                    using (var csvReader = new CsvReader(new StreamReader(System.IO.File.OpenRead(_FileId.FilePath)), true))
-                    {
-                        csvTable.Load((IDataReader)csvReader);
-                    }
+        //            var csvTable = new DataTable();
+        //            using (var csvReader = new CsvReader(new StreamReader(System.IO.File.OpenRead(_FileId.FilePath)), true))
+        //            {
+        //                csvTable.Load((IDataReader)csvReader);
+        //            }
 
-                    string Column1 = csvTable.Columns[0].ToString();
-                    string Row1 = csvTable.Rows[0][0].ToString();
-                    //List<student> searchParameters = new List<student>();
+        //            string Column1 = csvTable.Columns[0].ToString();
+        //            string Row1 = csvTable.Rows[0][0].ToString();
+        //            //List<student> searchParameters = new List<student>();
 
-                    for (int i = 0; i < csvTable.Rows.Count; i++)
-                    {
-                        //searchParameters.Add(new student { Name = csvTable.Rows[i][0].ToString(), Age = csvTable.Rows[i][1].ToString(), MobileNumber = csvTable.Rows[i][2].ToString() });
-                        var _subUser = c.Students.SingleOrDefault(x => x.MobileNumber == csvTable.Rows[i][2].ToString());
-                        if (_subUser is not null)
-                        {
-                            throw new ArgumentException($"{csvTable.Rows[i][0]} Alredy in This Class");
-                        }
-                        var _stud = new Student()
-                        {
-                            Name = csvTable.Rows[i][0].ToString(),
-                            Gender = csvTable.Rows[i][1].ToString(),
-                            MobileNumber = csvTable.Rows[i][2].ToString()
+        //            for (int i = 0; i < csvTable.Rows.Count; i++)
+        //            {
+        //                //searchParameters.Add(new student { Name = csvTable.Rows[i][0].ToString(), Age = csvTable.Rows[i][1].ToString(), MobileNumber = csvTable.Rows[i][2].ToString() });
+        //                var _subUser = c.Students.SingleOrDefault(x => x.MobileNumber == csvTable.Rows[i][2].ToString());
+        //                if (_subUser is not null)
+        //                {
+        //                    throw new ArgumentException($"{csvTable.Rows[i][0]} Alredy in This Class");
+        //                }
+        //                var _stud = new Student()
+        //                {
+        //                    Name = csvTable.Rows[i][0].ToString(),
+        //                    Age = csvTable.Rows[i][1].ToString(),
+        //                    MobileNumber = csvTable.Rows[i][2].ToString()
 
-                        };
-                        c.Students.InsertOnSubmit(_stud);
-                        c.SubmitChanges();
-                    }
-                    scope.Complete();
-                    return new Result()
-                    {
-                        Status = Result.ResultStatus.success,
-                        Message = string.Format($"Student Add Successfully"),
-                        Data = new
-                        {
+        //                };
+        //                c.Students.InsertOnSubmit(_stud);
+        //                c.SubmitChanges();
+        //            }
+        //            scope.Complete();
+        //            return new Result()
+        //            {
+        //                Status = Result.ResultStatus.success,
+        //                Message = string.Format($"Student Add Successfully"),
+        //                Data = new
+        //                {
 
-                        }
-                    };
-                }
-            }
-        }*/
+        //                }
+        //            };
+        //        }
+        //    }
+        //}
 
         public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value)   
         {
