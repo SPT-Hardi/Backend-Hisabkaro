@@ -15,7 +15,7 @@ namespace HIsabKaro.Models.Developer.Subscriber
 
 
         [Required(ErrorMessage ="Mobilenumber is required!")]
-        [RegularExpression(@"^[6-9][0-9]{9}$", ErrorMessage = "Only 10 digit allowed and startfrom 6,7,8,9 !")]
+        //[RegularExpression(@"^[6-9][0-9]{9}$", ErrorMessage = "Only 10 digit allowed and startfrom 6,7,8,9 !")]
         public string MobileNumber { get; set; }
 
 

@@ -128,7 +128,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             }
                             int days = (int)(((ISDT - startDate).TotalDays) + 1);
                             var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear ).ToList();
-                            for (var i = startDate.Day; i <= days; i++)
+                            for (var i = startDate.Day; i <= ISDT.Day; i++)
                             {
                                 var checkindate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
                                 var checkpresent = checkpresentlist.Where(x => x.ChekIN.Value.Date == checkindate.Date).SingleOrDefault();

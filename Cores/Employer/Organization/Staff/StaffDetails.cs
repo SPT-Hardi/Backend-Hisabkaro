@@ -49,7 +49,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
         public Result Create(object URId,Models.Employer.Organization.Staff.StaffDetail value)
         {
-            //var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+            var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -159,7 +159,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         IsOpenWeek = value.IsOpenWeek,
                         SId = _Sid,
                         Status = false,
-                       // CreateDate = ISDT,
+                        CreateDate = ISDT,
                     };
                     if (value.IsOpenWeek == false)
                     {
