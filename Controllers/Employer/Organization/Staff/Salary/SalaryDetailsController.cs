@@ -15,12 +15,9 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
         [HttpGet]
         [Route("SalaryDetails/One")]
         public IActionResult One()
-        [Route("SalaryDetails/Pendding")]
-        public IActionResult One([FromQuery] int OId)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(new SalaryDetails().SalarySlip(URId));
-            return Ok(new SalaryDetails().Pendding(OId));
         }
 
         [HttpPost]
@@ -29,6 +26,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
         {
             var URId = HttpContext.Items["URId"];
             return Ok(new SalaryDetails().Create(URId, StaffId, value));
+        }
+
+
+        [Route("SalaryDetails/Pendding")]
+        public IActionResult One([FromQuery] int OId)
+        {
+            return Ok(new SalaryDetails().Pendding(OId));
         }
     }
 }
