@@ -14,7 +14,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
 {
     public class SalaryDetails
     {
-        public Result One(int OId)
+        public Result Pendding(int OId)
         {
             using (DBContext c = new DBContext())
             {
@@ -43,6 +43,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
+                    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
                     var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (_User is null)
                     {
@@ -58,47 +59,62 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
-                    var s = new OrgStaffsSalaryDetail() { };
-                    var _Leave = Leave(StaffId);
-                    var _Bonus = Bonus(StaffId);
-                    var _Advance = Advance(StaffId);
+
+                    decimal _OverTime = OverTime(StaffId);
+                    decimal _Bonus = Bonus(StaffId);
+                    decimal _Advance = Advance(StaffId);
+                    decimal _Leave = Leave(StaffId);
                     var _Loan = Loan(StaffId);
-                    //var _CountAttend = Attendance(StaffId);
-                    
+
+                    decimal loan = decimal.Parse(_Loan.Data.Text);
+                    decimal salary = (decimal)_Staff.Salary;
+
+                    decimal _Salary = salary + _OverTime + _Bonus - _Advance - _Leave - loan;
+
+                    var _SalaryDetail = new OrgStaffsSalaryDetail() {
+                        OverTime = _OverTime,
+                        Bonus = _Bonus,
+                        Advance = _Advance,
+                        OrgStaffLeave = _Leave,
+                        LoanId = _Loan.Data.Id,
+                        LoanDeductionAmount = decimal.Parse(_Loan.Data.Text),
+                        Salary = _Salary,
+                        Date = ISDT,
+                        StaffURId=StaffId,
+                        URId=(int)URId,
+                        ASalary=salary,
+                    };
+                    c.OrgStaffsSalaryDetails.InsertOnSubmit(_SalaryDetail);
+                    c.SubmitChanges();
+
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = string.Format($"Bouns Give Successfully!"),
+                        Message = string.Format($"Salary Give Successfully!"),
                         Data = new
                         {
-                            Leave = _Leave,
-                            Bouns=_Bonus,
-                            Advance=_Advance,
+                            Id = _SalaryDetail.SalaryId,
+                            Salary=_SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(x=>x.Salary),
+                            Name=_SalaryDetail.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName
                         }
                     };
                 }
             }
         }
 
-        public decimal Leave(int StaffURId)
+        public decimal OverTime(int StaffURId)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var salary = (from x in c.DevOrganisationsStaffs
-                                 where x.URId == StaffURId
-                                 select x.Salary).SingleOrDefault();
-
-                    var leave = (from x in c.OrgStaffsLeaveApplications
-                                 where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved== "Accepted"
-                                 select x.UnPaidDays).Sum();
-                                                                      
-                    var Deduction=((leave==null?0:leave)* (salary/ 30));
+                    var _OverTime = (from x in c.OrgStaffsOverTimeDetails
+                                     where x.StaffURId == StaffURId && x.OverTimeDate.Month == DateTime.Now.Month - 1
+                                     select x.Amount).Sum();
 
                     scope.Complete();
-                    return (decimal)Deduction ;
+                    return (decimal)(_OverTime == null ? 0 : _OverTime);
 
                 }
             }
@@ -111,9 +127,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var _bonus = (from x in c.OrgStaffsBonusDetails
-                                 where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1 
-                                 select x.Amount).Sum();
-                    
+                                  where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1
+                                  select x.Amount).Sum();
+
                     scope.Complete();
                     return (decimal)(_bonus == null ? 0 : _bonus);
 
@@ -138,7 +154,30 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             }
         }
 
-        public int Loan(int StaffURId)
+        public decimal Leave(int StaffURId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var salary = (from x in c.DevOrganisationsStaffs
+                                  where x.URId == StaffURId
+                                  select x.Salary).SingleOrDefault();
+
+                    var leave = (from x in c.OrgStaffsLeaveApplications
+                                 where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved == "Accepted"
+                                 select x.UnPaidDays).Sum();
+
+                    var Deduction = ((leave == null ? 0 : leave) * (salary / 30));
+
+                    scope.Complete();
+                    return (decimal)Deduction;
+
+                }
+            }
+        }
+
+        public Result Loan(int StaffURId)
         {
             using (DBContext c = new DBContext())
             {
@@ -150,38 +189,44 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     if(_Loan is null)
                     {
                         scope.Complete();
-                        return 0;
+                        return new Result
+                        {
+                            Status = Result.ResultStatus.success,
+                            Message = string.Format(""),
+                            Data = new  { Id =0, Text =0.ToString()}
+                        };
                     }
                     var sal = (from x in c.OrgStaffsSalaryDetails
                                where x.LoanId == _Loan.LoanId
-                               select x).Count();//.ToList();
+                               select x).Count();
 
                     int totalMonth = Math.Abs(12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
 
-                    var tot=0;// = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                    decimal tot = 0;
                     //for (int i = sal+1; i <= totalMonth; i++)
                     //{
-                        
-                        if (sal+1 == totalMonth)
-                        {
-                             
-                            //insert new datain salary table
-                            _Loan.RemainingAmt = 0;
-                            //c.SubmitChanges();
-                        }
-                        else
-                        {
-                            _Loan.RemainingAmt = _Loan.RemainingAmt - _Loan.MonthlyPay;
-                            //c.SubmitChanges();
-                        }
+                    if (sal+1 == totalMonth)
+                    {
+                        tot = (decimal)_Loan.RemainingAmt;
+                        //insert new datain salary table
+                        _Loan.RemainingAmt = 0;
+                        c.SubmitChanges();
+                    }
+                    else
+                    {
+                        tot = (decimal)_Loan.MonthlyPay;
+                        _Loan.RemainingAmt = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                        c.SubmitChanges();
+                    }
                     //}
-
-                   
-                    
-                    
+                                                                
                     //c.SubmitChanges();
                     scope.Complete();
-                    return 1;  
+                    return new Result {
+                        Status=Result.ResultStatus.success,
+                        Message = string.Format(""),
+                        Data = new { Id=_Loan.LoanId,Text=tot.ToString()}
+                    };  
                 }
             }
         }
