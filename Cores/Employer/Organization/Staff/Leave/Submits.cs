@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                         UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid),
                         IsLeaveApproved = "Accepted"
                     };
-                    var duration = request.EndDate.Subtract(request.StartDate).Days;
+                    var duration = request.EndDate.Subtract(request.StartDate).Days + 1;
                     var total = request.PaidDays + request.UnPaidDays;
                     if (total > duration || total < duration)
                     {

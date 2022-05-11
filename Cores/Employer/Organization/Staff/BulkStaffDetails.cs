@@ -22,6 +22,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
+                    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
                     var _OId = c.SubUserOrganisations.SingleOrDefault(o => o.URId == (int)URId);
                     if (_OId is null)
                     {
@@ -129,7 +130,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             IsOpenWeek = bool.Parse(csvTable.Rows[i][5].ToString()),
                             SId = (int)_Sid,
                             Status = false,
-                            CreateDate = DateTime.Now,
+                            CreateDate = ISDT,
                         };
                         c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                         c.SubmitChanges();
@@ -138,7 +139,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = string.Format($"Student Add Successfully"),
+                        Message = string.Format($"Staffs Added Successfully"),
                     };
                 }
             }

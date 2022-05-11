@@ -21,7 +21,7 @@ namespace HIsabKaro.Cores.Common
             _tokenService = tokenService;
             _configuration = configuration;
         }
-        public Models.Common.Token RefreshToken(int URId,Models.Common.Token value) 
+        public Models.Common.Token RefreshToken(int Id, Models.Common.Token value) 
         {
             //enter URID=0 to generate refreshtoken for same URId
             //enter URId to generate refreshtoken for specific URId having same UId
