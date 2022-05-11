@@ -14,6 +14,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     {
         [HttpGet]
         [Route("HistoyOfMonth/{date}/{Id}")]
+        
         public IActionResult Get([FromRoute] DateTime date,[FromRoute] int Id) 
         {
             var URId = HttpContext.Items["URId"];

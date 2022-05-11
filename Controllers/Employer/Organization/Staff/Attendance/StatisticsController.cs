@@ -1,4 +1,6 @@
-﻿using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
+﻿using HIsabKaro.Controllers.Filters;
+using HIsabKaro.Controllers.Filters.Custom;
+using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,11 +16,16 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     {
         [HttpGet]
         [Route("Statistics/{date}")]
+        [Authenticate("Employer-Organization-Staff-Attendance-HistoryByMonths")]
         public IActionResult Get(DateTime date) 
         {
             var URId = HttpContext.Items["URId"];
+            var Ids = HttpContext.Items["Ids"];
             //int URId = 10000024;
-            return Ok(new Statistics().Get(URId,date));
+            new HaveAuthority().AccessStaff(Ids);
+            {
+                  return Ok(new Statistics().Get(URId,date));
+            }
         }
     }
 }

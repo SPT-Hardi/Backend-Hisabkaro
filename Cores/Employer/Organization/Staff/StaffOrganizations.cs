@@ -25,6 +25,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         UserName = oid.DevOrganisation.SubUser.SubUsersDetail.FullName,
                         StaffId = oid.SId,
                         JoiningDate = oid.CreateDate,
+                        IsActive=oid.Status,
                     }
                 };
             }
