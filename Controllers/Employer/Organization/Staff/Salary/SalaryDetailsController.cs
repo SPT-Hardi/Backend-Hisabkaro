@@ -14,9 +14,10 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
     {
         [HttpGet]
         [Route("SalaryDetails/One")]
-        public IActionResult One([FromQuery] int OId)
+        public IActionResult One()
         {
-            return Ok(new SalaryDetails().One(OId));
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalaryDetails().SalarySlip(URId));
         }
 
         [HttpPost]

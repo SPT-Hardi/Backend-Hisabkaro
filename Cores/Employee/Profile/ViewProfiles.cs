@@ -75,9 +75,11 @@ namespace HIsabKaro.Cores.Employee.Profile
             {
                 DashboardView userprofile = new DashboardView();
                 var about = c.EmpResumeAbouts.Where(x => x.UId == (int)UserId).SingleOrDefault();
-
-                userprofile.about.EmpResumeAboutId = about.EmpResumeAboutId;
-                userprofile.about.AboutText = about.About;
+                if(about != null)
+                {
+                    userprofile.about.EmpResumeAboutId = about.EmpResumeAboutId;
+                    userprofile.about.AboutText = about.About;
+                }
 
                 var experiencelist = c.EmpResumeWorkExperiences.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in experiencelist)
@@ -91,7 +93,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                         OrganizationName = item.OrganizationName,
                         StartDate = $"{item.StartDate.Value.ToString("MMMM").Substring(0, 3)} {item.StartDate.Value.Year}",
                         EndDate = $"{item.EndDate.Value.ToString("MMMM").Substring(0, 3)} {item.EndDate.Value.Year}",
-                        TotalDuration = $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mons",
+                        TotalDuration = $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mon",
                         WorkFrom = item.WorkFrom,
                     });
                 }

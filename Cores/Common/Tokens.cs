@@ -21,7 +21,7 @@ namespace HIsabKaro.Cores.Common
             _tokenService = tokenService;
             _configuration = configuration;
         }
-        public Models.Common.Token RefreshToken(int URId,Models.Common.Token value) 
+        public Models.Common.Token RefreshToken(int Id, Models.Common.Token value) 
         {
             string token = value.JWT;
             string refreshToken = value.RToken;
@@ -46,7 +46,7 @@ namespace HIsabKaro.Cores.Common
                 if (userrefreshtoken == null)
                     throw new ArgumentException("Bad Request!");
                 var claim = new Claims(_configuration, _tokenService);
-                var res =claim.Add(UserID.ToString(), DeviceToken, URId.ToString());
+                var res =claim.Add(UserID.ToString(), DeviceToken, Id.ToString());
                 //var newJwtToken = _tokenService.GenerateAccessToken(principal.Claims);
                 //var newRefreshToken = _tokenService.GenerateRefreshToken();
 
