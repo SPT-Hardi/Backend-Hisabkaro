@@ -16,7 +16,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
     public class SalaryDetails
     {
         public Result SalarySlip(object URId)
-        public Result Pendding(int OId)
         {
             using (DBContext c = new DBContext())
             {
