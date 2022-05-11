@@ -16,7 +16,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
     public class SalaryDetails
     {
         public Result SalarySlip(object URId)
-        public Result Pendding(int OId)
         {
             using (DBContext c = new DBContext())
             {
@@ -293,26 +292,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             }
         }
 
-        public int Attendance(int StaffURId)
+        public Result Pendding(int oid)
         {
-            return 1;
-            //using (DBContext c = new DBContext())
-            //{
-            //    using (TransactionScope scope = new TransactionScope())
-            //    {
-            //        var atte = (from x in c.OrgStaffsAttendancesDailies
-            //                    where x.URId == StaffURId && x.ChekIN.Value.Month == DateTime.Now.Month - 1
-            //                    select x).ToList();
-
-            //        var leave = (from x in c.OrgStaffsLeaveApplications
-            //                     where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1
-            //                     select x.PaidDays).Sum();
-            //        var totaldays = atte.Count() + leave;
-            //        scope.Complete();
-            //        return (int)totaldays;
-
-            //    }
-            //}
+            return new Result()
+            {
+                Status = Result.ResultStatus.success,
+                Message = string.Format($"Salary Give Successfully!"),
+            };
         }
+        
     }
 }
