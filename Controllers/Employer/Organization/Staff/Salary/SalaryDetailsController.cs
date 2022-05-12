@@ -30,9 +30,10 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
 
         [HttpGet]
         [Route("SalaryDetails/Pending")]
-        public IActionResult One([FromQuery] int OId)
+        public IActionResult Pending()
         {
-            return Ok(new SalaryDetails().Pending(OId));
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalaryDetails().Pending(URId));
         }
     }
 }

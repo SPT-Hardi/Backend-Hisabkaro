@@ -14,7 +14,6 @@ namespace HIsabKaro.Cores.Common
 {
     public class Claims
     {
-        
             private readonly IConfiguration _configuration;
             private readonly ITokenServices _tokenServices;
             public Claims(IConfiguration configuration, ITokenServices tokenServices)
@@ -26,7 +25,6 @@ namespace HIsabKaro.Cores.Common
         {
             using (TransactionScope scope = new TransactionScope())
             {
-
                 using (DBContext c = new DBContext())
                 {
                     var authclaims = new List<Claim>
@@ -38,20 +36,16 @@ namespace HIsabKaro.Cores.Common
                          };
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
                     var refreshToken = _tokenServices.GenerateRefreshToken();
-
                     var check = c.SubUserTokens.Where(x => x.UId == int.Parse(UID) && x.DeviceToken == DToken).SingleOrDefault();
-
                     //RefreshToken refreshToken1 = new RefreshToken();
                     if (check == null)
                     {
-                        
                     }
                     else
                     {
                         check.Token = refreshToken;
                         c.SubmitChanges();
                         scope.Complete();
-                       
                     }
                     return new Models.Common.Token()
                     {
