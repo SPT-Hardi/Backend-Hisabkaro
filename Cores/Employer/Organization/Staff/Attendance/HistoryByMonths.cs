@@ -17,6 +17,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
+                    HistoryByMonth historyByMonth = new HistoryByMonth();
                 using (DBContext c = new DBContext())
                 {
                     List<AttendanceHistory> attendanceHistory = new List<AttendanceHistory>();
@@ -28,7 +29,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var requestyear = date.Year;
                     var totalworkinghourmonth = new TimeSpan();
                     //var days = getTotalDays(date.Date);
-                    HistoryByMonth historyByMonth = new HistoryByMonth();
                     var userorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                     URId = Id == 0 ? URId : Id;
                     var joindate = (from x in c.DevOrganisationsStaffs where x.URId == (int)URId select x.CreateDate).FirstOrDefault();
@@ -196,13 +196,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     historyByMonth.Name = Org.SubUserOrganisation.SubUser.SubUsersDetail.FullName;
                     historyByMonth.ImagePath = Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID;
                     historyByMonth.MobileNumber = Org.SubUserOrganisation.SubUser.MobileNumber;
-                    return new Result()
-                        {
-                            Status = Result.ResultStatus.success,
-                            Message = "Staff attendance-history by month get successfully!",
-                            Data = historyByMonth,
-                        };
+
+                    
+                    
                 }
+                scope.Complete();
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "Staff attendance-history by month get successfully!",
+                    Data = historyByMonth,
+                };
             }
         }
         public int getTotalDays(DateTime month) 

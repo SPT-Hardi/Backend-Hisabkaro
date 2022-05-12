@@ -58,4 +58,11 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
         public decimal Leave { get; set; }
         public decimal TotalDeduction { get; set; }
     }
+    public class Pending
+    {
+        public int URId { get; set; }
+        public string Name { get; set; }
+        public decimal Salary { get; set; }
+        public string H { get; set; }
+    }
 }

@@ -22,17 +22,18 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
 
         [HttpPost]
         [Route("SalaryDetails/Create/{StaffId}")]
-        public IActionResult Create([FromRoute] int StaffId, [FromBody] Models.Employer.Organization.Staff.Salary.SalaryDetail value)
+        public IActionResult Create([FromRoute] int StaffId)
         {
             var URId = HttpContext.Items["URId"];
-            return Ok(new SalaryDetails().Create(URId, StaffId, value));
+            return Ok(new SalaryDetails().Create(URId, StaffId));
         }
 
-
-        [Route("SalaryDetails/Pendding")]
-        public IActionResult One([FromQuery] int OId)
+        [HttpGet]
+        [Route("SalaryDetails/Pending")]
+        public IActionResult Pending()
         {
-            return Ok(new SalaryDetails().Pendding(OId));
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalaryDetails().Pending(URId));
         }
     }
 }
