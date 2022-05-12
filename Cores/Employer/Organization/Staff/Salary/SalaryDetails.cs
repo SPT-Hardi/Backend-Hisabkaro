@@ -88,7 +88,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                }).SingleOrDefault();
                 salarySlip.deduction = deduction;
 
-                salarySlip.NetPay = salarySlip.earning.TotalEarning - salarySlip.deduction.TotalDeduction;
+                salarySlip.NetPay = ((earning == null ? 0 : salarySlip.earning.TotalEarning) - (deduction == null ? 0 : salarySlip.deduction.TotalDeduction));
 
                 return new Result()
                 {
