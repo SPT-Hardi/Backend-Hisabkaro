@@ -17,7 +17,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
             {
-                    HistoryByMonth historyByMonth = new HistoryByMonth();
+                HistoryByMonth historyByMonth = new HistoryByMonth();
                 using (DBContext c = new DBContext())
                 {
                     List<AttendanceHistory> attendanceHistory = new List<AttendanceHistory>();
@@ -123,6 +123,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             historyByMonth.Absent = (workingdays - presentcount)-weekoffcount;
                             historyByMonth.Late = latecount;
                             historyByMonth.WeeklyOff = weekoffcount;
+                            historyByMonth.OverTime = overtimecount;
                         }
 
                         //for current month
@@ -201,6 +202,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 historyByMonth.Absent = (days - presentcount)-weekoffcount;
                                 historyByMonth.Late = latecount;
                                 historyByMonth.WeeklyOff = weekoffcount;
+                                historyByMonth.OverTime = overtimecount;
                             }
 
 

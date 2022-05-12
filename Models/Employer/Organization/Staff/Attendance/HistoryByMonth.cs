@@ -17,6 +17,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
         public int Absent { get; set; }
         public int Late { get; set; }
         public int WeeklyOff { get; set; }
+        public int OverTime { get; set; }
         public List<AttendanceHistory> attendanceHistory { get; set; } = new List<AttendanceHistory>();
 
     }
