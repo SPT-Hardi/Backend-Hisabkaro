@@ -258,7 +258,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  Applied = (from y in c.EmpBookmarkJobsDetails
                                           where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId 
                                           select y.UId).Count(),
-                                 PostedOn = x.PostDate
+                                 PostedOn = x.PostDate,
+                                 EndDate = x.EndDate
                              });
 
                 return new Result()
