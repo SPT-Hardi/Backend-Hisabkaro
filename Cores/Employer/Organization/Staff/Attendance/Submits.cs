@@ -59,6 +59,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             {
                                 throw new ArgumentException("Permission revoked!");
                             }
+                            if (qs.ChekIN.Value.Date != ISDT.Date) 
+                            {
+                                throw new ArgumentException("CheckIN and CheckOUT date are not same!");
+                            }
                             qs.CheckOUT = ISDT;
                             qs.LastUpdateDate = ISDT;
                             c.SubmitChanges();
