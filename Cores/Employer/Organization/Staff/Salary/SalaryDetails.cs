@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
+using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 
 namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
 {
@@ -98,18 +99,73 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             }
         }
 
-        public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Salary.SalaryDetail value)
+        public Result Create(object URId, int StaffId)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+
                     var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (_User is null)
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
+                    var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName == "admin");
+                    if (_URId is null)
+                    {
+                        throw new ArgumentException("Unathorized!");
+                    }
+
+                    var _Salary = One(URId, StaffId);
+
+                    var _StaffSalary = (from x in c.OrgStaffsSalaryDetails
+                                        where x.StaffURId == StaffId && x.Date.Month == ISDT.Month
+                                        select x).FirstOrDefault();
+                    if(_StaffSalary is not null)
+                    {
+                        throw new ArgumentException("Salary Alredy Paid.");
+                    }
+
+                    var _SalaryDetail = new OrgStaffsSalaryDetail() {
+                        OverTime = _Salary.Data.OverTime,
+                        Bonus = _Salary.Data.Bonus,
+                        Advance = _Salary.Data.Advance,
+                        OrgStaffLeave = _Salary.Data.Leave,
+                        LoanId = _Salary.Data.LoanId,
+                        LoanDeductionAmount = _Salary.Data.Loan,
+                        Salary = _Salary.Data.Salary,
+                        Date = ISDT,
+                        StaffURId=StaffId,
+                        URId=(int)URId,
+                        ASalary= _Salary.Data.ActualSalary,
+                    };
+                    c.OrgStaffsSalaryDetails.InsertOnSubmit(_SalaryDetail);
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = string.Format($"Salary Give Successfully!"),
+                        Data = new
+                        {
+                            Id = _SalaryDetail.SalaryId,
+                            Salary=_SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(x=>x.Salary),
+                            Name=_SalaryDetail.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName
+                        }
+                    };
+                }
+            }
+        }
+
+        public Result One(object URId, int StaffId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
                     var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName == "admin");
                     if (_URId is null)
                     {
@@ -132,22 +188,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
 
                     decimal _Salary = salary + _OverTime + _Bonus - _Advance - _Leave - loan;
 
-                    var _SalaryDetail = new OrgStaffsSalaryDetail() {
-                        OverTime = _OverTime,
-                        Bonus = _Bonus,
-                        Advance = _Advance,
-                        OrgStaffLeave = _Leave,
-                        LoanId = _Loan.Data.Id,
-                        LoanDeductionAmount = decimal.Parse(_Loan.Data.Text),
-                        Salary = _Salary,
-                        Date = ISDT,
-                        StaffURId=StaffId,
-                        URId=(int)URId,
-                        ASalary=salary,
-                    };
-                    c.OrgStaffsSalaryDetails.InsertOnSubmit(_SalaryDetail);
-                    c.SubmitChanges();
-
                     scope.Complete();
                     return new Result()
                     {
@@ -155,9 +195,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         Message = string.Format($"Salary Give Successfully!"),
                         Data = new
                         {
-                            Id = _SalaryDetail.SalaryId,
-                            Salary=_SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(x=>x.Salary),
-                            Name=_SalaryDetail.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName
+                            OverTime = _OverTime,
+                            Bonus = _Bonus,
+                            Advance = _Advance,
+                            Leave = _Leave,
+                            LoanId=_Loan.Data.Id,
+                            Loan = decimal.Parse(_Loan.Data.Text),
+                            ActualSalary= salary,
+                            Salary = salary + _OverTime + _Bonus - _Advance - _Leave - loan,
                         }
                     };
                 }
@@ -264,12 +309,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     int totalMonth = Math.Abs(12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
 
                     decimal tot = 0;
-                    //for (int i = sal+1; i <= totalMonth; i++)
-                    //{
                     if (sal+1 == totalMonth)
                     {
                         tot = (decimal)_Loan.RemainingAmt;
-                        //insert new datain salary table
                         _Loan.RemainingAmt = 0;
                         c.SubmitChanges();
                     }
@@ -279,9 +321,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         _Loan.RemainingAmt = _Loan.RemainingAmt - _Loan.MonthlyPay;
                         c.SubmitChanges();
                     }
-                    //}
-                                                                
-                    //c.SubmitChanges();
+
                     scope.Complete();
                     return new Result {
                         Status=Result.ResultStatus.success,
@@ -292,13 +332,63 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             }
         }
 
-        public Result Pendding(int oid)
+        public Result Pending(object URId)
         {
-            return new Result()
+            using (DBContext c = new DBContext())
             {
-                Status = Result.ResultStatus.success,
-                Message = string.Format($"Salary Give Successfully!"),
-            };
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+                    List<Pending> pending = new List<Pending>();
+                    var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
+                    if (_User is null)
+                    {
+                        throw new ArgumentException("User Does Not Exits!");
+                    }
+                    var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName.ToLower() == "admin");
+                    if (_URId is null)
+                    {
+                        throw new ArgumentException("Unathorized!");
+                    }
+
+                    var _StaffSalary = (from x in c.OrgStaffsSalaryDetails
+                                        where x.SubUserOrganisation_StaffURId.OId == _URId.OId && x.Date.Month == ISDT.Month
+                                        select new { Id= x.StaffURId }).ToList();
+
+                    var _Staff = (from x in c.DevOrganisationsStaffs
+                                  where x.OId == _URId.OId
+                                  select new { Id= x.URId }).ToList().Except(_StaffSalary);
+                    var _s = (from x in _Staff
+                              select new { x.Id}).ToList();
+
+                    var hr = new HistoryByMonths().Get(URId, 10000062, ISDT.AddMonths(-1));
+                                                                        
+
+                    _s.ForEach((x) => {
+                        var _Salary = One(_URId.URId, x.Id);
+                        
+                        pending.Add(new Pending() { 
+                            URId=x.Id,
+                            Name= c.SubUserOrganisations.Where(y => y.URId == x.Id).Select(y => y.SubUser.SubUsersDetail.FullName).FirstOrDefault(),
+                            Salary= _Salary.Data.Salary,
+                            H = new HistoryByMonths().Get(URId, x.Id, ISDT.AddMonths(-1)).Data.TotalWorkingHourPerMonth,
+                        });
+                    });
+
+                    var totalSalary = pending.Sum(x=>x.Salary);
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = string.Format($"Salary Give Successfully!"),
+                        Data=new {
+                            Total=totalSalary,
+                            Staff=pending
+                        },
+                    };
+                }
+            }
         }
         
     }
