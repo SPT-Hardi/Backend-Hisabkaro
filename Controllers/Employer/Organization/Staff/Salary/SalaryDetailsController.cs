@@ -28,7 +28,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Salary
             return Ok(new SalaryDetails().Create(URId, StaffId, value));
         }
 
-
+        [HttpGet]
         [Route("SalaryDetails/Pendding")]
         public IActionResult One([FromQuery] int OId)
         {

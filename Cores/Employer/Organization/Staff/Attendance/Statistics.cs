@@ -80,7 +80,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                           CheckOUT = new TimeSpan(),
                                           Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
-                     
+                                          WeekoffoneDay=(obj.WeekOffOneDay==null) ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()==date.DayOfWeek.ToString().ToLower(),
+                                          WeekoffsecondDay=(obj.WeekOffSecondDay==null) ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()==date.DayOfWeek.ToString().ToLower(),
                                       }).ToList();
                     /* var overtime = (from obj in c.DevOrganisationsStaffs
                                      join obj1 in c.OrgStaffsAttendancesDailies
@@ -89,6 +90,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                      select obj).ToList();
                      var overtimecount = overtime.Count();*/
                     var overtimelist = (from x in presentlist where x.IsOvertime == true select x).ToList();
+                    var weekofflist = (from obj in absentlist
+                                       where (obj.WeekoffoneDay || obj.WeekoffsecondDay)==true
+                                       select obj
+                                     ).ToList();
                     foreach (var item in presentlist)
                     {
                         
@@ -117,14 +122,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         var lateby = new TimeSpan();
                         //var today = date.ToString("dd/MM/yyyy");
-                       
+                        
                         attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
                         {
                             URId = (int)item.URId,
                             AttendanceDate = date.Date,
                             CheckIN = item.CheckIN.ToString(@"hh\:mm"),
                             CheckOUT = item.CheckOUT.ToString(@"hh\:mm"),
-                            Status = "Absent",
+                            Status = (item.WeekoffoneDay || item.WeekoffsecondDay) ? "WeekOff" : "Absent",
                             LateBy = lateby.ToString(@"hh\:mm"),
                             Name = item.Name,
                             ImagePath = item.ImagePath,
@@ -137,9 +142,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         Organization = new IntegerNullString() { Id = findorg.OId, Text = findorg.DevOrganisation.OrganisationName },
                         TotalEmployee = totalemp.Count(),
                         Present = presentlist.Count(),
-                        Absent = absentlist.Count(),
+                        Absent = absentlist.Count()-weekofflist.Count(),
                         Late = latecount,
-                        WeeklyOff = 0,
+                        WeeklyOff = weekofflist.Count(),
                         Overtime = overtimelist.Count(),
                     };
                     return new Result()

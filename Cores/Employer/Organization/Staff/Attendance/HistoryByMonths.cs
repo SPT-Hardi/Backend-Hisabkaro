@@ -22,7 +22,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     List<AttendanceHistory> attendanceHistory = new List<AttendanceHistory>();
                     //var lateby = new TimeSpan();
                     var presentcount = 0;
+                    var overtimecount = 0;
                     var latecount = 0;
+                    var weekoffcount = 0;
                     var currentdate = ISDT;
                     var requestmonth = date.Month;
                     var requestyear = date.Year;
@@ -66,9 +68,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 if (checkpresent != null)
                                 {
                                     presentcount += 1;
+                                    if (checkpresent.IsOvertime == true) 
+                                    {
+                                        overtimecount += 1;
+                                    }
 
 
-                                    if (checkpresent.Lateby != null)
+                                    if (checkpresent.Lateby != null )
                                     {
                                         latecount += 1;
 
@@ -80,7 +86,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
-                                        Status = "Present",
+                                        Status = checkpresent.IsOvertime==true ? "OverTime" : "Present",
                                         CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
@@ -91,6 +97,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 }
                                 else
                                 {
+                                    var WeekoffDay = (from x in c.DevOrganisationsStaffs where x.URId == (int)URId && (x.WeekOffOneDay == null ? false : x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == checkindate.DayOfWeek.ToString().ToLower() || x.WeekOffSecondDay == null ? false : x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == checkindate.DayOfWeek.ToString().ToLower()) select x).FirstOrDefault();
+                                    if (WeekoffDay != null) 
+                                    {
+                                        weekoffcount += 1;
+                                    }
                                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
                                     attendanceHistory.Add(new AttendanceHistory()
@@ -98,7 +109,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
-                                        Status = "Absent",
+                                        Status = (WeekoffDay==null) ? "Absent" : "WeekOff" ,
                                         CheckIN = "00:00",
                                         CheckOUT = "00:00",
                                         LateBy = "00:00",
@@ -109,8 +120,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
                             }
                             historyByMonth.Present = presentcount;
-                            historyByMonth.Absent = workingdays - presentcount;
+                            historyByMonth.Absent = (workingdays - presentcount)-weekoffcount;
                             historyByMonth.Late = latecount;
+                            historyByMonth.WeeklyOff = weekoffcount;
                         }
 
                         //for current month
@@ -135,8 +147,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 if (checkpresent != null)
                                 {
                                     presentcount += 1;
-
-                                    if (checkpresent.Lateby != null)
+                                    if (checkpresent.IsOvertime == true)
+                                    {
+                                        overtimecount += 1;
+                                    }
+                                    if (checkpresent.Lateby != null )
                                     {
                                         latecount += 1;
 
@@ -149,7 +164,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
-                                        Status = "Present",
+                                        Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
                                         CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
@@ -161,6 +176,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 }
                                 else
                                 {
+                                    var WeekoffDay = (from x in c.DevOrganisationsStaffs where (x.URId == (int)URId) && ((x.WeekOffOneDay == null ? false : x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == checkindate.DayOfWeek.ToString().ToLower()) || (x.WeekOffSecondDay == null ? false : x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == checkindate.DayOfWeek.ToString().ToLower())) select x).FirstOrDefault();
+                                    if (WeekoffDay != null)
+                                    {
+                                        weekoffcount += 1;
+                                    }
                                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
                                     attendanceHistory.Add(new AttendanceHistory()
@@ -168,7 +188,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
-                                        Status = "Absent",
+                                        Status = (WeekoffDay == null) ? "Absent" : "WeekOff",
                                         CheckIN = "00:00",
                                         CheckOUT = "00:00",
                                         LateBy = "00:00",
@@ -178,8 +198,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 }
 
                                 historyByMonth.Present = presentcount;
-                                historyByMonth.Absent = days - presentcount;
+                                historyByMonth.Absent = (days - presentcount)-weekoffcount;
                                 historyByMonth.Late = latecount;
+                                historyByMonth.WeeklyOff = weekoffcount;
                             }
 
 
