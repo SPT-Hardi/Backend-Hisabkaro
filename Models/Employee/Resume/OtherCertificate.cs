@@ -17,11 +17,18 @@ namespace HIsabKaro.Models.Employee.Resume
         public int EmpResumeOtherCertificateId { get; set; }
         [JsonIgnore]
         public int CertificateFileId { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage ="Certificatename field is required!")]
+        [RegularExpression(@"^.{1,50}$",ErrorMessage ="Max 50 characters are allowed!")]
         public string CertificateName { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage ="StartDate is required!")]
         public DateTime StartDate { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage ="EndDate is required!")]
         public DateTime EndDate { get; set; }
     }
     public class Certificate

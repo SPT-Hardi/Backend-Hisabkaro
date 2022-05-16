@@ -27,7 +27,6 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("User/GenerateOTP")]
         public IActionResult otpPost(Models.Developer.Subscriber.User value) 
         {
-           
             return Ok(new Users(_configuration,_tokenServices).Add(value));
         }
 

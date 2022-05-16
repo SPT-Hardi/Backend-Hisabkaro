@@ -75,6 +75,7 @@ namespace HIsabKaro
             services.AddControllers().AddNewtonsoftJson();
             //------------------------------------register services----------------------------//
             services.AddSingleton<Users>();
+            
             services.AddTransient<ITokenServices, TokenServices>();
             services.AddTransient<Tokens>();
             services.AddTransient<Uploads>();

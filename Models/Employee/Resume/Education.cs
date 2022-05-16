@@ -17,15 +17,26 @@ namespace HIsabKaro.Models.Employee.Resume
     {
         [JsonIgnore]
         public int EmpResumeEducationId { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage = "Education name is required!")]
         public IntegerNullString EducationName { get; set; }
 
-        public string  EducationStreamName { get; set; }
-        [Required]
+
+        [RegularExpression(@"^[a-z A-Z]{1,50}$",ErrorMessage ="Only alphabates contains space,Max 50 characters are allowed!")]
+        public string EducationStreamName { get; set; }
+
+
+        [Required(ErrorMessage ="Institute name is required!")]
+        [RegularExpression(@"^[a-z A-Z .]{1,100}$", ErrorMessage = "Only alphabates contains space and dot,Max 100 characters are allowed!")]
         public string InstituteName { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage ="StartDate is required!")]
         public DateTime StartDate { get; set; }
-        [Required]
+
+
+        [Required(ErrorMessage ="EndDate is required!")]
         public DateTime EndDate { get; set; }
 
     }

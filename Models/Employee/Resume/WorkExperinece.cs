@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace HIsabKaro.Models.Employee.Resume
     {
         [JsonIgnore]
         public int EmpResumeWorkExperienceId { get; set; }
+
+        [Required(ErrorMessage ="JobTitle field is required! ")]
         public string JobTitle { get; set; }
         public string OrganizationName { get; set; }
         public string WorkFrom { get; set; }

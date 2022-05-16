@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HIsabKaro", "HIsabKaro.csproj", "{3588A75E-E472-433C-936E-B5B1E0AC1673}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHisabKaro-Backend", "..\TestHisabKaro-Backend\TestHisabKaro-Backend.csproj", "{3E3F17E6-C2B4-4022-8A42-8396704632F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3588A75E-E472-433C-936E-B5B1E0AC1673}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3588A75E-E472-433C-936E-B5B1E0AC1673}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3588A75E-E472-433C-936E-B5B1E0AC1673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E3F17E6-C2B4-4022-8A42-8396704632F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E3F17E6-C2B4-4022-8A42-8396704632F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E3F17E6-C2B4-4022-8A42-8396704632F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E3F17E6-C2B4-4022-8A42-8396704632F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

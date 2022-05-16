@@ -30,6 +30,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     contact.Email = value.Email;
                     contact.AMobileNumber = value.AMobileNumber;
                     
+                    
                     ContactAddress contactAddress = new ContactAddress();
                     var res = contactAddress.Update(value.AddressId, value.Address);
                     contact.AddressID = res.Data;
