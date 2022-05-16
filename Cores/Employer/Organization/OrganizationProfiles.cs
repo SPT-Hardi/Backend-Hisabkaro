@@ -40,7 +40,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                             where x.OId == OId
                             select new Models.Employer.Organization.OrganizationProfile
                             {
-
                                 LogoFile = (from f in c.CommonFiles
                                             where f.FileId == x.LogoFileId
                                             select f.FGUID).SingleOrDefault(),
@@ -73,17 +72,16 @@ namespace HIsabKaro.Cores.Employer.Organization
                                            where f.FileId == x.PANFileId
                                            select f.FGUID).SingleOrDefault(),
                                 Email = x.Email,
-
+                                OwnershipType = (from l in c.SubLookups
+                                                 where l.LookupId == x.OwnershipTypeId
+                                                 select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()   ,
                                 MobileNumber = x.MobileNumber,
                                 Partners = (from p in c.DevOrganisationsPartners
                                             where p.OId == x.OId
                                             select new Models.Employer.Organization.Partner
                                             {
                                                 Email = p.Email,
-                                                Mobilenumber = p.MobleNumber,
-                                                OwnershipTypeID = (from l in c.SubLookups
-                                                                   where l.LookupId == p.OwnershipTypeId
-                                                                   select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()
+                                                Mobilenumber = p.MobleNumber,                                                  
                                             }).ToList()
                             }).FirstOrDefault();
                 return new Result()
@@ -148,25 +146,19 @@ namespace HIsabKaro.Cores.Employer.Organization
                     _OId.PANFileId = _PANFileId.FileId;
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
-                    
+                    _OId.OwnershipTypeId = value.OwnershipType.Id;
+
+
                     c.SubmitChanges();
 
                     var _Partner = PartnerCreate(_OId.OId, value.Partners);
 
                     var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == (int)UserId && x.OId == OId && x.RId == _OrgRole.RId);
-                   /* var authclaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Role,_URID.URId.ToString()),
-                        new Claim(ClaimTypes.Sid,UserId.ToString()),
-                        new Claim(ClaimTypes.Name,_User.SubUserTokens.Select(x=>x.DeviceToken).FirstOrDefault()),
-                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
-                    };
-                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);*/
-
+                   
                     Cores.Common.Claims claims = new Common.Claims(configuration,tokenServices);
+                    
                     var res =claims.Add(UserId.ToString(), _User.SubUserTokens.Select(x => x.DeviceToken).FirstOrDefault(), _URID.URId.ToString());
-
 
                     scope.Complete();
                     return new Result()
@@ -203,7 +195,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                             {
                                 Email=x.Email,
                                 MobleNumber=x.Mobilenumber,
-                                OwnershipTypeId=x.OwnershipTypeID.Id,
                                 OId = OId
                             };
                             c.DevOrganisationsPartners.InsertOnSubmit(partner);
@@ -214,7 +205,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                             var _partner = c.DevOrganisationsPartners.SingleOrDefault(y => y.PId == x.PartnerId);
                             _partner.Email = x.Email;
                             _partner.MobleNumber = x.Mobilenumber;
-                            _partner.OwnershipTypeId = x.OwnershipTypeID.Id;
                             _partner.OId = OId;
                             c.SubmitChanges();
                         }

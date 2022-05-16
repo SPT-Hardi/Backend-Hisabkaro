@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Models.Common;
+﻿using HIsabKaro.Cores.Employee.Profile;
+using HIsabKaro.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             using (HisabKaroDBContext.DBContext c = new HisabKaroDBContext.DBContext()) 
             {
                 var oid = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
+
                 return new Result()
                 {
+                    
                     Status = Result.ResultStatus.success,
                     Message = "Staff organization details get successfully!",
                     Data = new
@@ -22,10 +25,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         OrgId = oid.DevOrganisation.OId,
                         OrgName = oid.DevOrganisation.OrganisationName,
                         ORString = oid.DevOrganisation.QRString,
-                        UserName = oid.DevOrganisation.SubUser.SubUsersDetail.FullName,
+                        UserName = oid.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                         StaffId = oid.SId,
                         JoiningDate = oid.CreateDate,
                         IsActive=oid.Status,
+                        WorkExperice= new ViewProfiles().Get(oid.SubUserOrganisation.SubUser.UId).Data,
+
                     }
                 };
             }

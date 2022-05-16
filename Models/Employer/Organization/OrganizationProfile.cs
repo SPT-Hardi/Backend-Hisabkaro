@@ -25,6 +25,7 @@ namespace HIsabKaro.Models.Employer.Organization
         public string PanCard { get; set; }
         public string Email { get; set; }
         public string MobileNumber { get; set; }
+        public Common.IntegerNullString OwnershipType { get; set; } = new Common.IntegerNullString();
         public List<Partner> Partners { get; set; } = new List<Partner>();
     }
     
@@ -34,6 +35,5 @@ namespace HIsabKaro.Models.Employer.Organization
         public int? PartnerId { get; set; }
         public string Email { get; set; }
         public string Mobilenumber { get; set; }
-        public Common.IntegerNullString OwnershipTypeID { get; set; } = new Common.IntegerNullString();
     }
 }
