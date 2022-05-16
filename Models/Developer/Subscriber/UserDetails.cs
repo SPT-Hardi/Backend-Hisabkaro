@@ -1,5 +1,4 @@
-﻿
-using HIsabKaro.Models.Common;
+﻿using HIsabKaro.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,7 +23,7 @@ namespace HIsabKaro.Models.Developer.Subscriber
         public string FullName { get; set; }
 
         [EmailAddress(ErrorMessage ="Enter valid emailaddress!")]
-        [Required(ErrorMessage ="Email address is required!")]
+        //[Required(ErrorMessage ="Email address is required!")]
         public string Email { get; set; }
 
 

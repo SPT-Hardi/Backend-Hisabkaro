@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace HIsabKaro.Models.Employee.Resume
     {
         [JsonIgnore]
         public int EmpResumeSkillId { get; set; }
+
+        [Required(ErrorMessage ="Skillname is required!")]
         public string SkillName { get; set; }
     }
 }
