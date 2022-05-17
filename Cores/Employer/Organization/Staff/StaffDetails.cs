@@ -4,6 +4,7 @@ using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
 using HisabKaroDBContext;
 using LumenWorks.Framework.IO.Csv;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -322,10 +323,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             }
         }
 
-        public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value)   
+        public Result JoinOrganizationCreate(Models.Employer.Organization.Staff.JoinOrganizationCreate value,IConfiguration configuration,ITokenServices tokenServices)   
         {
             using (DBContext c = new DBContext())
             {
+                Cores.Common.Claims claims = new Claims(configuration,tokenServices);
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var _User = c.SubUsers.SingleOrDefault(x =>x.MobileNumber == value.MobileNumber);
@@ -354,15 +356,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
                     _staff.Status = true;
                     c.SubmitChanges();
-
-                    var authclaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Role,_UserOrg.URId.ToString()),
-                        new Claim(ClaimTypes.Sid,_User.UId.ToString()),
-                        new Claim(ClaimTypes.Name,_User.SubUsersDetail.FullName),
-                        new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    };
-                    var jwtToken = _tokenService.GenerateAccessToken(authclaims);
+                    var devicetoken = (from x in c.SubUserTokens where x.UId == _User.UId select x.DeviceToken).FirstOrDefault();
+                    var res = claims.Add(_User.UId.ToString(),devicetoken,_UserOrg.URId.ToString());
                     scope.Complete();
 
                     return new Result()
@@ -371,7 +366,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         Message = string.Format("Staff Add Successfully!"),
                         Data = new
                         {
-                            JWT = jwtToken,
+                            UserName = _User.SubUsersDetail.FullName,
+                            JWT = res.JWT,
+                            RToken=res.RToken,
                         }
                     };
                 }

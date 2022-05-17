@@ -82,8 +82,6 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         smsres.Get(value.MobileNumber, otp);
                     }
                     
-
-
                     scope.Complete();
 
                     return new Result()
