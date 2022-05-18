@@ -255,7 +255,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Organization = x.DevOrganisation.OrganisationName,
                                  status = x.Status,
-                                 Applied = (from y in c.EmpBookmarkJobsDetails
+                                 Applied = (from y in c.EmpApplyJobDetails
                                           where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId 
                                           select y.UId).Count(),
                                  PostedOn = x.PostDate,
