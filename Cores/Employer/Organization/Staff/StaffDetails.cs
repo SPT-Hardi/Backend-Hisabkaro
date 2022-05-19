@@ -1,9 +1,12 @@
 ﻿
 using HIsabKaro.Cores.Common;
+using HIsabKaro.Cores.Common.MailService;
 using HIsabKaro.Models.Common;
+using HIsabKaro.Models.Common.MailService;
 using HIsabKaro.Services;
 using HisabKaroDBContext;
 using LumenWorks.Framework.IO.Csv;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,10 +22,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
     public class StaffDetails
     {
         private readonly ITokenServices _tokenService;
-        
-        public StaffDetails(ITokenServices tokenService)
+        private readonly IOptions<MailSetting> _mailSetting;
+
+        public StaffDetails(ITokenServices tokenService, IOptions<MailSetting> mailSetting)
         {
             _tokenService = tokenService;
+            _mailSetting = mailSetting;
         }
 
         public Result One(int OId)
@@ -169,7 +174,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     }
                     c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                     c.SubmitChanges();
-                    
+
+                    //if (value.Email != null)
+                    //{
+                    //    var mailRequest = new Models.Common.MailService.MailRequest() { 
+                    //        ToEmail=value.Email,
+                    //        Subject=$"Welcome To {_URID.DevOrganisation.OrganisationName}",
+                    //        Body=$"Hi <B>{value.Name}<B> <BR> Welcome to the team! We’re thrilled to have you at {_URID.DevOrganisation.OrganisationName}.We know you’re going to be a valuable asset to our company and can’t wait to see what you accomplish.",
+                    //    };
+                    //    Cores.Common.MailService.MailServices mailService = new Cores.Common.MailService.MailServices(_mailSetting);
+                    //    var mail = mailService.Create(mailRequest);
+
+                    //}
                     scope.Complete();
 
                     return new Result()

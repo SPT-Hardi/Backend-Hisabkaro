@@ -26,9 +26,9 @@ namespace HIsabKaro.Cores.Common.File
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c= new DBContext())
             {
-                if (objFile.files == null) 
+                if (objFile.files == null)               
                 {
-                    throw new ArgumentException("No file found!");
+                        throw new ArgumentException("No file found!");    
                 }
                 if (objFile.files.Length > 0)
                 {
@@ -36,16 +36,15 @@ namespace HIsabKaro.Cores.Common.File
                     {
                         Directory.CreateDirectory(_environment.WebRootPath + "/Upload/");
                     }
-                    var supportedTypes = new[] { ".jpg", ".jpeg", ".pdf",".png" };
+                    var supportedTypes = new[] { ".jpg", ".jpeg", ".pdf", ".png" };
                     var fileExt = "." + System.IO.Path.GetExtension(objFile.files.FileName).Substring(1);
                     if (!supportedTypes.Contains(fileExt))
                     {
                         throw new ArgumentException("File Extension Is InValid - Only Upload jpg/jpeg/pdf/png File");
                     }
-
                     var FGUID = Guid.NewGuid();
-                    var fileName = FGUID+fileExt;
-                    
+                    var fileName = FGUID + fileExt;
+
                     using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/Upload/" + fileName))
                     {
                         objFile.files.CopyTo(fileStream);
@@ -53,12 +52,13 @@ namespace HIsabKaro.Cores.Common.File
                         var file = new CommonFile()
                         {
                             FGUID = fileName,
-                            FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "/Upload/",fileName),
+                            FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "/Upload/", fileName),
                             FileSize = objFile.files.Length.ToString(),
                             FileType = fileExt,
                         };
                         c.CommonFiles.InsertOnSubmit(file);
                         c.SubmitChanges();
+
                         return new Result()
                         {
                             Message = "File uploaded successfully!",
@@ -96,16 +96,16 @@ namespace HIsabKaro.Cores.Common.File
                         throw new ArgumentException("File Extension Is InValid - Only Upload CSV/XLSX/XLS File");
                     }
 
-                    var fileName = ISDT.Ticks + fileExt;
+                    var FGUID = Guid.NewGuid();
+                    var fileName = FGUID + fileExt;
 
                     using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "/StaffDetail/" + fileName))
                     {
                         objFile.files.CopyTo(fileStream);
                         fileStream.Flush();
-                        var FGUID = Guid.NewGuid();
                         var file = new CommonFile()
                         {
-                            FGUID = FGUID.ToString(),
+                            FGUID = fileName,
                             FilePath = Path.Combine(Directory.GetCurrentDirectory(), _environment.WebRootPath + "/StaffDetail/", fileName),
                             FileSize = objFile.files.Length.ToString(),
                             FileType = fileExt,
@@ -116,7 +116,7 @@ namespace HIsabKaro.Cores.Common.File
                         {
                             Message = "File uploaded successfully!",
                             Status = Result.ResultStatus.success,
-                            Data = FGUID,
+                            Data = fileName,
                         };
                     }
                 }
