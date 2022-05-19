@@ -1,6 +1,6 @@
 ﻿using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employer.Organization.Staff.Attendance;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;

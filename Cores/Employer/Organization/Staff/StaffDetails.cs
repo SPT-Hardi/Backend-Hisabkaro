@@ -2,7 +2,7 @@
 using HIsabKaro.Cores.Common;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using LumenWorks.Framework.IO.Csv;
 using Microsoft.Extensions.Configuration;
 using System;

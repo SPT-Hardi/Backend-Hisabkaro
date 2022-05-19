@@ -1,9 +1,10 @@
 ﻿using HIsabKaro.Cores.Employer.Organization.Staff;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
     public class StaffDetailsController : ControllerBase
     {
         private readonly StaffDetails _staffDetails;
+        private readonly IConfiguration _configuration;
         private readonly ITokenServices _tokenService;
 
-        public StaffDetailsController(StaffDetails staffDetails,ITokenServices tokenService)
+        public StaffDetailsController(StaffDetails staffDetails,IConfiguration configuration,ITokenServices tokenService)
         {
             _staffDetails = staffDetails;
+            _configuration = configuration;
             _tokenService = tokenService;
         }
         [HttpGet]
@@ -49,14 +52,14 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
         }
 
         [HttpGet]
-        [Route("StaffDetails/Drop")]
-        public List<IntegerNullString> Drop()
+        [Route("StaffDetails/Drop/{Id}")]
+        public List<IntegerNullString> Drop([FromRoute]int Id)
         {
             var URId = HttpContext.Items["URId"];
             using (DBContext c = new DBContext())
             {
                 return (from x in c.DevOrganisationsShiftTimes
-                        where x.OId == c.SubUserOrganisations.Where(x=>x.URId==(int)URId).FirstOrDefault().OId
+                        where x.OId ==Id  //c.SubUserOrganisations.Where(x=>x.URId==(int)URId).FirstOrDefault().OId
                         select new IntegerNullString()
                         {
                             Id = x.ShiftTimeId,
@@ -70,7 +73,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         public IActionResult JoinOrganizationCreate([FromBody] Models.Employer.Organization.Staff.JoinOrganizationCreate value)
         {
-            return Ok(_staffDetails.JoinOrganizationCreate(value));
+            return Ok(_staffDetails.JoinOrganizationCreate(value,_configuration,_tokenService));
         }
     }
 }

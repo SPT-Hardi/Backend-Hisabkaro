@@ -21,7 +21,7 @@ namespace HIsabKaro
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://localhost:5024", "http://10.0.0.4:5024"); //Windows IP
+                    webBuilder.UseUrls("http://10.0.0.4:5024"); //Windows IP"http://localhost:5024",
                 });
 
     }

@@ -1,4 +1,4 @@
-﻿using HisabKaroDBContext;
+﻿using HisabKaroContext;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

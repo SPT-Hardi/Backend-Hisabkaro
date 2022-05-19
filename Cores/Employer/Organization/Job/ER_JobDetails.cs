@@ -1,6 +1,6 @@
 ﻿using HIsabKaro.Cores.Common.File;
 using HIsabKaro.Models.Common;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;

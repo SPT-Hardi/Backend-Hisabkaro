@@ -1,7 +1,7 @@
 ﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employee.Resume;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;

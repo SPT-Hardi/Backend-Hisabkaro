@@ -3,7 +3,7 @@ using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -147,7 +147,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
                     _OId.OwnershipTypeId = value.OwnershipType.Id;
-
+                    _OId.IsCompleted = true;
 
                     c.SubmitChanges();
 

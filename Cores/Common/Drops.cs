@@ -1,6 +1,6 @@
 ﻿using HIsabKaro.Cores.Helpers;
 using HIsabKaro.Models.Common;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -101,7 +101,7 @@ namespace HIsabKaro.Cores.Common
                     }
                     profile.Profiles.Add(new ProfileDropOrg()
                     {
-                        OrgName =c.DevOrganisations.Where(x=>x.OId==item).SingleOrDefault().OrganisationName,
+                        OrgName =new IntegerNullString() { Id=item,Text= c.DevOrganisations.Where(x => x.OId == item).SingleOrDefault().OrganisationName},
                         Orgrolelist=Orgrolelist,
                     });
                 }
