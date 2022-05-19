@@ -1,6 +1,6 @@
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://hisabkaroapi.otobit.com/",
+      "applicationUrl": "http://localhost/",
       "sslPort": 0
     },
     "iisExpress": {

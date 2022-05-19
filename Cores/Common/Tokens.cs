@@ -1,5 +1,5 @@
 ﻿using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;

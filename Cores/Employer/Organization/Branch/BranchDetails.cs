@@ -1,7 +1,7 @@
 ﻿using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Models.Common;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;

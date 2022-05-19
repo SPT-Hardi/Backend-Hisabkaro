@@ -11,7 +11,7 @@ namespace HIsabKaro.Models.Common
     }
     public class ProfileDropOrg 
     {
-        public string OrgName { get; set; }
+        public IntegerNullString OrgName { get; set; } = new IntegerNullString();
         public List<IntegerNullString> Orgrolelist { get; set; } = new List<IntegerNullString>();
     }
 }

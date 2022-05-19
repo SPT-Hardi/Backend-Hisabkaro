@@ -1,7 +1,7 @@
 ﻿
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Developer.Subscriber;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System;

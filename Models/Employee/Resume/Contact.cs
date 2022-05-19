@@ -1,6 +1,6 @@
 ﻿using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Common.Contact;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

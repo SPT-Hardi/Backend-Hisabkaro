@@ -1,5 +1,5 @@
 ﻿using HIsabKaro.Models.Common;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;

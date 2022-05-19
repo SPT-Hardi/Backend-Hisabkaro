@@ -2,7 +2,7 @@
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employer.Organization;
 using HIsabKaro.Services;
-using HisabKaroDBContext;
+using HisabKaroContext;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     var _FileId = (from x in c.CommonFiles where x.FGUID == value.Image select x).FirstOrDefault();
 
-                    var Org = new DevOrganisation()
+                    var Org = new DevOrganisation()  
                     {
                         LogoFileId = _FileId == null ? null : _FileId.FileId,
                         OrganisationName = value.OrgName,

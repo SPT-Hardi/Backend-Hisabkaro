@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
     {
         public Result Get(object URId) 
         {
-            using (HisabKaroDBContext.DBContext c = new HisabKaroDBContext.DBContext()) 
+            using (HisabKaroContext.DBContext c = new HisabKaroContext.DBContext()) 
             {
                 var oid = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
 
