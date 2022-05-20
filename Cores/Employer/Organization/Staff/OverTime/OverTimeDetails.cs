@@ -20,6 +20,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                     throw new ArgumentException("User Does Not Exits!");
                 }
 
+                var CheckIn = (from x in c.OrgStaffsOverTimeDetails
+                                   where x.URId == (int)URId
+                                   select new
+                                   {
+                                       checkin = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.ChekIN),
+                                   }).ToList();
                 var _OverTime = (from x in c.OrgStaffsOverTimeDetails
                             where x.URId == (int)URId
                             select new
@@ -28,7 +34,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                                 Name=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
                                 Image=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 OverTimeDate = x.OverTimeDate,
-                                OverTimeWage = x.OverTimeWage,
+                                OverTimeWage = x.OverTimeWage,                                  
+                                //CheckIn=x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y=> Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate.Date && y.URId==x.StaffURId).Select(y=>y.ChekIN).FirstOrDefault(),
+                                //CheckOut=x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y=> Convert.ToDateTime(y.CheckOUT).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y=>y.CheckOUT).FirstOrDefault(),
                                 OverTime = x.OverTime,
                                 Amount = x.Amount,
                                 URId = URId,
