@@ -23,5 +23,12 @@ namespace HIsabKaro.Controllers.Common.MailService
         {
             return Ok(_mailServices.Create(value));
         }
+
+        [HttpPost]
+        [Route("MailServices/MailChimp/Create")]
+        public IActionResult MailChimpCreate([FromBody] Models.Common.MailService.MailRequest value)
+        {
+            return Ok(_mailServices.MailChimpCreate(value));
+        }
     }
 }
