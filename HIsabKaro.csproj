@@ -55,10 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DataContext.DBContextDiagram.view">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataContext.lqml</DependentUpon>
-    </None>
     <None Update="DataContext.Diagram1.view">
       <AutoGen>True</AutoGen>
       <DependentUpon>DataContext.lqml</DependentUpon>

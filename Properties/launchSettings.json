@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/",
+      "applicationUrl": "https://hisabkaro.otobit.com/",
       "sslPort": 0
     },
     "iisExpress": {
@@ -39,7 +39,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "nativeDebugging": true
+      "nativeDebugging": true,
+      "jsWebView2Debugging": false
     }
   }
 }
