@@ -24,7 +24,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                                    where x.URId == (int)URId
                                    select new
                                    {
-                                       checkin = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.ChekIN),
+                                       StaffURId = x.StaffURId,
+                                       checkin = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.ChekIN).FirstOrDefault(),
+                                       CheckOut = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.CheckOUT).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.CheckOUT).FirstOrDefault(),
                                    }).ToList();
                 var _OverTime = (from x in c.OrgStaffsOverTimeDetails
                             where x.URId == (int)URId
@@ -34,9 +36,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                                 Name=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
                                 Image=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 OverTimeDate = x.OverTimeDate,
-                                OverTimeWage = x.OverTimeWage,                                  
-                                //CheckIn=x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y=> Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate.Date && y.URId==x.StaffURId).Select(y=>y.ChekIN).FirstOrDefault(),
-                                //CheckOut=x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y=> Convert.ToDateTime(y.CheckOUT).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y=>y.CheckOUT).FirstOrDefault(),
+                                OverTimeWage = x.OverTimeWage,
+                                CheckIn = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.ChekIN).FirstOrDefault(),
+                                CheckOut = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.CheckOUT).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.CheckOUT).FirstOrDefault(),
                                 OverTime = x.OverTime,
                                 Amount = x.Amount,
                                 URId = URId,
@@ -46,7 +48,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Success"),
-                    Data = _OverTime,
+                    Data =new { _OverTime , CheckIn },
 
                 };
             }
