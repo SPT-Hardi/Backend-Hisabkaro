@@ -38,7 +38,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         throw new ArgumentException("Staff not exist in any organization!");
                     }
-                    if (value.AttendanceDate.Date <= org.CreateDate.Date) 
+                    if (value.AttendanceDate.Date < org.CreateDate.Date) 
                     {
                         throw new ArgumentException("Staff not created yet!");
                     }

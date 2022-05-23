@@ -22,6 +22,12 @@ namespace HIsabKaro.Controllers.Common
         {
             return Ok("Working  :) !!");
         }
+        [Route("test3")]
+        [HttpGet]
+        public IActionResult Get3()
+        {
+            return Ok("Working  :) !!");
+        }
         [Route("put")]
         [HttpPut]
         public IActionResult GetPut()
