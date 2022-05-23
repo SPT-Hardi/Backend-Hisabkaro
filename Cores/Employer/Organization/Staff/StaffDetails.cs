@@ -1,5 +1,4 @@
-﻿
-using HIsabKaro.Cores.Common;
+﻿using HIsabKaro.Cores.Common;
 using HIsabKaro.Cores.Common.MailService;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Common.MailService;
