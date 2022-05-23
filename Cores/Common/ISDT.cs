@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Common
         {
              TimeZoneInfo INDIAN_ZONE;
              var name = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
-             if (System.Diagnostics.Process.GetCurrentProcess().ProcessName== "w3wp")
+             if (System.Diagnostics.Process.GetCurrentProcess().ProcessName== "w3wp"|| System.Diagnostics.Process.GetCurrentProcess().ProcessName == "iisexpress")
              {
                INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
              }

@@ -1,6 +1,7 @@
 ﻿using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Common.MailService;
 using MailChimp.Net;
+using MailChimp.Net.Core;
 using MailChimp.Net.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -25,7 +26,7 @@ namespace HIsabKaro.Cores.Common.MailService
             _mailSetting = mailSetting;
         }
         public Models.Common.Result Create(MailRequest mailRequest)
-        {      
+        {
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSetting.Value.Mail);
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
@@ -48,75 +49,151 @@ namespace HIsabKaro.Cores.Common.MailService
             };
         }
 
+
+        private const string ApiKey = "183ba0c13aaa5c0f40af22ae90f5fa9c-us14";
+        private const string ListId = "26ba1dcc87";
+        private const int TemplateId = 10018625; // (your template id) 10018625
+        private MailChimpManager _mailChimpManager = new MailChimpManager(ApiKey);
+
+
         public Models.Common.Result MailChimpCreate(MailRequest value)
         {
             //===== MailCjimp.Net.V3
             MailChimpManager manager = new MailChimpManager(apiKey: "183ba0c13aaa5c0f40af22ae90f5fa9c-us14");
             var listId = "26ba1dcc87";
+            var TemplateId = "10018625";//"174166181_41c478d636b04bf0074f_us14"; //10018625
 
-            //View ALL 
-            //var mailChimpListCollection = manager.Lists.GetAllAsync().ConfigureAwait(false);
+            var r = manager.Templates.GetAllAsync().Result.ToList();
+            var rr = manager.Templates.GetDefaultContentAsync(TemplateId).Result;
 
-            //Add Member
-            var member = new Member { EmailAddress = value.ToEmail, Status = Status.Subscribed };
-            //member.MergeFields.Add("FNAME", "HOLY");
-            //member.MergeFields.Add("LNAME", "COW");
-            manager.Members.AddOrUpdateAsync(listId, member);
-
-            //===== WebClient
-            var subscribeRequest = new
-            {
-                apikey = "183ba0c13aaa5c0f40af22ae90f5fa9c-us14",
-                id = "26ba1dcc87",
-                email = new
-                {
-                    email = value.ToEmail
-                },
-                double_optin = true,
-            };
-
-            var requestJson = JsonConvert.SerializeObject(subscribeRequest);
-
-            //var responseString = CallMailChimpApi("lists/subscribe.json", requestJson);
-            //dynamic responseObject = JsonConvert.DeserializeObject(responseString);
-
-            //if ((responseObject.email != null) && (responseObject.euid != null))
-            //{
-            //    // successful!
-            //}
-            //else
-            //{
-            //    string name = responseObject.name;
-            //    if (name == "List_AlreadySubscribed")
-            //    {
-            //        Trace.TraceInformation("Mailchimp already subscribed");
-            //    }
-            //    else
-            //    {
-            //        Trace.TraceError("Mailchimp subscribe error {0}", responseObject.error);
-            //    }
-            //}
             return new Models.Common.Result()
             {
                 Status = Models.Common.Result.ResultStatus.success,
                 Message = string.Format($"Mail Send Successfully"),
+                Data = new { r, rr },
             };
         }
-        private static string CallMailChimpApi(string method, string requestJson)
-        {
-            var endpoint = String.Format("https://{0}.api.mailchimp.com/2.0/{1}", "us14", method);
-            var wc = new WebClient();
-            try
+
+        // `html` contains the content of your email using html notation
+        public Models.Common.Result CreateAndSendCampaign(string html)
+        {         
+             Setting _campaignSettings = new Setting
+             {
+                 ReplyTo = "kokilavr@otobit.com",
+                 FromName = "Test Template",
+                 Title = "Your campaign title",
+                 SubjectLine = "The Template",
+             };
+
+            var campaign = _mailChimpManager.Campaigns.AddAsync(new Campaign
             {
-                return wc.UploadString(endpoint, requestJson);
-            }
-            catch (WebException we)
-            {
-                using (var sr = new StreamReader(we.Response.GetResponseStream()))
+                Settings = _campaignSettings,
+                Recipients = new Recipient { ListId = ListId },
+                Type = CampaignType.Regular
+            }).Result;
+
+            var timeStr = DateTime.Now.ToString();
+
+            var content = _mailChimpManager.Content.AddOrUpdateAsync(
+                campaign.Id,
+                new ContentRequest()
                 {
-                    return sr.ReadToEnd();
-                }
-            }
+                    Template = new ContentTemplate
+                    {
+                        Id = TemplateId,
+                        Sections = new Dictionary<string, object>()
+                        {
+                            { "body_content", html },
+                            { "preheader_leftcol_content", $"<p>{timeStr}</p>" }
+                        }
+                    }
+                }).Result;
+            var re = _mailChimpManager.Campaigns.SendAsync(campaign.Id);// _mailChimpManager.Campaigns.SendAsync(campaign.Id).Wait();
+
+            return new Models.Common.Result()
+            {
+                Status = Models.Common.Result.ResultStatus.success,
+                Message = string.Format($"Mail Send Successfully"),
+                Data = new { re },
+            };
+
         }
+
+
+
+
+
+        //public Models.Common.Result MailChimpCreate(MailRequest value)
+        //{
+        //    //===== MailCjimp.Net.V3
+        //    MailChimpManager manager = new MailChimpManager(apiKey: "183ba0c13aaa5c0f40af22ae90f5fa9c-us14");
+        //    var listId = "26ba1dcc87";
+        //    var TemplateId = "174166181_41c478d636b04bf0074f_us14";
+
+        //    //View ALL 
+        //    //var mailChimpListCollection = manager.Lists.GetAllAsync().ConfigureAwait(false);
+
+        //    //Add Member
+        //    var member = new Member { EmailAddress = value.ToEmail, Status = Status.Subscribed };
+        //    //member.MergeFields.Add("FNAME", "HOLY");
+        //    //member.MergeFields.Add("LNAME", "COW");
+        //    manager.Members.AddOrUpdateAsync(listId, member);
+
+        //    //===== WebClient
+        //    var subscribeRequest = new
+        //    {
+        //        apikey = "183ba0c13aaa5c0f40af22ae90f5fa9c-us14",
+        //        id = "26ba1dcc87",
+        //        email = new
+        //        {
+        //            email = value.ToEmail
+        //        },
+        //        double_optin = true,
+        //    };
+
+        //    var requestJson = JsonConvert.SerializeObject(subscribeRequest);
+
+        //    //var responseString = CallMailChimpApi("lists/subscribe.json", requestJson);
+        //    //dynamic responseObject = JsonConvert.DeserializeObject(responseString);
+
+        //    //if ((responseObject.email != null) && (responseObject.euid != null))
+        //    //{
+        //    //    // successful!
+        //    //}
+        //    //else
+        //    //{
+        //    //    string name = responseObject.name;
+        //    //    if (name == "List_AlreadySubscribed")
+        //    //    {
+        //    //        Trace.TraceInformation("Mailchimp already subscribed");
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        Trace.TraceError("Mailchimp subscribe error {0}", responseObject.error);
+        //    //    }
+        //    //}
+        //    return new Models.Common.Result()
+        //    {
+        //        Status = Models.Common.Result.ResultStatus.success,
+        //        Message = string.Format($"Mail Send Successfully"),
+        //    };
+        //}
+        //private static string CallMailChimpApi(string method, string requestJson)
+        //{
+        //    var endpoint = String.Format("https://{0}.api.mailchimp.com/2.0/{1}", "us14", method);
+        //    var wc = new WebClient();
+        //    try
+        //    {
+        //        return wc.UploadString(endpoint, requestJson);
+        //    }
+        //    catch (WebException we)
+        //    {
+        //        using (var sr = new StreamReader(we.Response.GetResponseStream()))
+        //        {
+        //            return sr.ReadToEnd();
+        //        }
+        //    }
+        //}
     }
 }
+
