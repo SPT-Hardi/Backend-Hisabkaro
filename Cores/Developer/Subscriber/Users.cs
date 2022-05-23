@@ -196,10 +196,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     }
                 }
                 var orgdetails = (from x in c.SubUserOrganisations where x.URId == (URId == null ? null : URId.URId) select x).FirstOrDefault();
-                var Completed = (from x in c.DevOrganisations where x.OId == (orgdetails == null ? null : orgdetails.OId) select x.IsCompleted).FirstOrDefault();
+                var Completed = (from x in c.DevOrganisations where x.OId == (orgdetails == null ? null : orgdetails.OId) select x).FirstOrDefault();
                 var Id = (URId == null ? (udetails == null ? (new IntegerNullString() { Id = 0, Text = null }) : (new IntegerNullString() { Id = udetails.UId, Text = "employee" })) : (new IntegerNullString() { Id = URId.URId, Text = orgdetails.SubRole.RoleName }));
                 var Org = (orgdetails == null ? null : new IntegerNullString() { Id = orgdetails.OId, Text = orgdetails.DevOrganisation.OrganisationName });
-                var IsCompleted = (Id.Text == null ? false : ((Id.Text=="employee" || Id.Text=="staff") ? (udetails==null ? false : true):(Completed==true ? true : false)));
+                var IsCompleted = (Id.Text == null ? false : ((Id.Text=="employee" || Id.Text=="staff") ? (udetails==null ? false : true):(Completed.IsCompleted==true ? true : false)));
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
@@ -213,6 +213,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         Id=Id,
                         IsCompleted=IsCompleted,
                         LoginType = new IntegerNullString() { Id = role.FixedLookupId, Text = role.FixedLookup },
+                        QRString=Completed==null?null :Completed.QRString,
                         Name = udetails == null ? null : udetails.FullName,
                         MobileNumber = user.MobileNumber,
                         AMobileNumber = udetails == null ? null : udetails.AMobileNumber,

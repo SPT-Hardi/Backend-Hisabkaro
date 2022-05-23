@@ -19,10 +19,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     var findrole = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                     //remove after contoller added
-                    if (findrole.SubRole.RoleName.ToLower() != "admin")
+                    /*if (findrole.SubRole.RoleName.ToLower() != "admin")
                     {
                         throw new ArgumentException("You are not authorize!");
-                    }
+                    }*/
                     var staffexist = c.SubUserOrganisations.Where(x => x.OId == findrole.OId && x.URId == value.URId).SingleOrDefault();
                     if (staffexist == null) 
                     {
@@ -40,7 +40,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     }
                     if (value.AttendanceDate.Date <= org.CreateDate.Date) 
                     {
-                        throw new ArgumentException("Not authorized!");
+                        throw new ArgumentException("Staff not created yet!");
                     }
                     var check = ((org.WeekOffOneDay == null ? null : org.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()) == value.AttendanceDate.DayOfWeek.ToString().ToLower() || (org.WeekOffSecondDay == null ? null : org.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()) == value.AttendanceDate.DayOfWeek.ToString().ToLower());
 

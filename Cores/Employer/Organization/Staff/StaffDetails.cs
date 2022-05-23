@@ -374,6 +374,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     c.SubmitChanges();
                     var devicetoken = (from x in c.SubUserTokens where x.UId == _User.UId select x.DeviceToken).FirstOrDefault();
                     var res = claims.Add(_User.UId.ToString(),devicetoken,_UserOrg.URId.ToString());
+                    var username = _User.SubUsersDetail.FullName;
                     scope.Complete();
 
                     return new Result()
@@ -382,7 +383,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         Message = string.Format("Staff Add Successfully!"),
                         Data = new
                         {
-                            UserName = _User.SubUsersDetail.FullName,
+                            UserName = username,
                             JWT = res.JWT,
                             RToken=res.RToken,
                         }

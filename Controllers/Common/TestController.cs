@@ -7,14 +7,26 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Common
 {
-    [Route("test")]
     [ApiController]
     public class TestController : ControllerBase
     {
+        [Route("test")]
         [HttpGet]
         public IActionResult Get() 
         {
             return Ok("Working!!");
+        }
+        [Route("test2")]
+        [HttpGet]
+        public IActionResult Get2()
+        {
+            return Ok("Working  :) !!");
+        }
+        [Route("put")]
+        [HttpPut]
+        public IActionResult GetPut()
+        {
+            return Ok(" PUT Working!!");
         }
     }
 }
