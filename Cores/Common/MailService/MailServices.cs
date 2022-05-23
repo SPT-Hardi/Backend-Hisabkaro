@@ -76,19 +76,33 @@ namespace HIsabKaro.Cores.Common.MailService
 
         // `html` contains the content of your email using html notation
         public Models.Common.Result CreateAndSendCampaign(string html)
-        {         
-             Setting _campaignSettings = new Setting
-             {
-                 ReplyTo = "kokilavr@otobit.com",
-                 FromName = "Test Template",
-                 Title = "Your campaign title",
-                 SubjectLine = "The Template",
+        {    
+            Setting _campaignSettings = new Setting
+             {   
+                 ToName="mayurpat@otobit.in",
+                 //FromName = "Test",
+                 Title = "Hiii",
+                 SubjectLine = "Template",
+                 TemplateId= TemplateId,
              };
+            //Recipient _recipient = new Recipient
+            //{
+            //    SegmentOptions = new SegmentOptions
+            //    {
+            //        Conditions = new Condition
+            //        {
+            //            Operator =new Operator {  }
+            //        }
+            //    }
+
+
+            //};
+
 
             var campaign = _mailChimpManager.Campaigns.AddAsync(new Campaign
             {
                 Settings = _campaignSettings,
-                Recipients = new Recipient { ListId = ListId },
+                Recipients =new Recipient { ListId = ListId },
                 Type = CampaignType.Regular
             }).Result;
 
@@ -108,13 +122,14 @@ namespace HIsabKaro.Cores.Common.MailService
                         }
                     }
                 }).Result;
-            var re = _mailChimpManager.Campaigns.SendAsync(campaign.Id);// _mailChimpManager.Campaigns.SendAsync(campaign.Id).Wait();
+            var re = _mailChimpManager.Campaigns.GetAll();
+            _mailChimpManager.Campaigns.SendAsync(campaign.Id);// _mailChimpManager.Campaigns.SendAsync(campaign.Id).Wait();
 
             return new Models.Common.Result()
             {
                 Status = Models.Common.Result.ResultStatus.success,
                 Message = string.Format($"Mail Send Successfully"),
-                Data = new { re },
+               // Data = new { re },
             };
 
         }
