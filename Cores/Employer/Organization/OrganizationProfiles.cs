@@ -143,7 +143,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     _OId.GSTFileId = _GSTFileId==null ? null : _GSTFileId.FileId;
                     _OId.GSTIN = value.GSTNumber;
                     _OId.PAN = value.PanCardNumber;
-                    _OId.PANFileId = _PANFileId.FileId;
+                    _OId.PANFileId = _PANFileId==null ? null :_PANFileId.FileId;
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
                     _OId.OwnershipTypeId = value.OwnershipType.Id;
