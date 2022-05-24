@@ -32,19 +32,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         UserName = oid.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
                         Profile=oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile ==null ? "": oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
                         StaffId = oid.SId,
+                        Designation = oid.DevOrganisationsStaffsEmploymentDetail==null?"":oid.DevOrganisationsStaffsEmploymentDetail.Designation,
                         JoiningDate = oid.CreateDate,
                         IsActive = oid.Status,
                         WorkExperice = new ViewProfiles().Get(oid.SubUserOrganisation.SubUser.UId).Data,
                         TotalAdvance = (from x in c.OrgStaffsAdvanceDetails
                                         where x.StaffURId == (int)URId
                                         select new { Total = x.Amount }).Sum(x => x.Total),
-                        Present = attedanace.Data.Present,
-                        Absent = attedanace.Data.Absent,
-                        Late = attedanace.Data.Late,
-                        WeeklyOff = attedanace.Data.WeeklyOff,
+                        //Present = attedanace.Data.Present,
+                        //Absent = attedanace.Data.Absent,
+                        //Late = attedanace.Data.Late,
+                        //WeeklyOff = attedanace.Data.WeeklyOff,
                         Salary = (from x in c.OrgStaffsSalaryDetails
                                   where x.StaffURId == (int)URId
-                                  select new { Salary=x.ASalary,Payment = x.Salary }).ToList(),                    }
+                                  select new { PayDate=x.Date,Salary=x.ASalary,Payment = x.Salary }).ToList(),                    }
                 };
             }
         }
