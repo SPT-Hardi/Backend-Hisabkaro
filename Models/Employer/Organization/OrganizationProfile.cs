@@ -18,10 +18,8 @@ namespace HIsabKaro.Models.Employer.Organization
         [Required(ErrorMessage = "Shift Time Is Required!")]
         public List<ShitTime> ShiftTime { get; set; } = new List<ShitTime>();        
         public Address Address { get; set; }
-        [Required(ErrorMessage = "Pan Card Number Is Required!")]
         [RegularExpression(@"^[A-Z]{5}\d{4}[A-Z]{1}$", ErrorMessage = "Invalid Pan Card Number!")] 
-        public string PanCardNumber { get; set; }
-        [Required(ErrorMessage = "Pan Card Is Required!")]
+        public string PanCardNumber { get; set; }             
         public string PanCard { get; set; }
         public string Email { get; set; }
         public string MobileNumber { get; set; }
