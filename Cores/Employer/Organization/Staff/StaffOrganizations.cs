@@ -38,10 +38,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         TotalAdvance = (from x in c.OrgStaffsAdvanceDetails
                                         where x.StaffURId == (int)URId
                                         select new { Total = x.Amount }).Sum(x => x.Total),
-                        Present = attedanace.Data.Present,
-                        Absent = attedanace.Data.Absent,
-                        Late = attedanace.Data.Late,
-                        WeeklyOff = attedanace.Data.WeeklyOff,
+                        //Present = attedanace.Data.Present,
+                        //Absent = attedanace.Data.Absent,
+                        //Late = attedanace.Data.Late,
+                        //WeeklyOff = attedanace.Data.WeeklyOff,
                         Salary = (from x in c.OrgStaffsSalaryDetails
                                   where x.StaffURId == (int)URId
                                   select new { Salary=x.ASalary,Payment = x.Salary }).ToList(),                    }
