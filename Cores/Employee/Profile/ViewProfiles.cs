@@ -131,6 +131,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                     var totalmonths = Math.Floor(totaldays / 30);
                     userprofile.otherCertificates.Add(new ViewOtherCertificate()
                     {
+                        CertificateName=item.CertificateName,
                         EmpResumeOtherCertificateId=item.EmpResumeOtherCertificateId,
                         Duration= $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mons",
                     });
