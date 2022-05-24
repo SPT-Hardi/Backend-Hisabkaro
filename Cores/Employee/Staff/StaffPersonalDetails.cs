@@ -106,7 +106,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                             select new
                             {
                                 URId = URId,
-                                FullName=x.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                FullName=x.NickName,
                                 MobileNumber= x.SubUserOrganisation.SubUser.MobileNumber,
                                 Image= x.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                             }).ToList();

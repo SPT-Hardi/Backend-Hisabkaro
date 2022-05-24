@@ -98,7 +98,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                             select new
                             {
                                 LoanId = x.LoanId,
-                                UserName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
+                                Name = x.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y => y.NickName).FirstOrDefault(),
                                 StartDate = x.StartDate,
                                 EndDate = x.EndDate,
                                 PrincipalAmount = x.PrincipalAmt,

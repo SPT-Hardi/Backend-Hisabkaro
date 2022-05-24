@@ -28,7 +28,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         attendaneReports.Add(new AttendaneReport()
                         {
                             URId=item.URId,
-                            Name=item.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                            Name=item.NickName,
                             Present=res.Data.Present,
                             Absent=res.Data.Absent,
                             Late=res.Data.Late,

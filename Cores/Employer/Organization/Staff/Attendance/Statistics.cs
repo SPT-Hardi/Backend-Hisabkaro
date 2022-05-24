@@ -78,7 +78,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                           URId = obj.URId,
                                           CheckIN = new TimeSpan(),
                                           CheckOUT = new TimeSpan(),
-                                          Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                          Name = obj.NickName,
                                           ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                                           WeekoffoneDay=(obj.WeekOffOneDay==null) ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()==date.DayOfWeek.ToString().ToLower(),
                                           WeekoffsecondDay=(obj.WeekOffSecondDay==null) ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()==date.DayOfWeek.ToString().ToLower(),

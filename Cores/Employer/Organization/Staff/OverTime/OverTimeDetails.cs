@@ -19,21 +19,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                 {
                     throw new ArgumentException("User Does Not Exits!");
                 }
-
-                var CheckIn = (from x in c.OrgStaffsOverTimeDetails
-                                   where x.URId == (int)URId
-                                   select new
-                                   {
-                                       StaffURId = x.StaffURId,
-                                       checkin = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.ChekIN).FirstOrDefault(),
-                                       CheckOut = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.CheckOUT).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.CheckOUT).FirstOrDefault(),
-                                   }).ToList();
+                
                 var _OverTime = (from x in c.OrgStaffsOverTimeDetails
                             where x.URId == (int)URId
                             select new
                             {
                                 StaffURId = x.StaffURId,
-                                Name=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
+                                Name=x.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y=>y.NickName).FirstOrDefault(),
                                 Image=x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 OverTimeDate = x.OverTimeDate,
                                 OverTimeWage = x.OverTimeWage,
@@ -48,8 +40,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Success"),
-                    Data =new { _OverTime , CheckIn },
-
+                    Data =new { _OverTime },
                 };
             }
         }
@@ -75,16 +66,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
-                    var time= Convert.ToDecimal(TimeSpan.Parse($"{value.Time}").Hours)+"."+Convert.ToDecimal(TimeSpan.Parse($"{value.Time}").Minutes);
-                    var t = Convert.ToDecimal((TimeSpan.Parse($"{value.Time}").Hours) + "." + (TimeSpan.Parse($"{value.Time}").Minutes)) * value.OverTimeWage;
-
+                                         
+                    var minute = (Convert.ToDecimal(TimeSpan.Parse($"{value.Time}").Minutes)* value.OverTimeWage)/60;
+                    var hour = Convert.ToDecimal((TimeSpan.Parse($"{value.Time}").Hours))  * value.OverTimeWage;
+                    
                     var _OverTime = new OrgStaffsOverTimeDetail()
                     {
                         StaffURId = StaffId,
                         OverTimeDate = value.Date,
                         OverTimeWage = value.OverTimeWage,
                         OverTime = (TimeSpan)value.Time,
-                        Amount = Convert.ToDecimal((TimeSpan.Parse($"{value.Time}").Hours) + "." + (TimeSpan.Parse($"{value.Time}").Minutes)) * value.OverTimeWage,
+                        Amount = minute+hour,
                         URId = (int)URId,
                     };
                     c.OrgStaffsOverTimeDetails.InsertOnSubmit(_OverTime);

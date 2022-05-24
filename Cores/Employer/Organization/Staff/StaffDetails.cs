@@ -157,6 +157,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
                     var staff = new DevOrganisationsStaff()
                     {
+                        NickName=value.Name,
                         URId = _URID.URId,
                         OId = (int)value.Organization.Id,
                         BranchId = value.Branch.Id == 0 ? null : value.Branch.Id,

@@ -29,7 +29,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         OrgId = oid.DevOrganisation.OId,
                         OrgName = oid.DevOrganisation.OrganisationName,
                         ORString = oid.DevOrganisation.QRString,
-                        UserName = oid.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                        UserName = oid.NickName,
                         Profile=oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile ==null ? "": oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
                         StaffId = oid.SId,
                         Designation = oid.DevOrganisationsStaffsEmploymentDetail==null?"":oid.DevOrganisationsStaffsEmploymentDetail.Designation,

@@ -153,7 +153,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         {
                             Id = _SalaryDetail.SalaryId,
                             Salary=_SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(x=>x.Salary),
-                            Name=_SalaryDetail.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName
+                            Name=_SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y=>y.NickName).FirstOrDefault()
                         }
                     };
                 }
@@ -369,7 +369,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         
                         pending.Add(new Pending() { 
                             URId=x.Id,
-                            Name= c.SubUserOrganisations.Where(y => y.URId == x.Id).Select(y => y.SubUser.SubUsersDetail.FullName).FirstOrDefault(),
+                            Name= c.DevOrganisationsStaffs.Where(y => y.URId == x.Id).Select(y => y.NickName).FirstOrDefault(),
                             Salary= _Salary.Data.Salary,
                             H = new HistoryByMonths().Get(URId, x.Id, ISDT.AddMonths(-1)).Data.TotalWorkingHourPerMonth,
                         });

@@ -30,7 +30,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                              select new
                              {
                                  Id = x.OrgStaffLeaveId,
-                                 UserName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
+                                 UserName = x.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y=>y.NickName).FirstOrDefault(),
                                  StartDate = x.StartDate,
                                  EndDate = x.EndDate
                              }).ToList();

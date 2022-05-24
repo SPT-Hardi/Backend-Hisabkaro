@@ -26,7 +26,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
                                  {
                                      BonusId=x.BonusId,
                                      StaffURId = x.StaffURId,
-                                     FullName = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.FullName,
+                                     Name = x.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y => y.NickName).FirstOrDefault(),
                                      Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
                                      Date=x.Date,
                                      Description = x.Description,
