@@ -42,6 +42,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
                             attendance.URId = (int)URId;
                             attendance.LastUpdateDate = ISDT;
+                            attendance.ShiftEndTime = org.DevOrganisationsShiftTime.EndTime;
                             attendance.ChekIN = ISDT;
                             attendance.Lateby = lateby;
                             if (check) 
@@ -127,6 +128,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         attendance.URId = (int)URId;
                         attendance.LastUpdateDate = ISDT;
                         attendance.ChekIN = ISDT;
+                        attendance.ShiftEndTime = org.DevOrganisationsShiftTime.EndTime;
                         if (check) 
                         {
                             attendance.IsOvertime = true;

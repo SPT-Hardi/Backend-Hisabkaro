@@ -81,6 +81,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     }
                                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
+                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.Value.TimeOfDay): null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                    
                                     attendanceHistory.Add(new AttendanceHistory()
                                     {
                                         URId = (int)URId,
@@ -90,10 +92,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
-                                        TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
-
+                                        TotalWorkingHourPerDay = TotalWorkingHourPerDay.Value.ToString(@"hh\:mm")
                                     });
-                                    totalworkinghourmonth += (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                    totalworkinghourmonth += (TimeSpan)TotalWorkingHourPerDay;
                                 }
                                 else
                                 {
@@ -159,7 +160,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     }
                                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
-                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? new TimeSpan() : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.Value.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
                                     attendanceHistory.Add(new AttendanceHistory()
                                     {
                                         URId = (int)URId,
@@ -169,11 +170,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
-                                        TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? null : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay).ToString(@"hh\:mm"),
-
+                                        TotalWorkingHourPerDay = TotalWorkingHourPerDay.Value.ToString(@"hh\:mm")
                                     });
                                     //@"hh\:mm"
-                                    totalworkinghourmonth += TotalWorkingHourPerDay;
+                                    totalworkinghourmonth += (TimeSpan)TotalWorkingHourPerDay;
                                 }
                                 else
                                 {

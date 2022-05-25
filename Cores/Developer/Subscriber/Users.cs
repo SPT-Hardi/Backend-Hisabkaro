@@ -65,6 +65,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         sotp.ExpiryDate = ISDT.AddMinutes(15);
                         sotp.IsUsed = false;
                         sotp.DeviceToken = value.DeviceToken;
+                        sotp.MobileNumber = value.MobileNumber;
                         c.SubOTPs.InsertOnSubmit(sotp);
                         c.SubmitChanges();
                         smsres.Get(value.MobileNumber, otp);
@@ -77,6 +78,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         newotp.ExpiryDate = ISDT.AddMinutes(15);
                         newotp.IsUsed = false;
                         newotp.DeviceToken = value.DeviceToken;
+                        newotp.MobileNumber = value.MobileNumber;
 
                         c.SubmitChanges();
                         smsres.Get(value.MobileNumber, otp);
