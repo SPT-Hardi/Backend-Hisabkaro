@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using static HIsabKaro.Cores.Employer.Organization.Staff.Leave.Approves;
 
 namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 {
@@ -47,7 +48,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                         Reason = value.Reason,
                         PaidDays = (value.Paid == null ? 0 : value.Paid),
                         UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid),
-                        IsLeaveApproved = "Accepted"
+                        LeaveStatusId = (int?)LeaveStatus.Accepted
                     };
                     var duration = request.EndDate.Subtract(request.StartDate).Days + 1;
                     var total = request.PaidDays + request.UnPaidDays;

@@ -54,7 +54,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 salarySlip.employeeDetail = employeeDetail;
 
                 salarySlip.attendanceDetail.PaidLeave = (int)(from y in c.OrgStaffsLeaveApplications
-                                                              where y.StaffURId == (int)URId && y.StartDate.Month == DateTime.Now.Month - 1 && y.IsLeaveApproved == "Accepted"
+                                                              where y.StaffURId == (int)URId && y.StartDate.Month == DateTime.Now.Month - 1 && y.SubFixedLookup.FixedLookupFormatted == "Accepted"
                                                               select y.PaidDays).Sum();
                 salarySlip.attendanceDetail.Present = (from y in c.OrgStaffsAttendancesDailies
                                                        where y.URId == (int)URId && y.ChekIN.Value.Month == DateTime.Now.Month - 1 
@@ -271,7 +271,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                   select x.Salary).SingleOrDefault();
 
                     var leave = (from x in c.OrgStaffsLeaveApplications
-                                 where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.IsLeaveApproved == "Accepted"
+                                 where x.StaffURId == StaffURId && x.StartDate.Month == DateTime.Now.Month - 1 && x.SubFixedLookup.FixedLookupFormatted == "Accepted"
                                  select x.UnPaidDays).Sum();
 
                     var Deduction = ((leave == null ? 0 : leave) * (salary / 30));
@@ -290,7 +290,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var _Loan = (from x in c.OrgStaffsLoanDetails
-                                    where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.Status==true
+                                    where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.IsLoanPending == true
                                     select x).SingleOrDefault();
                     if(_Loan is null)
                     {

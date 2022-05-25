@@ -20,7 +20,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
 
                 var job = (from x in c.EmprJobs
-                           where x.DevOrganisation.OrganisationName.Contains(value.CName) && x.Status.ToLower() == "Open"
+                           where x.DevOrganisation.OrganisationName.Contains(value.CName) && x.SubFixedLookup_JobStatusId.FixedLookupFormatted.ToLower() == "Open"
                            select new
                            {
                                JobID = x.JobId,
@@ -73,7 +73,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 }
 
                 var job = (from x in c.EmprJobs
-                           where x.Status.ToLower() == "Open"
+                           where x.SubFixedLookup_JobStatusId.FixedLookupFormatted.ToLower() == "Open"
                            select new
                            {
                                JobID = x.JobId,

@@ -9,6 +9,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
 {
     public class Approves
     {
+        public enum LeaveStatus
+        {
+            Pending = 55,
+            Accepted = 56,
+            Reject = 57
+        }
+
         public Result Get(object URId)
         {
             using (DBContext c = new DBContext())
@@ -25,7 +32,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 var leave = (from x in c.OrgStaffsLeaveApplications
-                             where x.SubUserOrganisation_StaffURId.OId == user.OId && x.IsLeaveApproved == "Pending"
+                             where x.SubUserOrganisation_StaffURId.OId == user.OId && x.SubFixedLookup.FixedLookupFormatted == "Pending"
                              orderby x.OrgStaffLeaveId descending
                              select new
                              {
@@ -76,7 +83,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 {
                     throw new ArgumentException("Approve days not match with leave duration");
                 }
-                leave.IsLeaveApproved = "Accepted";
+                leave.LeaveStatusId = (int?)LeaveStatus.Accepted;
                 leave.PaidDays = (value.Paid == null ? 0 : value.Paid);
                 leave.UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid);
                 leave.URId = (int)URId;
@@ -116,7 +123,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                leave.IsLeaveApproved = "Reject";
+                leave.LeaveStatusId = (int?)LeaveStatus.Reject;
                 leave.PaidDays = 0;
                 leave.UnPaidDays = 0;
                 leave.URId = (int)URId;

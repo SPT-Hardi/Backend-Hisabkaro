@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static HIsabKaro.Cores.Employer.Organization.Staff.Leave.Approves;
 
 namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
 {
@@ -35,7 +36,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     StartDate = value.StartDate,
                     EndDate = value.EndDate,
                     Reason = value.reason,
-                    IsLeaveApproved = "Pending"
+                    LeaveStatusId = (int?)LeaveStatus.Pending
                 };
                 c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                 c.SubmitChanges();
@@ -71,7 +72,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                                  Reason = x.Reason,
                                  StartDate =  x.StartDate,
                                  EndDate = x.EndDate,
-                                 IsApprove = x.IsLeaveApproved
+                                 IsApprove = x.SubFixedLookup.FixedLookupFormatted
                              }).ToList();
                 if (leave == null)
                 {

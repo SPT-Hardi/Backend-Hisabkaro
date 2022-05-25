@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Cores.Common.File;
+﻿using HIsabKaro.Cores.Common.Contact;
+using HIsabKaro.Cores.Common.File;
 using HIsabKaro.Models.Common;
 using HisabKaroContext;
 using System;
@@ -11,7 +12,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 {
     public class ER_JobDetails
     {
-        public Result Create( object URId, Models.Employer.Organization.Job.ER_JobDetail value)
+        public enum JobStatus
+        {
+            Open = 52,
+            Disable = 53,
+            Remove = 54
+        }
+
+        public Result Create(object URId, Models.Employer.Organization.Job.ER_JobDetail value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
@@ -34,12 +42,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("Post Date Can't be After End Date.");
                     }
 
-                    //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == (value.Branch.Id == null ? null : value.Branch.Id) && x.OId == value.Organisation.Id);
-                    //if(branch == null)
-                    //{
-                    //    throw new ArgumentException("Branch doesn't exist");
-                    //}
-
                     var jDetails = (from j in c.EmprJobs
                                     where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id && j.BranchID == (value.Branch.Id == null ? null : value.Branch.Id)
                                     orderby j.JobId descending
@@ -47,58 +49,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
 
                     if (jDetails != null)
                     {
-                        if (jDetails.EndDate < ISDT)
-                        {
-                            var _job = new EmprJob()
-                            {
-                                Title = value.Title,
-                                Location = value.Location,
-                                MinSalary = value.MinSalary,
-                                MaxSalary = value.MaxSalary,
-                                Roles = value.Roles,
-                                Description = value.Description,
-                                PostDate = ISDT,
-                                EndDate = value.Enddate.ToLocalTime(),
-                                OId = (int)value.Organisation.Id,
-                                BranchID = value.Branch.Id == null ? null : value.Branch.Id,
-                                URId = user.URId,
-                                Status = "Open"
-                            };
-                            c.EmprJobs.InsertOnSubmit(_job);
-                            c.SubmitChanges();
-
-
-                            c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
-                            {
-                                Skill = x.skill,
-                                JobId = _job.JobId
-                            }));
-                            c.SubmitChanges();
-
-                            c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
-                            {
-                                Type = x.type.Text,
-                                JobId = _job.JobId
-                            }));
-                            c.SubmitChanges();
-
-                            return new Result()
-                            {
-                                Message = string.Format("Job Details Added Successfully!!"),
-                                Status = Result.ResultStatus.success,
-                                Data = new
-                                {
-                                    Id = _job.JobId,
-                                    Title = _job.Title
-                                },
-                            };
-                        }
-                        else
+                        if (jDetails.EndDate > ISDT)
                         {
                             throw new ArgumentException("Job Already Exist");
                         }
                     }
-                    var job = new EmprJob()
+
+                    var _job = new EmprJob()
                     {
                         Title = value.Title,
                         Location = value.Location,
@@ -111,22 +68,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         OId = (int)value.Organisation.Id,
                         BranchID = value.Branch.Id == null ? null : value.Branch.Id,
                         URId = user.URId,
-                        Status = "Open"
+                        JobStatusId = (int)JobStatus.Open
                     };
-                    c.EmprJobs.InsertOnSubmit(job);
+                    c.EmprJobs.InsertOnSubmit(_job);
                     c.SubmitChanges();
 
                     c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
                     {
                         Skill = x.skill,
-                        JobId = job.JobId
+                        JobId = _job.JobId
                     }));
                     c.SubmitChanges();
 
                     c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
                     {
                         Type = x.type.Text,
-                        JobId = job.JobId
+                        JobId = _job.JobId
                     }));
                     c.SubmitChanges();
                     scope.Complete();
@@ -134,9 +91,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format("Job Details Added Successfully!!"),
-                        Data = new  { 
-                              Id = job.JobId,
-                              Title = job.Title
+                        Data = new
+                        {
+                            Id = _job.JobId,
+                            Title = _job.Title
                         },
                     };
                 }
@@ -182,7 +140,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.OId = (int)value.Organisation.Id;
                     job.BranchID = value.Branch.Id == null ? null : value.Branch.Id;
                     job.URId = user.URId;
-                    job.Status = "Open";
+                    job.JobStatusId = (int)JobStatus.Open;
                     c.SubmitChanges();
 
                     var _s = (from s in c.EmprJobSkills
@@ -263,12 +221,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
                                  Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
                                  Organization = x.DevOrganisation.OrganisationName,
-                                 status = x.Status,
                                  Applied = (from y in c.EmpApplyJobDetails
                                           where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId 
                                           select y.UId).Count(),
                                  PostedOn = x.PostDate,
-                                 EndDate = x.EndDate
+                                 EndDate = x.EndDate,
+                                 status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted
                              });
 
                 return new Result()
@@ -363,7 +321,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Job Not Found!!");
                 }
 
-                job.Status = "Remove";
+                job.JobStatusId = (int)JobStatus.Remove;
                 job.URId = user.URId;
                 c.SubmitChanges();
 
@@ -396,7 +354,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Job Not Found!!");
                 }
 
-                job.Status = "Disable";
+                job.JobStatusId = (int)JobStatus.Disable;
                 job.URId = user.URId;
                 c.SubmitChanges();
 
@@ -412,5 +370,138 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 };
             }
         }
+
+        //public Result Create( object URId, Models.Employer.Organization.Job.ER_JobDetail value)
+        //{
+        //    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+        //    using (DBContext c = new DBContext())
+        //    {
+        //        using (TransactionScope scope = new TransactionScope())
+        //        {
+        //            var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
+        //            if (user == null)
+        //            {
+        //                throw new ArgumentException("User not found!!");
+        //            }
+
+        //            if (user.SubRole.RoleName.ToLower() != "admin")
+        //            {
+        //                throw new ArgumentException("Access not allow!!");
+        //            }
+
+        //            if (ISDT > value.Enddate)
+        //            {
+        //                throw new ArgumentException("Post Date Can't be After End Date.");
+        //            }
+
+        //            //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == (value.Branch.Id == null ? null : value.Branch.Id) && x.OId == value.Organisation.Id);
+        //            //if(branch == null)
+        //            //{
+        //            //    throw new ArgumentException("Branch doesn't exist");
+        //            //}
+
+        //            var jDetails = (from j in c.EmprJobs
+        //                            where j.Title == value.Title && j.Location == value.Location && j.DevOrganisation.OId == value.Organisation.Id && j.BranchID == (value.Branch.Id == null ? null : value.Branch.Id)
+        //                            orderby j.JobId descending
+        //                            select j).FirstOrDefault();
+
+        //            if (jDetails != null)
+        //            {
+        //                if (jDetails.EndDate < ISDT)
+        //                {
+        //                    var _job = new EmprJob()
+        //                    {
+        //                        Title = value.Title,
+        //                        Location = value.Location,
+        //                        MinSalary = value.MinSalary,
+        //                        MaxSalary = value.MaxSalary,
+        //                        Roles = value.Roles,
+        //                        Description = value.Description,
+        //                        PostDate = ISDT,
+        //                        EndDate = value.Enddate.ToLocalTime(),
+        //                        OId = (int)value.Organisation.Id,
+        //                        BranchID = value.Branch.Id == null ? null : value.Branch.Id,
+        //                        URId = user.URId,
+        //                        Status = "Open"
+        //                    };
+        //                    c.EmprJobs.InsertOnSubmit(_job);
+        //                    c.SubmitChanges();
+
+
+        //                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+        //                    {
+        //                        Skill = x.skill,
+        //                        JobId = _job.JobId
+        //                    }));
+        //                    c.SubmitChanges();
+
+        //                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+        //                    {
+        //                        Type = x.type.Text,
+        //                        JobId = _job.JobId
+        //                    }));
+        //                    c.SubmitChanges();
+
+        //                    return new Result()
+        //                    {
+        //                        Message = string.Format("Job Details Added Successfully!!"),
+        //                        Status = Result.ResultStatus.success,
+        //                        Data = new
+        //                        {
+        //                            Id = _job.JobId,
+        //                            Title = _job.Title
+        //                        },
+        //                    };
+        //                }
+        //                else
+        //                {
+        //                    throw new ArgumentException("Job Already Exist");
+        //                }
+        //            }
+        //            var job = new EmprJob()
+        //            {
+        //                Title = value.Title,
+        //                Location = value.Location,
+        //                MinSalary = value.MinSalary,
+        //                MaxSalary = value.MaxSalary,
+        //                Roles = value.Roles,
+        //                Description = value.Description,
+        //                PostDate = ISDT,
+        //                EndDate = value.Enddate.ToLocalTime(),
+        //                OId = (int)value.Organisation.Id,
+        //                BranchID = value.Branch.Id == null ? null : value.Branch.Id,
+        //                URId = user.URId,
+        //                Status = "Open"
+        //            };
+        //            c.EmprJobs.InsertOnSubmit(job);
+        //            c.SubmitChanges();
+
+        //            c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+        //            {
+        //                Skill = x.skill,
+        //                JobId = job.JobId
+        //            }));
+        //            c.SubmitChanges();
+
+        //            c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+        //            {
+        //                Type = x.type.Text,
+        //                JobId = job.JobId
+        //            }));
+        //            c.SubmitChanges();
+        //            scope.Complete();
+        //            return new Result()
+        //            {
+        //                Status = Result.ResultStatus.success,
+        //                Message = string.Format("Job Details Added Successfully!!"),
+        //                Data = new  { 
+        //                      Id = job.JobId,
+        //                      Title = job.Title
+        //                },
+        //            };
+        //        }
+        //    }
+        //}
+        
     }
 }

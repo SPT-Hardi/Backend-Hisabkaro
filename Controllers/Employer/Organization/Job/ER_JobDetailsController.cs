@@ -1,4 +1,5 @@
-﻿using HIsabKaro.Cores.Common.File;
+﻿using HIsabKaro.Cores.Common.Contact;
+using HIsabKaro.Cores.Common.File;
 using HIsabKaro.Cores.Employer.Organization.Job;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

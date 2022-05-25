@@ -62,7 +62,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         InterestId = (int)value.Interest.Id,
                         PrincipalAmt = PrincipalAmt,
                         RemainingAmt = PrincipalAmt,
-                        Status = true
+                        IsLoanPending = true
                     };
                     c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
                     c.SubmitChanges();
