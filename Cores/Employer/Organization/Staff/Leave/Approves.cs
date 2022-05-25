@@ -32,7 +32,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                                  Id = x.OrgStaffLeaveId,
                                  UserName = x.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y=>y.NickName).FirstOrDefault(),
                                  StartDate = x.StartDate,
-                                 EndDate = x.EndDate
+                                 EndDate = x.EndDate,
+                                 Reason=x.Reason
                              }).ToList();
                 if (leave == null)
                 {
