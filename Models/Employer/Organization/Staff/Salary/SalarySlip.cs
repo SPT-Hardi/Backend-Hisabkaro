@@ -63,6 +63,6 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
         public int URId { get; set; }
         public string Name { get; set; }
         public decimal Salary { get; set; }
-        public string H { get; set; }
+        public string Hours { get; set; }
     }
 }

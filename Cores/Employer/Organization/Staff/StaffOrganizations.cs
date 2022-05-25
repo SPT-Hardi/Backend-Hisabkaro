@@ -17,8 +17,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                 var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
 
                 var oid = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
-                var r = oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile == null ? "" : oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath;
-                var attedanace = new HistoryByMonths().Get(URId, 0, ISDT);
+                
                 return new Result()
                 {
 
@@ -39,10 +38,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         TotalAdvance = (from x in c.OrgStaffsAdvanceDetails
                                         where x.StaffURId == (int)URId
                                         select new { Total = x.Amount }).Sum(x => x.Total),
-                        //Present = attedanace.Data.Present,
-                        //Absent = attedanace.Data.Absent,
-                        //Late = attedanace.Data.Late,
-                        //WeeklyOff = attedanace.Data.WeeklyOff,
                         Salary = (from x in c.OrgStaffsSalaryDetails
                                   where x.StaffURId == (int)URId
                                   select new { PayDate=x.Date,Salary=x.ASalary,Payment = x.Salary }).ToList(),                    }
