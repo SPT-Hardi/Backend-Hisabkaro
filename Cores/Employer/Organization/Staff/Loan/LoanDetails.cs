@@ -29,6 +29,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         throw new ArgumentException("Staff Doesn't exist");
                     }
 
+                    if (value.StartDate > value.EndDate)
+                    {
+                        throw new ArgumentException("Start Date Can't be After End Date.");
+                    }
+
                     var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == staff.URId);
                     if (org_staff == null)
                     {

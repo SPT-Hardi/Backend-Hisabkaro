@@ -29,6 +29,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("Access not allow!!");
                     }
 
+                    if (ISDT > value.Enddate)
+                    {
+                        throw new ArgumentException("Post Date Can't be After End Date.");
+                    }
+
                     //var branch = c.DevOrganisationBranches.SingleOrDefault(x => x.BranchId == (value.Branch.Id == null ? null : value.Branch.Id) && x.OId == value.Organisation.Id);
                     //if(branch == null)
                     //{
@@ -131,8 +136,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         Message = string.Format("Job Details Added Successfully!!"),
                         Data = new  { 
                               Id = job.JobId,
-                              Title = job.Title,
-                              Date = DateTime.Now.ToLocalTime()
+                              Title = job.Title
                         },
                     };
                 }
@@ -155,6 +159,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     if (user.SubRole.RoleName.ToLower() != "admin")
                     {
                         throw new ArgumentException("Access not allow!!");
+                    }
+
+                    if (ISDT > value.Enddate)
+                    {
+                        throw new ArgumentException("Post Date Can't be After End Date.");
                     }
 
                     var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
