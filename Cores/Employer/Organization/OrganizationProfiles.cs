@@ -174,7 +174,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                 }
             }
         }
-
         internal Result PartnerCreate(int OId, List<Models.Employer.Organization.Partner> value)
         {
             using (TransactionScope scope = new TransactionScope())
@@ -218,7 +217,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                 }
             }
         }
-
 
     }
 }

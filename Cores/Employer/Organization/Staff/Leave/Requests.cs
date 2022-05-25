@@ -19,6 +19,16 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     throw new ArgumentException("User not found!!");
                 }
 
+                if (user.SubRole.RoleName.ToLower() != "staff")
+                {
+                    throw new ArgumentException("Access not allow!!");
+                }
+
+                if (value.StartDate > value.EndDate)
+                {
+                    throw new ArgumentException("Start Date Can't be After End Date.");
+                }
+
                 var request = new OrgStaffsLeaveApplication()
                 {
                     StaffURId = user.URId,
