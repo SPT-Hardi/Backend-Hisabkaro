@@ -20,5 +20,13 @@ namespace HIsabKaro.Controllers.Employer.Organization
             var UserID = HttpContext.Items["UserID"];
             return Ok(new OrganizationDetails().Create(UserID,value));
         }
+
+        [HttpPost]
+        [Route("OrganizationDetails/Update/QRString")]
+        public IActionResult UpdateQR()
+        {
+            var URId = HttpContext.Items["URId"];
+            return Ok(new OrganizationDetails().UpdateQR(URId));
+        }
     }
 }

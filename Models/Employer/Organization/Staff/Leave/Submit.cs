@@ -15,7 +15,6 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
         [Required]
         public DateTime EndDate { get; set; }
 
-        [Required]
         public string Reason { get; set; }  
 
         public int? Paid { get; set; }

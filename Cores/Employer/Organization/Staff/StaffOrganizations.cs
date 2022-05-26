@@ -15,9 +15,25 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             using (HisabKaroContext.DBContext c = new HisabKaroContext.DBContext())
             {
                 var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
-
-                var oid = c.DevOrganisationsStaffs.Where(x => x.URId == (int)URId).SingleOrDefault();
                 
+                var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
+                if (_User is null)
+                {
+                    throw new ArgumentException("User Does Not Exits!");
+                }
+
+                var _URId = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName == "staff");
+                if (_URId is null)
+                {
+                    throw new ArgumentException("Unathorized!");
+                }
+
+                var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.URId == (int)URId);
+                if (_Staff is null)
+                {
+                    throw new ArgumentException("Staff Does Not Exits!");
+                }
+                                
                 return new Result()
                 {
 
@@ -25,22 +41,23 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     Message = "Staff organization details get successfully!",
                     Data = new
                     {
-                        OrgId = oid.DevOrganisation.OId,
-                        OrgName = oid.DevOrganisation.OrganisationName,
-                        ORString = oid.DevOrganisation.QRString,
-                        UserName = oid.NickName,
-                        Profile=oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile ==null ? "": oid.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
-                        StaffId = oid.SId,
-                        Designation = oid.DevOrganisationsStaffsEmploymentDetail==null?"":oid.DevOrganisationsStaffsEmploymentDetail.Designation,
-                        JoiningDate = oid.CreateDate,
-                        IsActive = oid.Status,
-                        WorkExperice = new ViewProfiles().Get(oid.SubUserOrganisation.SubUser.UId).Data,
+                        OrgId = _Staff.DevOrganisation.OId,
+                        OrgName = _Staff.DevOrganisation.OrganisationName,
+                        ORString = _Staff.DevOrganisation.QRString,
+                        UserName = _Staff.NickName,
+                        Profile= _Staff.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile ==null ? "": _Staff.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                        StaffId = _Staff.SId,
+                        Designation = _Staff.DevOrganisationsStaffsEmploymentDetail==null?"": _Staff.DevOrganisationsStaffsEmploymentDetail.Designation,
+                        JoiningDate = _Staff.CreateDate,
+                        IsActive = _Staff.Status,
+                        WorkExperice = new ViewProfiles().Get(_Staff.SubUserOrganisation.SubUser.UId).Data,
                         TotalAdvance = (from x in c.OrgStaffsAdvanceDetails
                                         where x.StaffURId == (int)URId
                                         select new { Total = x.Amount }).Sum(x => x.Total),
                         Salary = (from x in c.OrgStaffsSalaryDetails
                                   where x.StaffURId == (int)URId
-                                  select new { PayDate=x.Date,Salary=x.ASalary,Payment = x.Salary }).ToList(),                    }
+                                  select new { PayDate=x.Date,Salary=x.ASalary,Payment = x.Salary }).ToList(),         
+                    }
                 };
             }
         }

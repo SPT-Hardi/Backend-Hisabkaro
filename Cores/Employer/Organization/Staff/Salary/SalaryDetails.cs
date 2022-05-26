@@ -314,7 +314,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     {
                         tot = (decimal)_Loan.RemainingAmt;
                         _Loan.RemainingAmt = 0;
-                        _Loan.Status = false;
+                        _Loan.IsLoanPending = false;
                         c.SubmitChanges();
                     }
                     else
