@@ -217,6 +217,5 @@ namespace HIsabKaro.Cores.Employer.Organization
                 }
             }
         }
-
     }
 }

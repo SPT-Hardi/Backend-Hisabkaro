@@ -118,8 +118,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         throw new ArgumentException("Unathorized!");
                     }
 
-                    var _Salary = One(URId, StaffId);
-
                     var _StaffSalary = (from x in c.OrgStaffsSalaryDetails
                                         where x.StaffURId == StaffId && x.Date.Month == ISDT.Month
                                         select x).FirstOrDefault();
@@ -128,13 +126,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         throw new ArgumentException("Salary Alredy Paid.");
                     }
 
+                    var _Salary = One(URId, StaffId);
+
                     var _SalaryDetail = new OrgStaffsSalaryDetail() {
                         OverTime = _Salary.Data.OverTime,
-                        Bonus = _Salary.Data.Bonus,
-                        Advance = _Salary.Data.Advance,
-                        OrgStaffLeave = _Salary.Data.Leave,
+                        Bonus = _Salary.Data.Bonus ,
+                        Advance = _Salary.Data.Advance  ,                              
+                        OrgStaffLeave = _Salary.Data.Leave ,
                         LoanId = _Salary.Data.LoanId,
-                        LoanDeductionAmount = _Salary.Data.Loan,
+                        LoanDeductionAmount = _Salary.Data.Loan ,
                         Salary = _Salary.Data.Salary,
                         Date = ISDT,
                         StaffURId=StaffId,
@@ -143,7 +143,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     };
                     c.OrgStaffsSalaryDetails.InsertOnSubmit(_SalaryDetail);
                     c.SubmitChanges();
-
+                    var __Salary = _SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(x => x.Salary);
+                    var Name = _SalaryDetail.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y => y.NickName).FirstOrDefault();
                     scope.Complete();
                     return new Result()
                     {
@@ -177,10 +178,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
 
-                    decimal _OverTime = OverTime(StaffId);
-                    decimal _Bonus = Bonus(StaffId);
-                    decimal _Advance = Advance(StaffId);
-                    decimal _Leave = Leave(StaffId);
+                    decimal _OverTime = OverTime(StaffId) == null ? 0 : OverTime(StaffId);
+                    decimal _Bonus = Bonus(StaffId) == null ? 0 :Bonus(StaffId);
+                    decimal _Advance = Advance(StaffId) == null ? 0 :Advance(StaffId);
+                    decimal _Leave = Leave(StaffId) == null ? 0 :Leave(StaffId);
                     var _Loan = Loan(StaffId);
 
                     decimal loan = decimal.Parse(_Loan.Data.Text);
@@ -313,6 +314,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     {
                         tot = (decimal)_Loan.RemainingAmt;
                         _Loan.RemainingAmt = 0;
+                        _Loan.Status = false;
                         c.SubmitChanges();
                     }
                     else
@@ -371,7 +373,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                             URId=x.Id,
                             Name= c.DevOrganisationsStaffs.Where(y => y.URId == x.Id).Select(y => y.NickName).FirstOrDefault(),
                             Salary= _Salary.Data.Salary,
-                            H = new HistoryByMonths().Get(URId, x.Id, ISDT.AddMonths(-1)).Data.TotalWorkingHourPerMonth,
+                            Hours = new HistoryByMonths().Get(URId, x.Id, ISDT.AddMonths(-1)).Data.TotalWorkingHourPerMonth,
                         });
                     });
 
