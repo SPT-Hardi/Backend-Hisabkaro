@@ -50,4 +50,13 @@ namespace HIsabKaro.Models.Employee.Resume
         public string InstituteName { get; set; }
         public string TotalDuration { get; set; }
     }
+
+    public class OverTime
+    {
+        public DateTime Date { get; set; }
+        public TimeSpan Time { get; set; }
+        public DateTime CheckIn { get; set; }
+        public DateTime CheckOut { get; set; }
+        public string Hours { get; set; }
+    }
 }

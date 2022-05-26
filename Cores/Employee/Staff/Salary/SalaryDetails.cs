@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Models.Common;
+using HIsabKaro.Models.Employee.Resume;
 using HisabKaroContext;
 using System;
 using System.Collections.Generic;
@@ -95,13 +96,13 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                 }
             }
         }
-        public Result OverTime(object URId)
+        public Result OverTime(object URId,DateTime Date)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+                    var ISDT = new Common.ISDT().GetISDT(Date);
 
                     var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (_User is null)
@@ -114,24 +115,33 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                         throw new ArgumentException("Unathorized!");
                     }
 
+                    List<OverTime> overTime = new List<OverTime>();
+                                        
                     var OverTime = (from x in c.OrgStaffsOverTimeDetails
-                                   where x.StaffURId == _URId.URId
-                                   select new
-                                   {
-                                       Date = x.OverTimeDate,
-                                       Time=x.OverTime,
-                                       CheckIn=x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y=>y.ChekIN==x.OverTimeDate).Select(y=>y.ChekIN)  ,
-                                       CheckOut = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => y.CheckOUT == x.OverTimeDate).Select(y => y.CheckOUT)
-                                   }).ToList();
+                                    where x.StaffURId == _URId.URId && x.OverTimeDate.Month == ISDT.Month && x.OverTimeDate.Year == ISDT.Year
+                                    select x ).ToList();
 
+                    OverTime.ForEach((x) => {
+                        var Attendance = (from y in c.OrgStaffsAttendancesDailies
+                                          where y.ChekIN.Value.Date == x.OverTimeDate && y.URId == _URId.URId
+                                          select new { y.ChekIN, y.CheckOUT }).FirstOrDefault();
 
+                        overTime.Add(new OverTime() { 
+                            Time=x.OverTime,
+                            Date=x.OverTimeDate,
+                            CheckIn=Attendance.ChekIN.Value,
+                            CheckOut=Attendance.CheckOUT.Value,
+                            Hours = Attendance.CheckOUT == null ? null : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.Value.TimeOfDay).ToString(),
+                        });
+                    });
+                   
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Data = new
                         {
-                            OverTime = OverTime
+                            OverTime = overTime
                         },
                     };
                 }

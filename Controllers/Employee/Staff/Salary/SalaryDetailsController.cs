@@ -29,11 +29,11 @@ namespace HIsabKaro.Controllers.Employee.Staff.Salary
         }
 
         [HttpGet]
-        [Route("SalaryDetails/OverTime")]
-        public IActionResult OverTime()
+        [Route("SalaryDetails/OverTime/{Date}")]
+        public IActionResult OverTime([FromRoute] DateTime Date)
         {
             var URId = HttpContext.Items["URId"];
-            return Ok(new SalaryDetails().OverTime(URId));
+            return Ok(new SalaryDetails().OverTime(URId,Date));
         }
     }
 }
