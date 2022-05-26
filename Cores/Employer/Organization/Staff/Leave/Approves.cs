@@ -113,7 +113,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 var leave = c.OrgStaffsLeaveApplications.SingleOrDefault(x => x.OrgStaffLeaveId == leaveId
-                                                                          && x.SubUserOrganisation_URId.OId == user.OId);
+                                                                          && x.SubUserOrganisation_StaffURId.OId == user.OId);
                 if (leave == null)
                 {
                     throw new ArgumentException("Data not found!!");

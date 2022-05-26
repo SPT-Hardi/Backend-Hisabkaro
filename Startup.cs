@@ -1,3 +1,5 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using HIsabKaro.Cores.Common;
 using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.File;
@@ -14,6 +16,7 @@ using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 using HIsabKaro.Middleware;
 using HIsabKaro.Models.Common.MailService;
 using HIsabKaro.Services;
+using HIsabKaro.Services.ResumePDF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -69,6 +72,9 @@ namespace HIsabKaro
 
             //Mail Service Configure
             services.Configure<MailSetting>(Configuration.GetSection("MailSettings"));
+            
+            //For PDF Service
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             //JSON Serializer
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
@@ -102,6 +108,8 @@ namespace HIsabKaro
             services.AddTransient<MailServices>();
             //services.AddTransient<Cores.Common.Contact.Current>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<Services.ResumePDF.HTMLString>();
+            services.AddTransient<CustomAssemblyLoadContext>();
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>
@@ -162,7 +170,7 @@ namespace HIsabKaro
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseAuthorization();
             app.UseMiddleware<JwtHandler>();
             //app.UseMiddleware<CustomeException>();

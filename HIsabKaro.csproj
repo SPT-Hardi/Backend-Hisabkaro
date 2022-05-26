@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="Devart.Data.SqlServer.Linq" Version="4.9.2403" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="LumenWorksCsvReader" Version="4.0.0" />
     <PackageReference Include="MailChimp.Net.V3" Version="5.3.1" />
@@ -36,7 +37,16 @@
     </Reference>
   </ItemGroup>
 
+	<ItemGroup>
+		<None Remove="libwkhtmltox.dll" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Include="libwkhtmltox.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+	
   <ItemGroup>
     <Folder Include="wwwroot\Upload\" />
   </ItemGroup>
@@ -56,6 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DataContext.DBContextDiagram.view">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataContext.lqml</DependentUpon>
+    </None>
     <None Update="DataContext.Diagram1.view">
       <AutoGen>True</AutoGen>
       <DependentUpon>DataContext.lqml</DependentUpon>
