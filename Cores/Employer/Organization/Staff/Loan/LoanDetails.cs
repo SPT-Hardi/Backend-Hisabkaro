@@ -112,6 +112,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                                 RemainingAmount = x.RemainingAmt,
                                 Duration = x.Duration,
                                 InstallmentPaid = (DateTime.Now.ToLocalTime().Month - x.StartDate.Month) <= 0 ? 0 : (DateTime.Now.ToLocalTime().Month - x.StartDate.Month),
+                                Status = x.IsLoanPending == true ? "Pending" : "Completed" 
                             }).ToList();
                 return new Result()
                 {
@@ -141,12 +142,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 }
                 foreach (var item in loan)
                 {
-                    int totalMonth = 12 * (item.StartDate.Year - item.EndDate.Year) + item.StartDate.Month - item.EndDate.Month;
-                    int month = (Math.Abs(totalMonth));
-                    decimal principal = item.PrincipalAmt;
-                    decimal rate = (decimal)item.InterestRate;
-                    decimal no = (decimal)Math.Round(((float)month / 12), 2);
-                    decimal interestPaid = principal * (rate / 100) * (no);
                     loanView.loan.Add(new LoanDetailView()
                     {
                         LoanId = item.LoanId,
@@ -156,8 +151,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         DueOn = item.EndDate,
                         PayableAmt = item.PrincipalAmt,
                         InterestAmt = (decimal)item.InterestAmt,
-                        lastMonth = item.MonthlyPay,
-                        InstallmentPaid = (DateTime.Now.ToLocalTime().Month - item.StartDate.Month) <= 0 ? 0 : (DateTime.Now.ToLocalTime().Month - item.StartDate.Month),
+                        InstallmentPaid = (DateTime.Now.ToLocalTime().Month - item.StartDate.Month) <= 0 ? 0 : (DateTime.Now.ToLocalTime().Month - item.StartDate.Month)
                     });
                 }
               
@@ -166,12 +160,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 {
                     var m = (Math.Abs(dt.Month - payment.EndDate.Month));
                     var duration = (payment.EndDate.Month - payment.StartDate.Month) - 1;
-                    var r = (decimal)payment.PrincipalAmt - ((payment.MonthlyPay) * duration);
-                    decimal v = ((decimal)(m == 0 ? r : payment.MonthlyPay));
+                    var r = (decimal)payment.PayableAmt - ((payment.MonthlyPay) * duration);
+
                     loanView.payment.Add(new PaymentView()
                     {
-                        month = dt.ToString("MMM"),
-                        amount = v,
+                        month = dt.ToString("dd-MMM-yyyy"),
+                        amount = dt.AddMonths(1) == payment.EndDate ? r : payment.MonthlyPay,
                         InstallmentPaid = ((ISDT.Month - dt.Month) <= 0 ? "Unpaid" : "Paid").ToString() 
                     });
                 }
@@ -222,6 +216,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     decimal u = (decimal)Math.Pow((double)rate + 1, totalMonth);
                     decimal monthlypay = principal * rate * (u / (u - 1));
                     decimal PayableAmt = monthlypay * totalMonth;
+
+                    //if (value.TotalAmount != Math.Round(PayableAmt,2))
+                    //{
+                    //    throw new ArgumentException("Error in calculating");
+                    //}
+
                     var loan = new OrgStaffsLoanDetail()
                     {
                         StartDate = value.StartDate.ToLocalTime(),
@@ -255,6 +255,5 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 }
             }
         }
-
     }
 }

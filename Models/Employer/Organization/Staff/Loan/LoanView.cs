@@ -20,7 +20,6 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Loan
         public string Duration { get; set; }
         public int InstallmentPaid { get; set; }
         public decimal InterestAmt { get; set; }
-        public decimal lastMonth { get; set; }
         public string Interestrate { get; set; }
     }
 

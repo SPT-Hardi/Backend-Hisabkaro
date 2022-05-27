@@ -17,6 +17,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Loan
 
         public string Description { get; set; }
 
-        public string InterestRate { get; set; } 
+        public string InterestRate { get; set; }
+
+        //public decimal? TotalAmount { get; set; }
     }
 }
