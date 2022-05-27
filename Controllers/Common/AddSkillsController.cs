@@ -21,8 +21,8 @@ namespace HIsabKaro.Controllers.Common
         }
 
         [HttpGet]
-        [Route("Search/{keyword}")]
-        public IActionResult Get(string keyword)
+        [Route("Search")]
+        public IActionResult Get([FromQuery]string keyword)
         {
             return Ok(new AddSkills().SearchSkillList(keyword));
         }

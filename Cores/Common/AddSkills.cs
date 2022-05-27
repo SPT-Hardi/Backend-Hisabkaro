@@ -45,7 +45,7 @@ namespace HIsabKaro.Cores.Common
                            {
                                Id=x.LookupId,
                                Text=x.Lookup
-                           }).ToList();
+                           }).ToList().Take(10);
             return new Result()
             {
                 Status = Result.ResultStatus.success,
