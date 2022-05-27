@@ -35,5 +35,24 @@ namespace HIsabKaro.Cores.Common
                 }
             }
         }
+        public Result SearchSkillList(string keyword) 
+        {
+            using (DBContext c = new DBContext())
+            {
+
+                var res = (from x in c.SubLookups where x.LookupTypeId == 58 && x.Lookup.Contains(keyword)
+                           select new IntegerNullString()
+                           {
+                               Id=x.LookupId,
+                               Text=x.Lookup
+                           }).ToList();
+            return new Result()
+            {
+                Status = Result.ResultStatus.success,
+                Message = "Skill list get successfully!",
+                Data =res
+            };
+            }
+        }
     }
 }

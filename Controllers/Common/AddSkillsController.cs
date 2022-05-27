@@ -19,5 +19,12 @@ namespace HIsabKaro.Controllers.Common
         {
             return Ok(new AddSkills().Add(Id,value));
         }
+
+        [HttpGet]
+        [Route("Search/{keyword}")]
+        public IActionResult Get(string keyword)
+        {
+            return Ok(new AddSkills().SearchSkillList(keyword));
+        }
     }
 }
