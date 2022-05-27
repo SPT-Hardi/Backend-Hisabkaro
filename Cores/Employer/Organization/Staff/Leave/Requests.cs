@@ -36,7 +36,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
                     StartDate = value.StartDate,
                     EndDate = value.EndDate,
                     Reason = value.reason,
-                    LeaveStatusId = (int?)LeaveStatus.Pending
+                    LeaveStatusId = (int)LeaveStatus.Pending
                 };
                 c.OrgStaffsLeaveApplications.InsertOnSubmit(request);
                 c.SubmitChanges();

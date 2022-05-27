@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var education = (from obj in value.educationlist
                                      select new EmpResumeEducation()
                                      {
-                                         EducationNameId=obj.EducationName.Id,
+                                         EducationNameId= (int)obj.EducationName.Id,
                                          EducationSteamName=obj.EducationStreamName,
                                          InstituteName=obj.InstituteName,
                                          UId=(int)UID,

@@ -83,7 +83,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 {
                     throw new ArgumentException("Approve days not match with leave duration");
                 }
-                leave.LeaveStatusId = (int?)LeaveStatus.Accepted;
+                leave.LeaveStatusId = (int)LeaveStatus.Accepted;
                 leave.PaidDays = (value.Paid == null ? 0 : value.Paid);
                 leave.UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid);
                 leave.URId = (int)URId;
@@ -112,7 +112,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 }
 
                 var leave = c.OrgStaffsLeaveApplications.SingleOrDefault(x => x.OrgStaffLeaveId == leaveId
-                                                                          && x.SubUserOrganisation_URId.OId == user.OId);
+                                                                          && x.SubUserOrganisation_StaffURId.OId == user.OId);
                 if (leave == null)
                 {
                     throw new ArgumentException("Data not found!!");
@@ -123,7 +123,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                leave.LeaveStatusId = (int?)LeaveStatus.Reject;
+                leave.LeaveStatusId = (int)LeaveStatus.Reject;
                 leave.PaidDays = 0;
                 leave.UnPaidDays = 0;
                 leave.URId = (int)URId;

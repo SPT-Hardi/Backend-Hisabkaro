@@ -11,12 +11,12 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Loan
 
         public DateTime EndDate { get; set; }
 
-        public decimal Amount { get; set; }
+        public decimal PrincipalAmount { get; set; }
 
         public decimal? Monthlypay { get; set; }
 
         public string Description { get; set; }
 
-        public Models.Common.IntegerNullString Interest { get; set; } = new Common.IntegerNullString();
+        public string InterestRate { get; set; } 
     }
 }
