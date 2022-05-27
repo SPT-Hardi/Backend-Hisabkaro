@@ -100,6 +100,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 
                 var loan = (from x in c.OrgStaffsLoanDetails
                             where x.SubUserOrganisation_URId.OId == user.OId
+                            orderby x.LoanId descending
                             select new
                             {
                                 LoanId = x.LoanId,
@@ -153,8 +154,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                         Duration = item.Duration,
                         Interestrate = item.InterestRate.ToString(),
                         DueOn = item.EndDate,
-                        PrincipalAmount = item.PrincipalAmt,
-                        Interest = interestPaid,
+                        PayableAmt = item.PrincipalAmt,
+                        InterestAmt = (decimal)item.InterestAmt,
                         lastMonth = item.MonthlyPay,
                         InstallmentPaid = (DateTime.Now.ToLocalTime().Month - item.StartDate.Month) <= 0 ? 0 : (DateTime.Now.ToLocalTime().Month - item.StartDate.Month),
                     });
