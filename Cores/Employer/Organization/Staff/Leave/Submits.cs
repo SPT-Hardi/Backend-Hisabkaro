@@ -52,7 +52,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                     };
                     var duration = request.EndDate.Subtract(request.StartDate).Days + 1;
                     var total = request.PaidDays + request.UnPaidDays;
-                    if (total > duration || total < duration)
+                    if (total > duration)
                     {
                         throw new ArgumentException("Approve days not match with leave duration");
                     }
