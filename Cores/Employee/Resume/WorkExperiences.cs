@@ -26,7 +26,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                           {
                                               UId=(int)UID,
                                               StartDate=obj.StartDate,
-                                              EndDate=obj.EndDate,
+                                              EndDate=(obj.EndDate < obj.StartDate)? throw new ArgumentException($"Enter valid daterange for jobtitle:{obj.JobTitle}"):obj.EndDate,
                                               JobTitle=obj.JobTitle,
                                               OrganizationName=obj.OrganizationName,
                                               WorkFrom=obj.WorkFrom,

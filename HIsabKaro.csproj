@@ -38,13 +38,17 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<None Remove="assets\styles.css" />
 		<None Remove="libwkhtmltox.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="libwkhtmltox.dll">
+		<Content Include="assets\styles.css">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="libwkhtmltox.dll">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</EmbeddedResource>
+		</Content>
 	</ItemGroup>
 	
   <ItemGroup>

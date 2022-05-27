@@ -110,6 +110,9 @@ namespace HIsabKaro
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<Services.ResumePDF.HTMLString>();
             services.AddTransient<CustomAssemblyLoadContext>();
+            var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+
             //---------------------------------------------------------------------------------//
             services.AddControllers();
             services.AddAuthentication(option =>

@@ -14,12 +14,12 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Loan
     public class LoanDetailView
     {
         public int LoanId { get; set; }
-        public decimal PrincipalAmount { get; set; }
+        public decimal PayableAmt { get; set; }
         public DateTime DueOn { get; set; }
         public decimal LoanAmount { get; set; }
         public string Duration { get; set; }
         public int InstallmentPaid { get; set; }
-        public decimal Interest { get; set; }
+        public decimal InterestAmt { get; set; }
         public decimal lastMonth { get; set; }
         public string Interestrate { get; set; }
     }

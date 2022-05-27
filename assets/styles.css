@@ -1,22 +1,115 @@
-﻿.header {
-    text-align: center;
-    color: green;
-    padding-bottom: 35px;
+﻿* {
+    max-width: 700px;
+    margin: auto;
 }
 
-table {
-    width: 80%;
-    border-collapse: collapse;
+
+body {
+    min-width: 500px;
+    font-family: 'Calibri';
 }
 
-td, th {
-    border: 1px solid gray;
-    padding: 15px;
-    font-size: 22px;
-    text-align: center;
+div {
+    border-radius: 5px;
 }
 
-table th {
-    background-color: green;
-    color: white;
+#header {
+    height: 40px;
+    width: 100%;
+    background-color: rgba(99, 126, 183, 1);
+    position: fixed;
+    z-index: 1;
+}
+
+#title {
+    margin-left: 3%;
+}
+
+#footer {
+    height: 40px;
+    width: 100%;
+    background-color: rgba(99, 126, 183, 1);
+    clear: both;
+    position: relative;
+}
+
+.left {
+    height: 1000px;
+    width: 45px;
+    background-color: red;
+    float: left;
+    position: fixed;
+}
+
+.right {
+    height: 1000px;
+    width: 45px;
+    background-color: red;
+    float: right;
+    position: inherit;
+}
+
+.stuff {
+    display: inline-block;
+    margin-top: 6px;
+    margin-left: 55px;
+    width: 75%;
+    height: 1000px;
+}
+
+.about {
+    font-size: 24px;
+}
+
+h2 {
+    color: #000; /* Fallback for older browsers */
+    color: rgba(0, 0, 0, 0.5);
+    display: inline-block;
+    margin-top: 4px;
+    width: 100%;
+    font-size: 32px;
+}
+
+li {
+    margin-top: 4px;
+    list-style-type: circle;
+    font-size: 24px;
+}
+
+.head {
+    font-size: 24px;
+}
+
+.title {
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+#name {
+    font-family: Sacramento;
+    float: right;
+    margin-top: 10px;
+    margin-right: 4%;
+}
+
+h3 {
+    margin-top: 4px;
+    font-size: 24px;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 430px) {
+    .left,
+    .right {
+        display: none;
+    }
+
+    .stuff {
+        width: 100%;
+        margin-left: 10px;
+    }
 }

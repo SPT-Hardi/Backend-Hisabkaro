@@ -39,11 +39,11 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var education = (from obj in value.educationlist
                                      select new EmpResumeEducation()
                                      {
-                                         EducationNameId=obj.EducationName.Id,
+                                         EducationNameId=(int)obj.EducationName.Id,
                                          EducationSteamName=obj.EducationStreamName,
                                          InstituteName=obj.InstituteName,
                                          UId=(int)UID,
-                                         StartDate=obj.StartDate,
+                                         StartDate=(obj.EndDate<obj.StartDate)?throw new ArgumentException($"Enter valid daterange for education:{obj.EducationName}"):obj.StartDate,
                                          EndDate=obj.EndDate,
                                      }).ToList();
                     c.EmpResumeEducations.InsertAllOnSubmit(education);

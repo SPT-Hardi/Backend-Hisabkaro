@@ -11,76 +11,76 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 {
     public class LoanDetails
     {
-        public Result Create(object URId,int StaffId,Models.Employer.Organization.Staff.Loan.LoanDetail value)
-        {
-            using(TransactionScope scope = new TransactionScope())
-            {
-                using (DBContext c = new DBContext())
-                {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId ==(int)URId);
-                    if(user == null)
-                    {
-                        throw new ArgumentException("User Doesn't exist");
-                    }
+        //public Result Create(object URId,int StaffId,Models.Employer.Organization.Staff.Loan.LoanDetail value)
+        //{
+        //    using(TransactionScope scope = new TransactionScope())
+        //    {
+        //        using (DBContext c = new DBContext())
+        //        {
+        //            var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId ==(int)URId);
+        //            if(user == null)
+        //            {
+        //                throw new ArgumentException("User Doesn't exist");
+        //            }
 
-                    var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId);
-                    if (staff == null)
-                    {
-                        throw new ArgumentException("Staff Doesn't exist");
-                    }
+        //            var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId);
+        //            if (staff == null)
+        //            {
+        //                throw new ArgumentException("Staff Doesn't exist");
+        //            }
 
-                    if (value.StartDate > value.EndDate)
-                    {
-                        throw new ArgumentException("Start Date Can't be After End Date.");
-                    }
+        //            if (value.StartDate > value.EndDate)
+        //            {
+        //                throw new ArgumentException("Start Date Can't be After End Date.");
+        //            }
 
-                    var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == staff.URId);
-                    if (org_staff == null)
-                    {
-                        throw new ArgumentException("Staff Doesn't exist in org");
-                    }
+        //            var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == staff.URId);
+        //            if (org_staff == null)
+        //            {
+        //                throw new ArgumentException("Staff Doesn't exist in org");
+        //            }
 
-                    int totalMonth = 12 * (value.StartDate.Year - value.EndDate.Year) + value.StartDate.Month - value.EndDate.Month;
-                    int month = (Math.Abs(totalMonth));
-                    var t = (month / 12)  == 0 ? 0 : (month / 12);
-                    decimal principal = value.Amount;
-                    decimal rate = decimal.Parse(value.Interest.Text);
-                    double no = Math.Round(((float)month / 12), 2);
-                    decimal interestPaid = principal * (rate / 100) * Convert.ToDecimal(no);
-                    decimal PrincipalAmt = principal + interestPaid;
-                    decimal monthlypay = PrincipalAmt / month;
-                    var loan = new OrgStaffsLoanDetail()
-                    {
-                        StartDate = value.StartDate.ToLocalTime(),
-                        EndDate = value.EndDate.ToLocalTime(),
-                        Amount = value.Amount,
-                        Duration = (t == 0 ? $"{(month % 12)}month" : $"{(month / 12)}year{(month % 12)}month"),
-                        MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
-                        Description = value.Description,
-                        URId = (int)URId,
-                        StaffURId = staff.URId,
-                        InterestId = (int)value.Interest.Id,
-                        PrincipalAmt = PrincipalAmt,
-                        RemainingAmt = PrincipalAmt,
-                        IsLoanPending = true
-                    };
-                    c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
-                    c.SubmitChanges();
-                    var name = staff.SubUser.SubUsersDetail.FullName;
-                    scope.Complete();
-                    return new Result()
-                    {
-                        Status = Result.ResultStatus.success,
-                        Message = "Loan details added successfully!",
-                        Data = new
-                        {
-                            Id = loan.LoanId,
-                            Name = name
-                        },
-                    };
-                }
-            }
-        }
+        //            int totalMonth = 12 * (value.StartDate.Year - value.EndDate.Year) + value.StartDate.Month - value.EndDate.Month;
+        //            int month = (Math.Abs(totalMonth));
+        //            var t = (month / 12)  == 0 ? 0 : (month / 12);
+        //            decimal principal = value.Amount;
+        //            decimal rate = decimal.Parse(value.Interest.Text) / 12;
+        //            double no = Math.Round(((float)month / 12), 2);
+        //            decimal interestPaid = principal * (rate / 100) * month;//* Convert.ToDecimal(no);
+        //            decimal PrincipalAmt = principal + interestPaid;
+        //            decimal monthlypay = PrincipalAmt / month;
+        //            var loan = new OrgStaffsLoanDetail()
+        //            {
+        //                StartDate = value.StartDate.ToLocalTime(),
+        //                EndDate = value.EndDate.ToLocalTime(),
+        //                Amount = value.Amount,
+        //                Duration = (t == 0 ? $"{(month % 12)}month" : $"{(month / 12)}year{(month % 12)}month"),
+        //                MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
+        //                Description = value.Description,
+        //                URId = (int)URId,
+        //                StaffURId = staff.URId,
+        //                InterestId = (int)value.Interest.Id,
+        //                PrincipalAmt = PrincipalAmt,
+        //                RemainingAmt = PrincipalAmt,
+        //                IsLoanPending = true
+        //            };
+        //            c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
+        //            c.SubmitChanges();
+        //            var name = staff.SubUser.SubUsersDetail.FullName;
+        //            scope.Complete();
+        //            return new Result()
+        //            {
+        //                Status = Result.ResultStatus.success,
+        //                Message = "Loan details added successfully!",
+        //                Data = new
+        //                {
+        //                    Id = loan.LoanId,
+        //                    Name = name
+        //                },
+        //            };
+        //        }
+        //    }
+        //}
 
         public Result GetOrgLoan(object URId)
         {
@@ -100,6 +100,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 
                 var loan = (from x in c.OrgStaffsLoanDetails
                             where x.SubUserOrganisation_URId.OId == user.OId
+                            orderby x.LoanId descending
                             select new
                             {
                                 LoanId = x.LoanId,
@@ -142,19 +143,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 {
                     int totalMonth = 12 * (item.StartDate.Year - item.EndDate.Year) + item.StartDate.Month - item.EndDate.Month;
                     int month = (Math.Abs(totalMonth));
-                    decimal principal = item.Amount;
-                    decimal rate = decimal.Parse(item.SubFixedLookup.FixedLookup);
+                    decimal principal = item.PrincipalAmt;
+                    decimal rate = (decimal)item.InterestRate;
                     decimal no = (decimal)Math.Round(((float)month / 12), 2);
                     decimal interestPaid = principal * (rate / 100) * (no);
                     loanView.loan.Add(new LoanDetailView()
                     {
                         LoanId = item.LoanId,
-                        LoanAmount = item.Amount,
+                        LoanAmount = item.PrincipalAmt,
                         Duration = item.Duration,
-                        Interestrate = item.SubFixedLookup.FixedLookup,
+                        Interestrate = item.InterestRate.ToString(),
                         DueOn = item.EndDate,
-                        PrincipalAmount = item.PrincipalAmt,
-                        Interest = interestPaid,
+                        PayableAmt = item.PrincipalAmt,
+                        InterestAmt = (decimal)item.InterestAmt,
                         lastMonth = item.MonthlyPay,
                         InstallmentPaid = (DateTime.Now.ToLocalTime().Month - item.StartDate.Month) <= 0 ? 0 : (DateTime.Now.ToLocalTime().Month - item.StartDate.Month),
                     });
@@ -183,6 +184,77 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 };
             }
         }
-        
+
+        public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Loan.LoanDetail value)
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
+                    if (user == null)
+                    {
+                        throw new ArgumentException("User Doesn't exist");
+                    }
+
+                    var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId);
+                    if (staff == null)
+                    {
+                        throw new ArgumentException("Staff Doesn't exist");
+                    }
+
+                    if (value.StartDate > value.EndDate)
+                    {
+                        throw new ArgumentException("Start Date Can't be After End Date.");
+                    }
+
+                    var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == staff.URId);
+                    if (org_staff == null)
+                    {
+                        throw new ArgumentException("Staff Doesn't exist in org");
+                    }
+
+                    
+                    int totalMonth = Math.Abs(12 *(value.StartDate.Year - value.EndDate.Year) + value.StartDate.Month - value.EndDate.Month);
+                    var t = (totalMonth / 12) == 0 ? 0 : (totalMonth / 12);
+                    decimal principal = value.PrincipalAmount;
+                    decimal rate = decimal.Parse(value.InterestRate) / 12 / 100;
+                    decimal u = (decimal)Math.Pow((double)rate + 1, totalMonth);
+                    decimal monthlypay = principal * rate * (u / (u - 1));
+                    decimal PayableAmt = monthlypay * totalMonth;
+                    var loan = new OrgStaffsLoanDetail()
+                    {
+                        StartDate = value.StartDate.ToLocalTime(),
+                        EndDate = value.EndDate.ToLocalTime(),
+                        PrincipalAmt  = value.PrincipalAmount,
+                        Duration = (t == 0 ? $"{(totalMonth % 12)}month" : $"{(totalMonth / 12)}year{(totalMonth % 12)}month"),
+                        MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
+                        Description = value.Description,
+                        URId = (int)URId,
+                        StaffURId = staff.URId,
+                        InterestRate = (int?)decimal.Parse(value.InterestRate),
+                        InterestAmt = PayableAmt - principal,
+                        PayableAmt = PayableAmt,
+                        RemainingAmt = PayableAmt,
+                        IsLoanPending = true
+                    };
+                    c.OrgStaffsLoanDetails.InsertOnSubmit(loan);
+                    c.SubmitChanges();
+                    var name = staff.SubUser.SubUsersDetail.FullName;
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "Loan details added successfully!",
+                        Data = new
+                        {
+                            Id = loan.LoanId,
+                            Name = name
+                        },
+                    };
+                }
+            }
+        }
+
     }
 }
