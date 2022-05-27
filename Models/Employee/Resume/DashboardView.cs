@@ -8,6 +8,7 @@ namespace HIsabKaro.Models.Employee.Resume
 {
     public class DashboardView
     {
+        public int UId { get; set; }
         public About about { get; set; } = new About();
         public List<ViewExperience> experiences { get; set; } = new List<ViewExperience>();
         public List<EduDetail> educations { get; set; } = new List<EduDetail>();

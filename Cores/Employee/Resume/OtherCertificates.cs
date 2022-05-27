@@ -29,7 +29,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                             {
                                                 UId=(int)UID,
                                                 CertificateName=obj.CertificateName,
-                                                StartDate=obj.StartDate,
+                                                StartDate=(obj.EndDate<obj.StartDate)?throw new ArgumentException($"Enter valid daterange for certificate:{obj.CertificateName}") :obj.StartDate,
                                                 EndDate=obj.EndDate,
                                                 
                                             }).ToList();

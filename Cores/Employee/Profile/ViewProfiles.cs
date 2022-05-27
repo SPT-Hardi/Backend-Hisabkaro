@@ -84,15 +84,15 @@ namespace HIsabKaro.Cores.Employee.Profile
                 var experiencelist = c.EmpResumeWorkExperiences.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in experiencelist)
                 {
-                    var totaldays = (item.EndDate - item.StartDate).Value.TotalDays;
+                    var totaldays = (item.EndDate - item.StartDate).TotalDays;
                     var totalmonths = Math.Floor(totaldays / 30);
                     userprofile.experiences.Add(new ViewExperience()
                     {
                         EmpResumeWorkExperienceId = item.EmpResumeWorkExperienceId,
                         JobTitle = item.JobTitle,
                         OrganizationName = item.OrganizationName,
-                        StartDate = $"{item.StartDate.Value.ToString("MMMM").Substring(0, 3)} {item.StartDate.Value.Year}",
-                        EndDate = $"{item.EndDate.Value.ToString("MMMM").Substring(0, 3)} {item.EndDate.Value.Year}",
+                        StartDate = $"{item.StartDate.ToString("MMMM").Substring(0, 3)} {item.StartDate.Year}",
+                        EndDate = $"{item.EndDate.ToString("MMMM").Substring(0, 3)} {item.EndDate.Year}",
                         TotalDuration = $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mon",
                         WorkFrom = item.WorkFrom,
                     });
@@ -127,7 +127,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                 var certificates = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UserId).ToList();
                 foreach (var item in certificates) 
                 {
-                    var totaldays = (item.EndDate - item.StartDate).Value.TotalDays;
+                    var totaldays = (item.EndDate - item.StartDate).TotalDays;
                     var totalmonths = Math.Floor(totaldays / 30);
                     userprofile.otherCertificates.Add(new ViewOtherCertificate()
                     {
@@ -150,6 +150,7 @@ namespace HIsabKaro.Cores.Employee.Profile
 
                                }).SingleOrDefault();
                 userprofile.contact = contact;
+                userprofile.UId = (int)UserId;
               
                 return new Result()
                 {
