@@ -23,9 +23,9 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
             var Ids = HttpContext.Items["Ids"];
             //int URId = 10000024;
             new HaveAuthority().AccessStaff(Ids);
-            {
-                  return Ok(new Statistics().Get(URId,date));
-            }
+            
+            return Ok(new Statistics().Get(URId,date));
+            
         }
     }
 }
