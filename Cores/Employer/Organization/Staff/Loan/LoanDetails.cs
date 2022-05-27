@@ -53,7 +53,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     {
                         StartDate = value.StartDate.ToLocalTime(),
                         EndDate = value.EndDate.ToLocalTime(),
-                        Amount = value.Amount,
+                        //Amount = value.Amount,
                         Duration = (t == 0 ? $"{(month % 12)}month" : $"{(month / 12)}year{(month % 12)}month"),
                         MonthlyPay = (decimal)(value.Monthlypay == null ? (decimal)monthlypay : value.Monthlypay),
                         Description = value.Description,
@@ -142,7 +142,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 {
                     int totalMonth = 12 * (item.StartDate.Year - item.EndDate.Year) + item.StartDate.Month - item.EndDate.Month;
                     int month = (Math.Abs(totalMonth));
-                    decimal principal = item.Amount;
+                    //decimal principal = item.Amount;
                     decimal rate = decimal.Parse(item.SubFixedLookup.FixedLookup);
                     decimal no = (decimal)Math.Round(((float)month / 12), 2);
                     decimal interestPaid = principal * (rate / 100) * (no);
