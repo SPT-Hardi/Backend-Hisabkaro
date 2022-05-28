@@ -129,9 +129,9 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                         overTime.Add(new OverTime() { 
                             Time=x.OverTime,
                             Date=x.OverTimeDate,
-                            CheckIn=Attendance.ChekIN == null ? null : Attendance.ChekIN.Value,
-                            CheckOut=Attendance.CheckOUT == null ? null : Attendance.CheckOUT.Value,
-                            Hours = Attendance.CheckOUT == null  ? "0" : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.Value.TimeOfDay).ToString(),
+                            CheckIn=Attendance == null ? null :(Attendance.ChekIN == null ? null : Attendance.ChekIN.Value),
+                            CheckOut= Attendance == null ? null : (Attendance.CheckOUT == null ? null : Attendance.CheckOUT.Value),
+                            Hours = Attendance == null ? null : (Attendance.CheckOUT == null  ? null : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.Value.TimeOfDay).ToString()),
                         });
                     });
                    
