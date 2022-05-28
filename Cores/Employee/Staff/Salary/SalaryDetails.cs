@@ -124,14 +124,14 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                     OverTime.ForEach((x) => {
                         var Attendance = (from y in c.OrgStaffsAttendancesDailies
                                           where y.ChekIN.Value.Date == x.OverTimeDate && y.URId == _URId.URId
-                                          select new { y.ChekIN, y.CheckOUT }).FirstOrDefault();
+                                          select new { ChekIN=y.ChekIN, CheckOUT= y.CheckOUT }).FirstOrDefault();
 
                         overTime.Add(new OverTime() { 
                             Time=x.OverTime,
                             Date=x.OverTimeDate,
-                            CheckIn=Attendance.ChekIN.Value,
-                            CheckOut=Attendance.CheckOUT.Value,
-                            Hours = Attendance.CheckOUT == null ? null : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.Value.TimeOfDay).ToString(),
+                            CheckIn=Attendance.ChekIN == null ? null : Attendance.ChekIN.Value,
+                            CheckOut=Attendance.CheckOUT == null ? null : Attendance.CheckOUT.Value,
+                            Hours = Attendance.CheckOUT == null  ? "0" : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.Value.TimeOfDay).ToString(),
                         });
                     });
                    
