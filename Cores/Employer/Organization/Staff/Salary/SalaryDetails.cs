@@ -362,10 +362,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                   select new { Id= x.URId }).ToList().Except(_StaffSalary);
                     var _s = (from x in _Staff
                               select new { x.Id}).ToList();
-
-                    var hr = new HistoryByMonths().Get(URId, 10000062, ISDT.AddMonths(-1));
-                                                                        
-
+                    
                     _s.ForEach((x) => {
                         var _Salary = One(_URId.URId, x.Id);
                         
