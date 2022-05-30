@@ -22,6 +22,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     int latecount = 0;
                     
                     var attendancelist = new List<Models.Employer.Organization.Staff.Attendance.AttendanceList>();
+                    var statistics = new Models.Employer.Organization.Staff.Attendance.Statistic();
                     var findorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
 
 //------------------------------------------------------------------------------------------------------//
@@ -36,117 +37,130 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         throw new ArgumentException("Organization not exist,(enter valid token)");
                     }
                     var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
-                    if (findstaffroleid == null)
+                    if (findstaffroleid != null)
                     {
-                        throw new ArgumentException("Currently no staff in your organization!");
-                    }
-                    var totalemp = (from obj in c.DevOrganisationsStaffs
-                                    where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId && obj.CreateDate<= date.Date
-                                    select obj).ToList();
-                    var presentlist = (from obj in c.DevOrganisationsStaffs
-                                       join obj1 in c.OrgStaffsAttendancesDailies
-                                       on obj.URId equals obj1.URId
-                                       where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && obj.CreateDate<=date.Date
-                                       select new
-                                       {
-                                           URId = obj1.URId,
-                                           CheckIN = obj1.ChekIN,
-                                           CheckOUT = obj1.CheckOUT,
-                                           IsOvertime=obj1.IsOvertime,
-                                           Lateby= obj1.Lateby,
-                                           MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
-                                           Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
-                                           ImagePath = obj1.PhotoFileId==null ? (obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID) : obj1.CommonFile.FGUID,
-                                       }).ToList();
-                    //var absentlist = (from obj in totalemp
-                    //                  join obj1 in presentlist
-                    //                  on obj.URId equals obj1.URId
-                    //                  where obj.URId != obj1.URId || obj1.URId == null
-                    //                  select new
-                    //                  {
-                    //                      URId = obj.URId,
-                    //                      CheckIN = new TimeSpan(),
-                    //                      CheckOUT = new TimeSpan(),
-                    //                      Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
-                    //                      ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
-                    //
-                    //                  }).ToList();
-                    var absentlist = (from obj in totalemp
-                                      where !presentlist.Any(x => x.URId == obj.URId)
-                                      select new 
-                                      {
-                                          URId = obj.URId,
-                                          CheckIN = new TimeSpan(),
-                                          CheckOUT = new TimeSpan(),
-                                          Name = obj.NickName,
-                                          ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
-                                          WeekoffoneDay=(obj.WeekOffOneDay==null) ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()==date.DayOfWeek.ToString().ToLower(),
-                                          WeekoffsecondDay=(obj.WeekOffSecondDay==null) ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()==date.DayOfWeek.ToString().ToLower(),
-                                      }).ToList();
-                    /* var overtime = (from obj in c.DevOrganisationsStaffs
-                                     join obj1 in c.OrgStaffsAttendancesDailies
-                                     on obj.URId equals obj1.URId
-                                     where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && ((obj.WeekOffOneDay == null ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()) || (obj.WeekOffSecondDay == null ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()))
-                                     select obj).ToList();
-                     var overtimecount = overtime.Count();*/
-                    var overtimelist = (from x in presentlist where x.IsOvertime == true select x).ToList();
-                    var weekofflist = (from obj in absentlist
-                                       where (obj.WeekoffoneDay || obj.WeekoffsecondDay)==true
-                                       select obj
-                                     ).ToList();
-                    foreach (var item in presentlist)
-                    {
-                        
-                        //var today = date.ToString("dd/MM/yyyy");
-                        presentcount += 1;
+                        //throw new ArgumentException("Currently no staff in your organization!");
 
-                        if (item.Lateby !=null)
+
+                        var totalemp = (from obj in c.DevOrganisationsStaffs
+                                        where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId && obj.CreateDate <= date.Date
+                                        select obj).ToList();
+                        var presentlist = (from obj in c.DevOrganisationsStaffs
+                                           join obj1 in c.OrgStaffsAttendancesDailies
+                                           on obj.URId equals obj1.URId
+                                           where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && obj.CreateDate <= date.Date
+                                           select new
+                                           {
+                                               URId = obj1.URId,
+                                               CheckIN = obj1.ChekIN,
+                                               CheckOUT = obj1.CheckOUT,
+                                               IsOvertime = obj1.IsOvertime,
+                                               Lateby = obj1.Lateby,
+                                               MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
+                                               Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                                               ImagePath = obj1.PhotoFileId == null ? (obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID) : obj1.CommonFile.FGUID,
+                                           }).ToList();
+                        //var absentlist = (from obj in totalemp
+                        //                  join obj1 in presentlist
+                        //                  on obj.URId equals obj1.URId
+                        //                  where obj.URId != obj1.URId || obj1.URId == null
+                        //                  select new
+                        //                  {
+                        //                      URId = obj.URId,
+                        //                      CheckIN = new TimeSpan(),
+                        //                      CheckOUT = new TimeSpan(),
+                        //                      Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
+                        //                      ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                        //
+                        //                  }).ToList();
+                        var absentlist = (from obj in totalemp
+                                          where !presentlist.Any(x => x.URId == obj.URId)
+                                          select new
+                                          {
+                                              URId = obj.URId,
+                                              CheckIN = new TimeSpan(),
+                                              CheckOUT = new TimeSpan(),
+                                              Name = obj.NickName,
+                                              ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
+                                              WeekoffoneDay = (obj.WeekOffOneDay == null) ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower(),
+                                              WeekoffsecondDay = (obj.WeekOffSecondDay == null) ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower(),
+                                          }).ToList();
+                        /* var overtime = (from obj in c.DevOrganisationsStaffs
+                                         join obj1 in c.OrgStaffsAttendancesDailies
+                                         on obj.URId equals obj1.URId
+                                         where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && ((obj.WeekOffOneDay == null ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()) || (obj.WeekOffSecondDay == null ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()))
+                                         select obj).ToList();
+                         var overtimecount = overtime.Count();*/
+                        var overtimelist = (from x in presentlist where x.IsOvertime == true select x).ToList();
+                        var weekofflist = (from obj in absentlist
+                                           where (obj.WeekoffoneDay || obj.WeekoffsecondDay) == true
+                                           select obj
+                                         ).ToList();
+                        foreach (var item in presentlist)
                         {
-                            latecount += 1;
+
+                            //var today = date.ToString("dd/MM/yyyy");
+                            presentcount += 1;
+
+                            if (item.Lateby != null)
+                            {
+                                latecount += 1;
+                            }
+
+                            attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
+                            {
+                                URId = (int)item.URId,
+                                AttendanceDate = date.Date,
+                                CheckIN = item.CheckIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                CheckOUT = item.CheckOUT == null ? null : item.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                Status = item.IsOvertime == true ? "Overtime" : "Present",
+                                LateBy = item.Lateby == null ? null : item.Lateby.Value.ToString(@"hh\:mm"),
+                                Name = item.Name,
+                                ImagePath = item.ImagePath,
+                            });
+
                         }
-                        
-                        attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
+                        foreach (var item in absentlist)
                         {
-                            URId = (int)item.URId,
-                            AttendanceDate = date.Date,
-                            CheckIN = item.CheckIN.Value.TimeOfDay.ToString(@"hh\:mm"),
-                            CheckOUT = item.CheckOUT == null ? null : item.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                            Status = item.IsOvertime==true ? "Overtime" : "Present",
-                            LateBy = item.Lateby==null ? null : item.Lateby.Value.ToString(@"hh\:mm"),
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                        });
+                            var lateby = new TimeSpan();
+                            //var today = date.ToString("dd/MM/yyyy");
 
-                    }
-                    foreach (var item in absentlist)
-                    {
-                        var lateby = new TimeSpan();
-                        //var today = date.ToString("dd/MM/yyyy");
-                        
-                        attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
-                        {
-                            URId = (int)item.URId,
-                            AttendanceDate = date.Date,
-                            CheckIN = item.CheckIN.ToString(@"hh\:mm"),
-                            CheckOUT = item.CheckOUT.ToString(@"hh\:mm"),
-                            Status = (item.WeekoffoneDay || item.WeekoffsecondDay) ? "WeekOff" : "Absent",
-                            LateBy = lateby.ToString(@"hh\:mm"),
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                        });
+                            attendancelist.Add(new Models.Employer.Organization.Staff.Attendance.AttendanceList()
+                            {
+                                URId = (int)item.URId,
+                                AttendanceDate = date.Date,
+                                CheckIN = item.CheckIN.ToString(@"hh\:mm"),
+                                CheckOUT = item.CheckOUT.ToString(@"hh\:mm"),
+                                Status = (item.WeekoffoneDay || item.WeekoffsecondDay) ? "WeekOff" : "Absent",
+                                LateBy = lateby.ToString(@"hh\:mm"),
+                                Name = item.Name,
+                                ImagePath = item.ImagePath,
+                            });
 
+
+                        }
+
+                        statistics.Organization = new IntegerNullString() { Id = findorg.OId, Text = findorg.DevOrganisation.OrganisationName };
+                        statistics.TotalEmployee = totalemp.Count();
+                        statistics.Present = presentlist.Count();
+                        statistics.Absent = absentlist.Count() - weekofflist.Count();
+                        statistics.Late = latecount;
+                        statistics.WeeklyOff = weekofflist.Count();
+                        statistics.Overtime = overtimelist.Count();
                         
                     }
-                    var statistics = new Models.Employer.Organization.Staff.Attendance.Statistic()
+                    else 
                     {
-                        Organization = new IntegerNullString() { Id = findorg.OId, Text = findorg.DevOrganisation.OrganisationName },
-                        TotalEmployee = totalemp.Count(),
-                        Present = presentlist.Count(),
-                        Absent = absentlist.Count()-weekofflist.Count(),
-                        Late = latecount,
-                        WeeklyOff = weekofflist.Count(),
-                        Overtime = overtimelist.Count(),
-                    };
+                       
+                        statistics.Organization = new IntegerNullString() { Id = findorg.OId, Text = findorg.DevOrganisation.OrganisationName };
+                        statistics.TotalEmployee = 0;
+                        statistics.Present = 0;
+                        statistics.Absent = 0;
+                        statistics.Late = 0;
+                        statistics.WeeklyOff = 0;
+                        statistics.Overtime = 0;
+
+                    }
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
