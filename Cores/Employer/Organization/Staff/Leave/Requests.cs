@@ -10,7 +10,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Leave
 {
     public class Requests
     {
-        public Result Create(object URId, Models.Employer.Organization.Staff.Leave.Request value)
+        public Result Create(object URId,Request value)
         {
             using(DBContext c = new DBContext())
             {
