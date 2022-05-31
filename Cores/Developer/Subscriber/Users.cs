@@ -112,7 +112,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 var qs = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId == usersigninrole.UId).SingleOrDefault();
                 if (qs == null)
                 {
-                    throw new ArgumentException("User not exist,enter valid token!");
+                    throw new ArgumentException("Devicetoken not match!");
                 }
                 else if (qs.OTP != value.OTP)
                 {
