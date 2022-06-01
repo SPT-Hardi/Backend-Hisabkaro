@@ -144,7 +144,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     var _Sid = (from x in c.DevOrganisationsStaffs
                               where x.OId == _OId.OId
                               select x).Max(x => x.SId);
-                    var i = _Sid;
+
                     if (_Sid == null)
                     {
                         _Sid = 1;
@@ -153,7 +153,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     {
                         _Sid += 1;
                     }
-                    var id = _Sid;
 
                     var staff = new DevOrganisationsStaff()
                     {

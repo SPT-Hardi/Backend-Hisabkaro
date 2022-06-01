@@ -111,6 +111,7 @@ namespace HIsabKaro
             services.AddTransient<Services.ResumePDF.HTMLString>();
             services.AddTransient<CustomAssemblyLoadContext>();
             var context = new CustomAssemblyLoadContext();
+
             context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
 
             //---------------------------------------------------------------------------------//
