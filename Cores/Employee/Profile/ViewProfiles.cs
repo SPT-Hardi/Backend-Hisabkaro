@@ -91,8 +91,8 @@ namespace HIsabKaro.Cores.Employee.Profile
                         EmpResumeWorkExperienceId = item.EmpResumeWorkExperienceId,
                         JobTitle = item.JobTitle,
                         OrganizationName = item.OrganizationName,
-                        StartDate = $"{item.StartDate.ToString("MMMM").Substring(0, 3)} {item.StartDate.Year}",
-                        EndDate = $"{item.EndDate.ToString("MMMM").Substring(0, 3)} {item.EndDate.Year}",
+                        StartDate =item.StartDate, //$"{item.StartDate.ToString("MMMM").Substring(0, 3)} {item.StartDate.Year}",
+                        EndDate = item.EndDate,//$"{item.EndDate.ToString("MMMM").Substring(0, 3)} {item.EndDate.Year}",
                         TotalDuration = $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mon",
                         WorkFrom = item.WorkFrom,
                     });

@@ -16,6 +16,7 @@ namespace HIsabKaro.Models.Developer.Subscriber
 
     public class UserPersonalDetails
     {
+        
         public string ProfilePhotoFGUID { get; set; }
 
         [Required(ErrorMessage = "Fullname is required!")]

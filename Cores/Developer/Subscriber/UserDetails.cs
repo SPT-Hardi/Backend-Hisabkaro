@@ -1,5 +1,6 @@
 ﻿using HIsabKaro.Cores.Common;
 using HIsabKaro.Models.Common;
+using HIsabKaro.Models.Developer.Subscriber;
 using HIsabKaro.Services;
 using HisabKaroContext;
 using Microsoft.AspNetCore.Hosting;
@@ -65,7 +66,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     SubUsersDetail udetails = new SubUsersDetail();
                     udetails.AMobileNumber = value.userdetails.AMobileNumber;
                     udetails.Email = value.userdetails.Email;
-                    udetails.FileId = file==null ? null : file.FileId;
+                    udetails.FileId = file == null ? null : file.FileId;
                     udetails.FullName = value.userdetails.FullName;
                     udetails.UId = (int)UID;
                     Claims claims = new Claims(_configuration, _tokenServices);
@@ -93,8 +94,67 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 }
             }
         }
-       
-        
+
+        public Result Get(object UID) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                if (UID == null) 
+                {
+                    throw new ArgumentException("Token is not valid or expired!");
+                }
+                var res = (from x in c.SubUsersDetails
+                           where x.UId == (int)UID
+                           select new UserPersonalDetails()
+                           {
+                              FullName=x.FullName,
+                              Email=x.Email,
+                              MobileNumber=x.SubUser.MobileNumber,
+                              AMobileNumber=x.AMobileNumber,
+                              ProfilePhotoFGUID = x.FileId==null ? null :x.CommonFile.FGUID,
+                           }).FirstOrDefault();
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "UserDetails get successfully!",
+                    Data =res,
+                };
+            }
+        }
+
+        public Result Update(object UID, UserPersonalDetails value)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+
+                    if (UID == null)
+                    {
+                        throw new ArgumentException("Token is not valid or expired!");
+                    }
+                    var res = (from x in c.SubUsersDetails
+                               where x.UId == (int)UID
+                               select x).FirstOrDefault();
+                    var file = c.CommonFiles.Where(x => x.FGUID == value.ProfilePhotoFGUID).SingleOrDefault();
+                    res.AMobileNumber = value.AMobileNumber;
+                    res.Email = value.Email;
+                    res.FullName = value.FullName;
+                    res.FileId = file == null ? null : file.FileId;
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "UserDetails updated successfully!",
+                        Data = res,
+                    };
+                }
+            }
+        }
+
+
 
     }
 }

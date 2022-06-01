@@ -22,8 +22,8 @@ namespace HIsabKaro.Models.Employee.Resume
         public int EmpResumeWorkExperienceId { get; set; }
         public string JobTitle { get; set; }
         public string OrganizationName { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string TotalDuration { get; set; }
         public string WorkFrom { get; set; }
     }

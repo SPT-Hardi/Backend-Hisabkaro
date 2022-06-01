@@ -68,7 +68,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         sotp.MobileNumber = value.MobileNumber;
                         c.SubOTPs.InsertOnSubmit(sotp);
                         c.SubmitChanges();
-                        smsres.Get(value.MobileNumber, otp);
+                       // smsres.Get(value.MobileNumber, otp);
 
                     }
                     else
@@ -81,7 +81,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         newotp.MobileNumber = value.MobileNumber;
 
                         c.SubmitChanges();
-                        smsres.Get(value.MobileNumber, otp);
+                       // smsres.Get(value.MobileNumber, otp);
                     }
 
                     scope.Complete();

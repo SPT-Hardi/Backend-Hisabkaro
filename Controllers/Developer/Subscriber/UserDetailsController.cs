@@ -34,6 +34,24 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
             return Ok(new UserDetails(_configuration,_tokenServices).Add(UID,DeviceToken,value));
         }
 
+        [HttpGet]
+        [Route("UserDetails")]
+        public IActionResult DetailsGet()
+        {
+            var UID = HttpContext.Items["UserID"];
+            //var DeviceToken = HttpContext.Items["DeviceToken"];
+            return Ok(new UserDetails(_configuration, _tokenServices).Get(UID));
+        }
+
+
+        [HttpPatch]
+        [Route("UserDetails")]
+        public IActionResult DetailsPatch(Models.Developer.Subscriber.UserPersonalDetails value)
+        {
+            var UID = HttpContext.Items["UserID"];
+            //var DeviceToken = HttpContext.Items["DeviceToken"];
+            return Ok(new UserDetails(_configuration, _tokenServices).Update(UID,value));
+        }
 
     }
 }
