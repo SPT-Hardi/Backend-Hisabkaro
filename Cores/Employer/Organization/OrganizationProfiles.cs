@@ -123,16 +123,16 @@ namespace HIsabKaro.Cores.Employer.Organization
                         throw new ArgumentException($"Duplecate Entry In Partners!");
                     }
 
-                    if(_OId.ContactAddressId is null)
-                    {
-                        var _AId = _contactAddress.Create(value.Address);
+                    //if(_OId.ContactAddressId is null)
+                    //{
+                        var _AId = _contactAddress.Create(_OId.ContactAddressId,value.Address);
                         _OId.ContactAddressId = _AId.Data;
-                    }
-                    else
+                    //}
+                    /*else
                     {
                         var _AId = _contactAddress.Update((int)_OId.ContactAddressId,value.Address);
                         _OId.ContactAddressId = _AId.Data;
-                    }
+                    }*/
                     var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
                     
                     var _LogoFileId = (from x in c.CommonFiles where x.FGUID == value.LogoFile select x).FirstOrDefault();

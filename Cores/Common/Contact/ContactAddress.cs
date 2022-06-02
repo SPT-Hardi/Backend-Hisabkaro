@@ -10,34 +10,62 @@ namespace HIsabKaro.Cores.Common.Contact
 {
     public class ContactAddress
     {
-        public Result Create(Models.Common.Contact.Address value)
+        public Result Create(object Id,Models.Common.Contact.Address value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var add = new CommonContactAddress()
+                    
+                    var address = c.CommonContactAddresses.Where(x => x.ContactAddressId == (int)Id).SingleOrDefault();
+                    if (address != null)
                     {
-                        AddressLine1 = value.AddressLine1,
-                        AddressLine2 = value.AddressLine2,
-                        City = value.City,
-                        State = value.State,
-                        PinCode = value.PinCode,
-                        Landmark = value.LandMark,
-                    };
-                    c.CommonContactAddresses.InsertOnSubmit(add);
-                    c.SubmitChanges();
-                    scope.Complete();
-                    return new Models.Common.Result
+                        address.AddressLine1 = value.AddressLine1;
+                        address.AddressLine2 = value.AddressLine2;
+                        address.City = value.City;
+                        address.State = value.State;
+                        address.PinCode = value.PinCode;
+                        address.Landmark = value.LandMark;
+
+                        c.SubmitChanges();
+
+                        scope.Complete();
+
+                        return new Models.Common.Result
+                        {
+                            Status = Models.Common.Result.ResultStatus.success,
+                            Message = string.Format("Contact Address Updated Successfully!"),
+                            Data = address.ContactAddressId,
+                        };
+                    }
+                    else
                     {
-                        Status = Models.Common.Result.ResultStatus.success,
-                        Message = string.Format("Contact Address Added Successfully!"),
-                        Data =add.ContactAddressId,
-                    };
+                        var add = new CommonContactAddress()
+                        {
+                            AddressLine1 = value.AddressLine1,
+                            AddressLine2 = value.AddressLine2,
+                            City = value.City,
+                            State = value.State,
+                            PinCode = value.PinCode,
+                            Landmark = value.LandMark,
+                        };
+                        c.CommonContactAddresses.InsertOnSubmit(add);
+                        c.SubmitChanges();
+
+                        scope.Complete();
+
+                        return new Models.Common.Result
+                        {
+                            Status = Models.Common.Result.ResultStatus.success,
+                            Message = string.Format("Contact Address Added Successfully!"),
+                            Data = add.ContactAddressId,
+                        };
+                    }
+                    
                 }
             }            
         }
-        public Result Update(int Id, Models.Common.Contact.Address value)  
+/*        public Result Update(int Id, Models.Common.Contact.Address value)  
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -66,6 +94,6 @@ namespace HIsabKaro.Cores.Common.Contact
                     };
                 }
             }
-        }
+        }*/
     }
 }

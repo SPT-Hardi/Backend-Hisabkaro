@@ -74,7 +74,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
 
-                    var _AId = _contactAddress.Create(value.Address);
+                    var _AId = _contactAddress.Create(_User.SubUser.SubUsersDetail.AddressID,value.Address);
                     _Staff.DOB = value.DOB;
                     _Staff.Gender = value.Gender;
                     _Staff.SubUserOrganisation.SubUser.SubUsersDetail.AddressID = _AId.Data;

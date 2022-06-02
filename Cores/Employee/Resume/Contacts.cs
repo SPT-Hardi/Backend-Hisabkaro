@@ -19,6 +19,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                 using (DBContext c = new DBContext())
                 {
                     var contact = c.SubUsersDetails.Where(x => x.UId == (int)UId).SingleOrDefault();
+                    if (UId == null) 
+                    {
+                        throw new ArgumentException("Token not-valid or expired!");
+                    }
                     if (contact == null) 
                     {
                         throw new ArgumentException("There are no any contact details for this Id!");
@@ -32,7 +36,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     
                     
                     ContactAddress contactAddress = new ContactAddress();
-                    var res = contactAddress.Update(value.AddressId, value.Address);
+                    var res = contactAddress.Create(contact.AddressID,value.Address);
                     contact.AddressID = res.Data;
                     
 
@@ -59,6 +63,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                 using (DBContext c = new DBContext())
                 {
                     var contact = c.SubUsersDetails.Where(x => x.UId == (int)UId).SingleOrDefault();
+                    if (UId == null)
+                    {
+                        throw new ArgumentException("Token not-valid or expired!");
+                    }
                     if (contact == null) 
                     {
                         throw new ArgumentException("There are no contact details for current user,(enter valid token)");
@@ -74,11 +82,11 @@ namespace HIsabKaro.Cores.Employee.Resume
                             MobileNumber =contact.SubUser.MobileNumber,
                             AMobileNumber =contact.AMobileNumber,
                             AddressId=contact.AddressID,
-                            Address =contact.CommonContactAddress.AddressLine1,
-                            City =contact.CommonContactAddress.City,
-                            State =contact.CommonContactAddress.State,
-                            PinCode =contact.CommonContactAddress.PinCode,
-                            LandMark =contact.CommonContactAddress.Landmark,
+                            Address =contact.CommonContactAddress?.AddressLine1,
+                            City =contact.CommonContactAddress?.City,
+                            State =contact.CommonContactAddress?.State,
+                            PinCode =contact.CommonContactAddress?.PinCode,
+                            LandMark =contact.CommonContactAddress?.Landmark,
                         }
                     };
                 }
