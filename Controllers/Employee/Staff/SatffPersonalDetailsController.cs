@@ -35,6 +35,7 @@ namespace HIsabKaro.Controllers.Employee.Staff
         public IActionResult Create([FromBody] Models.Employee.Staff.StaffPersonalDetail value)
         {
             var URId = HttpContext.Items["URId"];
+            var UID = HttpContext.Items["UserID"];
             return Ok(_staffPersonalDetails.Create(URId,value));
         }
         [HttpGet]

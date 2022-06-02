@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         throw new ArgumentException("Organization Does Not Exits!");
                     }
 
-                    var _AId = _contactAddress.Create(value.Address);
+                    var _AId = _contactAddress.Create(null,value.Address);
                     var branch = new DevOrganisationBranch()
                     {
                         BranchName = value.BranchName,
@@ -115,7 +115,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         throw new ArgumentException("Branch Doesn't exist");
                     }
 
-                    var _AId = _contactAddress.Create(value.Address);
+                    var _AId = _contactAddress.Create(branch.ContactAddressId,value.Address);
                     branch.BranchName = value.BranchName;
                     branch.ContactAddressId = _AId == null ? null : _AId.Data;
                     branch.URId = (int)URId;
