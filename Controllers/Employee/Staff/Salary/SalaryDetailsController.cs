@@ -27,13 +27,5 @@ namespace HIsabKaro.Controllers.Employee.Staff.Salary
             var URId = HttpContext.Items["URId"];
             return Ok(new SalaryDetails().Payment(URId));
         }
-
-        [HttpGet]
-        [Route("SalaryDetails/OverTime/{Date}")]
-        public IActionResult OverTime([FromRoute] DateTime Date)
-        {
-            var URId = HttpContext.Items["URId"];
-            return Ok(new SalaryDetails().OverTime(URId,Date));
-        }
     }
 }
