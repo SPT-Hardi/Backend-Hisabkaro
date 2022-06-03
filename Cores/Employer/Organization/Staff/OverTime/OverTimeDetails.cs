@@ -31,8 +31,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                                 OverTimeWage = x.OverTimeWage,
                                 CheckIn = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.ChekIN).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.ChekIN).FirstOrDefault(),
                                 CheckOut = x.SubUserOrganisation_StaffURId.OrgStaffsAttendancesDailies.Where(y => Convert.ToDateTime(y.CheckOUT).Date == x.OverTimeDate && y.URId == x.StaffURId).Select(y => y.CheckOUT).FirstOrDefault(),
-                                OverTime = x.OverTime,
-                                Amount = x.Amount,
                                 URId = URId,
                             }).ToList();
 
@@ -75,8 +73,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.OverTime
                         StaffURId = StaffId,
                         OverTimeDate = value.Date,
                         OverTimeWage = value.OverTimeWage,
-                        OverTime = (TimeSpan)value.Time,
-                        Amount = minute+hour,
                         URId = (int)URId,
                     };
                     c.OrgStaffsOverTimeDetails.InsertOnSubmit(_OverTime);

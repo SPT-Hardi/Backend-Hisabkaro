@@ -218,7 +218,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 {
                     var _OverTime = (from x in c.OrgStaffsOverTimeDetails
                                      where x.StaffURId == StaffURId && x.OverTimeDate.Month == DateTime.Now.Month - 1
-                                     select x.Amount).Sum();
+                                     select x.OverTimeWage).Sum();
 
                     scope.Complete();
                     return (decimal)(_OverTime == null ? 0 : _OverTime);
