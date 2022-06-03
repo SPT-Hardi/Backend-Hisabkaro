@@ -302,6 +302,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                             Data = new  { Id =0, Text =0.ToString()}
                         };
                     }
+
                     var sal = (from x in c.OrgStaffsSalaryDetails
                                where x.LoanId == _Loan.LoanId
                                select x).Count();
