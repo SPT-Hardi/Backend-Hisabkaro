@@ -12,14 +12,6 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
     [ApiController]
     public class LoanDetailsController : ControllerBase
     {
-        [Route("loan/{StaffId}")]
-        [HttpPost]
-        public IActionResult Create([FromRoute]int StaffId,[FromBody]Models.Employer.Organization.Staff.Loan.LoanDetail value)
-        {
-            var URId = HttpContext.Items["URId"];
-            return Ok(new LoanDetails().Create(URId,StaffId, value));
-        }
-
         [Route("Orgloandetail")]
         [HttpGet]
         public IActionResult GetOrg()

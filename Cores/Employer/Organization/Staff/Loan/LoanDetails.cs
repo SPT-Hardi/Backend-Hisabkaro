@@ -11,12 +11,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 {
     public class LoanDetails
     {
-        public enum PaymentType
-        {
-            FullAmount = 59,
-            EMI = 60
-        }
-
         public Result GetOrgLoan(object URId)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
@@ -77,108 +71,100 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
             }
         }
 
-        public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Loan.LoanDetail value)
-        {
-            using (TransactionScope scope = new TransactionScope())
-            {
-                decimal totalmonth = 0;
-                decimal monthlypay = 0;
-                decimal rate = 0;
-                decimal InterestPaid = 0;
-                int _days = 0;
+        //public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Loan.LoanDetail value)
+        //{
+        //    using (TransactionScope scope = new TransactionScope())
+        //    {
+        //        decimal totalmonth = 0;
+        //        decimal monthlypay = 0;
+        //        decimal rate = 0;
+        //        decimal InterestPaid = 0;
+        //        int _days = 0;
 
-                using (DBContext c = new DBContext())
-                {
-                    var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
-                    if (user == null)
-                    {
-                        throw new ArgumentException("User Doesn't exist");
-                    }
+        //        using (DBContext c = new DBContext())
+        //        {
+        //            //var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
+        //            //if (user == null)
+        //            //{
+        //            //    throw new ArgumentException("User Doesn't exist");
+        //            //}
 
-                    var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId);
-                    if (staff == null)
-                    {
-                        throw new ArgumentException("Staff Doesn't exist");
-                    }
+        //            //var staff = c.SubUserOrganisations.SingleOrDefault(x => x.URId == StaffId);
+        //            //if (staff == null)
+        //            //{
+        //            //    throw new ArgumentException("Staff Doesn't exist");
+        //            //}
 
-                    var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == StaffId);
-                    if (org_staff == null)
-                    {
-                        throw new ArgumentException("Staff Doesn't exist in org");
-                    }
+        //            //var org_staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.OId == user.OId && x.URId == StaffId);
+        //            //if (org_staff == null)
+        //            //{
+        //            //    throw new ArgumentException("Staff Doesn't exist in org");
+        //            //}
 
-                    if(value.paymentType.Id == (int)PaymentType.FullAmount)
-                    {
-                        throw new ArgumentException("Paymnet Type not valid here");
-                    }
+        //            var month = value.StartDate.AddMonths(value.month);
+        //            for (DateTime dt = value.StartDate; dt < month; dt = dt.AddMonths(1))
+        //            {
+        //                _days = _days + DateTime.DaysInMonth(dt.Year, dt.Month);
+        //            }
+        //            int totalDays = Math.Abs((_days - value.StartDate.Day)) + 1;
 
-                    var month = value.StartDate.AddMonths(value.month);
-                    for (DateTime dt = value.StartDate; dt < month; dt = dt.AddMonths(1))
-                    {
-                        _days = _days + DateTime.DaysInMonth(dt.Year, dt.Month);
-                    }
-                    int totalDays = Math.Abs((_days - value.StartDate.Day)) + 1;
+        //            if (value.InterestRate == 0 || value.InterestRate == null)
+        //            {
+        //                if (value.Monthlypay != 0 && value.PrincipalAmount != 0)
+        //                {
+        //                    totalmonth = Math.Ceiling(value.PrincipalAmount / value.Monthlypay);
+        //                    monthlypay = value.Monthlypay;
+        //                }
+        //                else
+        //                {
+        //                    monthlypay = value.PrincipalAmount / value.month;
+        //                    totalmonth = value.month;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                rate = value.InterestRate == 0 ? 0 : (decimal)(value.InterestRate / 365);
+        //                InterestPaid = (value.PrincipalAmount * rate * totalDays) / 100;
+        //                monthlypay = (value.PrincipalAmount + InterestPaid) / value.month;
+        //                totalmonth = value.month;
+        //                if (value.Monthlypay > monthlypay)
+        //                {
+        //                    throw new ArgumentException("Monthly Pay can't be greater than calculate EMI!!");
+        //                }
+        //            }
 
-                    if (value.InterestRate == 0 || value.InterestRate == null)
-                    {
-                        if (value.Monthlypay != 0 && value.PrincipalAmount != 0)
-                        {
-                            totalmonth = Math.Ceiling(value.PrincipalAmount / value.Monthlypay);
-                            monthlypay = value.Monthlypay;
-                        }
-                        else
-                        {
-                            monthlypay = value.PrincipalAmount / value.month;
-                            totalmonth = value.month;
-                        }
-                    }
-                    else
-                    {
-                        rate = value.InterestRate == 0 ? 0 : (decimal)(value.InterestRate / 365);
-                        InterestPaid = (value.PrincipalAmount * rate * totalDays) / 100;
-                        monthlypay = (value.PrincipalAmount + InterestPaid) / value.month;
-                        totalmonth = value.month;
-                        if (value.Monthlypay > monthlypay)
-                        {
-                            throw new ArgumentException("Monthly Pay can't be greater than calculate EMI!!");
-                        }
-                    }
+        //            var _loan = new OrgStaffsLoanDetail()
+        //            {
+        //                StartDate = value.StartDate.ToLocalTime(),
+        //                EndDate = DateTime.Now,
+        //                PrincipalAmt = value.PrincipalAmount,
+        //                MonthlyPay = monthlypay,
+        //                Description = value.Description,
+        //                URId = (int)URId,
+        //                StaffURId = StaffId,
+        //                InterestRate = (int?)value.InterestRate,
+        //                InterestAmt = InterestPaid,
+        //                PayableAmt = value.PrincipalAmount + InterestPaid,
+        //                RemainingAmt = value.PrincipalAmount + InterestPaid,
+        //                IsLoanPending = true,
+        //                TotalMonth = totalmonth
+        //            };
+        //            c.OrgStaffsLoanDetails.InsertOnSubmit(_loan);
+        //            c.SubmitChanges();
 
-                    var _loan = new OrgStaffsLoanDetail()
-                    {
-                        StartDate = value.StartDate.ToLocalTime(),
-                        EndDate = DateTime.Now,
-                        PrincipalAmt = value.PrincipalAmount,
-                        MonthlyPay = monthlypay,
-                        Description = value.Description,
-                        URId = (int)URId,
-                        StaffURId = staff.URId,
-                        InterestRate = (int?)value.InterestRate,
-                        InterestAmt = InterestPaid,
-                        PayableAmt = value.PrincipalAmount + InterestPaid,
-                        RemainingAmt = value.PrincipalAmount + InterestPaid,
-                        IsLoanPending = true,
-                        TotalMonth = totalmonth
-                    };
-                    c.OrgStaffsLoanDetails.InsertOnSubmit(_loan);
-                    c.SubmitChanges();
-
-                    var installment = new Cores.Employer.Organization.Staff.Loan.LoanInstallments().Create(_loan.LoanId, c);
-                    var name = staff.SubUser.SubUsersDetail.FullName;
-                    scope.Complete();
-                    return new Result()
-                    {
-                        Status = Result.ResultStatus.success,
-                        Message = "Loan details added successfully!",
-                        Data = new
-                        {
-                            Id = _loan.LoanId,
-                            Name = name
-                        },
-                    };
-                }
-            }
-        }
+        //            scope.Complete();
+        //            return new Result()
+        //            {
+        //                Status = Result.ResultStatus.success,
+        //                Message = "Loan details added successfully!",
+        //                Data = new
+        //                {
+        //                    Id = _loan.LoanId
+        //                },
+        //            };
+        //        }
+        //    }
+        //}
 
         public Result GetStaffLoan(object URId, int LoanId)
         {
@@ -245,6 +231,74 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     Data = loanView
                 };
             }
+        }
+
+        public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Loan.LoanDetail value,DBContext c)
+        {
+            decimal totalmonth = 0;
+            decimal monthlypay = 0;
+            decimal rate = 0;
+            decimal InterestPaid = 0;
+            int _days = 0;
+
+            var month = value.StartDate.AddMonths(value.month);
+            for (DateTime dt = value.StartDate; dt < month; dt = dt.AddMonths(1))
+            {
+                _days = _days + DateTime.DaysInMonth(dt.Year, dt.Month);
+            }
+            int totalDays = Math.Abs((_days - value.StartDate.Day)) + 1;
+
+            if (value.InterestRate == 0 || value.InterestRate == null)
+            {
+                if (value.Monthlypay != 0 && value.PrincipalAmount != 0)
+                {
+                    totalmonth = Math.Ceiling(value.PrincipalAmount / value.Monthlypay);
+                    monthlypay = value.Monthlypay;
+                }
+                else
+                {
+                    monthlypay = value.PrincipalAmount / value.month;
+                    totalmonth = value.month;
+                }
+            }
+            else
+            {
+                rate = value.InterestRate == 0 ? 0 : (decimal)(value.InterestRate / 365);
+                InterestPaid = (value.PrincipalAmount * rate * totalDays) / 100;
+                monthlypay = (value.PrincipalAmount + InterestPaid) / value.month;
+                totalmonth = value.month;
+                if (value.Monthlypay > monthlypay)
+                {
+                    throw new ArgumentException("Monthly Pay can't be greater than calculate EMI!!");
+                }
+            }
+
+            var _loan = new OrgStaffsLoanDetail()
+            {
+                StartDate = value.StartDate.ToLocalTime(),
+                EndDate = DateTime.Now,
+                PrincipalAmt = value.PrincipalAmount,
+                MonthlyPay = monthlypay,
+                Description = value.Description,
+                URId = (int)URId,
+                StaffURId = StaffId,
+                InterestRate = (int?)value.InterestRate,
+                InterestAmt = InterestPaid,
+                PayableAmt = value.PrincipalAmount + InterestPaid,
+                RemainingAmt = value.PrincipalAmount + InterestPaid,
+                IsLoanPending = true,
+                TotalMonth = totalmonth
+            };
+            c.OrgStaffsLoanDetails.InsertOnSubmit(_loan);
+            c.SubmitChanges();
+            return new Result()
+            {
+                Status = Result.ResultStatus.success,
+                Data = new
+                {
+                    Id = _loan.LoanId
+                },
+            };
         }
     }
 }

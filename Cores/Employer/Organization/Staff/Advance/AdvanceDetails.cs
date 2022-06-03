@@ -10,6 +10,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
 {
     public class AdvanceDetails
     {
+        public enum PaymentType
+        {
+            FullAmount = 59,
+            EMI = 60
+        }
+
         public Result One(object URId)
         {
             using (DBContext c = new DBContext())
@@ -67,16 +73,40 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
-
-                    var _Advance = new OrgStaffsAdvanceDetail()
+                    var Advance = new OrgStaffsAdvanceDetail()
                     {
-                        StaffURId=StaffId,
+                        StaffURId = StaffId,
                         Date = value.Date,
-                        Amount=value.Amount,
-                        Description=value.Description,
-                        URId= (int)URId,
+                        Amount = value.Amount,
+                        Description = value.Description,
+                        URId = (int)URId,
+                        IsEMI = false
                     };
-                    c.OrgStaffsAdvanceDetails.InsertOnSubmit(_Advance);
+
+                    if (value.paymentType.Id != (int)PaymentType.FullAmount)
+                    {
+                        Advance.IsEMI = true;
+                        c.OrgStaffsAdvanceDetails.InsertOnSubmit(Advance);
+                        c.SubmitChanges();
+
+                        var loan = new Cores.Employer.Organization.Staff.Loan.LoanDetails().Create(URId,StaffId,value.loanDetail,c).Data.Id;
+
+                        var installment = new Cores.Employer.Organization.Staff.Loan.LoanInstallments().Create(loan, c);
+
+                        scope.Complete();
+                        return new Result()
+                        {
+                            Status = Result.ResultStatus.success,
+                            Message = string.Format($"Advance Give Successfully!"),
+                            Data = new
+                            {
+                                Id = Advance.AdvanceId,
+                                Name = _Staff.NickName
+                            }
+                        };
+                    }
+
+                    c.OrgStaffsAdvanceDetails.InsertOnSubmit(Advance);
                     c.SubmitChanges();
 
                     scope.Complete();
@@ -84,6 +114,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format($"Advance Give Successfully!"),
+                        Data = new
+                        {
+                            Id = Advance.AdvanceId,
+                            Name = _Staff.NickName
+                        }
                     };
                 }
             }
