@@ -82,7 +82,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                         URId = (int)URId,
                         IsEMI = false
                     };
-
+                         
                     if (value.paymentType.Id != (int)PaymentType.FullAmount)
                     {
                         Advance.IsEMI = true;
