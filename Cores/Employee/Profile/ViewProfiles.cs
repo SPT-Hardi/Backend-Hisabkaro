@@ -109,6 +109,8 @@ namespace HIsabKaro.Cores.Employee.Profile
                         InstituteName = item.InstituteName,
                         EducationName = new IntegerNullString() { Id = item.EducationNameId, Text = item.SubFixedLookup.FixedLookup },
                         EducationStreamName = item.EducationSteamName,
+                        StartDate=item.StartDate,
+                        EndDate=item.EndDate,
                         TotalDuration = syear + "-" + eyear,
                     });
                 }
@@ -133,7 +135,9 @@ namespace HIsabKaro.Cores.Employee.Profile
                     {
                         CertificateName=item.CertificateName,
                         EmpResumeOtherCertificateId=item.EmpResumeOtherCertificateId,
-                        Duration= $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mons",
+                        StartDate = item.StartDate,
+                        EndDate = item.EndDate,
+                        Duration = $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mons",
                     });
                 }
 

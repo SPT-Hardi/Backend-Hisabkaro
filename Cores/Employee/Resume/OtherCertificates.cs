@@ -27,14 +27,15 @@ namespace HIsabKaro.Cores.Employee.Resume
                     var othercertificate = (from obj in value.OtherCertificateDetails
                                             select new EmpResumeOtherCertificate()
                                             {
-                                                UId=(int)UID,
-                                                CertificateName=obj.CertificateName,
-                                                StartDate=(obj.EndDate<obj.StartDate)?throw new ArgumentException($"Enter valid daterange for certificate:{obj.CertificateName}") :obj.StartDate,
-                                                EndDate=obj.EndDate,
-                                                
+                                                UId = (int)UID,
+                                                CertificateName = obj.CertificateName,
+                                                StartDate = (obj.EndDate < obj.StartDate) ? throw new ArgumentException($"Enter valid daterange for certificate:{obj.CertificateName}") : obj.StartDate,
+                                                EndDate = obj.EndDate,
+                                                CertificateFileId = obj.CertificateFGUID == null ? null : ((from x in c.CommonFiles where x.FGUID == obj.CertificateFGUID select x.FileId).FirstOrDefault() == 0 ? throw new ArgumentException("Enter valid FGUID") : (from x in c.CommonFiles where x.FGUID == obj.CertificateFGUID select x.FileId).FirstOrDefault())
                                             }).ToList();
                     c.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificate);
                     c.SubmitChanges();
+
                     var res = (from obj in othercertificate
                                select new 
                                {
@@ -42,7 +43,9 @@ namespace HIsabKaro.Cores.Employee.Resume
                                    CertificateName=obj.CertificateName,
                                    
                                }).ToList();
+
                     scope.Complete();
+
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
@@ -129,6 +132,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     othercertificates.CertificateName = value.CertificateName;
                     othercertificates.EndDate =value.EndDate;
                     othercertificates.StartDate =value.StartDate;
+                    othercertificates.CertificateFileId = value.CertificateFGUID == null ? null : ((from x in c.CommonFiles where x.FGUID == value.CertificateFGUID select x.FileId).FirstOrDefault() == 0 ? throw new ArgumentException("Enter valid FGUID") : (from x in c.CommonFiles where x.FGUID == value.CertificateFGUID select x.FileId).FirstOrDefault());
 
                     c.SubmitChanges();
                     var res = new 
@@ -143,7 +147,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "Employee Resume-OtherCertificates added successfully!",
+                        Message = "Employee Resume-OtherCertificates updated successfully!",
                         Data = res,
                     };
                 }

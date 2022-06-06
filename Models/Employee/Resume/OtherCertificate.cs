@@ -30,6 +30,8 @@ namespace HIsabKaro.Models.Employee.Resume
 
         [Required(ErrorMessage ="EndDate is required!")]
         public DateTime EndDate { get; set; }
+
+        public string CertificateFGUID { get; set; }
     }
     public class Certificate
     {
