@@ -105,6 +105,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
+
                     var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
 
                     var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
@@ -127,15 +128,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     }
 
                     var _Salary = One(URId, StaffId);
-
+                    var _Loan = CreateLoan(StaffId);
+                    var f = _Salary.Data.Salary - _Loan.Data.Text;
                     var _SalaryDetail = new OrgStaffsSalaryDetail() {
                         OverTime = _Salary.Data.OverTime,
                         Bonus = _Salary.Data.Bonus ,
                         Advance = _Salary.Data.Advance  ,                              
                         OrgStaffLeave = _Salary.Data.Leave ,
-                        LoanId = _Salary.Data.LoanId,
-                        LoanDeductionAmount = _Salary.Data.Loan ,
-                        Salary = _Salary.Data.Salary,
+                        //LoanId = _Salary.Data.LoanId,
+                        //LoanDeductionAmount = _Salary.Data.Loan ,
+                        LoanId = _Loan.Data.Id,
+                        LoanDeductionAmount = _Loan.Data.Text,
+                        //Salary = _Salary.Data.Salary,
+                        Salary = _Salary.Data.Salary- _Loan.Data.Text,
                         Date = ISDT,
                         StaffURId=StaffId,
                         URId=(int)URId,
@@ -180,14 +185,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
 
                     decimal _OverTime = OverTime(StaffId) == null ? 0 : OverTime(StaffId);
                     decimal _Bonus = Bonus(StaffId) == null ? 0 :Bonus(StaffId);
-                    decimal _Advance = Advance(StaffId) == null ? 0 :Advance(StaffId);
+                    decimal _Advance = Advance(StaffId) == null ? 0 : Advance(StaffId);
                     decimal _Leave = Leave(StaffId) == null ? 0 :Leave(StaffId);
-                    var _Loan = Loan(StaffId);
+                    //var _Loan = Loan(StaffId);
 
-                    decimal loan = decimal.Parse(_Loan.Data.Text);
+                    //decimal loan = decimal.Parse(_Loan.Data.Text);
                     decimal salary = (decimal)_Staff.Salary;
 
-                    decimal _Salary = salary + _OverTime + _Bonus - _Advance - _Leave - loan;
+                    decimal _Salary = salary + _OverTime + _Bonus - _Advance - _Leave /*- loan*/;
 
                     scope.Complete();
                     return new Result()
@@ -200,10 +205,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                             Bonus = _Bonus,
                             Advance = _Advance,
                             Leave = _Leave,
-                            LoanId=_Loan.Data.Id,
-                            Loan = decimal.Parse(_Loan.Data.Text),
+                            //LoanId=_Loan.Data.Id,
+                            //Loan = decimal.Parse(_Loan.Data.Text),
                             ActualSalary= salary,
-                            Salary = salary + _OverTime + _Bonus - _Advance - _Leave - loan,
+                            Salary = salary + _OverTime + _Bonus - _Advance - _Leave /*- loan*/,
                         }
                     };
                 }
@@ -243,6 +248,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
             }
         }
 
+        //public decimal Advance(int StaffURId)
+        //{
+        //    using (DBContext c = new DBContext())
+        //    {
+        //        using (TransactionScope scope = new TransactionScope())
+        //        {
+        //            var _Advance = (from x in c.OrgStaffsAdvanceDetails
+        //                            where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1
+        //                            select x.Amount).Sum();
+
+        //            scope.Complete();
+        //            return (decimal)(_Advance == null ? 0 : _Advance);
+
+        //        }
+        //    }
+        //}
         public decimal Advance(int StaffURId)
         {
             using (DBContext c = new DBContext())
@@ -250,11 +271,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var _Advance = (from x in c.OrgStaffsAdvanceDetails
-                                  where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1
-                                  select x.Amount).Sum();
+                                    where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1 && x.IsEMI==false
+                                    select x.Amount).Sum();
 
                     scope.Complete();
-                    return (decimal)(_Advance==null?0:_Advance);
+                    return (decimal)(_Advance == null ? 0 : _Advance);
 
                 }
             }
@@ -282,57 +303,149 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                 }
             }
         }
-
-        public Result Loan(int StaffURId)
+        public Result CreateLoan(int StaffURId)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
+                    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+                    var _Advance = (from x in c.OrgStaffsAdvanceDetails
+                                    where x.StaffURId == StaffURId && x.Date.Month == DateTime.Now.Month - 1 && x.IsEMI == false
+                                    select x);
+
                     var _Loan = (from x in c.OrgStaffsLoanDetails
-                                    where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.IsLoanPending == true
-                                    select x).SingleOrDefault();
-                    if(_Loan is null)
+                                 where x.StaffURId == StaffURId && x.RemainingAmt != 0 && x.IsLoanPending == true
+                                 select x).SingleOrDefault();
+                    if (_Loan is null)
                     {
                         scope.Complete();
                         return new Result
                         {
                             Status = Result.ResultStatus.success,
                             Message = string.Format(""),
-                            Data = new  { Id =0, Text =0.ToString()}
+                            Data = new { Id = 0, Text = 0.ToString() }
                         };
                     }
+                    var installment = (from x in c.OrgStaffLoanInstallmentDetails
+                                       where x.LoanId == _Loan.LoanId && x.IsInstallmentCompleted == false
+                                       select x).ToList();
 
-                    var sal = (from x in c.OrgStaffsSalaryDetails
-                               where x.LoanId == _Loan.LoanId
-                               select x).Count();
-
-                    int totalMonth = Math.Abs(12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
-
-                    decimal tot = 0;
-                    if (sal+1 == totalMonth)
+                    if (installment is null)
                     {
-                        tot = (decimal)_Loan.RemainingAmt;
-                        _Loan.RemainingAmt = 0;
+                        return new Result
+                        {
+                            Status = Result.ResultStatus.success,
+                            Message = string.Format(""),
+                            Data = new { Id = 0, Text = 0.ToString() }
+                        };
+                    }
+                    var cut = (from x in installment
+                               where x.Month == ISDT.AddMonths(-1).ToString("MMMM") && x.Year == ISDT.Year.ToString() && x.IsInstallmentCompleted == false
+                               select x).FirstOrDefault();
+                    if (installment.Count()==1)
+                    {
+                        _Loan.RemainingAmt = (_Loan.RemainingAmt - cut.MonthlyPay)<= 0 ? 0 : _Loan.RemainingAmt - cut.MonthlyPay;
                         _Loan.IsLoanPending = false;
+
+                        cut.IsInstallmentCompleted = true;
                         c.SubmitChanges();
                     }
                     else
                     {
-                        tot = (decimal)_Loan.MonthlyPay;
-                        _Loan.RemainingAmt = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                        var m = ISDT.AddMonths(-1).ToString("MMMM")+" "+ ISDT.Year;
+                        
+                        _Loan.RemainingAmt = _Loan.RemainingAmt - cut.MonthlyPay;
+                        
+                        cut.IsInstallmentCompleted = true;
                         c.SubmitChanges();
                     }
 
+
                     scope.Complete();
-                    return new Result {
-                        Status=Result.ResultStatus.success,
+                    return new Result
+                    {
+                        Status = Result.ResultStatus.success,
                         Message = string.Format(""),
-                        Data = new { Id=_Loan.LoanId,Text=tot.ToString()}
-                    };  
+                        Data = new { Id = _Loan.LoanId, Text = cut.MonthlyPay/*.ToString() */}
+                    };
                 }
             }
         }
+
+        public decimal OneLoan(int StaffURId)
+        {
+            using (DBContext c = new DBContext())
+            {
+                var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+
+                var Loan = (from x in c.OrgStaffsLoanDetails
+                                where x.StaffURId == StaffURId && x.IsLoanPending==true
+                                select x).FirstOrDefault();
+                if(Loan is null)
+                {
+                    return (decimal)0;
+                }
+
+                var Installment = (from x in c.OrgStaffLoanInstallmentDetails
+                                   where x.LoanId == Loan.LoanId && x.IsInstallmentCompleted == false && x.Month==ISDT.AddMonths(-1).ToString("MMMM") && x.Year == ISDT.Year.ToString() 
+                                   select x.MonthlyPay).ToList();
+
+                return (decimal)(Installment == null ? 0 : Installment.Sum());
+
+            }
+        }
+        
+        //public Result Loan(int StaffURId)
+                    //{
+                    //    using (DBContext c = new DBContext())
+                    //    {
+                    //        using (TransactionScope scope = new TransactionScope())
+                    //        {
+                    //            var _Loan = (from x in c.OrgStaffsLoanDetails
+                    //                            where x.StaffURId == StaffURId && x.RemainingAmt!=0  && x.IsLoanPending == true
+                    //                            select x).SingleOrDefault();
+                    //            if(_Loan is null)
+                    //            {
+                    //                scope.Complete();
+                    //                return new Result
+                    //                {
+                    //                    Status = Result.ResultStatus.success,
+                    //                    Message = string.Format(""),
+                    //                    Data = new  { Id =0, Text =0.ToString()}
+                    //                };
+                    //            }
+
+                    //            var sal = (from x in c.OrgStaffsSalaryDetails
+                    //                       where x.LoanId == _Loan.LoanId
+                    //                       select x).Count();
+
+                    //            int totalMonth = Math.Abs(12 * (_Loan.StartDate.Year - _Loan.EndDate.Year) + _Loan.StartDate.Month - _Loan.EndDate.Month);
+
+                    //            decimal tot = 0;
+                    //            if (sal+1 == totalMonth)
+                    //            {
+                    //                tot = (decimal)_Loan.RemainingAmt;
+                    //                _Loan.RemainingAmt = 0;
+                    //                _Loan.IsLoanPending = false;
+                    //                c.SubmitChanges();
+                    //            }
+                    //            else
+                    //            {
+                    //                tot = (decimal)_Loan.MonthlyPay;
+                    //                _Loan.RemainingAmt = _Loan.RemainingAmt - _Loan.MonthlyPay;
+                    //                c.SubmitChanges();
+                    //            }
+
+                    //            scope.Complete();
+                    //            return new Result {
+                    //                Status=Result.ResultStatus.success,
+                    //                Message = string.Format(""),
+                    //                Data = new { Id=_Loan.LoanId,Text=tot.ToString()}
+                    //            };  
+                    //        }
+                    //    }
+                    //}
 
         public Result Pending(object URId)
         {
@@ -365,11 +478,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                     
                     _s.ForEach((x) => {
                         var _Salary = One(_URId.URId, x.Id);
-                        
+                        decimal loan = OneLoan(x.Id);
                         pending.Add(new Pending() { 
                             URId=x.Id,
                             Name= c.DevOrganisationsStaffs.Where(y => y.URId == x.Id).Select(y => y.NickName).FirstOrDefault(),
-                            Salary= _Salary.Data.Salary,
+                            Salary= _Salary.Data.Salary-loan,
                             Hours = new HistoryByMonths().Get(URId, x.Id, ISDT.AddMonths(-1)).Data.TotalWorkingHourPerMonth,
                         });
                     });
