@@ -251,6 +251,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 return 30;
             }
         }
+      
        /* public TimeSpan getCheckout(DateTime checkout)
         {
             if (checkout == null)

@@ -32,6 +32,8 @@ namespace HIsabKaro.Models.Employee.Resume
     {
         public string CertificateName { get; set; }
         public int EmpResumeOtherCertificateId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string Duration { get; set; }
     }
 
@@ -50,5 +52,7 @@ namespace HIsabKaro.Models.Employee.Resume
         public string EducationStreamName { get; set; }
         public string InstituteName { get; set; }
         public string TotalDuration { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }                      
 }
