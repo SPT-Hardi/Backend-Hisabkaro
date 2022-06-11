@@ -26,5 +26,12 @@ namespace HIsabKaro.Controllers.Common
         {
             return Ok(new AddSkills().SearchSkillList(keyword));
         }
+
+        [HttpGet]
+        [Route("AddJobList")]
+        public IActionResult AddJobList()
+        {
+            return Ok(new AddSkills().AddJobPostName());
+        }
     }
 }

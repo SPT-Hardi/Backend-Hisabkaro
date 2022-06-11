@@ -16,7 +16,7 @@ namespace HIsabKaro.Models.Employee.Resume
         [JsonIgnore]
         public string MobileNumber { get; set; }
 
-        [Required(ErrorMessage ="Alternate mobile number field is required!")]
+        //[Required(ErrorMessage ="Alternate mobile number field is required!")]
         //[RegularExpression(@"^[6-9][0-9]{9}$", ErrorMessage = "Only 10 digit allowed and startfrom 6,7,8,9 !")]
         public string AMobileNumber { get; set; }
 
@@ -24,13 +24,13 @@ namespace HIsabKaro.Models.Employee.Resume
         [EmailAddress(ErrorMessage ="Enter valid email-address!")]
         public string Email { get; set; }
 
-
+/*
         [Required(ErrorMessage ="AddressId is required!")]
         [RegularExpression(@"^[0-9]+$", ErrorMessage = "Enter only digits!")]
-        public int AddressId { get; set; }
+        public int AddressId { get; set; }*/
 
 
-        [Required(ErrorMessage ="Address is required!")]
+        //[Required(ErrorMessage ="Address is required!")]
         public Address Address { get; set; } = new Address();
        
     }

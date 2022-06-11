@@ -370,6 +370,26 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 };
             }
         }
+        public Result JobTypeSearch(string keyword)
+        {
+            using (DBContext c = new DBContext()) 
+            {
+                var res = (from x in c.SubFixedLookups
+                           where x.FixedLookupType == "JobType/Role" && x.FixedLookup.Contains(keyword)
+                           orderby x.FixedLookup.IndexOf(keyword) ascending
+                           select new IntegerNullString()
+                           {
+                               Id = x.FixedLookupId,
+                               Text = x.FixedLookup.Trim(),
+                           }).ToList();
+            return new Result()
+            {
+                Status=Result.ResultStatus.success,
+                Message="JobType search list geted successfully!",
+                Data=res,
+            };
+            }
+        }
 
         //public Result Create( object URId, Models.Employer.Organization.Job.ER_JobDetail value)
         //{

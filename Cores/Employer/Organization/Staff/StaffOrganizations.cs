@@ -45,7 +45,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         OrgName = _Staff.DevOrganisation.OrganisationName,
                         ORString = _Staff.DevOrganisation.QRString,
                         UserName = _Staff.NickName,
-                        Profile= _Staff.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile ==null ? "": _Staff.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
+                        Profile= _Staff.SubUserOrganisation.SubUser.SubUsersDetail.FileId ==null ? null: _Staff.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                         StaffId = _Staff.SId,
                         Designation = _Staff.DevOrganisationsStaffsEmploymentDetail==null?"": _Staff.DevOrganisationsStaffsEmploymentDetail.Designation,
                         JoiningDate = _Staff.CreateDate,

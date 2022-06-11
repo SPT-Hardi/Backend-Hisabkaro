@@ -218,9 +218,9 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         QRString=Completed==null?null :Completed.QRString,
                         Name = udetails == null ? null : udetails.FullName,
                         MobileNumber = user.MobileNumber,
-                        AMobileNumber = udetails == null ? null : udetails.AMobileNumber,
-                        Email = udetails == null ? null : udetails.Email,
-                        PhotoId = udetails == null ? null : udetails.FileId,
+                        AMobileNumber = udetails.AMobileNumber == null ? null : udetails.AMobileNumber,
+                        Email = udetails.Email == null ? null : udetails.Email,
+                        PhotoId = udetails.FileId == null ? null : udetails.CommonFile.FGUID,
                         Organization = organizationlist,
 
                     },

@@ -135,6 +135,7 @@ namespace HIsabKaro.Cores.Employee.Profile
                     {
                         CertificateName=item.CertificateName,
                         EmpResumeOtherCertificateId=item.EmpResumeOtherCertificateId,
+                        CertificateFGUId=item.CertificateFileId==null ? null : item.CommonFile.FGUID,
                         StartDate = item.StartDate,
                         EndDate = item.EndDate,
                         Duration = $"{Math.Floor(totalmonths / 12)}yr {Math.Floor(totalmonths % 12)}mons",

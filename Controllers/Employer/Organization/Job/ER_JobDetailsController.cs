@@ -61,5 +61,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
             var URId = HttpContext.Items["URId"];
             return Ok(new ER_JobDetails().DisablePost(URId, Jid));
         }
+
+        [Route("JobType/Search")]
+        [HttpGet]
+        public IActionResult JobSearch([FromQuery]string keyword)
+        {
+            //var URId = HttpContext.Items["URId"];
+            return Ok(new ER_JobDetails().JobTypeSearch(keyword));
+        }
     }
 }
