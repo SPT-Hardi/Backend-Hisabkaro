@@ -136,19 +136,24 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     var res = (from x in c.SubUsersDetails
                                where x.UId == (int)UID
                                select x).FirstOrDefault();
-                    var file = c.CommonFiles.Where(x => x.FGUID == value.ProfilePhotoFGUID).SingleOrDefault();
+                    var file = (from x in c.CommonFiles where x.FGUID == value.ProfilePhotoFGUID select x).FirstOrDefault();
                     res.AMobileNumber = value.AMobileNumber;
                     res.Email = value.Email;
                     res.FullName = value.FullName;
-                    res.FileId = file == null ? null : file.FileId;
+                    res.FileId = file?.FileId;
                     c.SubmitChanges();
+                    var MobileNumber = res.SubUser.MobileNumber;
 
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = "UserDetails updated successfully!",
-                        Data = res,
+                        Data = new 
+                        {
+                            FullName=res.FullName,
+                            MobileNumber=MobileNumber
+                        },
                     };
                 }
             }

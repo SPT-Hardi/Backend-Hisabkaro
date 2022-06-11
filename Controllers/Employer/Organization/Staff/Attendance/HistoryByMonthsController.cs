@@ -21,5 +21,15 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
             //int URId = 10000024;
             return Ok(new HistoryByMonths().Get(URId,Id,date));
         }
+
+        [HttpGet]
+        [Route("StatisticsOfMonth")]
+
+        public IActionResult GetStatistics([FromQuery]DateTime date)
+        {
+            var URId = HttpContext.Items["URId"];
+            //int URId = 10000024;
+            return Ok(new HistoryByMonths().StatisticsByMonth(URId,date));
+        }
     }
 }

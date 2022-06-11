@@ -89,6 +89,27 @@ namespace HIsabKaro.Cores.Employer.Organization
                 }
             }
         }
+        public Result OrganiztionSectorSearch(string keyword) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                var res = (from x in c.SubFixedLookups
+                           where x.FixedLookupType == "IndustrySector" && x.FixedLookup.Contains(keyword)
+                           orderby x.FixedLookup.IndexOf(keyword) ascending
+                           select new IntegerNullString()
+                           {
+                               Id=x.FixedLookupId,
+                               Text=x.FixedLookup.Trim(),
+                           }).ToList();
+
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "organization sector search successfully!",
+                    Data =res
+                };
+            }
+        }
 
         public Result UpdateQR(object URId)
         {

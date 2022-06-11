@@ -30,8 +30,9 @@ namespace HIsabKaro.Models.Employee.Resume
 
     public class ViewOtherCertificate
     {
-        public string CertificateName { get; set; }
         public int EmpResumeOtherCertificateId { get; set; }
+        public string CertificateFGUId { get; set; }
+        public string CertificateName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Duration { get; set; }

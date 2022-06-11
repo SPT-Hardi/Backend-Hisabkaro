@@ -27,10 +27,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                     {
                         throw new ArgumentException("There are no any contact details for this Id!");
                     }
-                    if (value.MobileNumber != contact.SubUser.MobileNumber) 
+                    /*if (value.MobileNumber != contact.SubUser.MobileNumber) 
                     {
                         throw new ArgumentException("You cant change your mobilenumber!");
-                    }
+                    }*/
                     contact.Email = value.Email;
                     contact.AMobileNumber = value.AMobileNumber;
                     

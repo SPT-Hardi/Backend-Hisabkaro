@@ -21,6 +21,14 @@ namespace HIsabKaro.Controllers.Employer.Organization
             return Ok(new OrganizationDetails().Create(UserID,value));
         }
 
+        [HttpGet]
+        [Route("OrganizationDetails/Sector/Search")]
+        public IActionResult SectorSearch([FromQuery]string keyword)
+        {
+            //var UserID = HttpContext.Items["UserID"];
+            return Ok(new OrganizationDetails().OrganiztionSectorSearch(keyword));
+        }
+
         [HttpPost]
         [Route("OrganizationDetails/Update/QRString")]
         public IActionResult UpdateQR()

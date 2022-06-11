@@ -25,6 +25,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
 
                         TimeSpan lateby = new TimeSpan();
+                
                         if (qs == null)
                         {
 
@@ -35,7 +36,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             }
                             if (ISDT.TimeOfDay > org.DevOrganisationsShiftTime.MarkLate)
                             {
-                                lateby = ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate;
+                                lateby = (ISDT.TimeOfDay >= (TimeSpan)org.DevOrganisationsShiftTime.MarkLate) ? ISDT.TimeOfDay - (TimeSpan)org.DevOrganisationsShiftTime.MarkLate : new TimeSpan();
+                                
                             }
                             var check = ((org.WeekOffOneDay==null ? null : org.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower()) == ISDT.DayOfWeek.ToString().ToLower() || (org.WeekOffSecondDay==null ? null : org.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower()) == ISDT.DayOfWeek.ToString().ToLower());
                             
