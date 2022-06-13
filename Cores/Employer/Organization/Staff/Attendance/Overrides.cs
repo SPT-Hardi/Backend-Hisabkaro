@@ -28,7 +28,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     {
                         throw new ArgumentException("Staff not exist in current organiztion!,(enter valid URId)");
                     }
-                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == value.URId && x.ChekIN.Value.Date == value.AttendanceDate.Date).SingleOrDefault();
+                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == value.URId && x.ChekIN.Date == value.AttendanceDate.Date).SingleOrDefault();
                     //33-present
                     //34-absent
                     //35-HalfDay

@@ -57,10 +57,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                                               where y.StaffURId == (int)URId && y.StartDate.Month == DateTime.Now.Month - 1 && y.SubFixedLookup.FixedLookupFormatted == "Accepted"
                                                               select y.PaidDays).Sum();
                 salarySlip.attendanceDetail.Present = (from y in c.OrgStaffsAttendancesDailies
-                                                       where y.URId == (int)URId && y.ChekIN.Value.Month == DateTime.Now.Month - 1 
+                                                       where y.URId == (int)URId && y.ChekIN.Month == DateTime.Now.Month - 1 
                                                        select y).ToList().Count();
                 salarySlip.attendanceDetail.Absent = (DateTime.DaysInMonth(ISDT.Year, ISDT.Month) -1) - (from y in c.OrgStaffsAttendancesDailies
-                                                                                                    where y.URId == (int)URId && y.ChekIN.Value.Month == DateTime.Now.Month - 1
+                                                                                                    where y.URId == (int)URId && y.ChekIN.Month == DateTime.Now.Month - 1
                                                                                                     select y).ToList().Count();
                 salarySlip.attendanceDetail.Workingdays = salarySlip.attendanceDetail.Present + salarySlip.attendanceDetail.Absent;
 

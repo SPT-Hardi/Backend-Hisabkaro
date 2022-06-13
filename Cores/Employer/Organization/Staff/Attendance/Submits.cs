@@ -22,7 +22,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var OrgStaffAttendanceDailyId = 0;
                     if (joindate.Date <= ISDT.Date)
                     {
-                        var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
+                        var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
 
                         TimeSpan lateby = new TimeSpan();
                 
@@ -62,7 +62,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             {
                                 throw new ArgumentException("Permission revoked!");
                             }
-                            if (qs.ChekIN.Value.Date != ISDT.Date) 
+                            if (qs.ChekIN.Date != ISDT.Date) 
                             {
                                 throw new ArgumentException("CheckIN and CheckOUT date are not same!");
                             }
@@ -99,7 +99,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
             {
                 using (DBContext c = new DBContext())
                 {
-                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
+                    var qs = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Date == ISDT.Date && x.URId == (int)URId).SingleOrDefault();
                     var OrgStaffAttendanceDailyId = 0;
                     TimeSpan lateby = new TimeSpan();
                     if (qs == null)
@@ -172,7 +172,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
             {
                 using (DBContext c = new DBContext())
                 {
-                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Date == ISDT.Date).SingleOrDefault();
+                    var staffattendance = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Date == ISDT.Date).SingleOrDefault();
                     bool IsPresent = false;
                     DateTime? LastUpdate =null;
                     if (staffattendance != null) 

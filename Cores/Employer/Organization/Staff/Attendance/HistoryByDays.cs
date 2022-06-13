@@ -30,12 +30,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     throw new ArgumentException("User yet not join your organzation!,JoinDate > Given Date");
                 }
                 var checkindate = date;
-                var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Value.Date == checkindate.Date && x.URId == (int)URId).SingleOrDefault();
+                var checkpresent = c.OrgStaffsAttendancesDailies.Where(x => x.ChekIN.Date == checkindate.Date && x.URId == (int)URId).SingleOrDefault();
                 if (checkpresent != null)
                 {
                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
-                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.Value.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.TimeOfDay);
 
                     var res = new
                     {
@@ -44,9 +44,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         AttendanceDate = $"{date.Day} {monthname} | {dayname}",
                         Date = checkindate,
                         Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
-                        CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                        CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                        LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
+                        LateBy = checkpresent.Lateby == new TimeSpan() ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
                         TotalWorkingHourPerDay = TotalWorkingHourPerDay.Value.ToString(@"hh\:mm"),
                         Name = Org.NickName,
                         ImagePath = checkpresent.PhotoFileId == null ? (Org.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : Org.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID) : checkpresent.CommonFile.FGUID,

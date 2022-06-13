@@ -58,13 +58,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 startDate = new DateTime(date.Year, date.Month, day: 1);
                                 workingdays = DateTime.DaysInMonth(date.Year, date.Month);
                             }
-                            var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
+                            var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Month == requestmonth && x.ChekIN.Year == requestyear).ToList();
                             var days = DateTime.DaysInMonth(date.Year, date.Month);
 
                             for (var i = startDate.Day; i <= days; i++)
                             {
                                 var checkindate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
-                                var checkpresent = checkpresentlist.Where(x => x.ChekIN.Value.Date == checkindate.Date).SingleOrDefault();
+                                var checkpresent = checkpresentlist.Where(x => x.ChekIN.Date == checkindate.Date).SingleOrDefault();
                                 if (checkpresent != null)
                                 {
                                     presentcount += 1;
@@ -81,7 +81,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     }
                                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
-                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.Value.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.TimeOfDay);
 
                                     attendanceHistory.Add(new AttendanceHistory()
                                     {
@@ -89,9 +89,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
                                         Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
-                                        CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                        CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                        LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
+                                        LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
                                         TotalWorkingHourPerDay = TotalWorkingHourPerDay.Value.ToString(@"hh\:mm")
                                     });
                                     totalworkinghourmonth += (TimeSpan)TotalWorkingHourPerDay;
@@ -141,11 +141,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 startDate = new DateTime(date.Year, date.Month, day: 1);
                             }
                             int days = (int)(((ISDT - startDate).TotalDays) + 1);
-                            var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Value.Month == requestmonth && x.ChekIN.Value.Year == requestyear).ToList();
+                            var checkpresentlist = c.OrgStaffsAttendancesDailies.Where(x => x.URId == (int)URId && x.ChekIN.Month == requestmonth && x.ChekIN.Year == requestyear).ToList();
                             for (var i = startDate.Day; i <= ISDT.Day; i++)
                             {
                                 var checkindate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
-                                var checkpresent = checkpresentlist.Where(x => x.ChekIN.Value.Date == checkindate.Date).SingleOrDefault();
+                                var checkpresent = checkpresentlist.Where(x => x.ChekIN.Date == checkindate.Date).SingleOrDefault();
                                 if (checkpresent != null)
                                 {
                                     presentcount += 1;
@@ -160,16 +160,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                     }
                                     var dayname = checkindate.DayOfWeek.ToString().Substring(0, 3);
                                     var monthname = checkindate.ToString("MMMM").Substring(0, 3);
-                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.Value.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.Value.TimeOfDay);
+                                    var TotalWorkingHourPerDay = checkpresent.CheckOUT == null ? ((checkindate < ISDT) ? (checkpresent.ShiftEndTime - checkpresent.ChekIN.TimeOfDay) : null) : (checkpresent.CheckOUT.Value.TimeOfDay - checkpresent.ChekIN.TimeOfDay);
                                     attendanceHistory.Add(new AttendanceHistory()
                                     {
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
                                         Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
-                                        CheckIN = checkpresent.ChekIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                        CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                        LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.Value.ToString(@"hh\:mm"),
+                                        LateBy = checkpresent.Lateby == new TimeSpan() ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
                                         TotalWorkingHourPerDay = TotalWorkingHourPerDay.Value.ToString(@"hh\:mm")
                                     });
                                     //@"hh\:mm"
@@ -318,10 +318,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             endDate = ISDT;
                         }
                     }
-                    var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Value.Date >= startDate.Date && x.ChekIN.Value.Date <= endDate.Date && x.URId == (int)URId select x).ToList();
+                    var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date >= startDate.Date && x.ChekIN.Date <= endDate.Date && x.URId == (int)URId select x).ToList();
                     foreach (var x in present)
                     {
-                        totalworkinghour += (TimeSpan)(x.CheckOUT == null ? ((x.ChekIN.Value.Date < ISDT.Date) ? (x.ShiftEndTime - x.ChekIN.Value.TimeOfDay) : null) : (x.CheckOUT.Value.TimeOfDay - x.ChekIN.Value.TimeOfDay));
+                        totalworkinghour += (TimeSpan)(x.CheckOUT == null ? ((x.ChekIN.Date < ISDT.Date) ? (x.ShiftEndTime - x.ChekIN.TimeOfDay) : null) : (x.CheckOUT.Value.TimeOfDay - x.ChekIN.TimeOfDay));
                     }
                     var late = (from x in present
                                 where x.Lateby != new TimeSpan()

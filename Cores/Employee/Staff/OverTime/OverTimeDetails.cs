@@ -38,15 +38,15 @@ namespace HIsabKaro.Cores.Employee.Staff.OverTime
 
                     OverTime.ForEach((x) => {
                         var Attendance = (from y in c.OrgStaffsAttendancesDailies
-                                          where y.ChekIN.Value.Date == x.OverTimeDate && y.URId == _URId.URId
+                                          where y.ChekIN.Date == x.OverTimeDate && y.URId == _URId.URId
                                           select new { ChekIN = y.ChekIN, CheckOUT = y.CheckOUT }).FirstOrDefault();
 
                         overTime.Add(new OverTimeDetail()
                         {
                             Date = x.OverTimeDate,
-                            CheckIn = Attendance == null ? null : (Attendance.ChekIN == null ? null : Attendance.ChekIN.Value),
+                            CheckIn = Attendance == null ? null : (Attendance.ChekIN),
                             CheckOut = Attendance == null ? null : (Attendance.CheckOUT == null ? null : Attendance.CheckOUT.Value),
-                            Hours = Attendance == null ? null : (Attendance.CheckOUT == null ? null : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.Value.TimeOfDay).ToString()),
+                            Hours = Attendance == null ? null : (Attendance.CheckOUT == null ? null : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.TimeOfDay).ToString()),
                         });
                     });
 

@@ -48,7 +48,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         var presentlist = (from obj in c.DevOrganisationsStaffs
                                            join obj1 in c.OrgStaffsAttendancesDailies
                                            on obj.URId equals obj1.URId
-                                           where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && obj.CreateDate <= date.Date
+                                           where obj.OId == findorg.OId && obj1.ChekIN.Date == date.Date && obj.CreateDate <= date.Date
                                            select new
                                            {
                                                URId = obj1.URId,
@@ -73,6 +73,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         //                      ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FilePath,
                         //
                         //                  }).ToList();
+                        
                         var absentlist = (from obj in totalemp
                                           where !presentlist.Any(x => x.URId == obj.URId)
                                           select new
@@ -81,6 +82,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                               CheckIN = new TimeSpan(),
                                               CheckOUT = new TimeSpan(),
                                               Name = obj.NickName,
+                                              PaidLeaveList=PaidLeaveList(obj.URId,date),
                                               ImagePath = obj.SubUserOrganisation.SubUser.SubUsersDetail.FileId == null ? null : obj.SubUserOrganisation.SubUser.SubUsersDetail.CommonFile.FGUID,
                                               WeekoffoneDay = (obj.WeekOffOneDay == null) ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower(),
                                               WeekoffsecondDay = (obj.WeekOffSecondDay == null) ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower(),
@@ -102,7 +104,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             //var today = date.ToString("dd/MM/yyyy");
                             presentcount += 1;
 
-                            if (item.Lateby != null)
+                            if (item.Lateby != new TimeSpan())
                             {
                                 latecount += 1;
                             }
@@ -111,12 +113,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             {
                                 URId = (int)item.URId,
                                 AttendanceDate = date.Date,
-                                CheckIN = item.CheckIN.Value.TimeOfDay.ToString(@"hh\:mm"),
+                                CheckIN = item.CheckIN.TimeOfDay.ToString(@"hh\:mm"),
                                 CheckOUT = item.CheckOUT == null ? null : item.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                 Status = item.IsOvertime == true ? "Overtime" : "Present",
-                                LateBy = item.Lateby == null ? null : item.Lateby.Value.ToString(@"hh\:mm"),
+                                LateBy = item.Lateby == new TimeSpan() ? null : item.Lateby.ToString(@"hh\:mm"),
                                 Name = item.Name,
                                 ImagePath = item.ImagePath,
+                                IsAbsent=false,
+                                IsLate=item.Lateby==new TimeSpan()?false:true,
+                                IsOverTime= item.IsOvertime,
+                                IsPaidLeave=false,
+                                IsWeeklyOff= item.IsOvertime ,
+                                IsPresent=true,
                             });
 
                         }
@@ -135,6 +143,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 LateBy = lateby.ToString(@"hh\:mm"),
                                 Name = item.Name,
                                 ImagePath = item.ImagePath,
+                                IsAbsent = true,
+                                IsLate = false,
+                                IsOverTime = false,
+                                IsPaidLeave = item.PaidLeaveList==null ? false : ((from x in item.PaidLeaveList where x.Date==date.Date select x).Any()?true:false),
+                                IsWeeklyOff = (item.WeekoffoneDay || item.WeekoffsecondDay)?true:false,
+                                IsPresent = false,
                             });
 
 
@@ -176,6 +190,26 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
             }
 
+        }
+        public List<DateTime> PaidLeaveList(int URId,DateTime date) 
+        {
+            using (DBContext c = new DBContext()) 
+            {
+                var paidleave = (from x in c.OrgStaffsLeaveApplications where x.StaffURId == URId && x.StartDate.Month == date.Month && x.StartDate.Year == date.Year select new { x.StartDate,x.PaidDays}).FirstOrDefault();
+                List<DateTime> paidleavelist = new List<DateTime>();
+                if (paidleave != null)
+                {
+                    for (var i = 0; i < paidleave.PaidDays; i++) 
+                    {
+                        paidleavelist.Add(paidleave.StartDate.AddDays(i));
+                    }
+                    return paidleavelist;
+                }
+                else 
+                {
+                    return null;
+                }
+            }
         }
 
     }
