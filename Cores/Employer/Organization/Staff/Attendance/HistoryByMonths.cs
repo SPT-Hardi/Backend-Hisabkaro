@@ -91,7 +91,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
                                         CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
-                                        LateBy = checkpresent.Lateby == null ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
+                                        LateBy = checkpresent.Lateby == new TimeSpan() ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
                                         TotalWorkingHourPerDay = TotalWorkingHourPerDay.Value.ToString(@"hh\:mm")
                                     });
                                     totalworkinghourmonth += (TimeSpan)TotalWorkingHourPerDay;
