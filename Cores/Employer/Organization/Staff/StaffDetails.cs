@@ -72,7 +72,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         throw new ArgumentException("MoileNumber and AlternetNumber Are Same!");
                     }
 
-                    var _OrgRole = (from x in c.SubRoles where x.OId == value.Organization.Id && x.RoleName.ToLower() == "staff" select new { x.RId, x.RoleName }).FirstOrDefault();
+                    var _OrgRole = (from x in c.SubRoles where x.OId == value.Organization.Id && x.RoleName.ToLower() == "staff" select x).FirstOrDefault();
                     if (_OrgRole is null)
                     {
                         var _role = new SubRole()
@@ -83,9 +83,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         };
                         c.SubRoles.InsertOnSubmit(_role);
                         c.SubmitChanges();
+                        _OrgRole = _role;
                     }
 
-                    var _OrgRoles = (from x in c.SubRoles where x.OId == value.Organization.Id && x.RoleName.ToLower() == "staff" select new { x.RId, x.RoleName }).FirstOrDefault();
                     var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
                     
                     if (_subUser is not null)
@@ -101,7 +101,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             {
                                 UId = _subUser.UId,
                                 OId = _OId.OId,
-                                RId = _OrgRoles.RId
+                                RId = _OrgRole.RId
                             };
                             c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                             c.SubmitChanges();
@@ -132,14 +132,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             UId = _user.UId,
                             OId = _OId.OId,
-                            RId = _OrgRoles.RId
+                            RId = _OrgRole.RId
                         };
                         c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                         c.SubmitChanges();
+                        _subUser = _user;
                     }
 
-                    var _users = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
+                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
 
                     var _Sid = (from x in c.DevOrganisationsStaffs
                               where x.OId == _OId.OId
@@ -153,6 +153,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     {
                         _Sid += 1;
                     }
+                    var s = _Sid;
 
                     var staff = new DevOrganisationsStaff()
                     {
@@ -160,7 +161,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         URId = _URID.URId,
                         OId = (int)value.Organization.Id,
                         BranchId = value.Branch.Id == 0 ? null : value.Branch.Id,
-                        ShiftTimeId = value.ShiftTiming.Id,
+                        ShiftTimeId = value.ShiftTiming.Id ==0?null:value.ShiftTiming.Id,
                         Salary = value.Salary,
                         IsOpenWeek = value.IsOpenWeek,
                         SId = _Sid,
@@ -223,7 +224,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             throw new ArgumentException("MoileNumber and AlternetNumber Are Same!");
                         }
 
-                        var _OrgRole = (from y in c.SubRoles where y.OId == v.Organization.Id && y.RoleName.ToLower() == "staff" select new { y.RId, y.RoleName }).FirstOrDefault();
+                        var _OrgRole = (from y in c.SubRoles where y.OId == v.Organization.Id && y.RoleName.ToLower() == "staff" select y).FirstOrDefault();
                         if (_OrgRole is null)
                         {
                             var _role = new SubRole()
@@ -234,9 +235,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             };
                             c.SubRoles.InsertOnSubmit(_role);
                             c.SubmitChanges();
+                            _OrgRole = _role;
                         }
 
-                        var _OrgRoles = (from y in c.SubRoles where y.OId == v.Organization.Id && y.RoleName.ToLower() == "staff" select new { y.RId, y.RoleName }).FirstOrDefault();
                         var _subUser = c.SubUsers.SingleOrDefault(y => y.MobileNumber == v.MobileNumber);
 
                         if (_subUser is not null)
@@ -252,7 +253,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                                 {
                                     UId = _subUser.UId,
                                     OId = _OId.OId,
-                                    RId = _OrgRoles.RId
+                                    RId = _OrgRole.RId
                                 };
                                 c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                                 c.SubmitChanges();
@@ -283,14 +284,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             {
                                 UId = _user.UId,
                                 OId = _OId.OId,
-                                RId = _OrgRoles.RId
+                                RId = _OrgRole.RId
                             };
                             c.SubUserOrganisations.InsertOnSubmit(_userOrg);
                             c.SubmitChanges();
+                            _subUser = _user;
                         }
 
                         var _users = c.SubUsers.SingleOrDefault(x => x.MobileNumber == v.MobileNumber);
-                        var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRoles.RId);
+                        var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _users.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
 
                         var _Sid = (from y in c.DevOrganisationsStaffs
                                     where y.OId == _OId.OId
