@@ -256,7 +256,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
         {
             using (DBContext c = new DBContext())
             {
-                if (URId == null) 
+                if (URId == null)
                 {
                     throw new ArgumentException("Token not-valid or expired!");
                 }
@@ -333,11 +333,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     var remainminute = Math.Floor((totalworkinghour.TotalMinutes) - (totalhour * 60));
                     for (var i = startDate.Day; i <= endDate.Day; i++)
                     {
-                        var todaydate= DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
+                        var todaydate = DateTime.Parse($"{requestyear}-{requestmonth}-{i}");
                         var WeekOff = (from x in c.DevOrganisationsStaffs
                                        where
                                        x.URId == (int)URId &&
-                                       ( (x.WeekOffOneDay==null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()) )
+                                       ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
                                        select x).FirstOrDefault();
                         if (WeekOff != null)
                         {
@@ -363,6 +363,238 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     Message = "StatisticsByMonth of user geted successfully!",
                     Data = historyByMonth,
                 };
+            }
+        }
+        public Result StatisticsByDateRange(int URId, DateTime startDate, DateTime endDate)
+        {
+            using (DBContext c = new DBContext()) 
+            {
+                StatisticsByDateRange statisticsByDateRange = new StatisticsByDateRange();
+                List<Status> statuslist = new List<Status>();
+                var paidlist = new Statistics().PaidLeaveList(URId,startDate);
+                var totalpresent = 0;
+                var totalabsent = 0;
+                var totalweeklyoff = 0;
+                var totalovertime = 0;
+                var totalpaidleave = 0;
+                var totallate = 0;
+                var totaldays = 0;
+                var joindate = (from x in c.DevOrganisationsStaffs where x.URId == (int)URId select x.CreateDate).FirstOrDefault();
+                if (startDate.Month == endDate.Month && startDate.Year == endDate.Year)
+                {
+                    for (var i = startDate.Day; i <= endDate.Day; i++)
+                    {
+                        var todaydate = DateTime.Parse($"{startDate.Year}-{startDate.Month}-{i}");
+                        if (joindate.Date <= todaydate.Date)
+                        {
+                            totaldays += 1;
+                            var isweekoff = false;
+                            var ispresent = false;
+                            var isovertime = false;
+                            var ispaidleave = false;
+                            var islate = false;
+                            var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date == todaydate.Date && x.URId == (int)URId select x).FirstOrDefault();
+                            if (present != null)
+                            {
+                                ispresent = true;
+                                totalpresent += 1;
+                                islate = present.Lateby != new TimeSpan() ? true : false;
+                                if (islate)
+                                {
+                                    totallate += 1;
+                                }
+                                isovertime = present.IsOvertime;
+                                if (isovertime)
+                                {
+                                    totalovertime += 1;
+                                }
+                            }
+                            else
+                            {
+                                totalabsent += 1;
+                            }
+                            var WeekOff = (from x in c.DevOrganisationsStaffs
+                                           where
+                                           x.URId == (int)URId &&
+                                           ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                           select x).FirstOrDefault();
+                            if (paidlist != null)
+                            {
+                                if ((from x in paidlist where x.Date == todaydate.Date select x).Any() ? true : false && !ispresent)
+                                {
+                                    ispaidleave = true;
+                                    totalpaidleave += 1;
+                                }
+                            }
+                            if (WeekOff != null)
+                            {
+                                isweekoff = true;
+                                totalweeklyoff += 1;
+                            }
+                            statuslist.Add(new Status()
+                            {
+                                Date = todaydate,
+                                IsAbsent = ispresent != true,
+                                IsLate = islate,
+                                IsOvertime = isovertime,
+                                IsPaidLeave = ispaidleave,
+                                IsPresent = ispresent,
+                                IsWeeklyOff = isweekoff,
+                            });
+                        }
+                        else 
+                        {
+                        }
+                    }
+                }
+                else 
+                {
+                    var daysinmonth = DateTime.DaysInMonth(startDate.Year, startDate.Month);
+                    for (var i = startDate.Day; i <= daysinmonth; i++) 
+                    {
+                        var todaydate = DateTime.Parse($"{startDate.Year}-{startDate.Month}-{i}");
+                        if (joindate.Date <= todaydate.Date)
+                        {
+                            totaldays += 1;
+                            var isweekoff = false;
+                            var ispresent = false;
+                            var isovertime = false;
+                            var ispaidleave = false;
+                            var islate = false;
+                            var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date == todaydate.Date && x.URId == (int)URId select x).FirstOrDefault();
+                            if (present != null)
+                            {
+                                ispresent = true;
+                                totalpresent += 1;
+                                islate = present.Lateby != new TimeSpan() ? true : false;
+                                if (islate)
+                                {
+                                    totallate += 1;
+                                }
+                                isovertime = present.IsOvertime;
+                                if (isovertime)
+                                {
+                                    totalovertime += 1;
+                                }
+                            }
+                            else
+                            {
+                                totalabsent += 1;
+                            }
+                            var WeekOff = (from x in c.DevOrganisationsStaffs
+                                           where
+                                           x.URId == (int)URId &&
+                                           ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                           select x).FirstOrDefault();
+                            if (paidlist != null)
+                            {
+                                if ((from x in paidlist where x.Date == todaydate.Date select x).Any() ? true : false && !ispresent)
+                                {
+                                    ispaidleave = true;
+                                    totalpaidleave += 1;
+                                }
+                            }
+                            if (WeekOff != null)
+                            {
+                                isweekoff = true;
+                                totalweeklyoff += 1;
+                            }
+                            statuslist.Add(new Status()
+                            {
+                                Date = todaydate,
+                                IsAbsent = ispresent != true,
+                                IsLate = islate,
+                                IsOvertime = isovertime,
+                                IsPaidLeave = ispaidleave,
+                                IsPresent = ispresent,
+                                IsWeeklyOff = isweekoff,
+                            });
+                        }
+                        else { }
+
+                    }
+                    for (var i = 1; i <= endDate.Day; i++) 
+                    {
+                        var todaydate = DateTime.Parse($"{startDate.Year}-{startDate.Month}-{i}");
+                        if (joindate.Date <= todaydate.Date)
+                        {
+                            totaldays += 1;
+                            var isweekoff = false;
+                            var ispresent = false;
+                            var isovertime = false;
+                            var ispaidleave = false;
+                            var islate = false;
+                            var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date == todaydate.Date && x.URId == (int)URId select x).FirstOrDefault();
+                            if (present != null)
+                            {
+                                ispresent = true;
+                                totalpresent += 1;
+                                islate = present.Lateby != new TimeSpan() ? true : false;
+                                if (islate)
+                                {
+                                    totallate += 1;
+                                }
+                                isovertime = present.IsOvertime;
+                                if (isovertime)
+                                {
+                                    totalovertime += 1;
+                                }
+                            }
+                            else
+                            {
+                                totalabsent += 1;
+                            }
+                            var WeekOff = (from x in c.DevOrganisationsStaffs
+                                           where
+                                           x.URId == (int)URId &&
+                                           ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                           select x).FirstOrDefault();
+                            if (paidlist != null)
+                            {
+                                if ((from x in paidlist where x.Date == todaydate.Date select x).Any() ? true : false && !ispresent)
+                                {
+                                    ispaidleave = true;
+                                    totalpaidleave += 1;
+                                }
+                            }
+                            if (WeekOff != null)
+                            {
+                                isweekoff = true;
+                                totalweeklyoff += 1;
+                            }
+                            statuslist.Add(new Status()
+                            {
+                                Date = todaydate,
+                                IsAbsent = ispresent != true,
+                                IsLate = islate,
+                                IsOvertime = isovertime,
+                                IsPaidLeave = ispaidleave,
+                                IsPresent = ispresent,
+                                IsWeeklyOff = isweekoff,
+                            });
+                        }
+                        else { }
+                    }
+                }
+                statisticsByDateRange.Absent =totalabsent;
+                statisticsByDateRange.EndDate=endDate.Date;
+                statisticsByDateRange.Late=totallate;
+                statisticsByDateRange.Name=(from x in c.SubUserOrganisations where x.URId==URId select x.SubUser.SubUsersDetail.FullName).FirstOrDefault();
+                statisticsByDateRange.OverTime=totalovertime;
+                statisticsByDateRange.PaidLeave=totalpaidleave;
+                statisticsByDateRange.Present=totalpresent;
+                statisticsByDateRange.StartDate=startDate.Date;
+                statisticsByDateRange.Status=statuslist;
+                statisticsByDateRange.TotalDays=totaldays;
+                statisticsByDateRange.URId=URId;
+                statisticsByDateRange.WeeklyOff=totalweeklyoff;
+
+            return new Result()
+            {
+                Status=Result.ResultStatus.success,
+                Message="",
+                Data=statisticsByDateRange,
+            };
             }
         }
     }

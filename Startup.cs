@@ -16,7 +16,7 @@ using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 using HIsabKaro.Middleware;
 using HIsabKaro.Models.Common.MailService;
 using HIsabKaro.Services;
-using HIsabKaro.Services.ResumePDF;
+using HIsabKaro.Services.PDF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -108,7 +108,7 @@ namespace HIsabKaro
             services.AddTransient<MailServices>();
             //services.AddTransient<Cores.Common.Contact.Current>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<Services.ResumePDF.HTMLString>();
+            services.AddTransient<Services.PDF.HTMLString>();
             services.AddTransient<CustomAssemblyLoadContext>();
             var context = new CustomAssemblyLoadContext();
 

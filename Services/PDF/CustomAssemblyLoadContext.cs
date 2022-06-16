@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 
-namespace HIsabKaro.Services.ResumePDF
+namespace HIsabKaro.Services.PDF
 {
         internal class CustomAssemblyLoadContext : AssemblyLoadContext
         {

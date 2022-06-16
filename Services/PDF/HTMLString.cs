@@ -1,15 +1,16 @@
-﻿using HisabKaroContext;
+﻿using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
+using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HIsabKaro.Services.ResumePDF
+namespace HIsabKaro.Services.PDF
 {
     public class HTMLString
     {
-        public static string GetHTMLString(int UId)
+        public static string GetHTMLStringForResume(int UId)
         {
             using (DBContext c = new DBContext())
             {
@@ -131,49 +132,67 @@ namespace HIsabKaro.Services.ResumePDF
                 return sb.ToString();
             }
         }
+        public static string GetHTMLStringForAttendanceReport(int URId, DateTime startDate, DateTime endDate)
+        {
+            using (DBContext c = new DBContext())
+            {
+
+                var findorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
+                if (findorg == null)
+                {
+                    throw new ArgumentException("Organization not exist,(enter valid token)");
+                }
+                var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
+                if (findstaffroleid != null)
+                {
+                    var totalemp = (from obj in c.DevOrganisationsStaffs
+                                    where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId && obj.CreateDate <= endDate.Date
+                                    select obj).ToList();
+                    if (totalemp.Count() <= 0) 
+                    {
+                        throw new ArgumentException("Currently not any user exist in your Organization!");
+                    }
+                    var res =new HistoryByMonths().StatisticsByDateRange(10000003, new DateTime(2022, 02, 03), new DateTime(2022, 02, 10));
+                    var sb = new StringBuilder();
+                    sb.Append(@"
+                                  <html>
+                                  <head> 
+                                  </head>
+                                  <body>
+                                      <div>
+                                          <table>
+                                          <tr>
+                                            <th>Name</th>
+                                ");
+                    while (startDate.Date < endDate.Date) 
+                    {
+                        sb.Append($@"
+                                    <th>{startDate.Date}</th>
+                                  ");
+                        startDate.AddDays(1);
+                    };
+                    sb.Append($@"
+                                </tr>
+                              <tr>
+                                ");
+                    sb.Append(@"");
+
+                              /*         
+                                            <td>Raj</td>
+                                            <td>16-06-2022</td>
+                                          </tr>
+                                        </table>
+                                      </div>
+                                  </body>
+                                  </html>
+                               ");*/
+                }
+                else 
+                {
+                    throw new ArgumentException("Currently not any user exist in your Organization!");
+                }
+                return "";
+            }
+        }
     }
 }
-//< html >
-//< head >
-//< link rel = "stylesheet" type = "text/css" href = "C:\Users\RajMashruwala\Desktop\ResumeCss.css" > </ link >
-//     </ head >
-//     < body >
-//       < div class= "left" ></ div >
-//        < div class= "stuff" >
-//           < br >< br >
-//           < h1 > Patel Vijal </ h1 >
-//              < br />
-//              < p class= "head" > Address </ p >
-//                 < p class= "head" > email Id </ p >
-//                     < p class= "head" > Conatact Number </ p >< br />
-//                       < h2 > About </ h2 >
-//                       < hr />
-//                       < h3 > email Id </ h3 >                   
-//                          < br >                        
-//                          < h2 > Work Experience </ h2 >                         
-//                            < hr />                          
-//                             < h3 > Designation Name </ h3 >                              
-//                                < p class= "title" > Company Name </ p >                                  
-//                                    < p class= "head" > Duration </ p >                                   
-//                                     < br >                                   
-//                                     < h2 > Education </ h2 >                                   
-//                                     < hr />                                   
-//                                     < h3 > Institute Name </ h3 >                                      
-//                                        < p class= "title" > Stream </ p >                                      
-//                                         < p class= "head" > Duration </ p >                                        
-//                                          < br >                                        
-//                                          < h2 > Skills </ h2 >                                        
-//                                          < hr />                                       
-//                                          < p class= "head" >                                         
-//                                             < li > Web Design with HTML & CSS</li>
-//    <li>Web Design with HTML & CSS</li>     
-//  </p>
-//  <br>
-//<h2>Certificte</h2>
-//  <hr />
-// <h3>Name</h3>
-//  <p class= "head" > Duration </ p >
-//</ div >
-//< div class= "right" ></ div >   
-//          </ body >        
-//          </ html >

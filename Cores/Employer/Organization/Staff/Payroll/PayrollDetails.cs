@@ -19,6 +19,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                     var p = (from x in c.PayrollFixedLookups
                              select x).ToList();
                 }
+                return new Result() { };
             }
         } 
     }
