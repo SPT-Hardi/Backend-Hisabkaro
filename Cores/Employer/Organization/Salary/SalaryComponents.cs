@@ -220,7 +220,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
         }
 
         //=========Allowance,Other Incentive,Bonus,Night Allowance 
-        public Result Allowance(object URId, Models.Employer.Organization.Salary.SalaryComponent value)
+        public Result Allowance(object URId, Models.Employer.Organization.Salary.SalaryEarningComponent value)
         {
             using (DBContext c = new DBContext())
             {
@@ -233,11 +233,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                     }
 
                     value.StaffLists.ForEach((x) => {
-                        var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id);
-                        if (Staff.OId != _User.OId)
+                        var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id );
+                        var a = Staff.PayrollStaffSalaryComponents.SingleOrDefault(z => z.SalaryComponentId == value.PaymentType.Id);
+                        var v = x.Status == true;
+                        if (Staff.OId != _User.OId )
                         {
-                            throw new ArgumentException($"{x.Staff.Id}{x.Staff.Text} !");
+                            throw new ArgumentException($"{x.Staff.Text} Not Exist!");
                         }
+                        if (x.Status == true && a != null)
+                        {
+                            throw new ArgumentException($"{x.Staff.Text} Alredy Give {value.PaymentType.Text} !");
+                        }
+                        
                     });
 
                     var PF = value.StaffLists.Where(x => x.Status == true).Select(x => new HisabKaroContext.PayrollStaffSalaryComponent()
