@@ -17,6 +17,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
         public int WeeklyOff { get; set; }
         public int Late { get; set; }
         public int PaidLeave { get; set; }
+        public int Present_Late{get;set;}
         public int FullOverTime { get; set; }
         public int HalfOverTime { get; set; }
         public List<Status> Status { get; set; } = new List<Status>();

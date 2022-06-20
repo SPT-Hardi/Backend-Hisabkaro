@@ -146,9 +146,9 @@ namespace HIsabKaro.Services.PDF
                 }
                 List<int> user = new List<int>();
                 user.Add(10000062);
-                user.Add(10000024);
+               user.Add(10000024);
                 user.Add(10000025);
-                user.Add(10000027);
+               user.Add(10000027);
                 var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
                 if (findstaffroleid != null)
                 {
@@ -161,6 +161,7 @@ namespace HIsabKaro.Services.PDF
                     }*/
                     var sb = new StringBuilder();
                     var sp = new StringBuilder();
+                   
                     if (totaldaysofrecord <= 16)
                     {
                         sb.Append(@"
@@ -180,6 +181,21 @@ namespace HIsabKaro.Services.PDF
                                   ");
                             sd = sd.AddDays(1);
                         };
+                        sp.Append(@"
+                                     <div>
+                                     <table>
+                                      <tr>
+                                        <th>Name</th>
+                                        <th>TotalDays</th>
+                                        <th>Present</th>
+                                        <th>Absent</th>
+                                        <th>WeeklyOff</th>
+                                        <th>Late/HalfDay</th>
+                                        <th>PaidLeave</th>
+                                        <th>P-OverTimeF</th>
+                                        <th>P-OverTimeH</th>
+                                      </tr>
+                                   ");
                         sb.Append($@"
                                 </tr>
                                 ");
@@ -212,17 +228,41 @@ namespace HIsabKaro.Services.PDF
                                </tr>
                               ");
                             
+                        sp.Append($@"<tr>
+                                      <td>Raj</td>
+                                      <td>{attendancelist.TotalDays}</td>
+                                      <td>{attendancelist.Present}</td>
+                                      <td>{attendancelist.Absent}</td>
+                                      <td>{attendancelist.WeeklyOff}</td>
+                                      <td>{attendancelist.Late}</td>
+                                      <td>{attendancelist.PaidLeave}</td>
+                                      <td>{attendancelist.FullOverTime}</td>
+                                      <td>{attendancelist.HalfOverTime}</td>
+                                    </tr>
+                                     ");
                         }
                         sb.Append(@"</table>");
-                        //__>
                         sb.Append($@"
                                 </div>
-                               </body>
-                            </html>
                                 ");
+                        sb.Append(sp);
+                        sb.Append(@"</table>
+                                   </div>");
+                        sb.Append(@"
+                               </body>
+                            </html>");
                     }
                     else 
                     {
+                        List<StatisticsByDateRange> userlist = new List<StatisticsByDateRange>();
+                       /* var totalpresent = 0;
+                        var totalabsent = 0;
+                        var totalweekoff = 0;
+                        var totalpaidleave = 0;
+                        var totallate = 0;
+                        var totaldays = 0;
+                        var totalovertimefull = 0;
+                        var totalovertimehalf = 0;*/
                         var remainrecord = totaldaysofrecord - 16;
                         sb.Append(@"
                                   <html>
@@ -234,6 +274,21 @@ namespace HIsabKaro.Services.PDF
                                           <tr>
                                             <th>Name</th>
                                 ");
+                        sp.Append(@"
+                                     <div>
+                                     <table>
+                                      <tr>
+                                        <th>Name</th>
+                                        <th>TotalDays</th>
+                                        <th>Present</th>
+                                        <th>Absent</th>
+                                        <th>WeeklyOff</th>
+                                        <th>Late/HalfDay</th>
+                                        <th>PaidLeave</th>
+                                        <th>P-OverTimeF</th>
+                                        <th>P-OverTimeH</th>
+                                      </tr>
+                                   ");
                         while (sd <= startDate.AddDays(15))
                         {
                             sb.Append($@"
@@ -244,9 +299,11 @@ namespace HIsabKaro.Services.PDF
                         sb.Append($@"
                                 </tr>
                                 ");
+
                         foreach (var x in user)
                         {
                             StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x, startDate, sd.AddDays(-1)).Data;
+                            userlist.Add(attendancelist);
                             List<Status> status = attendancelist.Status;
                             var count = 16 - attendancelist.TotalDays;
                             sb.Append(@"
@@ -270,6 +327,26 @@ namespace HIsabKaro.Services.PDF
                             sb.Append(@"
                                </tr>
                               ");
+                           /* totalabsent =attendancelist.Absent;
+                            totalpresent =attendancelist.Present;
+                            totaldays =attendancelist.TotalDays;
+                            totalweekoff =attendancelist.WeeklyOff;
+                            totallate =attendancelist.Late;
+                            totalpaidleave =attendancelist.PaidLeave;
+                            totalovertimehalf =attendancelist.HalfOverTime;
+                            totalovertimefull =attendancelist.FullOverTime;*/
+                            /*sp.Append($@"<tr>
+                                      <td>Raj</td>
+                                      <td>{attendancelist.TotalDays}</td>
+                                      <td>{attendancelist.Present}</td>
+                                      <td>{attendancelist.Absent}</td>
+                                      <td>{attendancelist.WeeklyOff}</td>
+                                      <td>{attendancelist.Late}</td>
+                                      <td>{attendancelist.PaidLeave}</td>
+                                      <td>{attendancelist.FullOverTime}</td>
+                                      <td>{attendancelist.HalfOverTime}</td>
+                                    </tr>
+                                     ");*/
                         }
                             sb.Append(@"
                               </table>
@@ -291,6 +368,7 @@ namespace HIsabKaro.Services.PDF
                                 ");
                         foreach (var x in user)
                         {
+                            var attendancelist = (from y in userlist where y.URId == x select y).FirstOrDefault();
                             StatisticsByDateRange attendancelist17 = new HistoryByMonths().StatisticsByDateRange(x, remainsd, endDate).Data;
                             List<Status> status17 = attendancelist17.Status;
                             var count17 = remainrecord - attendancelist17.TotalDays;
@@ -314,13 +392,36 @@ namespace HIsabKaro.Services.PDF
                             }
                             sb.Append(@"
                                </tr>
-                              ");
+                              ");/*
+                            totalabsent +=attendancelist17.Absent;
+                            totalpresent +=attendancelist17.Present;
+                            totaldays +=attendancelist17.TotalDays;
+                            totalweekoff +=attendancelist17.WeeklyOff;
+                            totallate += attendancelist17.Late;
+                            totalpaidleave += attendancelist17.PaidLeave;
+                            totalovertimehalf +=attendancelist17.HalfOverTime;
+                            totalovertimefull +=attendancelist17.FullOverTime;*/
+                            sp.Append($@"<tr>
+                                      <td>Raj</td>
+                                      <td>{attendancelist.TotalDays + attendancelist17.TotalDays}</td>
+                                      <td>{attendancelist.Present+attendancelist17.Present}</td>
+                                      <td>{attendancelist.Absent+attendancelist17.Absent}</td>
+                                      <td>{attendancelist.WeeklyOff+attendancelist17.WeeklyOff}</td>
+                                      <td>{attendancelist.Late+attendancelist17.Late}</td>
+                                      <td>{attendancelist.PaidLeave+attendancelist17.PaidLeave}</td>
+                                      <td>{attendancelist.FullOverTime+attendancelist17.FullOverTime}</td>
+                                      <td>{attendancelist.HalfOverTime+attendancelist17.HalfOverTime}</td>
+                                    </tr>
+                                     ");
                         }
                         sb.Append(@"
                               </table>
                               ");
-                        //-->
-                        sb.Append(@"    </div>
+                        sb.Append(@"</div>");
+                        sb.Append(sp);
+                        sb.Append(@"</table>
+                                     </div>");
+                        sb.Append(@"
                                     </body>
                                  </html>
                               ");
