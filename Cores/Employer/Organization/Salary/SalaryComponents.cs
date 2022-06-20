@@ -1,6 +1,6 @@
 ﻿using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
 using HIsabKaro.Models.Common;
-using HIsabKaro.Models.Employer.Organization.Staff.Payroll;
+using HIsabKaro.Models.Employer.Organization.Salary;
 using HisabKaroContext;
 using System;
 using System.Collections.Generic;
@@ -8,20 +8,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
+namespace HIsabKaro.Cores.Employer.Organization.Salary
 {
-    public class PayrollDetails
+    public class SalaryComponents
     {
         public enum Component
         {
-            HRA=1,
-            NightAllowance =2,
-            PF=3,
-            ESI=4
+            HRA = 1,
+            NightAllowance = 2,
+            PF = 3,
+            ESI = 4,
+            Bonus = 5,
+            Incentive = 6,
+            Allowance  = 7
         }
 
         //=========PF
-        public Result PFOne(object URId)
+        public Result PF(object URId)
         {
 
             using (DBContext c = new DBContext())
@@ -42,7 +45,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                 var _staff = (from x in c.DevOrganisationsStaffs
                               where x.OId == _User.OId
                               select new { URId = x.URId }).ToList().Except(staff);
-
+                
                 foreach (var item in _staff)
                 {
                     var s = (from y in c.DevOrganisationsStaffs
@@ -57,10 +60,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                                  MobileNumber = y.SubUserOrganisation.SubUser.MobileNumber
                              }).FirstOrDefault();
 
-                    view.Add(new View() { 
-                        Staffset = new IntegerNullString() { Id = s.URId, Text = s.Name, }  ,
+                    view.Add(new View()
+                    {
+                        Staff = new IntegerNullString() { Id = s.URId, Text = s.Name, },
                         Profile = s.Profile,
-                        MobileNumber=s.MobileNumber,
+                        MobileNumber = s.MobileNumber,
                         Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
                     });
 
@@ -74,7 +78,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                 };
             }
         }
-        public Result PFCreate(object URId, Models.Employer.Organization.Staff.Payroll.PayrollDetail value)
+        public Result PF(object URId, Models.Employer.Organization.Salary.SalaryComponent value)
         {
             using (DBContext c = new DBContext())
             {
@@ -85,7 +89,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    
+
+                    value.StaffLists.ForEach((x) => {
+                        var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id);
+                        if (Staff.OId != _User.OId)
+                        {
+                            throw new ArgumentException($"{x.Staff.Text} Alredy Give PF!");
+                        }
+                    });
+
                     var PF = value.StaffLists.Where(x => x.Status == true).Select(x => new HisabKaroContext.PayrollStaffSalaryComponent()
                     {
                         SalaryComponentId = (int)Component.PF,
@@ -106,7 +118,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
             }
         }
         //=========ESI
-        public Result ESIOne(object URId)
+        public Result ESI(object URId)
         {
 
             using (DBContext c = new DBContext())
@@ -150,7 +162,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
 
                     view.Add(new View()
                     {
-                        Staffset = new IntegerNullString() { Id = s.URId, Text = s.Name, },
+                        Staff = new IntegerNullString() { Id = s.URId, Text = s.Name, },
                         Profile = s.Profile,
                         MobileNumber = s.MobileNumber,
                         Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
@@ -166,7 +178,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                 };
             }
         }
-        public Result ESICreate(object URId, Models.Employer.Organization.Staff.Payroll.PayrollDetail value)
+        public Result ESI(object URId, Models.Employer.Organization.Salary.SalaryComponent value)
         {
             using (DBContext c = new DBContext())
             {
@@ -177,6 +189,55 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Payroll
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
+
+                    value.StaffLists.ForEach((x) => {
+                        var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id);
+                        if (Staff.OId != _User.OId)
+                        {
+                            throw new ArgumentException($"{x.Staff.Text} Alredy Give ESI !");
+                        }
+                    });
+
+                    var PF = value.StaffLists.Where(x => x.Status == true).Select(x => new HisabKaroContext.PayrollStaffSalaryComponent()
+                    {
+                        SalaryComponentId = (int)Component.ESI,
+                        URId = (int)x.Staff.Id,
+                        Amount = value.Amount,
+                    }).ToList();
+
+                    c.PayrollStaffSalaryComponents.InsertAllOnSubmit(PF);
+                    c.SubmitChanges();
+
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = string.Format("ESI Give Successfully!"),
+                    };
+                }
+            }
+        }
+
+        //=========Allowance,Other Incentive,Bonus,Night Allowance 
+        public Result Allowance(object URId, Models.Employer.Organization.Salary.SalaryComponent value)
+        {
+            using (DBContext c = new DBContext())
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName.ToLower() == "admin");
+                    if (_User is null)
+                    {
+                        throw new ArgumentException("User Does Not Exits!");
+                    }
+
+                    value.StaffLists.ForEach((x) => {
+                        var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id);
+                        if (Staff.OId != _User.OId)
+                        {
+                            throw new ArgumentException($"{x.Staff.Id}{x.Staff.Text} !");
+                        }
+                    });
 
                     var PF = value.StaffLists.Where(x => x.Status == true).Select(x => new HisabKaroContext.PayrollStaffSalaryComponent()
                     {
