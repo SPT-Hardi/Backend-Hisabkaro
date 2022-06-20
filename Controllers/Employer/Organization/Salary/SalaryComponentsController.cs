@@ -48,7 +48,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Salary
         
         [HttpPost]
         [Route("SalaryComponents/Allowance/Create")]
-        public IActionResult Allowance([FromBody] Models.Employer.Organization.Salary.SalaryComponent value)
+        public IActionResult Allowance([FromBody] Models.Employer.Organization.Salary.SalaryEarningComponent value)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(new SalaryComponents().Allowance(URId, value));
