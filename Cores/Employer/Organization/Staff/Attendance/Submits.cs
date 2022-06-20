@@ -49,7 +49,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.Lateby = lateby;
                             if (check) 
                             {
-                                attendance.IsOvertime = true;
+                                attendance.IsOvertimeFullDay = true;
                             }
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
@@ -133,7 +133,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         attendance.ShiftEndTime = org.DevOrganisationsShiftTime.EndTime;
                         if (check) 
                         {
-                            attendance.IsOvertime = true;
+                            attendance.IsOvertimeFullDay = true;
                         }
                         attendance.PhotoFileId = fileid.FileId;
                         attendance.Lateby = lateby;

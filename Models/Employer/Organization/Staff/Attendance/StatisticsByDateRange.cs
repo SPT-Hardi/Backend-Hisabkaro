@@ -17,7 +17,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
         public int WeeklyOff { get; set; }
         public int Late { get; set; }
         public int PaidLeave { get; set; }
-        public int OverTime { get; set; }
+        public int FullOverTime { get; set; }
+        public int HalfOverTime { get; set; }
         public List<Status> Status { get; set; } = new List<Status>();
     }
     public class Status 
@@ -28,6 +29,8 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Attendance
         public bool IsWeeklyOff { get; set; }
         public bool IsLate { get; set; }
         public bool IsPaidLeave { get; set; }
-        public bool IsOvertime { get; set; }
+        public bool IsOvertimeFull { get; set; }
+        public bool IsOvertimeHalf { get; set; }
+        public string StatusString { get; set; }
     }
 }

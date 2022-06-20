@@ -89,6 +89,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Leave
                 leave.UnPaidDays = (value.UnPaid == null ? 0 : value.UnPaid);
                 leave.URId = (int)URId;
                 c.SubmitChanges();
+
+               /* var count = (value.Paid == null ? 0 : value.Paid);
+                while (count != 0) 
+                {
+                    OrgStaffPaidLeaveDate paiddates = new OrgStaffPaidLeaveDate();
+                    
+                    paiddates.OrgStaffLeaveId =leave.OrgStaffLeaveId;
+                    paiddates.PaidLeaveDate =;
+                    count -= 1;
+                }*/
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,

@@ -29,7 +29,7 @@ namespace HIsabKaro.Services
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["Jwt:ValidAudience"],
                 notBefore: DateTime.Parse($"{DateTime.Now.ToString("yyyy/MM/dd")} {tokentime}"),
-                expires: DateTime.Now.AddMonths(1),
+                expires: DateTime.Now.AddMonths(10),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSignKey, SecurityAlgorithms.HmacSha256)
             );

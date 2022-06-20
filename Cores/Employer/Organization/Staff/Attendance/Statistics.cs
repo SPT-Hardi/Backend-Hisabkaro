@@ -54,7 +54,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                                URId = obj1.URId,
                                                CheckIN = obj1.ChekIN,
                                                CheckOUT = obj1.CheckOUT,
-                                               IsOvertime = obj1.IsOvertime,
+                                               IsOvertime = obj1.IsOvertimeFullDay || obj1.IsOvertimeHalfDay,
                                                Lateby = obj1.Lateby,
                                                MarkLate = obj.DevOrganisationsShiftTime.MarkLate,
                                                Name = obj.SubUserOrganisation.SubUser.SubUsersDetail.FullName,
@@ -195,13 +195,71 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
         {
             using (DBContext c = new DBContext()) 
             {
-                var paidleave = (from x in c.OrgStaffsLeaveApplications where x.StaffURId == URId && x.StartDate.Month == date.Month && x.StartDate.Year == date.Year select new { x.StartDate,x.PaidDays}).FirstOrDefault();
+                var paidleave = (from x in c.OrgStaffsLeaveApplications where x.StaffURId == URId && x.StartDate.Month == date.Month && x.StartDate.Year == date.Year select new { x.StartDate,x.PaidDays,x.EndDate}).FirstOrDefault();
                 List<DateTime> paidleavelist = new List<DateTime>();
                 if (paidleave != null)
                 {
-                    for (var i = 0; i < paidleave.PaidDays; i++) 
+                    var count = paidleave.PaidDays;
+                    /*for (var i = 0; i < paidleave.PaidDays; i++) 
                     {
+                        var WeekOff = (from x in c.DevOrganisationsStaffs
+                                       where
+                                       x.URId == (int)URId &&
+                                       ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                       select x).FirstOrDefault();
                         paidleavelist.Add(paidleave.StartDate.AddDays(i));
+                    }*/
+                    if (paidleave.StartDate.Month == paidleave.EndDate.Month && paidleave.StartDate.Year == paidleave.EndDate.Year)
+                    {
+                        for (var i = paidleave.StartDate.Day; i <= paidleave.EndDate.Day; i++)
+                        {
+                            if (count == 0) break;
+                            var todaydate = DateTime.Parse($"{paidleave.StartDate.Year}-{paidleave.StartDate.Month}-{i}");
+                            var WeekOff = (from x in c.DevOrganisationsStaffs
+                                           where
+                                           x.URId == (int)URId &&
+                                           ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                           select x).FirstOrDefault();
+                            if (WeekOff == null) 
+                            {
+                                paidleavelist.Add(todaydate.Date);
+                                count -= 1;
+                            }
+                        }
+                    }
+                    else 
+                    {
+                        var daysinmonth = DateTime.DaysInMonth(paidleave.StartDate.Year, paidleave.StartDate.Month);
+                        for (var i = paidleave.StartDate.Day; i <= daysinmonth; i++) 
+                        {
+                            if (count == 0) break;
+                            var todaydate = DateTime.Parse($"{paidleave.StartDate.Year}-{paidleave.StartDate.Month}-{i}");
+                            var WeekOff = (from x in c.DevOrganisationsStaffs
+                                           where
+                                           x.URId == (int)URId &&
+                                           ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                           select x).FirstOrDefault();
+                            if (WeekOff == null)
+                            {
+                                paidleavelist.Add(todaydate.Date);
+                                count -= 1;
+                            }
+                        }
+                        for (var i = 1; i <= paidleave.EndDate.Day; i++) 
+                        {
+                            if (count == 0) break;
+                            var todaydate = DateTime.Parse($"{paidleave.EndDate.Year}-{paidleave.EndDate.Month}-{i}");
+                            var WeekOff = (from x in c.DevOrganisationsStaffs
+                                           where
+                                           x.URId == (int)URId &&
+                                           ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
+                                           select x).FirstOrDefault();
+                            if (WeekOff == null)
+                            {
+                                paidleavelist.Add(todaydate.Date);
+                                count -= 1;
+                            }
+                        }
                     }
                     return paidleavelist;
                 }

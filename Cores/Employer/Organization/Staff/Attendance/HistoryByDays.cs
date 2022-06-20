@@ -43,7 +43,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         URId = (int)URId,
                         AttendanceDate = $"{date.Day} {monthname} | {dayname}",
                         Date = checkindate,
-                        Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
+                        Status = (checkpresent.IsOvertimeFullDay == true || checkpresent.IsOvertimeHalfDay == true) ? "OverTime" : "Present",
                         CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                         LateBy = checkpresent.Lateby == new TimeSpan() ? null : checkpresent.Lateby.ToString(@"hh\:mm"),

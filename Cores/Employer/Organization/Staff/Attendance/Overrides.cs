@@ -32,6 +32,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     //33-present
                     //34-absent
                     //35-HalfDay
+                    //155-OvertimeFullDay
+                    //157-OvertimeHalfDay
                     var checkindate = value.AttendanceDate.ToString("yyyy/MM/dd");
                     var org = c.DevOrganisationsStaffs.Where(x => x.URId == value.URId).SingleOrDefault();
                     if (org==null) 
@@ -46,7 +48,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
                     if (staffattendance == null)
                     {
-                        if (value.Status.Id ==34) 
+                        if (value.Status.Id == 34)
                         {
                             throw new ArgumentException($"Staff already absent at {value.AttendanceDate.ToString("dd/MM/yyyy")} day!");
                         }
@@ -56,34 +58,58 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
                             attendance.URId = value.URId;
-                            attendance.LastUpdateDate =ISDT;
-                            if (check) 
-                            {
-                                attendance.IsOvertime = true;
-                            }
-                            attendance.IsAccessible = false;
-                            c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
-                            c.SubmitChanges();
-                        }
-                        else if (value.Status.Id == 35) 
-                        {
-                            OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
-                            var total_org_runnigtime = (org.DevOrganisationsShiftTime.EndTime-org.DevOrganisationsShiftTime.StartTime)/2;
-                            var checkouttime= org.DevOrganisationsShiftTime.EndTime-total_org_runnigtime;
-                            attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
-                            attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
-                            attendance.URId = value.URId;
                             attendance.LastUpdateDate = ISDT;
                             if (check)
                             {
-                                attendance.IsOvertime = true;
+                                attendance.IsOvertimeFullDay = true;
+                            }
+                            attendance.IsAccessible = false;
+                            c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
+                            c.SubmitChanges();
+                        }
+                        else if (value.Status.Id == 35)
+                        {
+                            OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
+                            var total_org_runnigtime = (org.DevOrganisationsShiftTime.EndTime - org.DevOrganisationsShiftTime.StartTime) / 2;
+                            var checkouttime = org.DevOrganisationsShiftTime.EndTime - total_org_runnigtime;
+                            attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
+                            attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
+                            attendance.URId = value.URId;
+                            attendance.IsHalfDay = true;
+                            attendance.LastUpdateDate = ISDT;
+                            if (check)
+                            {
+                                attendance.IsOvertimeFullDay = true;
                             }
                             attendance.IsAccessible = false;
                             c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
                             c.SubmitChanges();
 
                         }
-
+                        else if (value.Status.Id == 155)
+                        {
+                            OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
+                            attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
+                            attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
+                            attendance.URId = value.URId;
+                            attendance.LastUpdateDate = ISDT;
+                            attendance.IsOvertimeFullDay = true;
+                            attendance.IsAccessible = false;
+                            c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
+                            c.SubmitChanges();
+                        }
+                        else if (value.Status.Id == 157) 
+                        {
+                            OrgStaffsAttendancesDaily attendance = new OrgStaffsAttendancesDaily();
+                            attendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
+                            attendance.CheckOUT = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.EndTime}");
+                            attendance.URId = value.URId;
+                            attendance.LastUpdateDate = ISDT;
+                            attendance.IsOvertimeHalfDay = true;
+                            attendance.IsAccessible = false;
+                            c.OrgStaffsAttendancesDailies.InsertOnSubmit(attendance);
+                            c.SubmitChanges();
+                        }
                     }
                     else 
                     {
@@ -98,22 +124,41 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         }
                         else if (value.Status.Id == 35)
                         {
-                            
-                            
                             var total_org_runnigtime = (org.DevOrganisationsShiftTime.EndTime - org.DevOrganisationsShiftTime.StartTime) / 2;
                             var checkouttime = org.DevOrganisationsShiftTime.EndTime - total_org_runnigtime;
                             staffattendance.ChekIN = Convert.ToDateTime($"{checkindate} {org.DevOrganisationsShiftTime.StartTime}");
                             staffattendance.CheckOUT = Convert.ToDateTime($"{checkindate} {checkouttime}");
                             staffattendance.URId = value.URId;
+                            staffattendance.IsHalfDay = true;
                             if (check)
                             {
-                                staffattendance.IsOvertime = true;
+                                staffattendance.IsOvertimeFullDay = true;
                             }
                             staffattendance.LastUpdateDate = ISDT;
                             staffattendance.IsAccessible = false;
-                            
+
                             c.SubmitChanges();
 
+                        }
+                        else if (value.Status.Id == 155)
+                        {
+                            if (staffattendance.IsOvertimeFullDay == true) 
+                            {
+                                throw new ArgumentException("FullDayOvertime already assigned!");
+                            }
+                            staffattendance.IsOvertimeFullDay = true;
+                            staffattendance.IsOvertimeHalfDay = false;
+                            c.SubmitChanges();
+                        }
+                        else if (value.Status.Id == 157) 
+                        {
+                            if (staffattendance.IsOvertimeHalfDay == true)
+                            {
+                                throw new ArgumentException("HalfDayOvertime already assigned!");
+                            }
+                            staffattendance.IsOvertimeHalfDay = true;
+                            staffattendance.IsOvertimeFullDay = false;
+                            c.SubmitChanges();
                         }
                     }
                     var name = c.SubUsersDetails.Where(x=>x.UId==staffexist.UId).SingleOrDefault().FullName;

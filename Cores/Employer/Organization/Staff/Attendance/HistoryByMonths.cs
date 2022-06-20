@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -68,7 +69,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 if (checkpresent != null)
                                 {
                                     presentcount += 1;
-                                    if (checkpresent.IsOvertime == true)
+                                    if (checkpresent.IsOvertimeFullDay == true || checkpresent.IsOvertimeHalfDay == true)
                                     {
                                         overtimecount += 1;
                                     }
@@ -88,7 +89,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
-                                        Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
+                                        Status = (checkpresent.IsOvertimeFullDay == true || checkpresent.IsOvertimeHalfDay == true) ? "OverTime" : "Present",
                                         CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         LateBy = checkpresent.Lateby == new TimeSpan() ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
@@ -149,7 +150,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 if (checkpresent != null)
                                 {
                                     presentcount += 1;
-                                    if (checkpresent.IsOvertime == true)
+                                    if (checkpresent.IsOvertimeFullDay == true || checkpresent.IsOvertimeHalfDay == true)
                                     {
                                         overtimecount += 1;
                                     }
@@ -166,7 +167,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                         URId = (int)URId,
                                         AttendanceDate = $"{i} {monthname} | {dayname}",
                                         Date = checkindate,
-                                        Status = checkpresent.IsOvertime == true ? "OverTime" : "Present",
+                                        Status = (checkpresent.IsOvertimeFullDay == true || checkpresent.IsOvertimeHalfDay == true) ? "OverTime" : "Present",
                                         CheckIN = checkpresent.ChekIN.TimeOfDay.ToString(@"hh\:mm"),
                                         CheckOUT = checkpresent.CheckOUT == null ? null : checkpresent.CheckOUT.Value.TimeOfDay.ToString(@"hh\:mm"),
                                         LateBy = checkpresent.Lateby == new TimeSpan() ? null : checkpresent.Lateby.ToString(@"hh\:mm"),
@@ -327,7 +328,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 where x.Lateby != new TimeSpan()
                                 select x).ToList();
                     var overtime = (from x in present
-                                    where x.IsOvertime == true
+                                    where x.IsOvertimeFullDay == true || x.IsOvertimeHalfDay==true
                                     select x).ToList();
                     var totalhour = (Math.Floor((totalworkinghour.TotalMinutes) / 60));
                     var remainminute = Math.Floor((totalworkinghour.TotalMinutes) - (totalhour * 60));
@@ -375,7 +376,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 var totalpresent = 0;
                 var totalabsent = 0;
                 var totalweeklyoff = 0;
-                var totalovertime = 0;
+                var totalfullovertime = 0;
+                var totalhalfovertime = 0;
                 var totalpaidleave = 0;
                 var totallate = 0;
                 var totaldays = 0;
@@ -390,7 +392,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             totaldays += 1;
                             var isweekoff = false;
                             var ispresent = false;
-                            var isovertime = false;
+                            var isovertimefull = false;
+                            var isovertimehalf = false;
                             var ispaidleave = false;
                             var islate = false;
                             var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date == todaydate.Date && x.URId == (int)URId select x).FirstOrDefault();
@@ -403,10 +406,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 {
                                     totallate += 1;
                                 }
-                                isovertime = present.IsOvertime;
-                                if (isovertime)
+                                isovertimefull = present.IsOvertimeFullDay;
+                                if (isovertimefull)
                                 {
-                                    totalovertime += 1;
+                                    totalfullovertime += 1;
+                                }
+                                isovertimehalf = present.IsOvertimeHalfDay;
+                                if (isovertimehalf)
+                                {
+                                    totalhalfovertime += 1;
                                 }
                             }
                             else
@@ -431,15 +439,25 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 isweekoff = true;
                                 totalweeklyoff += 1;
                             }
+                            /*
+                             Present-P
+                             Absent-A
+                             WeeklyOff-WO
+                             Overtime-OT
+                             PaidLeave-PL
+                             Late/HalfDay-L
+                             */
                             statuslist.Add(new Status()
                             {
                                 Date = todaydate,
                                 IsAbsent = ispresent != true,
                                 IsLate = islate,
-                                IsOvertime = isovertime,
+                                IsOvertimeFull=isovertimefull,
+                                IsOvertimeHalf=isovertimehalf,
                                 IsPaidLeave = ispaidleave,
                                 IsPresent = ispresent,
                                 IsWeeklyOff = isweekoff,
+                                StatusString=BuilStatusString(ispresent,!ispresent,isovertimefull,isovertimehalf,isweekoff,islate,ispaidleave)
                             });
                         }
                         else 
@@ -458,7 +476,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                             totaldays += 1;
                             var isweekoff = false;
                             var ispresent = false;
-                            var isovertime = false;
+                            var isovertimefull = false;
+                            var isovertimehalf = false;
                             var ispaidleave = false;
                             var islate = false;
                             var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date == todaydate.Date && x.URId == (int)URId select x).FirstOrDefault();
@@ -471,10 +490,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 {
                                     totallate += 1;
                                 }
-                                isovertime = present.IsOvertime;
-                                if (isovertime)
+                                isovertimefull = present.IsOvertimeFullDay;
+                                if (isovertimefull)
                                 {
-                                    totalovertime += 1;
+                                    totalfullovertime += 1;
+                                }
+                                isovertimehalf = present.IsOvertimeHalfDay;
+                                if (isovertimehalf)
+                                {
+                                    totalhalfovertime += 1;
                                 }
                             }
                             else
@@ -504,10 +528,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 Date = todaydate,
                                 IsAbsent = ispresent != true,
                                 IsLate = islate,
-                                IsOvertime = isovertime,
+                                IsOvertimeFull = isovertimefull,
+                                IsOvertimeHalf = isovertimehalf,
                                 IsPaidLeave = ispaidleave,
                                 IsPresent = ispresent,
                                 IsWeeklyOff = isweekoff,
+                                StatusString = BuilStatusString(ispresent, !ispresent, isovertimefull, isovertimehalf, isweekoff, islate, ispaidleave)
                             });
                         }
                         else { }
@@ -515,13 +541,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     }
                     for (var i = 1; i <= endDate.Day; i++) 
                     {
-                        var todaydate = DateTime.Parse($"{startDate.Year}-{startDate.Month}-{i}");
+                        var todaydate = DateTime.Parse($"{endDate.Year}-{endDate.Month}-{i}");
                         if (joindate.Date <= todaydate.Date)
                         {
                             totaldays += 1;
                             var isweekoff = false;
                             var ispresent = false;
-                            var isovertime = false;
+                            var isovertimefull = false;
+                            var isovertimehalf = false;
                             var ispaidleave = false;
                             var islate = false;
                             var present = (from x in c.OrgStaffsAttendancesDailies where x.ChekIN.Date == todaydate.Date && x.URId == (int)URId select x).FirstOrDefault();
@@ -534,10 +561,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 {
                                     totallate += 1;
                                 }
-                                isovertime = present.IsOvertime;
-                                if (isovertime)
+                                isovertimefull = present.IsOvertimeFullDay;
+                                if (isovertimefull)
                                 {
-                                    totalovertime += 1;
+                                    totalfullovertime += 1;
+                                }
+                                isovertimehalf = present.IsOvertimeHalfDay;
+                                if (isovertimehalf)
+                                {
+                                    totalhalfovertime += 1;
                                 }
                             }
                             else
@@ -567,10 +599,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 Date = todaydate,
                                 IsAbsent = ispresent != true,
                                 IsLate = islate,
-                                IsOvertime = isovertime,
+                                IsOvertimeFull = isovertimefull,
+                                IsOvertimeHalf = isovertimehalf,
                                 IsPaidLeave = ispaidleave,
                                 IsPresent = ispresent,
                                 IsWeeklyOff = isweekoff,
+                                StatusString = BuilStatusString(ispresent, !ispresent, isovertimefull, isovertimehalf, isweekoff, islate, ispaidleave)
                             });
                         }
                         else { }
@@ -580,7 +614,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 statisticsByDateRange.EndDate=endDate.Date;
                 statisticsByDateRange.Late=totallate;
                 statisticsByDateRange.Name=(from x in c.SubUserOrganisations where x.URId==URId select x.SubUser.SubUsersDetail.FullName).FirstOrDefault();
-                statisticsByDateRange.OverTime=totalovertime;
+                statisticsByDateRange.FullOverTime=totalfullovertime;
+                statisticsByDateRange.HalfOverTime = totalhalfovertime;
                 statisticsByDateRange.PaidLeave=totalpaidleave;
                 statisticsByDateRange.Present=totalpresent;
                 statisticsByDateRange.StartDate=startDate.Date;
@@ -596,6 +631,43 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 Data=statisticsByDateRange,
             };
             }
+        }
+        public string BuilStatusString(bool ispresent, bool isabsent, bool isovertimefull,bool isovertimehalf, bool isweeklyoff, bool islate, bool ispaidleave)
+        {
+            StringBuilder result = new StringBuilder();
+            if (ispresent)
+            {
+                result.Append("P");
+                if (isweeklyoff)
+                {
+                    result.Append(" |WO");
+                }
+                if (isovertimefull)
+                {
+                    result.Append(" |OT-F");
+                }
+                if (isovertimehalf)
+                {
+                    result.Append(" |OT-H");
+                }
+                if (islate)
+                {
+                    result.Append(" |L");
+                }
+            }
+            else 
+            {
+                result.Append("A");
+                if (isweeklyoff) 
+                {
+                    result.Append(" |WO");
+                }
+                else if (ispaidleave) 
+                {
+                    result.Append(" |PL");
+                }
+            }
+            return result.ToString();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
+using HIsabKaro.Models.Employer.Organization.Staff.Attendance;
 using HisabKaroContext;
 using System;
 using System.Collections.Generic;
@@ -136,25 +137,33 @@ namespace HIsabKaro.Services.PDF
         {
             using (DBContext c = new DBContext())
             {
-
+                var sd = startDate.Date;
+                var totaldaysofrecord = ((endDate.Date - startDate.Date).TotalDays)+1;
                 var findorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                 if (findorg == null)
                 {
                     throw new ArgumentException("Organization not exist,(enter valid token)");
                 }
+                List<int> user = new List<int>();
+                user.Add(10000062);
+                user.Add(10000024);
+                user.Add(10000025);
+                user.Add(10000027);
                 var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
                 if (findstaffroleid != null)
                 {
-                    var totalemp = (from obj in c.DevOrganisationsStaffs
+                    /*var totalemp = (from obj in c.DevOrganisationsStaffs
                                     where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId && obj.CreateDate <= endDate.Date
                                     select obj).ToList();
                     if (totalemp.Count() <= 0) 
                     {
                         throw new ArgumentException("Currently not any user exist in your Organization!");
-                    }
-                    var res =new HistoryByMonths().StatisticsByDateRange(10000003, new DateTime(2022, 02, 03), new DateTime(2022, 02, 10));
+                    }*/
                     var sb = new StringBuilder();
-                    sb.Append(@"
+                    var sp = new StringBuilder();
+                    if (totaldaysofrecord <= 16)
+                    {
+                        sb.Append(@"
                                   <html>
                                   <head> 
                                   </head>
@@ -164,34 +173,165 @@ namespace HIsabKaro.Services.PDF
                                           <tr>
                                             <th>Name</th>
                                 ");
-                    while (startDate.Date < endDate.Date) 
-                    {
-                        sb.Append($@"
-                                    <th>{startDate.Date}</th>
+                        while (sd <= startDate.AddDays(15))
+                        {
+                            sb.Append($@"
+                                    <th>{sd.ToString("dd-MM-yyyy")}</th>
                                   ");
-                        startDate.AddDays(1);
-                    };
-                    sb.Append($@"
+                            sd = sd.AddDays(1);
+                        };
+                        sb.Append($@"
                                 </tr>
-                              <tr>
                                 ");
-                    sb.Append(@"");
+                        foreach (var x in user)
+                        {
+                            StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x, startDate, startDate.AddDays(15)).Data;
+                        List<Status> status = attendancelist.Status;
+                        var count = totaldaysofrecord - attendancelist.TotalDays;
+                        sb.Append(@"
+                               <tr>
+                               <td>Raj</td>
+                              ");
+                        /*sb.Append(@"
+                              ");*/
+                        foreach (var y in status)
+                        {
+                            while (count != 0)
+                            {
+                                sb.Append($@"
+                                    <td>_</td>
+                                   ");
+                                count -= 1;
+                            }
+                            sb.Append($@"
+                                    <td>{y.StatusString}</td>
+                                   ");
+                            //startDate.AddDays(1);
+                        }
+                        sb.Append(@"
+                               </tr>
+                              ");
+                            
+                        }
+                        sb.Append(@"</table>");
+                        //__>
+                        sb.Append($@"
+                                </div>
+                               </body>
+                            </html>
+                                ");
+                    }
+                    else 
+                    {
+                        var remainrecord = totaldaysofrecord - 16;
+                        sb.Append(@"
+                                  <html>
+                                  <head> 
+                                  </head>
+                                  <body>
+                                      <div>
+                                          <table>
+                                          <tr>
+                                            <th>Name</th>
+                                ");
+                        while (sd <= startDate.AddDays(15))
+                        {
+                            sb.Append($@"
+                                    <th>{sd.ToString("dd-MM-yyyy")}</th>
+                                  ");
+                            sd = sd.AddDays(1);
+                        };
+                        sb.Append($@"
+                                </tr>
+                                ");
+                        foreach (var x in user)
+                        {
+                            StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x, startDate, sd.AddDays(-1)).Data;
+                            List<Status> status = attendancelist.Status;
+                            var count = 16 - attendancelist.TotalDays;
+                            sb.Append(@"
+                               <tr>
+                               <td>Raj</td>
+                              ");
+                            foreach (var y in status)
+                            {
+                                while (count != 0)
+                                {
+                                    sb.Append($@"
+                                    <td>_</td>
+                                   ");
+                                    count -= 1;
+                                }
+                                sb.Append($@"
+                                    <td>{y.StatusString}</td>
+                                   ");
+                                //startDate.AddDays(1);
+                            }
+                            sb.Append(@"
+                               </tr>
+                              ");
+                        }
+                            sb.Append(@"
+                              </table>
+                              ");
+                            //------------------------------- after 16 col new table
+                            sb.Append(@"<table>
+                                <tr>
+                                <th>Name</th>");
+                        var remainsd = sd;
+                        while (sd <= endDate.Date)
+                        {
+                            sb.Append($@"
+                                    <th>{sd.ToString("dd-MM-yyyy")}</th>
+                                  ");
+                            sd = sd.AddDays(1);
+                        };
+                        sb.Append($@"
+                                </tr>
+                                ");
+                        foreach (var x in user)
+                        {
+                            StatisticsByDateRange attendancelist17 = new HistoryByMonths().StatisticsByDateRange(x, remainsd, endDate).Data;
+                            List<Status> status17 = attendancelist17.Status;
+                            var count17 = remainrecord - attendancelist17.TotalDays;
+                            sb.Append(@"
+                               <tr>
+                               <td>Raj</td>
+                              ");
+                            foreach (var y in status17)
+                            {
+                                while (count17 != 0)
+                                {
+                                    sb.Append($@"
+                                    <td>_</td>
+                                   ");
+                                    count17 -= 1;
+                                }
+                                sb.Append($@"
+                                    <td>{y.StatusString}</td>
+                                   ");
+                                //startDate.AddDays(1);
+                            }
+                            sb.Append(@"
+                               </tr>
+                              ");
+                        }
+                        sb.Append(@"
+                              </table>
+                              ");
+                        //-->
+                        sb.Append(@"    </div>
+                                    </body>
+                                 </html>
+                              ");
 
-                              /*         
-                                            <td>Raj</td>
-                                            <td>16-06-2022</td>
-                                          </tr>
-                                        </table>
-                                      </div>
-                                  </body>
-                                  </html>
-                               ");*/
+                    }
+                    return sb.ToString();
                 }
                 else 
                 {
                     throw new ArgumentException("Currently not any user exist in your Organization!");
                 }
-                return "";
             }
         }
     }
