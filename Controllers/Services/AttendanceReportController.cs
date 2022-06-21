@@ -22,9 +22,14 @@ namespace HIsabKaro.Controllers.Services
         }
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get([FromQuery]int Id,[FromQuery]DateTime startDate,[FromQuery]DateTime endDate) 
+        public IActionResult Get([FromQuery]int URId,[FromQuery]DateTime startDate,[FromQuery]DateTime endDate) 
         {
             var FGUID = Guid.NewGuid();
+            /*var URId = HttpContext.Items["URId"];
+            if (URId == null) 
+            {
+                throw new ArgumentException("Token not vaild or expired!");
+            }*/
             var globalSettings = new GlobalSettings
             {
                 ColorMode = ColorMode.Color,
@@ -36,8 +41,8 @@ namespace HIsabKaro.Controllers.Services
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
-                HtmlContent = HIsabKaro.Services.PDF.HTMLString.GetHTMLStringForAttendanceReport(Id,startDate,endDate),
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "AttendanceReport.css") },
+                HtmlContent = HIsabKaro.Services.PDF.HTMLString.GetHTMLStringForAttendanceReport(URId,startDate,endDate),
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "AttendanceReport.css")},
                 HeaderSettings = { FontName = "Arial", FontSize = 9/*, Right = "Page [page] of [toPage]", Line = true ,*/ },
                 FooterSettings = { FontName = "Arial", FontSize = 9 /*Line = true, Center = "Report Footer" */}
             };

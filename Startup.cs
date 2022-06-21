@@ -111,7 +111,6 @@ namespace HIsabKaro
             services.AddTransient<Services.PDF.HTMLString>();
             services.AddTransient<CustomAssemblyLoadContext>();
             var context = new CustomAssemblyLoadContext();
-
             context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
 
             //---------------------------------------------------------------------------------//
@@ -172,7 +171,6 @@ namespace HIsabKaro
                 EnableDefaultFiles = true
             });
             app.UseHttpsRedirection();
-
             app.UseRouting();
             
             app.UseAuthorization();

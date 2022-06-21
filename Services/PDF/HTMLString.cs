@@ -133,57 +133,89 @@ namespace HIsabKaro.Services.PDF
                 return sb.ToString();
             }
         }
-        public static string GetHTMLStringForAttendanceReport(int URId, DateTime startDate, DateTime endDate)
+        public static string GetHTMLStringForAttendanceReport(object URId, DateTime startDate, DateTime endDate)
         {
             using (DBContext c = new DBContext())
             {
                 var sd = startDate.Date;
                 var totaldaysofrecord = ((endDate.Date - startDate.Date).TotalDays)+1;
                 var findorg = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
+             
                 if (findorg == null)
                 {
                     throw new ArgumentException("Organization not exist,(enter valid token)");
                 }
-                List<int> user = new List<int>();
+               /* List<int> user = new List<int>();
                 user.Add(10000062);
                user.Add(10000024);
                 user.Add(10000025);
-               user.Add(10000027);
+               user.Add(10000027);*/
                 var findstaffroleid = c.SubRoles.Where(x => x.RoleName.ToLower() == "staff" && x.OId == findorg.OId).SingleOrDefault();
                 if (findstaffroleid != null)
                 {
-                    /*var totalemp = (from obj in c.DevOrganisationsStaffs
+                    var totalemp = (from obj in c.DevOrganisationsStaffs
                                     where obj.OId == findorg.OId && obj.SubUserOrganisation.RId == findstaffroleid.RId && obj.CreateDate <= endDate.Date
                                     select obj).ToList();
-                    if (totalemp.Count() <= 0) 
+                    if (totalemp.Count() <= 0)
                     {
                         throw new ArgumentException("Currently not any user exist in your Organization!");
-                    }*/
+                    }
+                    var org = (from x in c.DevOrganisations where x.OId == findorg.OId select x).FirstOrDefault();
                     var sb = new StringBuilder();
                     var sp = new StringBuilder();
                    
                     if (totaldaysofrecord <= 16)
                     {
-                        sb.Append(@"
+                        var img_src = org.LogoFileId == null ? null : $"https://hisabkaroapi.otobit.com/upload/{org.CommonFile_LogoFileId.FGUID}";
+                        var img_alt = $"https://hisabkaroapi.otobit.com/upload/ac224141-2a49-4ea1-b1ae-937c0616e582.png";
+                        var img_legends = $"https://hisabkaroapi.otobit.com/upload/7987c8ad-0e75-4a0b-acc3-fad31df869ce.png";
+                        var Duration = $"{startDate.Day}-{startDate.ToString("MMMM").Substring(0, 3)}-{startDate.Year} to {endDate.Day}-{endDate.ToString("MMMM").Substring(0, 3)}-{endDate.Year}";
+                                   //<link rel='stylesheet' href='https://hisabkaroapi.otobit.com/CSS/AttendanceReport.css'>
+                        sb.Append($@"
                                   <html>
                                   <head> 
                                   </head>
                                   <body>
-                                      <div>
-                                          <table>
+                                  <div class='companydetails'>
+                                  <center>
+                                          <div class='container'>
+
+                                              <div id = 'st-box'>
+                                                  <img src={img_alt} alt={img_alt} style='width:190px; height:110px;'>
+                                                  <p>
+                                                       {org.OrganisationName}
+                                                  </p>
+                                              </div>
+
+                                              <div id = 'nd-box'>
+                                                <div id='center'>
+                                                  <p>  Duration </p>
+                                                  <p>{Duration}</p>
+                                                 </div>
+                                              </div>
+
+                                              <div id = 'rd-box'>
+                                                  <img src={img_legends} style= 'width:190px; height:220px;'>
+                                              </div>
+
+                                          </div>
+                                   </center>
+                                   </div>
+                                      <div class='report'>
+                                          <table id='firsttable'>
                                           <tr>
                                             <th>Name</th>
                                 ");
                         while (sd <= startDate.AddDays(15))
                         {
                             sb.Append($@"
-                                    <th>{sd.ToString("dd-MM-yyyy")}</th>
+                                    <th>{sd.Day}-{sd.ToString("MMMM").Substring(0, 3)}</th>
                                   ");
                             sd = sd.AddDays(1);
                         };
                         sp.Append(@"
-                                     <div>
-                                     <table>
+                                     <div class='statistics'>
+                                     <table id='thirdtable'>
                                       <tr>
                                         <th>Name</th>
                                         <th>TotalDays</th>
@@ -199,17 +231,27 @@ namespace HIsabKaro.Services.PDF
                         sb.Append($@"
                                 </tr>
                                 ");
-                        foreach (var x in user)
+                        foreach (var x in totalemp)
                         {
-                            StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x, startDate, startDate.AddDays(15)).Data;
+                            StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x.URId, startDate, startDate.AddDays(15)).Data;
                         List<Status> status = attendancelist.Status;
                         var count = totaldaysofrecord - attendancelist.TotalDays;
-                        sb.Append(@"
+                        sb.Append($@"
                                <tr>
-                               <td>Raj</td>
+                               <td>{x.SubUserOrganisation.SubUser.SubUsersDetail.FullName}</td>
                               ");
-                        /*sb.Append(@"
-                              ");*/
+                            /*sb.Append(@"
+                                  ");*/
+                            if (status.Count() == 0)
+                            {
+                                while (count != 0)
+                                {
+                                    sb.Append($@"
+                                    <td>_</td>
+                                   ");
+                                    count -= 1;
+                                }
+                            }
                         foreach (var y in status)
                         {
                             while (count != 0)
@@ -229,7 +271,7 @@ namespace HIsabKaro.Services.PDF
                               ");
                             
                         sp.Append($@"<tr>
-                                      <td>Raj</td>
+                                      <td>{x.SubUserOrganisation.SubUser.SubUsersDetail.FullName}</td>
                                       <td>{attendancelist.TotalDays}</td>
                                       <td>{attendancelist.Present}</td>
                                       <td>{attendancelist.Absent}</td>
@@ -264,19 +306,48 @@ namespace HIsabKaro.Services.PDF
                         var totalovertimefull = 0;
                         var totalovertimehalf = 0;*/
                         var remainrecord = totaldaysofrecord - 16;
-                        sb.Append(@"
+                        var img_src = org.LogoFileId == null ? null : $"https://hisabkaroapi.otobit.com/upload/{org.CommonFile_LogoFileId.FGUID}";
+                        var img_alt = $"https://hisabkaroapi.otobit.com/upload/ac224141-2a49-4ea1-b1ae-937c0616e582.png";
+                        var img_legends = $"https://hisabkaroapi.otobit.com/upload/7987c8ad-0e75-4a0b-acc3-fad31df869ce.png";
+                        var Duration = $"{startDate.Day}-{startDate.ToString("MMMM").Substring(0, 3)}-{startDate.Year} to {endDate.Day}-{endDate.ToString("MMMM").Substring(0, 3)}-{endDate.Year}";
+                        sb.Append($@"
                                   <html>
                                   <head> 
                                   </head>
                                   <body>
-                                      <div>
-                                          <table>
+                                  <div class='companydetails'>
+                                  <center>
+                                          <div class='container'>
+
+                                              <div id = 'st-box'>
+                                                  <img src={img_alt} alt={img_alt} style='width:190px; height:110px;'>
+                                                  <p>
+                                                     {org.OrganisationName}
+                                                  </p>
+                                              </div>
+
+                                              <div id = 'nd-box'>
+                                                <div id='center'>
+                                                  <p>  Duration </p>
+                                                  <p>{Duration}</p>
+                                                 </div>
+                                              </div>
+
+                                              <div id = 'rd-box'>
+                                                  <img src={img_legends} style='width:190px; height:220px;'>
+                                              </div>
+
+                                          </div>
+                                   </center>
+                                   </div>
+                                         <div class='report'>
+                                          <table id='firsttable'>
                                           <tr>
                                             <th>Name</th>
                                 ");
                         sp.Append(@"
-                                     <div>
-                                     <table>
+                                     <div class='statistics'>
+                                     <table id='thirdtable'>
                                       <tr>
                                         <th>Name</th>
                                         <th>TotalDays</th>
@@ -292,7 +363,7 @@ namespace HIsabKaro.Services.PDF
                         while (sd <= startDate.AddDays(15))
                         {
                             sb.Append($@"
-                                    <th>{sd.ToString("dd-MM-yyyy")}</th>
+                                    <th>{sd.Day}-{sd.ToString("MMMM").Substring(0,3)}</th>
                                   ");
                             sd = sd.AddDays(1);
                         };
@@ -300,16 +371,26 @@ namespace HIsabKaro.Services.PDF
                                 </tr>
                                 ");
 
-                        foreach (var x in user)
+                        foreach (var x in totalemp)
                         {
-                            StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x, startDate, sd.AddDays(-1)).Data;
+                            StatisticsByDateRange attendancelist = new HistoryByMonths().StatisticsByDateRange(x.URId, startDate, sd.AddDays(-1)).Data;
                             userlist.Add(attendancelist);
                             List<Status> status = attendancelist.Status;
                             var count = 16 - attendancelist.TotalDays;
-                            sb.Append(@"
+                            sb.Append($@"
                                <tr>
-                               <td>Raj</td>
+                               <td>{x.SubUserOrganisation.SubUser.SubUsersDetail.FullName}</td>
                               ");
+                            if (status.Count() == 0) 
+                            {
+                                while (count != 0)
+                                {
+                                    sb.Append($@"
+                                    <td>_</td>
+                                   ");
+                                    count -= 1;
+                                }
+                            }
                             foreach (var y in status)
                             {
                                 while (count != 0)
@@ -352,30 +433,40 @@ namespace HIsabKaro.Services.PDF
                               </table>
                               ");
                             //------------------------------- after 16 col new table
-                            sb.Append(@"<table>
+                            sb.Append(@"<table id='secondtable'>
                                 <tr>
                                 <th>Name</th>");
                         var remainsd = sd;
                         while (sd <= endDate.Date)
                         {
                             sb.Append($@"
-                                    <th>{sd.ToString("dd-MM-yyyy")}</th>
+                                    <th>{sd.Day}-{sd.ToString("MMMM").Substring(0, 3)}</th>
                                   ");
                             sd = sd.AddDays(1);
                         };
                         sb.Append($@"
                                 </tr>
                                 ");
-                        foreach (var x in user)
+                        foreach (var x in totalemp)
                         {
-                            var attendancelist = (from y in userlist where y.URId == x select y).FirstOrDefault();
-                            StatisticsByDateRange attendancelist17 = new HistoryByMonths().StatisticsByDateRange(x, remainsd, endDate).Data;
+                            var attendancelist = (from y in userlist where y.URId == x.URId select y).FirstOrDefault();
+                            StatisticsByDateRange attendancelist17 = new HistoryByMonths().StatisticsByDateRange(x.URId, remainsd, endDate).Data;
                             List<Status> status17 = attendancelist17.Status;
                             var count17 = remainrecord - attendancelist17.TotalDays;
-                            sb.Append(@"
+                            sb.Append($@"
                                <tr>
-                               <td>Raj</td>
+                               <td>{x.SubUserOrganisation.SubUser.SubUsersDetail.FullName}</td>
                               ");
+                            if (status17.Count() == 0)
+                            {
+                                while (count17 != 0)
+                                {
+                                    sb.Append($@"
+                                    <td>_</td>
+                                   ");
+                                    count17 -= 1;
+                                }
+                            }
                             foreach (var y in status17)
                             {
                                 while (count17 != 0)
@@ -433,7 +524,7 @@ namespace HIsabKaro.Services.PDF
                 {
                     throw new ArgumentException("Currently not any user exist in your Organization!");
                 }
-            }
+            } 
         }
     }
 }
