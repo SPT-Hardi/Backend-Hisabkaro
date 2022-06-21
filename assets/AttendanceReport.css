@@ -1,23 +1,84 @@
-﻿/*.header {
-    text-align: center;
-    color: green;
-    padding-bottom: 35px;
+﻿* {
+}
+.container {
+    width: 650px;
+    height: 240px;
+    padding-top: 05px;
+    padding-left: 05px;
+    padding-right: 05px;
 }
 
-table {
-    width: 80%;
+#st-box {
+    float: left;
+    width: 190px;
+    height: 220px;
+    background-color: white;
+    font-size: large;
+    font-weight: bold;
+    border: solid black;
+}
+
+#nd-box {
+    float: left;
+    width: 220px;
+    height: 220px;
+    background-color: white;
+    border: solid black;
+    font-weight: bold;
+    font-size: large;
+    margin-left: 20px;
+}
+
+#rd-box {
+    float: right;
+    width: 190px;
+    height: 220px;
+    background-color: white;
+    border: solid black;
+}
+
+#center {
+    margin-top: 70px;
+}
+
+.report {
+    margin-top: 20px;
+}
+
+.statistics {
+    margin-top: 30px;
+}
+
+table,
+th,tr,
+td {
+    border: 1px solid black;
     border-collapse: collapse;
-}
-
-td, th {
-    border: 1px solid gray;
-    padding: 15px;
-    font-size: 22px;
     text-align: center;
+    font-family: 'Calibri';
 }
 
 table th {
-    background-color: green;
-    color: white;
+   width:5.88%;
 }
-*/
+    table tr {
+        line-height:150%;
+    }
+
+#firsttable {
+    margin-top: 20px;
+    width: 100%;
+}
+
+#secondtable {
+    margin-top: 35px;
+    width: 100%;
+}
+
+#thirdtable {
+    margin-top: 40px;
+}
+
+.companydetails {
+    font-family: 'Calibri';
+}
