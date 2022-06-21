@@ -516,7 +516,6 @@ namespace HIsabKaro.Services.PDF
                                     </body>
                                  </html>
                               ");
-
                     }
                     return sb.ToString();
                 }
