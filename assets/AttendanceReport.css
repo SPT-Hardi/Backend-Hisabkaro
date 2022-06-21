@@ -1,5 +1,6 @@
 ﻿* {
 }
+
 .container {
     width: 650px;
     height: 240px;
@@ -50,7 +51,7 @@
 }
 
 table,
-th,tr,
+th, tr,
 td {
     border: 1px solid black;
     border-collapse: collapse;
@@ -58,11 +59,12 @@ td {
     font-family: 'Calibri';
 }
 
-table th {
-   width:5.88%;
-}
+    table th {
+        width: 5.88%;
+    }
+
     table tr {
-        line-height:150%;
+        line-height: 150%;
     }
 
 #firsttable {

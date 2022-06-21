@@ -167,8 +167,8 @@ namespace HIsabKaro.Services.PDF
                     if (totaldaysofrecord <= 16)
                     {
                         var img_src = org.LogoFileId == null ? null : $"https://hisabkaroapi.otobit.com/upload/{org.CommonFile_LogoFileId.FGUID}";
-                        var img_alt = $"https://hisabkaroapi.otobit.com/upload/ac224141-2a49-4ea1-b1ae-937c0616e582.png";
-                        var img_legends = $"https://hisabkaroapi.otobit.com/upload/7987c8ad-0e75-4a0b-acc3-fad31df869ce.png";
+                        var img_alt = $"https://hisabkaroapi.otobit.com/upload/56d68672-c1e6-4229-a2c4-ecbb360f9bf4.png";
+                        var img_legends = $"https://hisabkaroapi.otobit.com/upload/c14b6fe2-cd97-493f-800f-7ea62f257a36.png";
                         var Duration = $"{startDate.Day}-{startDate.ToString("MMMM").Substring(0, 3)}-{startDate.Year} to {endDate.Day}-{endDate.ToString("MMMM").Substring(0, 3)}-{endDate.Year}";
                                    //<link rel='stylesheet' href='https://hisabkaroapi.otobit.com/CSS/AttendanceReport.css'>
                         sb.Append($@"
@@ -307,8 +307,8 @@ namespace HIsabKaro.Services.PDF
                         var totalovertimehalf = 0;*/
                         var remainrecord = totaldaysofrecord - 16;
                         var img_src = org.LogoFileId == null ? null : $"https://hisabkaroapi.otobit.com/upload/{org.CommonFile_LogoFileId.FGUID}";
-                        var img_alt = $"https://hisabkaroapi.otobit.com/upload/ac224141-2a49-4ea1-b1ae-937c0616e582.png";
-                        var img_legends = $"https://hisabkaroapi.otobit.com/upload/7987c8ad-0e75-4a0b-acc3-fad31df869ce.png";
+                        var img_alt = $"https://hisabkaroapi.otobit.com/upload/56d68672-c1e6-4229-a2c4-ecbb360f9bf4.png";
+                        var img_legends = $"https://hisabkaroapi.otobit.com/upload/c14b6fe2-cd97-493f-800f-7ea62f257a36.png";
                         var Duration = $"{startDate.Day}-{startDate.ToString("MMMM").Substring(0, 3)}-{startDate.Year} to {endDate.Day}-{endDate.ToString("MMMM").Substring(0, 3)}-{endDate.Year}";
                         sb.Append($@"
                                   <html>
