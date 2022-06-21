@@ -493,7 +493,7 @@ namespace HIsabKaro.Services.PDF
                             totalovertimehalf +=attendancelist17.HalfOverTime;
                             totalovertimefull +=attendancelist17.FullOverTime;*/
                             sp.Append($@"<tr>
-                                      <td>Raj</td>
+                                       <td>{x.SubUserOrganisation.SubUser.SubUsersDetail.FullName}</td>
                                       <td>{attendancelist.TotalDays + attendancelist17.TotalDays}</td>
                                       <td>{attendancelist.Present+attendancelist17.Present}</td>
                                       <td>{attendancelist.Absent+attendancelist17.Absent}</td>
