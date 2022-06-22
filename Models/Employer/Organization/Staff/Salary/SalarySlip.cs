@@ -48,13 +48,18 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
         public decimal Salary { get; set; }
         public decimal Overtime { get; set; }
         public decimal Bonus { get; set; }
+        public decimal NightAllowance { get; set; }
+        public decimal SpecialAllowance { get; set; }
+        public decimal OtherIncentive { get; set; }
         public decimal TotalEarning { get; set; }
     }
 
     public class Deduction
     {
-        public decimal Loan { get; set; }
         public decimal Advance { get; set; }
+        public decimal Loan { get; set; }
+        public decimal PF { get; set; }
+        public decimal ESI { get; set; }
         public decimal Leave { get; set; }
         public decimal TotalDeduction { get; set; }
     }

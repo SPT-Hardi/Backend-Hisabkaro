@@ -11,6 +11,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
 using HIsabKaro.Cores.Employer.Organization.Staff.Attendance;
+using static HIsabKaro.Cores.Employer.Organization.Staff.Leave.Approves;
+using static HIsabKaro.Cores.Employer.Organization.Salary.SalaryComponents;
 
 namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
 {
@@ -48,13 +50,13 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                           AccountNo = x.DevOrganisationsStaffsBankDetail.AccountNumber,
                                           HolderName = x.DevOrganisationsStaffsBankDetail.Name,
                                           IFSC = x.DevOrganisationsStaffsBankDetail.IFSCCode,
-                                          PAN = "41529632145",
-                                          AadharCard = "967412859632"
+                                          PAN = x.DevOrganisationsStaffsEmploymentDetail.PAN,
+                                          AadharCard = x.DevOrganisationsStaffsEmploymentDetail.UAN
                                       }).SingleOrDefault();
                 salarySlip.employeeDetail = employeeDetail;
 
                 salarySlip.attendanceDetail.PaidLeave = (int)(from y in c.OrgStaffsLeaveApplications
-                                                              where y.StaffURId == (int)URId && y.StartDate.Month == DateTime.Now.Month - 1 && y.SubFixedLookup.FixedLookupFormatted == "Accepted"
+                                                              where y.StaffURId == (int)URId && y.StartDate.Month == DateTime.Now.Month - 1 && y.LeaveStatusId == (int)LeaveStatus.Accepted
                                                               select y.PaidDays).Sum();
                 salarySlip.attendanceDetail.Present = (from y in c.OrgStaffsAttendancesDailies
                                                        where y.URId == (int)URId && y.ChekIN.Month == DateTime.Now.Month - 1 
@@ -64,29 +66,36 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                                                                                     select y).ToList().Count();
                 salarySlip.attendanceDetail.Workingdays = salarySlip.attendanceDetail.Present + salarySlip.attendanceDetail.Absent;
 
-              
 
-                var earning = (from x in c.OrgStaffsSalaryDetails
-                                      where x.StaffURId == (int)URId && x.Date.Month == ISDT.Month
-                                      select new Earning()
-                                      {
-                                         Salary = (decimal)x.ASalary,
-                                         Overtime = (decimal)x.OverTime,
-                                         Bonus = (decimal)x.Bonus,
-                                         TotalEarning = (decimal)(x.ASalary + x.OverTime + x.Bonus)
-                                      }).SingleOrDefault();
-                salarySlip.earning = earning;
-
-                var deduction = (from x in c.OrgStaffsSalaryDetails
-                               where x.StaffURId == (int)URId && x.Date.Month == ISDT.Month
-                               select new Deduction()
+                var earning = (from x in c.PayrollSalarySlips
+                               where x.StaffURId == (int)URId && x.Month.Month == ISDT.Month-1 && x.Month.Year==(ISDT.Month==1?12:ISDT.Year)
+                               select new Earning()
                                {
-                                  Loan = (decimal)x.LoanDeductionAmount,
-                                  Advance = (decimal)x.Advance,
-                                  Leave = (decimal)x.OrgStaffLeave,
-                                  TotalDeduction = (decimal)(x.LoanDeductionAmount + x.Advance + x.OrgStaffLeave)
+                                   Salary = (decimal)x.BasicAmount,
+                                   Overtime = (decimal)x.OverTimeEarning,
+                                   Bonus = (decimal)x.PayrollSalarySlipsComponents.FirstOrDefault(y=>y.SalarySlipId==x.SalarySlipId && y.Name=="Bonus").Amount,
+                                   NightAllowance = (decimal)x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "Night Allowance").Amount,
+                                   SpecialAllowance = (decimal)x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "Allowance").Amount,
+                                   OtherIncentive = (decimal)x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "Other Incentive").Amount,
                                }).SingleOrDefault();
+                salarySlip.earning = earning;
+                salarySlip.earning.TotalEarning = earning.Salary + earning.Bonus + earning.NightAllowance + earning.SpecialAllowance + earning.OtherIncentive + earning.Overtime;
+                
+
+                var deduction = (from x in c.PayrollSalarySlips
+                                 where x.StaffURId == (int)URId && x.Month.Month == ISDT.Month - 1 && x.Month.Year == (ISDT.Month == 1 ? 12 : ISDT.Year)
+                                 select new Deduction()
+                                 {
+                                     Loan = (decimal)x.LoanDeduction,
+                                     //Advance = (decimal)x.,
+                                     Leave = (decimal)x.AbsentDeduction,
+                                     PF = x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "PF ( Provident Fund )").Amount,
+                                     ESI = x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "ESI (Employees' State Insurance Scheme)").Amount,
+                                     
+                                 }).SingleOrDefault();
                 salarySlip.deduction = deduction;
+                salarySlip.deduction.TotalDeduction = deduction.Loan + deduction.Leave + deduction.PF + deduction.ESI;
+                
 
                 salarySlip.NetPay = ((earning == null ? 0 : salarySlip.earning.TotalEarning) - (deduction == null ? 0 : salarySlip.deduction.TotalDeduction));
 
@@ -124,7 +133,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Salary
                                         select x).FirstOrDefault();
                     if(_StaffSalary is not null)
                     {
-                        throw new ArgumentException("Salary Alredy Paid.");
+                        throw new ArgumentException("Salary Already Paid.");
                     }
 
                     var _Salary = One(URId, StaffId);

@@ -12,24 +12,20 @@ namespace HIsabKaro.Controllers.Employer.Organization.Salary
     [ApiController]
     public class SalarySheetsController : ControllerBase
     {
-        [Route("SalarySheets/One")]
-        [ApiController]
-        public class OrganizationCodeController : ControllerBase
+        [Route("SalarySheets/Pending")]
+        [HttpGet]
+        public IActionResult Get()
         {
-            [HttpGet]
-            [Route("Code")]
-            public IActionResult Get()
-            {
-                var URId = HttpContext.Items["URId"];
-                return Ok(new SalarySheets().Get(URId));
-            }
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalarySheets().Pending(URId));
         }
-        //[HttpPost]
-        //[Route("OrganizationDetails/Create")]
-        //public IActionResult Create([FromBody] Models.Employer.Organization.Salary.SalarySheet value)
-        //{
-        //    var UserID = HttpContext.Items["UserID"];
-        //    return Ok(new SalarySheets().Create(UserID, value));
-        //}
+
+        [HttpPost]
+        [Route("SalarySheets/Create/{StaffURId}")]
+        public IActionResult Create([FromRoute] int StaffURId)
+        {
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalarySheets().Create(URId,StaffURId));
+        }
     }
 }
