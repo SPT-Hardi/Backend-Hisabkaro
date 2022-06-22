@@ -93,7 +93,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
                         if (_subUserOrg is not null)
                         {
-                            throw new ArgumentException($"Staff Member Are Alredy Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
+                            throw new ArgumentException($"Staff Member Are Already Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
                         }
                         else
                         {
@@ -245,7 +245,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
                             if (_subUserOrg is not null)
                             {
-                                throw new ArgumentException($"Staff Member Are Alredy Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
+                                throw new ArgumentException($"Staff Member Are Already Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
                             }
                             else
                             {

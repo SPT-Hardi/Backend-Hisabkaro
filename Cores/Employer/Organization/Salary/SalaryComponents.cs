@@ -14,13 +14,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
     {
         public enum Component
         {
+            Earning=101,
+            Deduction=102,
+
             HRA = 1,
             NightAllowance = 2,
             PF = 3,
             ESI = 4,
             Bonus = 5,
             Incentive = 6,
-            Allowance  = 7
+            Allowance  = 7,
+            Advance=8
         }
 
         //=========PF
@@ -94,7 +98,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                         var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id);
                         if (Staff.OId != _User.OId)
                         {
-                            throw new ArgumentException($"{x.Staff.Text} Alredy Give PF!");
+                            throw new ArgumentException($"{x.Staff.Text} Does not Exist!");
+                        }
+                        var Pf = c.PayrollStaffSalaryComponents.SingleOrDefault(y => y.URId == (int)Component.PF);
+                        if (Staff.OId != _User.OId)
+                        {
+                            throw new ArgumentException($"{x.Staff.Text} Already Give PF!");
                         }
                     });
 
@@ -195,7 +204,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                         var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id);
                         if (Staff.OId != _User.OId)
                         {
-                            throw new ArgumentException($"{x.Staff.Text} Alredy Give ESI !");
+                            throw new ArgumentException($"{x.Staff.Text} Already Give ESI !");
+                        }
+                        var Pf = c.PayrollStaffSalaryComponents.SingleOrDefault(y => y.URId == (int)Component.ESI);
+                        if (Staff.OId != _User.OId)
+                        {
+                            throw new ArgumentException($"{x.Staff.Text} Already Give ESI!");
                         }
                     });
 
@@ -226,6 +240,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
+                    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
                     var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName.ToLower() == "admin");
                     if (_User is null)
                     {
@@ -234,24 +249,25 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
 
                     value.StaffLists.ForEach((x) => {
                         var Staff = c.SubUserOrganisations.SingleOrDefault(y => y.URId == (int)x.Staff.Id );
-                        var a = Staff.PayrollStaffSalaryComponents.SingleOrDefault(z => z.SalaryComponentId == value.PaymentType.Id);
-                        var v = x.Status == true;
+                        var a = Staff.PayrollStaffSalaryComponents.SingleOrDefault(z => z.SalaryComponentId == value.PaymentType.Id && z.Date.Value.Month == value.Date.Month && z.Date.Value.Year == value.Date.Year);
                         if (Staff.OId != _User.OId )
                         {
                             throw new ArgumentException($"{x.Staff.Text} Not Exist!");
                         }
-                        if (x.Status == true && a != null)
+                        if (x.Status == true && a != null )
                         {
-                            throw new ArgumentException($"{x.Staff.Text} Alredy Give {value.PaymentType.Text} !");
-                        }
-                        
+                            throw new ArgumentException($"{x.Staff.Text} Already Give {value.PaymentType.Text} For This Month !");
+                        }                            
                     });
 
                     var PF = value.StaffLists.Where(x => x.Status == true).Select(x => new HisabKaroContext.PayrollStaffSalaryComponent()
                     {
-                        SalaryComponentId = (int)Component.ESI,
+                        SalaryComponentId = (int)value.PaymentType.Id,
                         URId = (int)x.Staff.Id,
                         Amount = value.Amount,
+                        Date=value.Date,
+                        Description=value.Description,
+                        IsForMonth=true
                     }).ToList();
 
                     c.PayrollStaffSalaryComponents.InsertAllOnSubmit(PF);
@@ -261,7 +277,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = string.Format("ESI Give Successfully!"),
+                        Message = string.Format($"{value.PaymentType.Text} Give Successfully!"),
                     };
                 }
             }

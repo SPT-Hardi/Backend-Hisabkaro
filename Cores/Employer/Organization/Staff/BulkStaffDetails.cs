@@ -61,7 +61,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                             var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
                             if (_subUserOrg is not null)
                             {
-                                throw new ArgumentException($"Staff Alredy Exits with this {_subUserOrg.SubUser.MobileNumber}!");
+                                throw new ArgumentException($"Staff Already Exits with this {_subUserOrg.SubUser.MobileNumber}!");
                             }
                             else
                             {
