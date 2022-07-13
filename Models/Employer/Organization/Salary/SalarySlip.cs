@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
+namespace HIsabKaro.Models.Employer.Organization.Salary
 {
     public class SalarySlip
     {
@@ -45,6 +46,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
 
     public class Earning
     {
+        public DateTime Date { get; set; }
         public decimal Salary { get; set; }
         public decimal Overtime { get; set; }
         public decimal Bonus { get; set; }
@@ -56,6 +58,7 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
 
     public class Deduction
     {
+        public DateTime Date { get; set; }
         public decimal Advance { get; set; }
         public decimal Loan { get; set; }
         public decimal PF { get; set; }
@@ -69,5 +72,14 @@ namespace HIsabKaro.Models.Employer.Organization.Staff.Salary
         public string Name { get; set; }
         public decimal Salary { get; set; }
         public string Hours { get; set; }
+    }
+    public class Payment
+    {
+        public DateTime Date { get; set; }
+        public decimal Loan { get; set; }
+        public decimal NetPay { get; set; }
+        public decimal Salary { get; set; }
+        public decimal TotalDeduction { get; set; }
+
     }
 }

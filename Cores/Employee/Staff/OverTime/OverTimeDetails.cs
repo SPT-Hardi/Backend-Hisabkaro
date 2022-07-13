@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using HIsabKaro.Models.Employee.OverTime;
+using HIsabKaro.Models.Employer.Organization.Staff.Attendance;
 
 namespace HIsabKaro.Cores.Employee.Staff.OverTime
 {
@@ -32,35 +33,33 @@ namespace HIsabKaro.Cores.Employee.Staff.OverTime
 
                     List<OverTimeDetail> overTime = new List<OverTimeDetail>();
 
-                    var OverTime = (from x in c.OrgStaffsOverTimeDetails
-                                    where x.StaffURId == _URId.URId && x.OverTimeDate.Month == ISDT.Month && x.OverTimeDate.Year == ISDT.Year
-                                    select x).ToList();
+                    var OverTimess = (from x in c.OrgStaffsAttendancesDailies
+                                      where x.URId == _URId.URId && x.ChekIN.Month == ISDT.Month && x.ChekIN.Year == ISDT.Year && (x.IsOvertimeFullDay == true || x.IsOvertimeHalfDay == true)
+                                      select x).ToList();
 
-                    OverTime.ForEach((x) => {
-                        var Attendance = (from y in c.OrgStaffsAttendancesDailies
-                                          where y.ChekIN.Date == x.OverTimeDate && y.URId == _URId.URId
-                                          select new { ChekIN = y.ChekIN, CheckOUT = y.CheckOUT }).FirstOrDefault();
-
-                        overTime.Add(new OverTimeDetail()
-                        {
-                            Date = x.OverTimeDate,
-                            CheckIn = Attendance == null ? null : (Attendance.ChekIN),
-                            CheckOut = Attendance == null ? null : (Attendance.CheckOUT == null ? null : Attendance.CheckOUT.Value),
-                            Hours = Attendance == null ? null : (Attendance.CheckOUT == null ? null : (Attendance.CheckOUT.Value.TimeOfDay - Attendance.ChekIN.TimeOfDay).ToString()),
-                        });
-                    });
-
+                    OverTimess.ForEach(x =>
+                        overTime.Add(new OverTimeDetail(){
+                            Date=x.ChekIN.Date,
+                            CheckIn = x.ChekIN,
+                            CheckOut = x.CheckOUT,
+                            Hours = x.CheckOUT == null ? null : (x.CheckOUT.Value.TimeOfDay - x.ChekIN.TimeOfDay)
+                        })
+                    ); 
+                   
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
+                        Message = string.Format("Over TIme Details"),
                         Data = new
                         {
                             OverTime = overTime
+
                         },
                     };
                 }
             }
         }
     }
+    
 }

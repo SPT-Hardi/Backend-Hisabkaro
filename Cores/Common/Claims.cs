@@ -28,12 +28,12 @@ namespace HIsabKaro.Cores.Common
                 using (DBContext c = new DBContext())
                 {
                     var authclaims = new List<Claim>
-                        {
-                     new Claim(ClaimTypes.Sid,UID==null? "0" :UID),
-                     new Claim(ClaimTypes.Name,DToken==null ? "0" : DToken),
-                     new Claim(ClaimTypes.Role,URId==null ? "0" : URId),
-                     new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
-                         };
+                    {
+                         new Claim(ClaimTypes.Sid,UID==null? "0" :UID),
+                         new Claim(ClaimTypes.Name,DToken==null ? "0" : DToken),
+                         new Claim(ClaimTypes.Role,URId==null ? "0" : URId),
+                         new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
+                    };
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
                     var refreshToken = _tokenServices.GenerateRefreshToken();
                     var check = c.SubUserTokens.Where(x => x.UId == int.Parse(UID) && x.DeviceToken == DToken).SingleOrDefault();

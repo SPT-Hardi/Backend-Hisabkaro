@@ -1,7 +1,7 @@
 ﻿using HIsabKaro.Cores.Common;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employer.Organization.Staff;
-using HIsabKaro.Models.Employer.Organization.Staff.Salary;
+using HIsabKaro.Models.Employer.Organization.Salary;
 using HisabKaroContext;
 using LumenWorks.Framework.IO.Csv;
 using System;
@@ -29,7 +29,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         throw new ArgumentException("Organization Does Not Exits!");
                     }
                     var _FileId = (from x in c.CommonFiles where x.FGUID == value.CSV select x).FirstOrDefault();
-
+                    if (_FileId == null)
+                    {
+                        throw new ArgumentException("File Does Not Exits!");
+                    }
                     var csvTable = new DataTable();
                     using (var csvReader = new CsvReader(new StreamReader(System.IO.File.OpenRead(_FileId.FilePath)), true))
                     {

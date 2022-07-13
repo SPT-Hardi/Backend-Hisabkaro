@@ -45,7 +45,15 @@ namespace HIsabKaro.Controllers.Employer.Organization.Salary
             var URId = HttpContext.Items["URId"];
             return Ok(new SalaryComponents().ESI(URId, value));
         }
-        
+        //=======Allowance
+        [HttpGet]
+        [Route("SalaryComponents/Allowance/One")]
+        public IActionResult Allowance()
+        {
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalaryComponents().Allowance(URId));
+        }
+
         [HttpPost]
         [Route("SalaryComponents/Allowance/Create")]
         public IActionResult Allowance([FromBody] Models.Employer.Organization.Salary.SalaryEarningComponent value)

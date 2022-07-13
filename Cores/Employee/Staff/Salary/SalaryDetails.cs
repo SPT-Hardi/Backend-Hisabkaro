@@ -1,11 +1,13 @@
 ﻿using HIsabKaro.Models.Common;
 using HIsabKaro.Models.Employee.Resume;
+using HIsabKaro.Models.Employer.Organization.Salary;
 using HisabKaroContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using static HIsabKaro.Cores.Employer.Organization.Salary.SalaryComponents;
 
 namespace HIsabKaro.Cores.Employee.Staff.Salary
 {
@@ -18,6 +20,7 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+                    SalarySlip salarySlip = new SalarySlip();
 
                     var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (_User is null)
@@ -30,25 +33,29 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                         throw new ArgumentException("Unathorized!");
                     }
 
-                    var Deduction = (from x in c.OrgStaffsSalaryDetails
-                                     where x.StaffURId == _URId.URId
-                                     select new
+                    var deduction = (from x in c.PayrollSalarySlips
+                                     where x.StaffURId == (int)URId
+                                     select new Deduction()
                                      {
-                                         Date = x.Date,
-                                         Advance = x.Advance,
-                                         Leave = x.OrgStaffLeave,
-                                         Loan = x.LoanDeductionAmount,
-                                         TotalDeduction = x.Advance + x.OrgStaffLeave + x.LoanDeductionAmount,
-                                     }).ToList();
+                                         Date=x.Month,
+                                         Loan = (decimal)x.LoanDeduction,
+                                         //Advance = (decimal)x.,
+                                         Leave = (decimal)x.AbsentDeduction,
+                                         PF = x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "PF ( Provident Fund )").Amount,
+                                         ESI = x.PayrollSalarySlipsComponents.FirstOrDefault(y => y.SalarySlipId == x.SalarySlipId && y.Name == "ESI (Employees' State Insurance Scheme)").Amount,
 
+                                     }).SingleOrDefault();
+                    salarySlip.deduction = deduction;
+                    salarySlip.deduction.TotalDeduction = deduction.Loan + deduction.Leave + deduction.PF + deduction.ESI;
 
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
+                        Message = string.Format("Deduction Details"),
                         Data = new
                         {
-                            Deduction = Deduction
+                            Deduction = salarySlip.deduction
                         },
                     };
                 }
@@ -73,24 +80,32 @@ namespace HIsabKaro.Cores.Employee.Staff.Salary
                         throw new ArgumentException("Unathorized!");
                     }
 
-                    var Payment = (from x in c.OrgStaffsSalaryDetails
-                                   where x.StaffURId == _URId.URId
-                                   select new
-                                   {
-                                       Date = x.Date,
-                                       TotalDeduction = x.Advance + x.OrgStaffLeave + x.LoanDeductionAmount,
-                                       Salary = x.Salary,
-                                       ActualSalary = x.ASalary,
-                                   }).ToList();
+                    List<Payment> payments = new List<Payment>();
 
+
+                    var Payment = (from x in c.PayrollSalarySlips
+                                   where x.StaffURId == _URId.URId
+                                   select x).ToList();
+
+                    Payment.ForEach(x =>
+                        payments.Add(new Payment(){
+                            Date = x.Month,
+                            Loan = (decimal)x.LoanDeduction,
+                            TotalDeduction = (decimal)x.AbsentDeduction + (decimal)x.LoanDeduction + Convert.ToDecimal(x.PayrollSalarySlipsComponents.Where(y => y.SalarySlipId == x.SalarySlipId && y.ComponentTypeId == (int)Component.Deduction).Select(y => y.Amount).Sum()),
+                            NetPay = x.NetPay,
+                            Salary = x.BasicAmount,
+                        })
+                    );
+                    
 
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
+                        Message = string.Format("Payment Details"),
                         Data = new
                         {
-                            Payment = Payment
+                            Payment = payments ,
                         },
                     };
                 }

@@ -10,6 +10,6 @@ namespace HIsabKaro.Models.Employee.OverTime
         public DateTime Date { get; set; }
         public DateTime? CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }
-        public string? Hours { get; set; }
+        public TimeSpan? Hours { get; set; }
     }
 }

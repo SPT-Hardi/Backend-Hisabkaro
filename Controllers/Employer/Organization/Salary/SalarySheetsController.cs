@@ -12,6 +12,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Salary
     [ApiController]
     public class SalarySheetsController : ControllerBase
     {
+        [HttpGet]
+        [Route("SalarySheets/One")]
+        public IActionResult One()
+        {
+            var URId = HttpContext.Items["URId"];
+            return Ok(new SalarySheets().SalarySlip(URId));
+        }
         [Route("SalarySheets/Pending")]
         [HttpGet]
         public IActionResult Get()

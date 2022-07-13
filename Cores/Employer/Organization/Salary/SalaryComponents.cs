@@ -234,6 +234,66 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
         }
 
         //=========Allowance,Other Incentive,Bonus,Night Allowance 
+        public Result Allowance(object URId)
+        {
+
+            using (DBContext c = new DBContext())
+            {
+                var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
+                List<View> view = new List<View>();
+
+                var _User = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId && x.SubRole.RoleName.ToLower() == "admin");
+                if (_User is null)
+                {
+                    throw new ArgumentException("User Does Not Exits!");
+                }
+
+                var staff = (from x in c.PayrollStaffSalaryComponents
+                             where x.SalaryComponentId == (int)Component.ESI
+                             select new
+                             {
+                                 URId = x.URId,
+                             }).ToList();
+
+                var _staff = (from x in c.DevOrganisationsStaffs
+                              where x.OId == _User.OId
+                              select new
+                              {
+                                  URId = x.URId,
+                              }).ToList();//.Except(staff);
+
+                foreach (var item in _staff)
+                {
+                    var s = (from y in c.DevOrganisationsStaffs
+                             where y.URId == item.URId
+                             select new
+                             {
+                                 URId = y.URId,
+                                 Name = y.NickName,
+                                 Profile = (from z in c.CommonFiles
+                                            where z.FileId == y.SubUserOrganisation.SubUser.SubUsersDetail.FileId
+                                            select z.FGUID).SingleOrDefault(),
+                                 MobileNumber = y.SubUserOrganisation.SubUser.MobileNumber
+                             }).FirstOrDefault();
+
+                    view.Add(new View()
+                    {
+                        Staff = new IntegerNullString() { Id = s.URId, Text = s.Name, },
+                        Profile = s.Profile,
+                        MobileNumber = s.MobileNumber,
+                        Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
+                    });
+
+                }
+
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = string.Format("View"),
+                    Data = new { view }
+                };
+            }
+        }
         public Result Allowance(object URId, Models.Employer.Organization.Salary.SalaryEarningComponent value)
         {
             using (DBContext c = new DBContext())
