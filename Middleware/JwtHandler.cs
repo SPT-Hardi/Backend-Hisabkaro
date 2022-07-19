@@ -51,7 +51,7 @@ namespace HIsabKaro.Middleware
                 string DeviceToken = jwtToken.Claims.First(x => x.Type == ClaimTypes.Name).Value ;
                 c.Items["DeviceToken"] = DeviceToken;
                 int UserID = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid).Value);
-                c.Items["UserID"] = UserID;
+                c.Items["UId"] = UserID;
                 int URId = int.Parse(jwtToken.Claims.First(x => x.Type == ClaimTypes.Role).Value);
                 c.Items["URId"] = URId;
                 if (UserID == 0)

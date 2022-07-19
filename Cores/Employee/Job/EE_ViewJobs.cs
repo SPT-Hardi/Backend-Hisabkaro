@@ -40,9 +40,7 @@ namespace HIsabKaro.Cores.Employee.Job
                                            type = t.Type
                                        }).ToList().Distinct(),
                                Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
-                               Location = x.Location,
                                Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
-                               Roles = x.Roles,
                                Description = x.Description,
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
@@ -93,9 +91,7 @@ namespace HIsabKaro.Cores.Employee.Job
                                            type = t.Type
                                        }).ToList().Distinct(),
                                Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
-                               Location = x.Location,
                                Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
-                               Roles = x.Roles,
                                Description = x.Description,
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,

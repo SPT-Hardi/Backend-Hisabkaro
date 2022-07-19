@@ -62,7 +62,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
             return Ok(new ER_JobDetails().DisablePost(URId, Jid));
         }
 
-        [Route("JobType/Search")]
+        [Route("JobTitle/Search")]
         [HttpGet]
         public IActionResult JobSearch([FromQuery]string keyword)
         {
