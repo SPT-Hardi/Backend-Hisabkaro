@@ -97,5 +97,12 @@ namespace HIsabKaro.Controllers.Common
         {
             return Ok(new CustomeDrops.EnglishLevel_Drop().Get());
         }
+
+        [HttpGet]
+        [Route("General/Data/Job_Types")]
+        public IActionResult Job_Types_Drop()
+        {
+            return Ok(new CustomeDrops.Job_Type().Get());
+        }
     }
 }

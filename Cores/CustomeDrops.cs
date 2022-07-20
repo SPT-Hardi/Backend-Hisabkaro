@@ -257,5 +257,21 @@ namespace HIsabKaro.Cores
                 }
             }
         }
+        public class Job_Type 
+        {
+            public Result Get() 
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var jobTypes = (from x in c.SubFixedLookups where x.FixedLookupType == "JobType" select new IntegerNullString() { Id = x.FixedLookupId, Text = x.FixedLookup, }).ToList();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "Job type list get successfully!",
+                        Data = jobTypes
+                    };
+                }
+            }
+        }
     }
 }

@@ -40,10 +40,10 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
 
         [Route("JobDetail/{Jid}")]
         [HttpGet]
-        public IActionResult GetById([FromRoute]int Jid)
+        public IActionResult GetById([FromRoute] int Jid)
         {
             var URId = HttpContext.Items["URId"];
-            return Ok(new ER_JobDetails().GetJob(URId,Jid));
+            return Ok(new ER_JobDetails().GetJob(URId, Jid));
         }
 
         [Route("RemoveJob/{Jid}")]
@@ -54,12 +54,12 @@ namespace HIsabKaro.Controllers.Employer.Organization.Job
             return Ok(new ER_JobDetails().RemovePost(URId, Jid));
         }
 
-        [Route("DisableJob/{Jid}")]
+        [Route("Disable_Enable/{Jid}")]
         [HttpPost]
-        public IActionResult DisableJob([FromRoute] int Jid)
+        public IActionResult Disable_Enable_Job([FromRoute] int Jid)
         {
             var URId = HttpContext.Items["URId"];
-            return Ok(new ER_JobDetails().DisablePost(URId, Jid));
+            return Ok(new ER_JobDetails().Disable_Enable(URId, Jid));
         }
 
         [Route("JobTitle/Search")]

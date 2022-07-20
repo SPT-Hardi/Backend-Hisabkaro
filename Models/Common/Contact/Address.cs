@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace HIsabKaro.Models.Common.Contact
 {
     public class Address
     {
-        
+        [JsonIgnore]
+        public int AddressId { get; set; }
         /*[Required(ErrorMessage ="Address is required!")]
         [RegularExpression("^.{1,100}$",ErrorMessage ="Maximum 100 character allowed!")]*/
         public string AddressLine1 { get; set; }

@@ -81,46 +81,53 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         PostDate = ISDT,
                         EndDate = value.EndDate.ToLocalTime(),
                         OId = (int)value.Organisation.Id,
-                        BranchID = value.Branch.Id == null ? null : value.Branch.Id,
+                        BranchID = value.Branch.Id == 0 ? null : value.Branch.Id,
                         URId = user.URId,
                         JobStatusId = (int)JobStatus.Open,
                         AddressId=value.AddressId,
                         Comment=value.Comment,
                         Email=value.Email,
-                        EnglishLevel=value.EnglishLevel,
-                        IncentiveTypeId=value.IncentiveType.Id,
-                        JobShiftTimeId=value.JobShiftTime.Id,
+                        IncentiveTypeId=value.IncentiveType.Id==0? null : value.IncentiveType.Id,
+                        JobStartTime=value.JobStartTime,
+                        JobEndTime=value.JobEndDate,
                         MaxIncentive=value.MaxIncentive,
                         MinIncentive=value.MinIncentive,
                         MobileNumber=value.MobileNumber,
-                        SalaryTypeId=value.SalaryType.Id,
+                        SalaryTypeId=value.SalaryType.Id==0 ? null : value.SalaryType.Id,
                         LastUpdated=DateTime.Now,
                         IsUpdated=false,
                     };
                     c.EmprJobs.InsertOnSubmit(_job);
                     c.SubmitChanges();
 
+                    c.EmprEnglishLevels.InsertAllOnSubmit(value.EnglishLevels.Where(x => x.level != null).Select(x => new EmprEnglishLevel()
+                    {
+                        JobId = _job.JobId,
+                        EnglishLevel = x.level,
+                    }));
+                    c.SubmitChanges();
 
-                    c.EmprJobExperienceLevels.InsertAllOnSubmit(value.ExperienceLevels.Select(x => new EmprJobExperienceLevel()
+                    c.EmprJobExperienceLevels.InsertAllOnSubmit(value.ExperienceLevels.Where(x=>x.level!=null).Select(x => new EmprJobExperienceLevel()
                     {
                         JobId= _job.JobId,
                         ExperienceLevel=x.level,
                     }));
                     c.SubmitChanges();
 
-                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Where(x=>x.skill!=null).Select(x => new EmprJobSkill()
                     {
                         Skill = x.skill,
                         JobId = _job.JobId
                     }));
                     c.SubmitChanges();
 
-                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true && x.type!=null).Select(x => new EmprJobType()
                     {
-                        Type = x.type.Text,
+                        Type = x.type,
                         JobId = _job.JobId
                     }));
                     c.SubmitChanges();
+
                     scope.Complete();
                     return new Result()
                     {
@@ -135,7 +142,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 }
             }
         }
-
         public Result Update(object URId, int Jid,Models.Employer.Organization.Job.ER_JobDetail value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
@@ -159,7 +165,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("Post Date Can't be After End Date.");
                     }
 
-                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
+                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.JobStatusId!=(int)JobStatus.Remove);
                     if (null == job)
                     {
                         throw new ArgumentException("JobDeatils doesn't exist");
@@ -170,19 +176,19 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.Description = value.Description;
                     job.EndDate = value.EndDate.ToLocalTime();
                     job.OId = (int)value.Organisation.Id;
-                    job.BranchID = value.Branch.Id == null ? null : value.Branch.Id;
+                    job.BranchID = value.Branch.Id == 0 ? null : value.Branch.Id;
                     job.URId = user.URId;
                     job.JobStatusId = (int)JobStatus.Open;
                     job.AddressId = value.AddressId;
                     job.Comment = value.Comment;
                     job.Email = value.Email;
-                    job.EnglishLevel = value.EnglishLevel;
-                    job.IncentiveTypeId = value.IncentiveType.Id;
-                    job.JobShiftTimeId = value.JobShiftTime.Id;
+                    job.IncentiveTypeId = value.IncentiveType.Id==0 ? null : value.IncentiveType.Id;
+                    job.JobStartTime = value.JobStartTime;
+                    job.JobEndTime = value.JobEndDate;
                     job.MaxIncentive = value.MaxIncentive;
                     job.MinIncentive = value.MinIncentive;
                     job.MobileNumber = value.MobileNumber;
-                    job.SalaryTypeId = value.SalaryType.Id;
+                    job.SalaryTypeId = value.SalaryType.Id==0? null : value.SalaryType.Id;
                     job.IsUpdated = true;
                     job.LastUpdated = DateTime.Now;
                 /*    job.Title = value.Title;
@@ -225,24 +231,40 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         c.SubmitChanges();
                     }
 
-                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Select(x => new EmprJobSkill()
+                    var _english = (from t in c.EmprEnglishLevels
+                                where t.JobId == Jid
+                                select t).ToList();
+                    if (_english.Any())
+                    {
+                        c.EmprEnglishLevels.DeleteAllOnSubmit(_english);
+                        c.SubmitChanges();
+                    }
+
+                    c.EmprJobSkills.InsertAllOnSubmit(value.jobSkill.Where(x=>x.skill!=null).Select(x => new EmprJobSkill()
                     {
                         Skill = x.skill,
                         JobId = job.JobId
                     }));
                     c.SubmitChanges();
 
-                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true).Select(x => new EmprJobType()
+                    c.EmprJobTypes.InsertAllOnSubmit(value.jobType.Where(x => x.status == true && x.type!=null).Select(x => new EmprJobType()
                     {
-                        Type = x.type.Text,
+                        Type = x.type,
                         JobId = job.JobId
                     }));
                     c.SubmitChanges();
 
-                    c.EmprJobExperienceLevels.InsertAllOnSubmit(value.ExperienceLevels.Select(x => new EmprJobExperienceLevel()
+                    c.EmprJobExperienceLevels.InsertAllOnSubmit(value.ExperienceLevels.Where(x=>x.level!=null).Select(x => new EmprJobExperienceLevel()
                     {
                         JobId = job.JobId,
                         ExperienceLevel = x.level,
+                    }));
+                    c.SubmitChanges();
+
+                    c.EmprEnglishLevels.InsertAllOnSubmit(value.EnglishLevels.Where(x => x.level != null).Select(x => new EmprEnglishLevel()
+                    {
+                        JobId = job.JobId,
+                        EnglishLevel = x.level,
                     }));
                     c.SubmitChanges();
 
@@ -261,7 +283,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        //user view specific organization job
+        //user view specific organization job with less Description
         public Result One(object URId)
         {
             using (DBContext c = new DBContext())
@@ -277,41 +299,42 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var query = (from x in c.EmprJobs
-                             where x.OId == user.OId
+                var res = (from x in c.EmprJobs
+                             //where x.SubUserOrganisation.URId==user.URId
+                             where x.SubUserOrganisation.SubUser.UId==user.UId 
                              orderby x.JobId descending
                              select new
                              {
-                                 JobID = x.JobId,
+                                 JobId = x.JobId,
                                  JobTitle = x.Title,
-                                 Type = (from t in c.EmprJobTypes
+                                 JobType = (from t in c.EmprJobTypes
                                          where t.JobId == x.JobId
-                                         select new { 
-                                           id = t.JobTypeId,
-                                           type = t.Type
-                                         }).ToList().Distinct(),
+                                         select new {Type = t.Type}).ToList(),
                                  Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
-                                 Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
-                                 Organization = x.DevOrganisation.OrganisationName,
+                                 MinSalary = x.MinSalary,
+                                 MaxSalary = x.MaxSalary,
+                                 Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
+                                 Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                  Applied = (from y in c.EmpApplyJobDetails
-                                          where y.EmprJob.DevOrganisation.OId == user.OId && y.JobId == x.JobId 
-                                          select y.UId).Count(),
-                                 PostedOn = x.PostDate,
+                                            where y.JobId == x.JobId
+                                            select y.UId).Count(),
+                                 PostDate = x.PostDate,
                                  EndDate = x.EndDate,
-                                 status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted
-                             });
+                                 Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                                 Address= x.BranchID==null ? new {City=x.DevOrganisation.CommonContactAddress.City,State= x.DevOrganisation.CommonContactAddress.State } : new {City=x.DevOrganisationBranch.CommonContactAddress.City,State= x.DevOrganisationBranch.CommonContactAddress.State, } 
+                             }).ToList();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("Org Job List!!"),
-                    Data = query.ToList(),
+                    Data = res,
                 };
             }
         }
 
         //user view specific organization specific job
-        public Result GetJob(object URId,int Jid)
+        public Result GetJob(object URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -326,50 +349,65 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
                 }
 
-                var query = (from x in c.EmprJobs
-                             where x.JobId == Jid
-                             orderby x.JobId descending
-                             select new
-                             {
-                                 //id = x.JobId,
-                                 //JobTitle = x.Title,
-                                 //Type = (from t in c.EmprJobTypes
-                                 //        where t.JobId == Jid
-                                 //        select new
-                                 //        {
-                                 //            id = t.JobTypeId,
-                                 //            type = t.Type
-                                 //        }).ToList(),
-                                 //Image = x.DevOrganisation.CommonFile_LogoFileId.FilePath,
-                                 //Salary = "₹" + x.MinSalary + " - ₹" + x.MaxSalary + "/yearly",
-                                 //Organization = x.DevOrganisation.OrganisationName,
-                                 //PostedOn = x.PostDate.ToString("d MMMM"),
-                                 Applybefore = x.EndDate,
-                                 Skill = (from s in c.EmprJobSkills
-                                          where s.JobId == Jid
-                                          select new
-                                          {
-                                              id = s.SkillId,
-                                              skill = s.Skill
-                                          }).ToList(),
-                                 Description = x.Description
-                             }).SingleOrDefault();
+                var res = (from x in c.EmprJobs
+                           where x.JobId == Jid
+                           orderby x.JobId descending
+                           select new
+                           {
+                               JobId = x.JobId,
+                               SalaryType = new IntegerNullString() { Id = x.SubFixedLookup_SalaryTypeId.FixedLookupId, Text = x.SubFixedLookup_SalaryTypeId.FixedLookup, },
+                               AddressId = x.AddressId,
+                               Address=new Models.Common.Contact.Address() 
+                               {
+                                   AddressId=x.AddressId,
+                                   AddressLine1=x.CommonContactAddress.AddressLine1,
+                                   AddressLine2="",
+                                   City=x.CommonContactAddress.City,
+                                   LandMark=x.CommonContactAddress.Landmark,
+                                   PinCode=x.CommonContactAddress.PinCode,
+                                   State=x.CommonContactAddress.State
+                               },
+                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
+                               Comment = x.Comment,
+                               Description = x.Description,
+                               Email = x.Email,
+                               EndDate = x.EndDate,
+                               EnglishLevel = x.EmprEnglishLevels.ToList().Select(z=> new {level=z.EnglishLevel }).ToList(),
+                               ExperienceLevels =x.EmprJobExperienceLevels.ToList().Select(z => new { level = z.ExperienceLevel }).ToList(),
+                               IncentiveType =new IntegerNullString() { Id=x.SubFixedLookup_IncentiveTypeId.FixedLookupId,Text=x.SubFixedLookup_IncentiveTypeId.FixedLookup,},
+                               JobEndDate =x.EndDate,
+                               jobSkill =x.EmprJobSkills.ToList().Select(z=>new { skill=z.Skill}).ToList(),
+                               JobStartTime =x.JobStartTime,
+                               jobType =x.EmprJobTypes.ToList().Select(z=>new { type=z.Type}).ToList(),
+                               MaxIncentive =x.MaxIncentive,
+                               MaxSalary =x.MaxSalary,
+                               MinIncentive =x.MinIncentive,
+                               MinSalary =x.MinSalary,
+                               MobileNumber =x.MobileNumber,
+                               Status=x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                               Organisation =new IntegerNullString() { Id=x.DevOrganisation.OId,Text=x.DevOrganisation.OrganisationName,},
+                               Title =x.Title,
+                               Applied = (from y in c.EmpApplyJobDetails
+                                          where y.JobId == x.JobId
+                                          select y.UId).Count(),
+                               Bookmarked =0,
+                               ShortListed =0,
+                           }).FirstOrDefault();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = string.Format("View full Job Details!!"),
-                    Data = query,
+                    Data = res,
                 };
             }
         }
-
         public Result RemovePost(object URId, int Jid)
         {
             using (DBContext c = new DBContext())
@@ -385,7 +423,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.JobStatusId!=(int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -408,7 +446,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             }
         }
 
-        public Result DisablePost(object URId, int Jid)
+        public Result Disable_Enable(object URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -418,20 +456,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("User not found!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.JobStatusId!=(int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
                 }
 
-                job.JobStatusId = (int)JobStatus.Disable;
+                job.JobStatusId =job.JobStatusId==(int)JobStatus.Disable ? (int)JobStatus.Open : (int)JobStatus.Disable;
                 job.URId = user.URId;
                 c.SubmitChanges();
-
+                var status = job.SubFixedLookup_JobStatusId.FixedLookup;
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
-                    Message = string.Format("Job Disable Successfully!!"),
+                    Message = string.Format($"Job {status} Successfully!!"),
                     Data = new
                     {
                         Id = job.JobId,

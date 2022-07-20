@@ -10,13 +10,13 @@ namespace HIsabKaro.Cores.Common.Contact
 {
     public class ContactAddress
     {
-        public Result Create(object Id,Models.Common.Contact.Address value)
+        public Result Create(object Id, Models.Common.Contact.Address value)
         {
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    
+
                     var address = c.CommonContactAddresses.Where(x => x.ContactAddressId == (int)Id).SingleOrDefault();
                     if (address != null)
                     {
@@ -61,31 +61,31 @@ namespace HIsabKaro.Cores.Common.Contact
                             Data = add.ContactAddressId,
                         };
                     }
-                    
+
                 }
-            }            
+            }
         }
-        public Result GetOrgAddress(object UId,int Id) 
+        public Result GetOrgAddress(object UId, int Id)
         {
             using (DBContext c = new DBContext())
             {
-                if (UId == null) 
+                if (UId == null)
                 {
                     throw new ArgumentException("token not found or expired!");
                 }
                 var org = (from x in c.DevOrganisations
                            where x.OId == Id
-                           select new 
+                           select new
                            {
-                               AddressId=x.CommonContactAddress.ContactAddressId,
-                               AddressLine1=x.CommonContactAddress.AddressLine1,
-                               AddressLine2="",
-                               City= x.CommonContactAddress.City,
-                               LandMark= x.CommonContactAddress.Landmark,
-                               PinCode= x.CommonContactAddress.PinCode,
-                               State= x.CommonContactAddress.State,
-                               MobileNumber=x.MobileNumber,
-                               Email=x.Email,
+                               AddressId = x.CommonContactAddress.ContactAddressId,
+                               AddressLine1 = x.CommonContactAddress.AddressLine1,
+                               AddressLine2 = "",
+                               City = x.CommonContactAddress.City,
+                               LandMark = x.CommonContactAddress.Landmark,
+                               PinCode = x.CommonContactAddress.PinCode,
+                               State = x.CommonContactAddress.State,
+                               MobileNumber = x.MobileNumber,
+                               Email = x.Email,
                            }).FirstOrDefault();
                 return new Result()
                 {
@@ -105,24 +105,48 @@ namespace HIsabKaro.Cores.Common.Contact
                     throw new ArgumentException("token not found or expired!");
                 }
                 var branch = (from x in c.DevOrganisationBranches
-                           where x.BranchId == Id
-                           select new
-                           {
-                               AddressId = x.CommonContactAddress.ContactAddressId,
-                               AddressLine1 = x.CommonContactAddress.AddressLine1,
-                               AddressLine2 = "",
-                               City = x.CommonContactAddress.City,
-                               LandMark = x.CommonContactAddress.Landmark,
-                               PinCode = x.CommonContactAddress.PinCode,
-                               State = x.CommonContactAddress.State,
-                               MobileNumber = x.DevOrganisation.MobileNumber,
-                               Email = x.DevOrganisation.Email,
-                           }).FirstOrDefault();
+                              where x.BranchId == Id
+                              select new
+                              {
+                                  AddressId = x.CommonContactAddress.ContactAddressId,
+                                  AddressLine1 = x.CommonContactAddress.AddressLine1,
+                                  AddressLine2 = "",
+                                  City = x.CommonContactAddress.City,
+                                  LandMark = x.CommonContactAddress.Landmark,
+                                  PinCode = x.CommonContactAddress.PinCode,
+                                  State = x.CommonContactAddress.State,
+                                  MobileNumber = x.DevOrganisation.MobileNumber,
+                                  Email = x.DevOrganisation.Email,
+                              }).FirstOrDefault();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
                     Message = "Address details get successfully!",
                     Data = branch,
+                };
+            }
+        }
+        public Result Get(int Id) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                var address = (from x in c.CommonContactAddresses
+                              where x.ContactAddressId == Id
+                              select new HIsabKaro.Models.Common.Contact.Address()
+                              {
+                                  AddressId=x.ContactAddressId,
+                                  AddressLine1 = x.AddressLine1,
+                                  AddressLine2 = "",
+                                  City = x.City,
+                                  LandMark = x.Landmark,
+                                  PinCode = x.PinCode,
+                                  State = x.State,
+                              }).FirstOrDefault();
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "Address details get successfully!",
+                    Data = address,
                 };
             }
         }
