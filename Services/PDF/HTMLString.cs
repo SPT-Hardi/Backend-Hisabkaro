@@ -36,7 +36,7 @@ namespace HIsabKaro.Services.PDF
                                       {
                                           Designation=x.JobTitle,
                                           CompanyName=x.OrganizationName,
-                                          Duration = new Cores.Common.StringFormators().CountDuration(x.StartDate,x.EndDate),
+     //removed from 86 line no           //Duration = new Cores.Common.StringFormators().CountDuration(x.StartDate,x.EndDate),
                                       }).ToList();
                 var Education = (from x in c.EmpResumeEducations where x.UId == (int)UId select new
                 {
@@ -83,7 +83,7 @@ namespace HIsabKaro.Services.PDF
                     sb.Append($@"
                                  <h3>{x.Designation}</h3>
                                  <p class='title'>{x.CompanyName}</p>
-                                 <p class='head'>{x.Duration}</p>
+                                 <p class='head'>{"1 year"}</p>                  
                                  <br>  
                               ");
                 }

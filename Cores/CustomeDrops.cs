@@ -273,5 +273,37 @@ namespace HIsabKaro.Cores
                 }
             }
         }
+        public class LoginType_Drop 
+        {
+            public Result Get() 
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var loginTypes = (from x in c.SubFixedLookups where x.FixedLookupId == 20 || x.FixedLookupId == 21 select new IntegerNullString() { Id = x.FixedLookupId, Text = x.FixedLookup }).ToList();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "loginType drop get successfully!",
+                        Data = loginTypes
+                    };
+                }
+            }
+        }
+        public class Languages 
+        {
+            public Result Get()
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var languages = (from x in c.SubFixedLookups where x.FixedLookupType=="Language" select new IntegerNullString() { Id = x.FixedLookupId, Text = x.FixedLookup }).ToList();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "loginType drop get successfully!",
+                        Data = languages,
+                    };
+                }
+            }
+        }
     }
 }

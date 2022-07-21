@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static HIsabKaro.Cores.Employer.Organization.Job.ER_JobDetails;
 
 namespace HIsabKaro.Cores.Employer.Organization.Job
 {
     public class ER_AppliedJobs
     {
-        public Result Get(object URId,int Jid)
+        public Result Get(object URId, int Jid)
         {
             using (DBContext c = new DBContext())
             {
@@ -22,33 +23,40 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 if (user.SubRole.RoleName.ToLower() != "admin")
                 {
                     throw new ArgumentException("Access not allow!!");
-                } 
+                }
 
-                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
 
-                var apply = (from x in c.EmpApplyJobDetails
-                            where x.DevOrganisation.OId == user.OId && x.JobId == Jid
-                            select new
-                            {
-                                ApplyId = x.ApplyId,
-                                UserName = x.SubUser.SubUsersDetail.FullName,
-                                Experience = (from y in c.SubUsersTotalworkexperiences
-                                              where y.UId == x.SubUser.UId
-                                              select y.Duration).SingleOrDefault(),
-                                Image = x.SubUser.SubUsersDetail.CommonFile.FGUID,
-                                ApplyDate = x.ApplyDate,
-                                Status = (x.SubUser.SubUserOrganisations.Count(y => y.UId == x.UId) == 0 ? "looking for job" : "currently working"),
-                            }).ToList();
+                var applicants = (from x in c.EmpApplyJobDetails
+                                  where x.JobId == Jid
+                                  select new Models.Employer.Organization.Job.Applicants()
+                                  {
+                                      Id = x.ApplyId,
+                                      Date = x.ApplyDate,
+                                      IsApplied = true,
+                                      ImageFGUID = x.SubUser.SubUsersDetail.CommonFile.FGUID,
+                                      IsBookmarked = (from y in c.EmpBookmarkJobsDetails where x.UId == y.UId && x.OId == y.OId select x).Any() ? true : false,
+                                      IsShortListed = (from y in c.EmprApplicantShortListDetails where x.UId == y.ApplicantUId && x.OId == y.OId select x).Any() ? true : false,
+                                      MobileNumber = x.SubUser.MobileNumber,
+                                      Name = x.SubUser.SubUsersDetail.FullName,
+                                      skills = x.SubUser.EmpResumeSkills.ToList().Select(y => new Models.Employer.Organization.Job.JobSkill() { skill = y.SkillName }).ToList(),
+                                      UId = x.UId,
+                                      WorkExperience = new Employee.Resume.WorkExperiences().TotalExperience(x.UId),
+                                  }).ToList();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
-                    Message = string.Format($"{apply.Count()} Participants of {job.Title}"),
-                    Data = apply,
+                    Message = "Users list get successfully,who applied for job!",
+                    Data = new Models.Employer.Organization.Job.Applied_Bookmarked_ShortListed_List()
+                    {
+                        Applicants = applicants,
+                        Total = applicants.Count(),
+                    },
                 };
             }
         }

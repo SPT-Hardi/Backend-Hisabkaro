@@ -8,9 +8,6 @@ namespace HIsabKaro.Models.Developer.Subscriber
 {
     public class UserMobile
     {
-        public string DeviceProfile { get; set; }
-
-
         [Required(ErrorMessage ="DeviceToken is required!")]
         public string DeviceToken { get; set; }
 
@@ -21,8 +18,5 @@ namespace HIsabKaro.Models.Developer.Subscriber
 
         [Required(ErrorMessage ="OTP is required!")]
         public string OTP { get; set; }
-
-
-        public int OTPID { get; set; }
     }
 }

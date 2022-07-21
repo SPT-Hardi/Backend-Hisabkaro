@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static HIsabKaro.Cores.Employer.Organization.Job.ER_JobDetails;
 
 namespace HIsabKaro.Cores.Employer.Organization.Job
 {
@@ -24,29 +25,38 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.OId == user.OId);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
 
-                var save = (from x in c.EmpBookmarkJobsDetails
-                            where x.DevOrganisation.OId == user.OId && x.JobId == Jid
-                            select new
+                var applicants = (from x in c.EmpBookmarkJobsDetails
+                            where x.JobId == Jid
+                            select new Models.Employer.Organization.Job.Applicants()
                             {
-                                SaveId = x.BookMarkId,
-                                UserName = x.SubUser.SubUsersDetail.FullName,
-                                BranchName = x.DevOrganisationBranch.BranchName,
-                                Image = x.SubUser.SubUsersDetail.CommonFile.FGUID,
-                                SaveDate = x.SaveDate,
-                                Status = (x.SubUser.SubUserOrganisations.Count(y => y.UId == x.UId) == 0 ? "looking for job" : "currently working"),
+                                Id=x.BookMarkId,
+                                Date=x.SaveDate,
+                                IsApplied=(from y in c.EmpApplyJobDetails where x.UId==y.UId && x.OId==y.OId select x).Any()? true : false,
+                                ImageFGUID=x.SubUser.SubUsersDetail.CommonFile.FGUID,
+                                IsBookmarked=true,
+                                IsShortListed=(from y in c.EmprApplicantShortListDetails where x.UId == y.ApplicantUId && x.OId == y.OId select x).Any()? true : false,
+                                MobileNumber=x.SubUser.MobileNumber,
+                                Name=x.SubUser.SubUsersDetail.FullName,
+                                skills=x.SubUser.EmpResumeSkills.ToList().Select(y=>new Models.Employer.Organization.Job.JobSkill() { skill=y.SkillName}).ToList(),
+                                UId=x.UId,
+                                WorkExperience= new Employee.Resume.WorkExperiences().TotalExperience(x.UId),
                             }).ToList();
 
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
-                    Message = string.Format($"{save.Count()} Participants of {job.Title}"),
-                    Data = save,
+                    Message = "bookmarked by users list get successfully!",
+                    Data = new Models.Employer.Organization.Job.Applied_Bookmarked_ShortListed_List() 
+                    {
+                        Applicants=applicants,
+                        Total=applicants.Count(),
+                    },
                 };
             }
         }

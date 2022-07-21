@@ -57,12 +57,12 @@ namespace HIsabKaro.Models.Validation
             {
                 return false;
             }
-            var v = value as IntegerNullString;
+            var v = value as IntegerString;
             if (v == null)
             {
                 return false;
             }
-            else if (v.Id == null || v.Id == 0)
+            else if (v.Id == 0)
             {
                 return false;
             }

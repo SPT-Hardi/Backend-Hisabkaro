@@ -104,5 +104,19 @@ namespace HIsabKaro.Controllers.Common
         {
             return Ok(new CustomeDrops.Job_Type().Get());
         }
+
+        [HttpGet]
+        [Route("General/Data/Login_Types")]
+        public IActionResult Login_Types_Drop()
+        {
+            return Ok(new CustomeDrops.LoginType_Drop().Get());
+        }
+
+        [HttpGet]
+        [Route("General/Data/Languages")]
+        public IActionResult Languages_Drop()
+        {
+            return Ok(new CustomeDrops.Languages().Get());
+        }
     }
 }

@@ -349,7 +349,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -391,7 +391,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                MinSalary =x.MinSalary,
                                MobileNumber =x.MobileNumber,
                                Status=x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
-                               Organisation =new IntegerNullString() { Id=x.DevOrganisation.OId,Text=x.DevOrganisation.OrganisationName,},
+                               Organization =new IntegerNullString() { Id=x.DevOrganisation.OId,Text=x.DevOrganisation.OrganisationName,},
                                Title =x.Title,
                                Applied = (from y in c.EmpApplyJobDetails
                                           where y.JobId == x.JobId
@@ -423,7 +423,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.JobStatusId!=(int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -456,7 +456,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("User not found!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.JobStatusId!=(int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -498,7 +498,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
             };
             }
         }
-
+  
         //public Result Create( object URId, Models.Employer.Organization.Job.ER_JobDetail value)
         //{
         //    var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
@@ -630,6 +630,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         //        }
         //    }
         //}
-        
+
     }
 }

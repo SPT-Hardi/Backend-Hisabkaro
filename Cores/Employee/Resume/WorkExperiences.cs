@@ -150,5 +150,26 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
+        public TimeSpan TotalExperience(int UId) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                var user = (from x in c.SubUsers where x.UId == UId select x).FirstOrDefault();
+                if (user == null) 
+                {
+                    throw new ArgumentException("User not found!");
+                }
+                List<DateTime> dates = new List<DateTime>();
+                foreach (var x in user.EmpResumeWorkExperiences.ToList()) 
+                {
+                    dates.Add(x.StartDate);
+                    dates.Add(x.EndDate);
+                }
+                var MaxDate = dates.Max();
+                var MinDate = dates.Min();
+                var Duration = MaxDate - MinDate;
+                return Duration;
+            }
+        }
     }
 }

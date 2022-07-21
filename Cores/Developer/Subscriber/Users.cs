@@ -24,6 +24,13 @@ namespace HIsabKaro.Cores.Developer.Subscriber
             _configuration = configuration;
             _tokenServices = tokenServices;
         }
+        public enum LoginType 
+        {
+            Employee=20,
+            Employer=21,
+            Staff=23,
+            Manager=163,
+        }
         public Result Add(Models.Developer.Subscriber.User value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
@@ -38,16 +45,15 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     SubOTP sotp = new SubOTP();
                     SubUser suser = new SubUser();
                     SubUserToken token = new SubUserToken();
+
+                    //create new user
                     if (qs == null)
                     {
-
                         suser.MobileNumber = value.MobileNumber;
-                        suser.DefaultLoginTypeId = 23;
-                        suser.DefaultLanguageId = value.DefaultLanguageID;
+                        suser.DefaultLanguageId = value.Language.Id;
+                        suser.IsLocked = false;
                         c.SubUsers.InsertOnSubmit(suser);
                         c.SubmitChanges();
-
-
                     }
                     if (qs == null)
                     {
@@ -58,11 +64,12 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         sotp.UId = qs.UId;
                     }
                     var newotp = c.SubOTPs.Where(x => x.DeviceToken == value.DeviceToken && x.UId == (qs == null ? null : qs.UId)).SingleOrDefault();
+                   
+                    //create new otp for user
                     if (newotp == null)
                     {
-
                         sotp.OTP = otp;
-                        sotp.ExpiryDate = ISDT.AddMinutes(15);
+                        sotp.ExpiryDate = ISDT.AddMinutes(3);
                         sotp.IsUsed = false;
                         sotp.DeviceToken = value.DeviceToken;
                         sotp.MobileNumber = value.MobileNumber;
@@ -71,11 +78,11 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                        // smsres.Get(value.MobileNumber, otp);
 
                     }
+                    //update new otp for user
                     else
                     {
-
                         newotp.OTP = otp;
-                        newotp.ExpiryDate = ISDT.AddMinutes(15);
+                        newotp.ExpiryDate = ISDT.AddMinutes(3);
                         newotp.IsUsed = false;
                         newotp.DeviceToken = value.DeviceToken;
                         newotp.MobileNumber = value.MobileNumber;
@@ -130,12 +137,64 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 {
                     throw new ArgumentException("OTP Time Expired!");
                 }
+                qs.IsUsed = true;
+                var tokenExist = (from x in c.SubUserTokens where x.DeviceToken == value.DeviceToken && x.UId == qs.SubUser.UId select x).FirstOrDefault();
+                var res = new Models.Common.Token();
+                if (qs.SubUser.DefaultLoginTypeId==(int)LoginType.Employee)
+                {
+                    res = new Claims(_configuration, _tokenServices).Add(qs.SubUser.UId, value.DeviceToken, null);
+                }
+                else if (qs.SubUser.DefaultLoginTypeId == (int)LoginType.Employer)
+                {
+                    var URId=(from x in c.5859845+86+58+8kpok099jk0)
+                }
+                else if (qs.SubUser.DefaultLoginTypeId == (int)LoginType.Staff)
+                {
+                }
+                else if (qs.SubUser.DefaultLoginTypeId == (int)LoginType.Manager)
+                {
+                }
+                var tkn= new Claims(_configuration, _tokenServices).Add(qs.SubUser.UId,value.DeviceToken,)
+                //create new token for existing user new device
+                //create new token for new user
+                if (tokenExist == null)
+                {
+                    c.SubUserTokens.InsertOnSubmit(new SubUserToken()
+                    {
+                        DeviceToken=value.DeviceToken,
+                        ExpiryDate=,
+                        Token=,
+                        UId=qs.SubUser.UId,
+                    });
+                    c.SubmitChanges();
+                }
+                //create new token for existing user existing device
+                else 
+                {
+                    tokenExist.ExpiryDate =;
+                    tokenExist.Token =;
+                    c.SubmitChanges();
+                }
+                return new Result()
+                {
+                    Status=Result.ResultStatus.success,
+                    Message="otp verified successfully!",
+                    Data=new 
+                    {
+                        UId=qs.SubUser.UId,
+                        URId="",
+                        LoginType=qs.SubUser.DefaultLoginTypeId==null ? new IntegerNullString() { Id =0, Text =null } : new IntegerNullString() {Id=qs.SubUser.SubFixedLookup.FixedLookupId,Text= qs.SubUser.SubFixedLookup.FixedLookup },
+                        JWT = "",
+                        RToken = "",
+                    }
+                };
+/*
                 var user = c.SubUsers.Where(x => x.UId == qs.UId).SingleOrDefault();
                 var tokn = new Claims(_configuration, _tokenServices);
                 //delete after------
-                var logintype = usersigninrole.DefaultLoginTypeId == null ? null : usersigninrole.SubFixedLookup.FixedLookup;
+            *//*    var logintype = usersigninrole.DefaultLoginTypeId == null ? null : usersigninrole.SubFixedLookup.FixedLookup;
                 var URIdlist = c.SubUserOrganisations.Where(x => x.UId == user.UId).ToList();
-                var URId = URIdlist.LastOrDefault();
+                var URId = URIdlist.LastOrDefault();*//*
                 //------------------
                 var res = tokn.Add(usersigninrole.UId.ToString(), value.DeviceToken, URId == null ? null : URId.URId.ToString());
                 var checktoken = (from obj in c.SubUserTokens
@@ -148,7 +207,6 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     refreshtoken.UId = qs.UId;
                     refreshtoken.Token = res.RToken;
                     refreshtoken.DeviceToken = value.DeviceToken;
-                    refreshtoken.DeviceProfile = value.DeviceProfile;
                     c.SubUserTokens.InsertOnSubmit(refreshtoken);
                     c.SubmitChanges();
 
@@ -157,7 +215,6 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 {
                     checktoken.Token = res.RToken;
                     c.SubmitChanges();
-
                 }
                 if (value.OTP != "456456") 
                 { 
@@ -224,15 +281,9 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         Organization = organizationlist,
 
                     },
-                };
+                };*/
 
             }
-
-
-
-
         }
-
-
     }
 }

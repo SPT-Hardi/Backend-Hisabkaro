@@ -51,7 +51,25 @@ namespace HIsabKaro.Models.Employer.Organization.Job
         public List<ExperienceLevel> ExperienceLevels { get; set; } = new List<ExperienceLevel>();
         public List<EnglishLevel> EnglishLevels { get; set; } = new List<EnglishLevel>();
     }
-
+    public class Applied_Bookmarked_ShortListed_List
+    {
+        public int Total { get; set; }
+        public List<Applicants> Applicants { get; set; } = new List<Applicants>();
+    }
+    public class Applicants
+    {
+        public int Id { get; set; }
+        public int UId { get; set; }
+        public string Name { get; set; }
+        public string ImageFGUID{get;set;}
+        public string MobileNumber { get; set; }
+        public DateTime Date { get; set; }
+        public dynamic WorkExperience { get; set; }
+        public bool IsApplied { get; set; }
+        public bool IsBookmarked { get; set; }
+        public bool IsShortListed { get; set; }
+        public List<JobSkill> skills { get; set; } = new List<JobSkill>();
+    }
     public class JobSkill
     {
         [RegularExpression("^.{1,50}$", ErrorMessage = "Value_Allowed: Any, Max_Length:50 character")]

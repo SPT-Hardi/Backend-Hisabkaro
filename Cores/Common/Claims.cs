@@ -21,22 +21,26 @@ namespace HIsabKaro.Cores.Common
                 _configuration = configuration;
                 _tokenServices = tokenServices;
             }
-        public Models.Common.Token Add(string UID, string DToken,string URId)
+        public Models.Common.Token Add(int UID, string DToken,int? URId)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
+                    if (UID == 0 || DToken == null) 
+                    {
+                        throw new ArgumentException("Not Allowed!");
+                    }
                     var authclaims = new List<Claim>
                     {
-                         new Claim(ClaimTypes.Sid,UID==null? "0" :UID),
-                         new Claim(ClaimTypes.Name,DToken==null ? "0" : DToken),
-                         new Claim(ClaimTypes.Role,URId==null ? "0" : URId),
+                         new Claim(ClaimTypes.Sid,UID.ToString()),
+                         new Claim(ClaimTypes.Name,DToken),
+                         new Claim(ClaimTypes.Role,URId==null ? "0" : URId.ToString()),
                          new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid ().ToString ()),
                     };
                     var jwtToken = _tokenServices.GenerateAccessToken(authclaims);
                     var refreshToken = _tokenServices.GenerateRefreshToken();
-                    var check = c.SubUserTokens.Where(x => x.UId == int.Parse(UID) && x.DeviceToken == DToken).SingleOrDefault();
+                    var check = c.SubUserTokens.Where(x => x.UId ==UID && x.DeviceToken == DToken).SingleOrDefault();
                     //RefreshToken refreshToken1 = new RefreshToken();
                     if (check == null)
                     {
