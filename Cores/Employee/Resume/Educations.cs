@@ -40,11 +40,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                      select new EmpResumeEducation()
                                      {
                                          EducationNameId=(int)obj.EducationName.Id,
-                                         EducationSteamName=obj.EducationStreamName,
-                                         InstituteName=obj.InstituteName,
                                          UId=(int)UID,
-                                         StartDate=(obj.EndDate<obj.StartDate)?throw new ArgumentException($"Enter valid daterange for education:{obj.EducationName}"):obj.StartDate,
-                                         EndDate=obj.EndDate,
                                      }).ToList();
                     c.EmpResumeEducations.InsertAllOnSubmit(education);
                     c.SubmitChanges();
@@ -74,12 +70,6 @@ namespace HIsabKaro.Cores.Employee.Resume
                                where obj.UId == (int)UID
                                select new Models.Employee.Resume.EducationDetail()
                                {
-                                   EmpResumeEducationId = obj.EmpResumeEducationId,
-                                   EducationName = new IntegerNullString() { Id = obj.EducationNameId, Text = obj.SubFixedLookup.FixedLookup },
-                                   EducationStreamName = obj.EducationSteamName,
-                                   InstituteName = obj.InstituteName,
-                                   StartDate = Convert.ToDateTime(obj.StartDate),
-                                   EndDate = Convert.ToDateTime(obj.EndDate),
                                }).ToList();
                     if (!res.Any())
                     {

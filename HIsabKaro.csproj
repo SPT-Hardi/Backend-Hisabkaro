@@ -26,12 +26,6 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Kendo.Mvc">
-      <HintPath>C:\onteamin\telerik\aspnetcore\16.0.22.119\Kendo.Mvc.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 	<ItemGroup>
 		<None Remove="assets\styles.css" />
 		<None Remove="libwkhtmltox.dll" />
@@ -59,12 +53,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Kendo.Mvc">
-      <HintPath>..\..\..\..\..\onteamin\telerik\aspnetcore\16.0.22.119\Kendo.Mvc.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="DataContext.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -73,10 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DataContext.DBContextDiagram.view">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataContext.lqml</DependentUpon>
-    </None>
     <None Update="DataContext.Diagram1.view">
       <AutoGen>True</AutoGen>
       <DependentUpon>DataContext.lqml</DependentUpon>
@@ -93,6 +77,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Upload\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>C:\onteamin\telerik\aspnetcore\16.0.22.119\Kendo.Mvc.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 

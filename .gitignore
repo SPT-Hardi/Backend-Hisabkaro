@@ -9,6 +9,7 @@ DataContext.lqml
 DataContext.Diagram1.view
 DataContext.Designer.cs
 DataContext.edps
+DataContext.DBContextDiagram.view
 obj/
 # User-specific files
 *.rsuser

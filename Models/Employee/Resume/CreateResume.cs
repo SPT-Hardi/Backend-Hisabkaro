@@ -17,6 +17,7 @@ namespace HIsabKaro.Models.Employee.Resume
     }
     public class PersonalInfo 
     {
+        public int ProfileId { get; set; }
         [Required(ErrorMessage ="Name is required!")]
         public string Name { get; set; }
         public string Email { get; set; }

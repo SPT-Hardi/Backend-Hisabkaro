@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class WorkExperiences
     {
-        public Result Add(object UID,Models.Employee.Resume.WorkExperinece value) 
+        public Result Add(object UID,List<Models.Employee.Resume.WorkExperiences> value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -21,15 +21,13 @@ namespace HIsabKaro.Cores.Employee.Resume
                     {
                         throw new ArgumentException("User doesnt exist!,(enter valid token)");
                     }
-                    var workexperience = (from obj in value.workExperienceDetails
+                    var workexperience = (from obj in value
                                           select new EmpResumeWorkExperience()
                                           {
                                               UId=(int)UID,
                                               StartDate=obj.StartDate,
                                               EndDate=(obj.EndDate < obj.StartDate)? throw new ArgumentException($"Enter valid daterange for jobtitle:{obj.JobTitle}"):obj.EndDate,
                                               JobTitle=obj.JobTitle,
-                                              OrganizationName=obj.OrganizationName,
-                                              WorkFrom=obj.WorkFrom,
                                           }).ToList();
                     c.EmpResumeWorkExperiences.InsertAllOnSubmit(workexperience);
                     c.SubmitChanges();
@@ -38,8 +36,6 @@ namespace HIsabKaro.Cores.Employee.Resume
                               {
                                   EmpResumeWorkExperienceId=obj.EmpResumeWorkExperienceId,
                                   JobTitle=obj.JobTitle,
-                                  OrganizationName=obj.OrganizationName,
-                                  WorkFrom=obj.WorkFrom,
                                   StartDate=Convert.ToDateTime(obj.StartDate),
                                   EndDate=Convert.ToDateTime(obj.EndDate),
                               }).ToList();

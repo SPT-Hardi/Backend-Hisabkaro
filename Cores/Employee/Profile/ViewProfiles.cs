@@ -10,6 +10,40 @@ namespace HIsabKaro.Cores.Employee.Profile
 {
     public class ViewProfiles
     {
+        public Result Get(object UId) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                if (UId == null) 
+                {
+                    throw new ArgumentException("token not found or expired!");
+                }
+                var user = (from x in c.SubUsers where x.UId == (int)UId select x).FirstOrDefault();
+                if (user == null) 
+                {
+                    throw new ArgumentException("user not exist!");
+                }
+                var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                var res = new 
+                {
+                    AddressId =profile.AddressId,
+                    CurrentSalary =profile.CurrentSalary,
+                    Email =profile.Email,
+                    EnglishLevel =new IntegerNullString() { Id=profile.SubFixedLookup_EnglishLevelId.FixedLookupId,Text= profile.SubFixedLookup_EnglishLevelId.FixedLookup},
+                    IsVisibleToBusinessOwner =profile.IsVisibleToBussinessOwner,
+                    MobileNumber =profile.MobileNumber,
+                    Name =profile.FullName,
+                    ProfileId =profile.ProfileId,
+                    SalaryType =new IntegerNullString() { Id=profile.SubFixedLookup_SalaryTypeId.FixedLookupId,Text=profile.SubFixedLookup_SalaryTypeId.FixedLookup}
+                };
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "user profile get successfully!",
+                    Data = res
+                };
+            }
+        }
         //public Result Get(int UserId)
         //{
         //    using (DBContext c = new DBContext())
@@ -69,7 +103,7 @@ namespace HIsabKaro.Cores.Employee.Profile
         //    //}
         //}
 
-        public Result Get(object UserId)
+     /*   public Result Get(object UserId)
         {
             using (DBContext c = new DBContext())
             {
@@ -164,6 +198,6 @@ namespace HIsabKaro.Cores.Employee.Profile
                     Data = userprofile,
                 };
             }
-        }
+        }*/
     }
 }

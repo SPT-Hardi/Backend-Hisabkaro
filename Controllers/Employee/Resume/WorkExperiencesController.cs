@@ -14,7 +14,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
     {
         [HttpPost]
         [Route("WorkExperiences")]
-        public IActionResult Post(Models.Employee.Resume.WorkExperinece value) 
+        public IActionResult Post([FromBody]List<Models.Employee.Resume.WorkExperiences> value) 
         {
            var UID = HttpContext.Items["UserID"];
             return Ok(new WorkExperiences().Add(UID,value));

@@ -21,6 +21,11 @@ namespace HIsabKaro.Cores.Employee.Resume
                         throw new ArgumentException("token not found or expired!");
                     }
                     var user = (from x in c.SubUsers where x.UId == (int)UId select x).FirstOrDefault();
+                    //can be deleted if multi resume feature added in future
+                    if (user.EmpResumeProfiles.ToList().Count() > 0) 
+                    {
+                        throw new ArgumentException("Profile alredy exist!");
+                    }
                    
                     //create new user profile
                     var userProfile = new EmpResumeProfile()
@@ -103,6 +108,16 @@ namespace HIsabKaro.Cores.Employee.Resume
                         });
                         c.SubmitChanges();
                     }
+
+                    //create new user_Resume_Certificates
+                    c.EmpResumeOtherCertificates.InsertAllOnSubmit(value.Certificates.Where(x => x.CertificateName != null).Select(x => new EmpResumeOtherCertificate()
+                    {
+                        CertificateFileId=(from y in c.CommonFiles where y.FGUID==x.FileGUId select y.FileId).FirstOrDefault(),
+                        CertificateName=x.CertificateName,
+                        ProfileId=userProfile.ProfileId,
+                        UId=user.UId,
+                    }));
+                    c.SubmitChanges();
 
                     scope.Complete();
                     return new Result()
