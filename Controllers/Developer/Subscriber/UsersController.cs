@@ -34,8 +34,16 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("User/VerifyOTP")]
         public IActionResult otpverifyPost(UserMobile value)
         {
-           
             return Ok(new Users(_configuration, _tokenServices).VerifyOtp(value));
+        }
+
+        [HttpPost]
+        [Route("User/Account/LoginType")]
+        public IActionResult Default_Login_Type(DefaultLoginType value)
+        {
+            var UId = HttpContext.Items["UId"];
+            var DeviceToken = HttpContext.Items["DeviceToken"];
+            return Ok(new Users(_configuration, _tokenServices).Select_LoginType(UId,DeviceToken,value));
         }
 
     }

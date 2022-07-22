@@ -50,6 +50,7 @@ namespace HIsabKaro.Models.Employer.Organization.Job
         public DateTime EndDate { get; set; }
         public List<ExperienceLevel> ExperienceLevels { get; set; } = new List<ExperienceLevel>();
         public List<EnglishLevel> EnglishLevels { get; set; } = new List<EnglishLevel>();
+        public List<OtherLanguage> OtherLanguages { get; set; } = new List<OtherLanguage>();
     }
     public class Applied_Bookmarked_ShortListed_List
     {
@@ -75,7 +76,11 @@ namespace HIsabKaro.Models.Employer.Organization.Job
         [RegularExpression("^.{1,50}$", ErrorMessage = "Value_Allowed: Any, Max_Length:50 character")]
         public string skill { get; set; } 
     }
-
+    public class OtherLanguage 
+    {
+        [RegularExpression("^.{1,50}$", ErrorMessage = "Value_Allowed: Any, Max_Length:50 character")]
+        public string language { get; set; }
+    }
     public class EnglishLevel
     {
         [RegularExpression("^.{1,50}$", ErrorMessage = "Value_Allowed: Any, Max_Length:50 character")]

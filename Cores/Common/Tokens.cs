@@ -44,7 +44,7 @@ namespace HIsabKaro.Cores.Common
                 string DeviceToken = principal.Claims.First(x => x.Type == ClaimTypes.Name).Value;
 
                 NewURID = URId==0 ? NewURID : URId;
-                var userrefreshtoken = c.SubUserTokens.Where(x => x.Token == refreshToken && x.UId == UserID && x.DeviceToken==DeviceToken).SingleOrDefault();
+                var userrefreshtoken = c.SubUserTokens.Where(x => x.Token == refreshToken && x.UId == UserID && x.CommonDeviceToken.DeviceToken==DeviceToken).SingleOrDefault();
                 if (URId != 0)
                 {
 
@@ -58,7 +58,7 @@ namespace HIsabKaro.Cores.Common
                 if (userrefreshtoken == null)
                     throw new ArgumentException("Bad Request!");
                 var claim = new Claims(_configuration, _tokenService);
-                var res =claim.Add(UserID.ToString(), DeviceToken, NewURID.ToString());
+                var res =claim.Add(UserID, DeviceToken, NewURID);
                 //var newJwtToken = _tokenService.GenerateAccessToken(principal.Claims);
                 //var newRefreshToken = _tokenService.GenerateRefreshToken();
 

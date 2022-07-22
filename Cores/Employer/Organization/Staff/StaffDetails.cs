@@ -373,8 +373,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
                     _staff.Status = true;
                     c.SubmitChanges();
-                    var devicetoken = (from x in c.SubUserTokens where x.UId == _User.UId select x.DeviceToken).FirstOrDefault();
-                    var res = claims.Add(_User.UId.ToString(),devicetoken,_UserOrg.URId.ToString());
+                    var devicetoken = (from x in c.SubUserTokens where x.UId == _User.UId select x.CommonDeviceToken.DeviceToken).FirstOrDefault();
+                    var res = claims.Add(_User.UId,devicetoken,_UserOrg.URId);
                     var username = _User.SubUsersDetail.FullName;
                     scope.Complete();
 

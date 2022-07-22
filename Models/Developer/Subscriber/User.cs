@@ -22,4 +22,9 @@ namespace HIsabKaro.Models.Developer.Subscriber
         [Required(ErrorMessage ="DeviceToken is required!")]
         public string DeviceToken { get; set; }
     }
+    public class DefaultLoginType 
+    {
+        [Validation.Pair_IntegerString(ErrorMessage ="LoginType is required!")]
+        public IntegerString LoginType { get; set; } = new IntegerString();
+    }
 }

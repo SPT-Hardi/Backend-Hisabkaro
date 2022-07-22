@@ -158,7 +158,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                    
                     Cores.Common.Claims claims = new Common.Claims(configuration,tokenServices);
                     
-                    var res =claims.Add(UserId.ToString(), _User.SubUserTokens.Select(x => x.DeviceToken).FirstOrDefault(), _URID.URId.ToString());
+                    var res =claims.Add((int)UserId, _User.SubUserTokens.Select(x => x.CommonDeviceToken.DeviceToken).FirstOrDefault(), _URID.URId);
 
                     scope.Complete();
                     return new Result()

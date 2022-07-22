@@ -1,4 +1,5 @@
 ﻿using HIsabKaro.Cores.Developer.Subscriber;
+using HIsabKaro.Models.Developer.Subscriber;
 using HIsabKaro.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,11 +12,18 @@ using System.Threading.Tasks;
 
 namespace HIsabKaro.Controllers.Developer.Subscriber
 {
-    [Route("Developer/Subscriber")]
+    [Route("Developer/Subscriber/UserDetails")]
     [ApiController]
     public class UserDetailsController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        [HttpPost]
+        [Route("Add")]
+        public IActionResult Post([FromBody]UserPersonalDetails value) 
+        {
+            var UId = HttpContext.Items["UId"];
+            return Ok(new UserDetails().Add(UId,value));
+        }
+        /*private readonly IConfiguration _configuration;
         private readonly ITokenServices _tokenServices;
         private readonly IWebHostEnvironment _environment;
 
@@ -51,7 +59,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
             var UID = HttpContext.Items["UserID"];
             //var DeviceToken = HttpContext.Items["DeviceToken"];
             return Ok(new UserDetails(_configuration, _tokenServices).Update(UID,value));
-        }
+        }*/
 
     }
 }

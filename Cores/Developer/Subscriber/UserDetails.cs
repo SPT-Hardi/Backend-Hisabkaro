@@ -15,6 +15,40 @@ namespace HIsabKaro.Cores.Developer.Subscriber
 {
     public class UserDetails
     {
+        public Result Add(object UId,Models.Developer.Subscriber.UserPersonalDetails value) 
+        {
+            using (DBContext c = new DBContext())
+            {
+                if (UId == null) 
+                {
+                    throw new ArgumentException("token not found or expired!");
+                }
+                var user = (from x in c.SubUsers where x.UId == (int)UId select x).FirstOrDefault();
+                c.SubUsersDetails.InsertOnSubmit(new SubUsersDetail()
+                {
+                    AddressID=null,
+                    AMobileNumber=value.AMobileNumber,
+                    Email=value.Email,
+                    FileId=(from x in c.CommonFiles where x.FGUID==value.ProfilePhotoFGUID select x.FileId).FirstOrDefault(),
+                    FullName=value.FullName,
+                    UId=user.UId,
+                });
+                c.SubmitChanges();
+
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "user details added successflly!",
+                    Data =new 
+                    {
+                        UId=user.UId,
+                        FullName=value.FullName,
+                        MobileNumber=user.MobileNumber
+                    },
+                };
+            }
+        }
+        /*
         private readonly IConfiguration _configuration;
         private readonly ITokenServices _tokenServices;
       
@@ -55,10 +89,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     c.SubmitChanges();
 
                     //add user role in subroles
-                  /*  addrole.RoleName = "Employee";
+                  *//*  addrole.RoleName = "Employee";
                     addrole.LoginTypeId = (int)value.role.Id;
                     c.SubRoles.InsertOnSubmit(addrole);
-                    c.SubmitChanges();*/
+                    c.SubmitChanges();*//*
                     
 
                     //entry userdeatils
@@ -71,7 +105,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     udetails.UId = (int)UID;
                     Claims claims = new Claims(_configuration, _tokenServices);
                     int URId = 0;
-                    var res = claims.Add(((int)UID).ToString(), (string)DeviceToken,URId.ToString());
+                    var res = claims.Add(((int)UID), (string)DeviceToken,URId);
                     c.SubUsersDetails.InsertOnSubmit(udetails);
                     c.SubmitChanges();
 
@@ -157,9 +191,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     };
                 }
             }
-        }
-
-
+        }*/
 
     }
 }

@@ -100,10 +100,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     c.EmprJobs.InsertOnSubmit(_job);
                     c.SubmitChanges();
 
-                    c.EmprEnglishLevels.InsertAllOnSubmit(value.EnglishLevels.Where(x => x.level != null).Select(x => new EmprEnglishLevel()
+                    c.EmprJobEnglishLevels.InsertAllOnSubmit(value.EnglishLevels.Where(x => x.level != null).Select(x => new EmprJobEnglishLevel()
                     {
                         JobId = _job.JobId,
                         EnglishLevel = x.level,
+                    }));
+                    c.SubmitChanges();
+
+                    c.EmprJobOtherLanguages.InsertAllOnSubmit(value.OtherLanguages.Where(x => x.language != null).Select(x => new EmprJobOtherLanguage()
+                    {
+                        JobId = _job.JobId,
+                        OtherLanguage=x.language,
                     }));
                     c.SubmitChanges();
 
@@ -231,12 +238,21 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         c.SubmitChanges();
                     }
 
-                    var _english = (from t in c.EmprEnglishLevels
+                    var _english = (from t in c.EmprJobEnglishLevels
                                 where t.JobId == Jid
                                 select t).ToList();
                     if (_english.Any())
                     {
-                        c.EmprEnglishLevels.DeleteAllOnSubmit(_english);
+                        c.EmprJobEnglishLevels.DeleteAllOnSubmit(_english);
+                        c.SubmitChanges();
+                    }
+
+                    var _language = (from t in c.EmprJobOtherLanguages
+                                    where t.JobId == Jid
+                                    select t).ToList();
+                    if (_language.Any())
+                    {
+                        c.EmprJobOtherLanguages.DeleteAllOnSubmit(_language);
                         c.SubmitChanges();
                     }
 
@@ -261,10 +277,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     }));
                     c.SubmitChanges();
 
-                    c.EmprEnglishLevels.InsertAllOnSubmit(value.EnglishLevels.Where(x => x.level != null).Select(x => new EmprEnglishLevel()
+                    c.EmprJobEnglishLevels.InsertAllOnSubmit(value.EnglishLevels.Where(x => x.level != null).Select(x => new EmprJobEnglishLevel()
                     {
                         JobId = job.JobId,
                         EnglishLevel = x.level,
+                    }));
+                    c.SubmitChanges();
+
+                    c.EmprJobOtherLanguages.InsertAllOnSubmit(value.OtherLanguages.Where(x => x.language != null).Select(x => new EmprJobOtherLanguage()
+                    {
+                        JobId = job.JobId,
+                        OtherLanguage = x.language,
                     }));
                     c.SubmitChanges();
 
@@ -378,7 +401,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                Description = x.Description,
                                Email = x.Email,
                                EndDate = x.EndDate,
-                               EnglishLevel = x.EmprEnglishLevels.ToList().Select(z=> new {level=z.EnglishLevel }).ToList(),
+                               EnglishLevel = x.EmprJobEnglishLevels.ToList().Select(z=> new {level=z.EnglishLevel }).ToList(),
+                               OtherLanguage = x.EmprJobOtherLanguages.ToList().Select(z => new { language = z.OtherLanguage }).ToList(),
                                ExperienceLevels =x.EmprJobExperienceLevels.ToList().Select(z => new { level = z.ExperienceLevel }).ToList(),
                                IncentiveType =new IntegerNullString() { Id=x.SubFixedLookup_IncentiveTypeId.FixedLookupId,Text=x.SubFixedLookup_IncentiveTypeId.FixedLookup,},
                                JobEndDate =x.EndDate,
