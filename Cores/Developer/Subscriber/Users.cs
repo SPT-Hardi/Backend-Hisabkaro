@@ -18,7 +18,6 @@ namespace HIsabKaro.Cores.Developer.Subscriber
         private readonly IConfiguration _configuration;
         private readonly ITokenServices _tokenServices;
 
-
         public Users(IConfiguration configuration, ITokenServices tokenServices)
         {
             _configuration = configuration;

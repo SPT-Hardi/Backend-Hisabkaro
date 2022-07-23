@@ -12,36 +12,36 @@ namespace HIsabKaro.Controllers.Employee.Resume
     [ApiController]
     public class SkillsController : ControllerBase
     {
-        [HttpPost]
+  /*      [HttpPost]
         [Route("Skills")]
         public IActionResult Add(Models.Employee.Resume.Skill value) 
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new Skills().Add(UID,value));
-        }
+        }*/
 
         [HttpGet]
         [Route("Skills")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new Skills().View(UID));
         }
 
         [HttpPatch]
-        [Route("Skills/{Id}")]
-        public IActionResult Update(Models.Employee.Resume.SkillDetails value,int Id)
+        [Route("Skills")]
+        public IActionResult Update(Models.Employee.Resume.List_Skills value)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new Skills().Update(Id, UID,value));
+            var UID = HttpContext.Items["UId"];
+            return Ok(new Skills().Update(UID,value));
         }
 
-        [HttpDelete]
+        /*[HttpDelete]
         [Route("Skills/{Id}")]
         public IActionResult Update([FromRoute]int Id)
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new Skills().Delete(UID,Id));
-        }
+        }*/
     }
 }

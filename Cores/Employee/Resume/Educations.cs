@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Educations
     {
-        public Result Add(object UID,Models.Employee.Resume.Education value) 
+       /* public Result Add(object UID,Models.Employee.Resume.Education value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -59,79 +59,76 @@ namespace HIsabKaro.Cores.Employee.Resume
                     };
                 }
             }
-        }
+        }*/
         public Result View(object UID) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var res = (from obj in c.EmpResumeEducations
-                               where obj.UId == (int)UID
-                               select new Models.Employee.Resume.EducationDetail()
-                               {
-                               }).ToList();
-                    if (!res.Any())
+                    if (UID == null) 
                     {
-                        return new Result()
-                        {
-                            Status = Result.ResultStatus.success,
-                            Message = "Employee Resume-Educations Data get successfully!",
-                            Data = res,
-                        };
+                        throw new ArgumentException("token not found or expired!");
                     }
-                    else
+                    var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
+                    if (user == null) 
                     {
-                        return new Result()
-                        {
-                            Status = Result.ResultStatus.success,
-                            Message = "Employee Resume-Educations Data get successfully!",
-                            Data = res,
-                        };
+                        throw new ArgumentException("User not exist!");
                     }
+                    var Profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    var Education = (from x in c.EmpResumeEducations
+                                     where x.UId == (int)UID && x.ProfileId == Profile.ProfileId
+                                     select new IntegerNullString()
+                                     {
+                                         Id=x.SubFixedLookup.FixedLookupId,
+                                         Text=x.SubFixedLookup.FixedLookup
+                                     });
+                    return new Result()
+                    {
+                        Status=Result.ResultStatus.success,
+                        Message="User education details viewed successfully!",
+                        Data=Education
+                    };
                     
                 }
             }
         }
-        public Result Update(int Id,object UID,Models.Employee.Resume.EducationDetail value) 
+        public Result Update(object UID,Models.Employee.Resume.Educations value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    
-                    var education = c.EmpResumeEducations.Where(x => x.UId == (int)UID && x.EmpResumeEducationId == Id).SingleOrDefault();
-                    if (education == null) 
+                    if (UID == null)
                     {
-                        throw new ArgumentException("Enter valid EducationId");
+                        throw new ArgumentException("token not found or expired!");
                     }
-                    if (education.EducationNameId == value.EducationName.Id)
+                    var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
+                    if (user == null)
                     {
-
-                        education.EducationSteamName = value.EducationStreamName;
-                        education.InstituteName = value.InstituteName;
-                        education.EndDate = value.EndDate;
-                        education.StartDate = value.StartDate;
+                        throw new ArgumentException("User not exist!");
+                    }
+                    var Profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (Profile.EmpResumeEducations.ToList().Any())
+                    {
+                        c.EmpResumeEducations.DeleteAllOnSubmit(Profile.EmpResumeEducations.ToList());
                         c.SubmitChanges();
                     }
-                    else 
+                    var Education = new EmpResumeEducation()
                     {
-                        throw new ArgumentException($"You only update {education.SubFixedLookup.FixedLookup} details by this request.");
-                    }
+                        EducationNameId=value.HighestEducation.Id,
+                        ProfileId=Profile.ProfileId,
+                        UId=user.UId
+                    };
+                    c.EmpResumeEducations.InsertOnSubmit(Education);
+                    c.SubmitChanges();
 
-
-                    var text =education.SubFixedLookup.FixedLookup;
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "Employee Resume-Educations Data Update successfully!",
-                        Data = new 
-                        {
-                            EmpResumeEducationId = education.EmpResumeEducationId,
-                            EducationName = new IntegerNullString() { Id = education.EducationNameId, Text = text },
-                            EducationStreamName = education.EducationSteamName,
-                        }
+                        Message = "User education details updated successfully!",
+                        Data = value
                     };
                 }
             }

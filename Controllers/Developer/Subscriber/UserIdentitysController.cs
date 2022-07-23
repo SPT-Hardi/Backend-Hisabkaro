@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("UserIdentity")]
         public IActionResult Add([FromBody]Models.Developer.Subscriber.UserIdentity value) 
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new UserIdentitys().Add( UID,value));
         }
     }

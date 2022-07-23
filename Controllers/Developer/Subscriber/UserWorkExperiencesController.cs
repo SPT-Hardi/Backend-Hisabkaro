@@ -15,7 +15,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("UserWorkExperience")]
         public IActionResult Post() 
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok();
         }
     }

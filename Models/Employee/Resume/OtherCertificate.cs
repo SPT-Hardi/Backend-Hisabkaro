@@ -35,10 +35,9 @@ namespace HIsabKaro.Models.Employee.Resume
     }
     public class Certificate
     {
-       
-        public int EmpResumeOtherCertificateId { get; set; }
-     
-        public string CertificateFGUID { get;set; }
+        [Required(ErrorMessage ="CertificateId is required!")]
+        public int CertificateId { get; set; }
+        public string FileGUID { get;set; }
     }
     
 }

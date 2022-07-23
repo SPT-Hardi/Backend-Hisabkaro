@@ -66,7 +66,7 @@ namespace HIsabKaro.Controllers.Common
         [Route("Profile/{Id}")]
         public IActionResult Get(int Id) 
         {
-            var UId = HttpContext.Items["UserID"];
+            var UId = HttpContext.Items["UId"];
             var URId = HttpContext.Items["URId"];
             return Ok(new Cores.Common.Drops().ProfileDrop(UId,Id,URId));
         }

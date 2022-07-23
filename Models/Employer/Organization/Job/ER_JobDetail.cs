@@ -65,7 +65,7 @@ namespace HIsabKaro.Models.Employer.Organization.Job
         public string ImageFGUID{get;set;}
         public string MobileNumber { get; set; }
         public DateTime Date { get; set; }
-        public dynamic WorkExperience { get; set; }
+        //public dynamic WorkExperience { get; set; }
         public bool IsApplied { get; set; }
         public bool IsBookmarked { get; set; }
         public bool IsShortListed { get; set; }

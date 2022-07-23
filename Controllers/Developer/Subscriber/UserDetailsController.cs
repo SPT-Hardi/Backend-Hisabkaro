@@ -37,7 +37,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("UserDetails")]
         public IActionResult DetailsPost(Models.Developer.Subscriber.UserDetails value) 
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             var DeviceToken= HttpContext.Items["DeviceToken"];
             return Ok(new UserDetails(_configuration,_tokenServices).Add(UID,DeviceToken,value));
         }
@@ -46,7 +46,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("UserDetails")]
         public IActionResult DetailsGet()
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             //var DeviceToken = HttpContext.Items["DeviceToken"];
             return Ok(new UserDetails(_configuration, _tokenServices).Get(UID));
         }
@@ -56,7 +56,7 @@ namespace HIsabKaro.Controllers.Developer.Subscriber
         [Route("UserDetails")]
         public IActionResult DetailsPatch(Models.Developer.Subscriber.UserPersonalDetails value)
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             //var DeviceToken = HttpContext.Items["DeviceToken"];
             return Ok(new UserDetails(_configuration, _tokenServices).Update(UID,value));
         }*/

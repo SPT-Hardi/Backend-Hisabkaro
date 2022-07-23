@@ -35,14 +35,13 @@ namespace HIsabKaro.Services.PDF
                                       select new
                                       {
                                           Designation=x.JobTitle,
-                                          CompanyName=x.OrganizationName,
+                                          CompanyName=x.CompanyName,
      //removed from 86 line no           //Duration = new Cores.Common.StringFormators().CountDuration(x.StartDate,x.EndDate),
                                       }).ToList();
                 var Education = (from x in c.EmpResumeEducations where x.UId == (int)UId select new
                 {
                     StreamName=x.SubFixedLookup.FixedLookup,
-                    InstituteName=x.InstituteName,
-                    Duration= new Cores.Common.StringFormators().CountDuration(x.StartDate, x.EndDate),
+                    //Duration= new Cores.Common.StringFormators().CountDuration(x.StartDate, x.EndDate),
                 }).ToList();
                 var Skills = (from x in c.EmpResumeSkills where x.UId == (int)UId select new
                 {
@@ -53,7 +52,7 @@ namespace HIsabKaro.Services.PDF
                                         select new
                                         {
                                             CertificateName=x.CertificateName,
-                                            Duration= new Cores.Common.StringFormators().CountDuration(x.StartDate, x.EndDate),
+           //97                             //Duration= new Cores.Common.StringFormators().CountDuration(x.StartDate, x.EndDate),
                                         }).ToList();
 
                 var sb = new StringBuilder();
@@ -94,9 +93,8 @@ namespace HIsabKaro.Services.PDF
                 foreach (var x in Education)
                 {
                     sb.Append($@"
-                               <h3>{x.InstituteName}</h3>
                                <p class='title'>{x.StreamName}</p>
-                               <p class='head'>{x.Duration}</p>
+                               <p class='head'>{""}</p>
                                <br>
                                ");
                 }
@@ -121,7 +119,7 @@ namespace HIsabKaro.Services.PDF
                 {
                     sb.Append($@"
                                <h3>{x.CertificateName}</h3>
-                                <p class='head'>{x.Duration}</p>
+                                <p class='head'>{""}</p>
                                 ");
                 }
                 sb.Append(@"

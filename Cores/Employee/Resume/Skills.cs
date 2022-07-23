@@ -10,30 +10,39 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class Skills
     {
-        public Result Add(object UID,Models.Employee.Resume.Skill value) 
+       /* public Result Add(object UID,Models.Employee.Resume.List_Skills value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
+                    if (UID == null) 
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
                     var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt Exist!");
                     }
-                    var skills = (from obj in value.skillDetails
-                                  select new EmpResumeSkill
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (profile == null)
+                    {
+                        throw new ArgumentException("user resume not created yet!");
+                    }
+                    var skills = (from obj in value.SkillList
+                                  select new EmpResumeSkill()
                                   {
                                       UId = (int)UID,
-                                      SkillName=obj.SkillName,
+                                      ProfileId=profile.ProfileId,
+                                      SkillName=obj.skill,
                                   }).ToList();
                     c.EmpResumeSkills.InsertAllOnSubmit(skills);
                     c.SubmitChanges();
                     var res = (from obj in skills
-                               select new Models.Employee.Resume.SkillDetails()
+                               select new Models.Employee.Resume.Skills()
                                {
-                                   EmpResumeSkillId=obj.EmpResumeSkillId,
-                                   SkillName=obj.SkillName,
+                                   skill=obj.SkillName,
                                }).ToList();
 
                     scope.Complete();
@@ -45,19 +54,28 @@ namespace HIsabKaro.Cores.Employee.Resume
                     };
                 }
             }
-        }
+        }*/
         public Result View(object UID)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UID).ToList();
+                    if (UID == null)
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
+                    var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
+                    if (user == null)
+                    {
+                        throw new ArgumentException("User doesnt Exist!");
+                    }
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UID && x.ProfileId==profile.ProfileId).ToList();
                     var res = (from obj in skills
-                               select new Models.Employee.Resume.SkillDetails()
+                               select new Models.Employee.Resume.Skills()
                                {
-                                   EmpResumeSkillId = obj.EmpResumeSkillId,
-                                   SkillName = obj.SkillName,
+                                   skill=obj.SkillName,
                                }).ToList();
                     return new Result()
                     {
@@ -68,29 +86,50 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id,object UID,Models.Employee.Resume.SkillDetails value)
+        public Result Update(object UID,Models.Employee.Resume.List_Skills value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UID && x.EmpResumeSkillId == Id).SingleOrDefault();
-                    if (skills == null) 
+                    if (UID == null)
                     {
-                        throw new ArgumentException("No Skills details for this id,(enter valid token)");
+                        throw new ArgumentException("token not found or expired!");
                     }
-                    skills.SkillName = value.SkillName;
-                    c.SubmitChanges();
-                    var res = new Models.Employee.Resume.SkillDetails()
+                    var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
+                    if (user == null)
                     {
-                        EmpResumeSkillId = skills.EmpResumeSkillId,
-                        SkillName = skills.SkillName,
-                    };
-                    scope.Complete();
+                        throw new ArgumentException("User doesnt Exist!");
+                    }
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (profile == null) 
+                    {
+                        throw new ArgumentException("user resume not created yet!");
+                    }
+                    if (profile.EmpResumeSkills.ToList().Any()) 
+                    {
+                        c.EmpResumeSkills.DeleteAllOnSubmit(profile.EmpResumeSkills.ToList());
+                        c.SubmitChanges();
+                    }
+                    var skills = (from obj in value.SkillList
+                                  select new EmpResumeSkill()
+                                  {
+                                      UId = (int)UID,
+                                      ProfileId = profile.ProfileId,
+                                      SkillName = obj.skill,
+                                  }).ToList();
+                    c.EmpResumeSkills.InsertAllOnSubmit(skills);
+                    c.SubmitChanges();
+                    var res = (from obj in skills
+                               select new Models.Employee.Resume.Skills()
+                               {
+                                   skill = obj.SkillName,
+                               }).ToList();
+
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "Employee Resume-Skills Details Added Successfully!",
+                        Message = "Employee Resume-Skills Details Updated Successfully!",
                         Data = res,
                     };
                 }

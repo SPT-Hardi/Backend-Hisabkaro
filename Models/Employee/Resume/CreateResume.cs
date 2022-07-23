@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace HIsabKaro.Models.Employee.Resume
@@ -33,23 +34,46 @@ namespace HIsabKaro.Models.Employee.Resume
     }
     public class WorkExperiences
     {
+        [JsonIgnore]
+        public int WorkExperienceId { get; set; }
         public string JobTitle { get; set; }
         public string CopanyName { get; set; }
         public IntegerNullString Sector { get; set; } = new IntegerNullString();
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }
-    public class Skills 
+    public class List_WorkExperienxes 
     {
+        public List<WorkExperiences> WorkExperienceList { get; set; } = new List<WorkExperiences>();
+    }
+    public class Skills 
+    {  
         public string skill { get; set; }
+    }
+    public class List_Skills 
+    {
+        public List<Skills> SkillList { get; set; } = new List<Skills>();
     }
     public class Certificates 
     {
+        public int CertificateId { get; set; }
         public string CertificateName { get; set; }
         public string FileGUId { get; set; }
+    }
+    public class Educations 
+    {
+        public IntegerString HighestEducation { get; set; } = new IntegerString();
+    }
+    public class List_Certificates 
+    {
+        public List<Certificates> CertificateList { get; set; } = new List<Certificates>();
     }
     public class OtherLanguages 
     {
         public string language { get; set; }
+    }
+    public class List_OtherLanguages
+    {
+        public List<OtherLanguages> OtherLanguageList { get; set; } = new List<OtherLanguages>();
     }
 }

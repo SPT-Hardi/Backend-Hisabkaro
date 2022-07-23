@@ -16,9 +16,9 @@ namespace HIsabKaro.Controllers.Employee.Resume
        
         [HttpPost]
         [Route("OtherCertificates")]
-        public IActionResult Post(Models.Employee.Resume.OtherCertificate value)
+        public IActionResult Post(Models.Employee.Resume.List_Certificates value)
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new OtherCertificates().Add(UID,value));
         }
 
@@ -26,32 +26,32 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("OtherCertificates")]
         public IActionResult Get()
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new OtherCertificates().View(UID));
         }
 
         [HttpPatch]
         [Route("OtherCertificates/{Id}")]
-        public IActionResult Patch([FromBody] Models.Employee.Resume.OtherCertificateDetails value, [FromRoute] int Id)
+        public IActionResult Patch([FromBody] Models.Employee.Resume.Certificates value, [FromRoute] int Id)
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new OtherCertificates().Update(Id, UID,value));
         }
 
         [HttpPost]
-        [Route("OtherCertificates/Upload/{Id}")]
-        public IActionResult PostCertificate([FromBody] Models.Employee.Resume.Certificate value,[FromRoute] int Id)
+        [Route("OtherCertificates/Upload")]
+        public IActionResult PostCertificate([FromBody] Models.Employee.Resume.Certificate value)
         {
-            var UID = HttpContext.Items["UserID"];
-            return Ok(new OtherCertificates().UploadCertificate(Id,UID,value));
+            var UID = HttpContext.Items["UId"];
+            return Ok(new OtherCertificates().UploadCertificate(UID,value));
         }
 
-        [HttpDelete]
+       /* [HttpDelete]
         [Route("OtherCertificates/{Id}")]
         public IActionResult Delete([FromRoute] int Id)
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new OtherCertificates().Delete(UID,Id));
-        }
+        }*/
     }
 }

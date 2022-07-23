@@ -24,6 +24,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     throw new ArgumentException("token not found or expired!");
                 }
                 var user = (from x in c.SubUsers where x.UId == (int)UId select x).FirstOrDefault();
+                if (user.SubUsersDetail != null) 
+                {
+                    throw new ArgumentException("User Details already exist!");
+                }
                 c.SubUsersDetails.InsertOnSubmit(new SubUsersDetail()
                 {
                     AddressID=null,

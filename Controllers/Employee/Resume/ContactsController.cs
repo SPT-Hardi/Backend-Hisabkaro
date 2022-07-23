@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Contact")]
         public IActionResult Get() 
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new Contacts().Get(UID));
         }
 
@@ -25,7 +25,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         [Route("Contact")]
         public IActionResult Patch(Contact value)
         {
-            var UID = HttpContext.Items["UserID"];
+            var UID = HttpContext.Items["UId"];
             return Ok(new Contacts().Update(UID,value));
         }
     }

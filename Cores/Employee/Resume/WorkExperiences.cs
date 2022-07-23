@@ -10,34 +10,49 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class WorkExperiences
     {
-        public Result Add(object UID,List<Models.Employee.Resume.WorkExperiences> value) 
+        public Result Add(object UID,Models.Employee.Resume.List_WorkExperienxes value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
+                    if (UID == null) 
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
                     var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist!,(enter valid token)");
                     }
-                    var workexperience = (from obj in value
+                    var Profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (Profile == null) 
+                    {
+                        throw new ArgumentException("user resume yet not created!");
+                    }
+                    var workexperiences = (from x in value.WorkExperienceList
                                           select new EmpResumeWorkExperience()
                                           {
-                                              UId=(int)UID,
-                                              StartDate=obj.StartDate,
-                                              EndDate=(obj.EndDate < obj.StartDate)? throw new ArgumentException($"Enter valid daterange for jobtitle:{obj.JobTitle}"):obj.EndDate,
-                                              JobTitle=obj.JobTitle,
+                                              CompanyName=x.CopanyName,
+                                              EndDate=x.EndDate,
+                                              JobTitle=x.JobTitle,
+                                              ProfileId=Profile.ProfileId,
+                                              SectorId=x.Sector.Id,
+                                              StartDate=x.StartDate,
+                                              UId=user.UId,
                                           }).ToList();
-                    c.EmpResumeWorkExperiences.InsertAllOnSubmit(workexperience);
+                    c.EmpResumeWorkExperiences.InsertAllOnSubmit(workexperiences);
                     c.SubmitChanges();
-                    var res = (from obj in workexperience
-                              select new Models.Employee.Resume.WorkExperienceDetails()
+
+                    var res = (from obj in workexperiences
+                              select new Models.Employee.Resume.WorkExperiences()
                               {
-                                  EmpResumeWorkExperienceId=obj.EmpResumeWorkExperienceId,
+                                  WorkExperienceId=obj.EmpResumeWorkExperienceId,
                                   JobTitle=obj.JobTitle,
                                   StartDate=Convert.ToDateTime(obj.StartDate),
                                   EndDate=Convert.ToDateTime(obj.EndDate),
+                                  CopanyName=obj.CompanyName,
+                                  Sector=new IntegerNullString() { Id=obj.SubFixedLookup.FixedLookupId,Text=obj.SubFixedLookup.FixedLookup,},
                               }).ToList();
                     scope.Complete();
                     return new Result()
@@ -55,21 +70,26 @@ namespace HIsabKaro.Cores.Employee.Resume
             {
                 using (DBContext c = new DBContext())
                 {
+                    if (UID == null) 
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
                     var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User Doesnt Exist!,(Enter valid token)");
                     }
-                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId== (int)UID).ToList();
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId== (int)UID && x.ProfileId==profile.ProfileId).ToList();
                     var res= (from obj in workExperience
-                              select new Models.Employee.Resume.WorkExperienceDetails()
+                              select new Models.Employee.Resume.WorkExperiences()
                               {
-                                  EmpResumeWorkExperienceId = obj.EmpResumeWorkExperienceId,
+                                  WorkExperienceId = obj.EmpResumeWorkExperienceId,
                                   JobTitle = obj.JobTitle,
-                                  OrganizationName = obj.OrganizationName,
-                                  WorkFrom = obj.WorkFrom,
+                                  CopanyName = obj.CompanyName,
                                   StartDate = Convert.ToDateTime(obj.StartDate),
                                   EndDate = Convert.ToDateTime(obj.EndDate),
+                                  Sector=new IntegerNullString() { Id=obj.SubFixedLookup.FixedLookupId,Text=obj.SubFixedLookup.FixedLookup,},
                               }).ToList();
                     return new Result()
                     {
@@ -80,32 +100,42 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(int Id,object UID,Models.Employee.Resume.WorkExperienceDetails value)
+        public Result Update(int Id,object UID,Models.Employee.Resume.WorkExperiences value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId == (int)UID && x.EmpResumeWorkExperienceId == Id).SingleOrDefault();
+                    if (UID == null) 
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
+                    var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
+                    if (user == null) 
+                    {
+                        throw new ArgumentException("User not found!");
+                    }
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId == (int)UID && x.EmpResumeWorkExperienceId == Id && x.ProfileId==profile.ProfileId).SingleOrDefault();
                     if (workExperience == null) 
                     {
-                        throw new ArgumentException("Enter valid WorkExperienceId,(enter valid token)");
+                        throw new ArgumentException($"No record found for given Id:{Id}");
                     }
                     workExperience.JobTitle =value.JobTitle;
                     workExperience.EndDate =value.EndDate;
-                    workExperience.OrganizationName =value.OrganizationName;
+                    workExperience.CompanyName =value.CopanyName;
                     workExperience.StartDate =value.StartDate;
-                    workExperience.WorkFrom =value.WorkFrom;
+                    workExperience.SectorId = value.Sector.Id;
                     c.SubmitChanges();
 
-                    var res = new Models.Employee.Resume.WorkExperienceDetails()
+                    var res = new Models.Employee.Resume.WorkExperiences()
                     {
-                        EmpResumeWorkExperienceId = workExperience.EmpResumeWorkExperienceId,
+                        WorkExperienceId = workExperience.EmpResumeWorkExperienceId,
                         JobTitle = workExperience.JobTitle,
-                        OrganizationName = workExperience.OrganizationName,
-                        WorkFrom = workExperience.WorkFrom,
+                        CopanyName = workExperience.CompanyName,
                         StartDate = Convert.ToDateTime(workExperience.StartDate),
                         EndDate = Convert.ToDateTime(workExperience.EndDate),
+                        Sector=new IntegerNullString() { Id=workExperience.SubFixedLookup.FixedLookupId,Text=workExperience.SubFixedLookup.FixedLookup,},
                     };
                     
                     scope.Complete();
@@ -146,7 +176,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public TimeSpan TotalExperience(int UId) 
+   /*     public TimeSpan TotalExperience(int UId) 
         {
             using (DBContext c = new DBContext())
             {
@@ -166,6 +196,6 @@ namespace HIsabKaro.Cores.Employee.Resume
                 var Duration = MaxDate - MinDate;
                 return Duration;
             }
-        }
+        }*/
     }
 }

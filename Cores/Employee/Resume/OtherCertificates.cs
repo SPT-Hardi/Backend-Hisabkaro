@@ -12,34 +12,41 @@ namespace HIsabKaro.Cores.Employee.Resume
 {
     public class OtherCertificates
     {
-        public Result Add(object UID,Models.Employee.Resume.OtherCertificate value) 
+        public Result Add(object UID,Models.Employee.Resume.List_Certificates value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    
+                    if (UID == null) 
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
                     var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
                     if (user == null) 
                     {
                         throw new ArgumentException("User doesnt exist,(enter valid token)");
                     }
-                    var othercertificate = (from obj in value.OtherCertificateDetails
+                    var profile=user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (profile == null) 
+                    {
+                        throw new ArgumentException("user resume not created yet!");
+                    }
+                    var othercertificates = (from obj in value.CertificateList
                                             select new EmpResumeOtherCertificate()
                                             {
                                                 UId = (int)UID,
                                                 CertificateName = obj.CertificateName,
-                                                StartDate = (obj.EndDate < obj.StartDate) ? throw new ArgumentException($"Enter valid daterange for certificate:{obj.CertificateName}") : obj.StartDate,
-                                                EndDate = obj.EndDate,
-                                                CertificateFileId = obj.CertificateFGUID == null ? null : ((from x in c.CommonFiles where x.FGUID == obj.CertificateFGUID select x.FileId).FirstOrDefault() == 0 ? throw new ArgumentException("Enter valid FGUID") : (from x in c.CommonFiles where x.FGUID == obj.CertificateFGUID select x.FileId).FirstOrDefault())
+                                                ProfileId=profile.ProfileId,
+                                                CertificateFileId=(from x in c.CommonFiles where x.FGUID==obj.FileGUId select x.FileId).FirstOrDefault(),
                                             }).ToList();
-                    c.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificate);
+                    c.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificates);
                     c.SubmitChanges();
 
-                    var res = (from obj in othercertificate
+                    var res = (from obj in othercertificates
                                select new 
                                {
-                                   EmpResumeOtherCertificateId=obj.EmpResumeOtherCertificateId,
+                                   CertificateId=obj.EmpResumeOtherCertificateId,
                                    CertificateName=obj.CertificateName,
                                    
                                }).ToList();
@@ -56,19 +63,19 @@ namespace HIsabKaro.Cores.Employee.Resume
             }
         }
        
-        public Result UploadCertificate(int Id,object UID,Models.Employee.Resume.Certificate value) 
+        public Result UploadCertificate(object UID,Models.Employee.Resume.Certificate value) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == value.CertificateId).SingleOrDefault();
                     if (certificate == null) 
                     {
-                        throw new ArgumentException($"There are no details for OtherCertificateId:{Id}");
+                        throw new ArgumentException($"There are no details for OtherCertificateId:{value.CertificateId}");
                     }
 
-                    var file = c.CommonFiles.Where(x => x.FGUID == value.CertificateFGUID).SingleOrDefault();
+                    var file = c.CommonFiles.Where(x => x.FGUID == value.FileGUID).SingleOrDefault();
                     if (file == null) 
                     {
                         throw new ArgumentException("File not exist!");
@@ -96,51 +103,63 @@ namespace HIsabKaro.Cores.Employee.Resume
             {
                 using (DBContext c = new DBContext())
                 {
-                    
+                    if (UID == null)
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
+                    var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
+                    if (user == null) 
+                    {
+                        throw new ArgumentException("User not exist!");
+                    }
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
                     var res = (from obj in c.EmpResumeOtherCertificates
-                               where obj.UId==(int)UID
-                               select new 
+                               where obj.UId==(int)UID && obj.ProfileId==profile.ProfileId
+                               select new Models.Employee.Resume.Certificates()
                                {
-                                   EmpResumeOtherCertificateId = obj.EmpResumeOtherCertificateId,
                                    CertificateName = obj.CertificateName,
-                                   StartDate = Convert.ToDateTime(obj.StartDate),
-                                   EndDate = Convert.ToDateTime(obj.EndDate),
-                                   CertificateFilePath =obj.CertificateFileId==null ? null : obj.CommonFile.FGUID ,
-
+                                   CertificateId=obj.EmpResumeOtherCertificateId,
+                                   FileGUId=obj.CommonFile.FGUID,
                                }).ToList();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "Employee Resume-OtherCertificates added successfully!",
+                        Message = "Employee Resume-OtherCertificates details get successfully!",
                         Data = res,
                     };
                 }
             }
         }
-        public Result Update(int Id, object UID,Models.Employee.Resume.OtherCertificateDetails value)
+        public Result Update(int Id, object UID,Models.Employee.Resume.Certificates value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == Id).SingleOrDefault();
+                    if (UID == null) 
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
+                    var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
+                    if (user == null) 
+                    {
+                        throw new ArgumentException("user not exist!");
+                    }
+                    var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == Id ).SingleOrDefault();
                     if (othercertificates == null) 
                     {
                         throw new ArgumentException("No othercertificate details for this Id,(enter valid token)");
                     }
 
                     othercertificates.CertificateName = value.CertificateName;
-                    othercertificates.EndDate =value.EndDate;
-                    othercertificates.StartDate =value.StartDate;
-                    othercertificates.CertificateFileId = value.CertificateFGUID == null ? null : ((from x in c.CommonFiles where x.FGUID == value.CertificateFGUID select x.FileId).FirstOrDefault() == 0 ? throw new ArgumentException("Enter valid FGUID") : (from x in c.CommonFiles where x.FGUID == value.CertificateFGUID select x.FileId).FirstOrDefault());
+                    othercertificates.CertificateFileId =(from x in c.CommonFiles where x.FGUID==value.FileGUId select x.FileId).FirstOrDefault();
 
                     c.SubmitChanges();
                     var res = new 
                     {
-                        EmpResumeOtherCertificateId = othercertificates.EmpResumeOtherCertificateId,
+                        CertificateId = othercertificates.EmpResumeOtherCertificateId,
                         CertificateName = othercertificates.CertificateName,
-                        
-
 
                     };
                     scope.Complete();

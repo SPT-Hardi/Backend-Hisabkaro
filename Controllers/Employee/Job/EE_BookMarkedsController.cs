@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpPost]
         public IActionResult Create(int Jid)
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             return Ok(new EE_BookmarkedJobs().Create(UserId, Jid));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpGet]
         public IActionResult One()
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             return Ok(new EE_BookmarkedJobs().One(UserId));
         }
 
@@ -32,7 +32,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpDelete]
         public IActionResult Delete(int SaveId)
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             return Ok(new EE_BookmarkedJobs().Remove(UserId, SaveId));
         }
     }

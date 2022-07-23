@@ -42,7 +42,7 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("OrganizationProfiles/Create/{OId}")]
         public IActionResult Create([FromRoute] int OId,[FromBody] Models.Employer.Organization.OrganizationProfile value)
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             //int UserId = 50000333;
             return Ok(_organizationProfiles.Create(UserId,OId,value,_configuration,_tokenService));
         }

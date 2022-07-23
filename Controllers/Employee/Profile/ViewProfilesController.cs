@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Profile
         [HttpGet]
         public IActionResult Get()
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             return Ok(new ViewProfiles().Get(UserId));
         }
     }

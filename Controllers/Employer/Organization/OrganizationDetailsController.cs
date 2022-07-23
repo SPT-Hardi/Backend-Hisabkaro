@@ -17,7 +17,7 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("OrganizationDetails/Create")]
         public IActionResult Create([FromBody] Models.Employer.Organization.OrganizationDetail value)
         {
-            var UserID = HttpContext.Items["UserID"];
+            var UserID = HttpContext.Items["UId"];
             return Ok(new OrganizationDetails().Create(UserID,value));
         }
 
@@ -25,7 +25,7 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("OrganizationDetails/Sector/Search")]
         public IActionResult SectorSearch([FromQuery]string keyword)
         {
-            //var UserID = HttpContext.Items["UserID"];
+            //var UserID = HttpContext.Items["UId"];
             return Ok(new OrganizationDetails().OrganiztionSectorSearch(keyword));
         }
 

@@ -16,7 +16,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpPost]
         public IActionResult Search(Models.Employee.Job.EE_ViewJob value)
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             return Ok(new EE_ViewJobs().Create(UserId, value));
         }
 
@@ -24,7 +24,7 @@ namespace HIsabKaro.Controllers.Employee.Job
         [HttpGet]
         public IActionResult Get()
         {
-            var UserId = HttpContext.Items["UserID"];
+            var UserId = HttpContext.Items["UId"];
             return Ok(new EE_ViewJobs().Get(UserId));
         }
     }
