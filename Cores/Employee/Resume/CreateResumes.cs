@@ -39,28 +39,9 @@ namespace HIsabKaro.Cores.Employee.Resume
                         MobileNumber=value.PersonalInfo.MobileNumber,
                         UId=user.UId,
                         SalaryTypeId=value.PersonalInfo.SalaryType.Id,
+                        AddressId=value.PersonalInfo.AddressId,
                     };
-                    //create address for profile
-                    if (value.PersonalInfo.AddressId == null)
-                    {
-                        var address = new CommonContactAddress()
-                        {
-                            AddressLine1 = value.PersonalInfo.Address.AddressLine1,
-                            AddressLine2 = "",
-                            City = value.PersonalInfo.Address.City,
-                            Landmark = value.PersonalInfo.Address.LandMark,
-                            PinCode = value.PersonalInfo.Address.PinCode,
-                            State = value.PersonalInfo.Address.State,
-                        };
-                        c.CommonContactAddresses.InsertOnSubmit(address);
-                        c.SubmitChanges();
-                        userProfile.AddressId = address.ContactAddressId;
-
-                    }
-                    else 
-                    {
-                        userProfile.AddressId = value.PersonalInfo.AddressId;
-                    }
+                    
                     c.EmpResumeProfiles.InsertOnSubmit(userProfile);
                     c.SubmitChanges();
 
@@ -112,7 +93,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     //create new user_Resume_Certificates
                     c.EmpResumeOtherCertificates.InsertAllOnSubmit(value.Certificates.Where(x => x.CertificateName != null).Select(x => new EmpResumeOtherCertificate()
                     {
-                        CertificateFileId=(from y in c.CommonFiles where y.FGUID==x.FileGUId select y.FileId).FirstOrDefault(),
+                        CertificateFileId=(from y in c.CommonFiles where y.FGUID==x.FileGUId select y).FirstOrDefault()?.FileId,
                         CertificateName=x.CertificateName,
                         ProfileId=userProfile.ProfileId,
                         UId=user.UId,

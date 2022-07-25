@@ -10,7 +10,7 @@ namespace HIsabKaro.Controllers.Common
     {
         [HttpPost]
         [Route("{Id}")]
-        public IActionResult Post(int Id, Skills value)
+        public IActionResult Post(int Id, Skill_Default value)
         {
             return Ok(new AddSkills().Add(Id, value));
         }

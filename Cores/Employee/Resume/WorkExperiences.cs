@@ -94,7 +94,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "Employee Resume-WorkExperiences added successfully!",
+                        Message = "Employee Resume-WorkExperiences details get successfully!",
                         Data = res,
                     };
                 }
@@ -142,7 +142,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
-                        Message = "Employee Resume-WorkExperiences added successfully!",
+                        Message = "Employee Resume-WorkExperiences updated successfully!",
                         Data = res,
                     };
                 }

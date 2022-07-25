@@ -86,7 +86,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Update(object UID,Models.Employee.Resume.List_Skills value)
+        public Result Update_Skills(object UID,Models.Employee.Resume.List_Skills value)
         {
             using (TransactionScope scope = new TransactionScope())
             {

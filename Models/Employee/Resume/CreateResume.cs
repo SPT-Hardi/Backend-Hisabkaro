@@ -18,13 +18,13 @@ namespace HIsabKaro.Models.Employee.Resume
     }
     public class PersonalInfo 
     {
+        [JsonIgnore]
         public int ProfileId { get; set; }
         [Required(ErrorMessage ="Name is required!")]
         public string Name { get; set; }
         public string Email { get; set; }
         public string MobileNumber { get; set; }
         public int? AddressId { get; set; }=null;
-        public Models.Common.Contact.Address Address { get; set; } = new Common.Contact.Address();
         public string CurrentSalary { get; set; }
         public IntegerNullString SalaryType { get; set; } = new IntegerNullString();
         public bool IsVisibleToBusinessOwner { get; set; }
@@ -39,8 +39,8 @@ namespace HIsabKaro.Models.Employee.Resume
         public string JobTitle { get; set; }
         public string CopanyName { get; set; }
         public IntegerNullString Sector { get; set; } = new IntegerNullString();
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; } = null;
+        public DateTime? EndDate { get; set; } = null;
     }
     public class List_WorkExperienxes 
     {
@@ -56,6 +56,7 @@ namespace HIsabKaro.Models.Employee.Resume
     }
     public class Certificates 
     {
+        [JsonIgnore]
         public int CertificateId { get; set; }
         public string CertificateName { get; set; }
         public string FileGUId { get; set; }

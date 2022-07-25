@@ -13,13 +13,13 @@ namespace HIsabKaro.Controllers.Employee.Resume
     [ApiController]
     public class OtherCertificatesController : ControllerBase
     {
-       
+
         [HttpPost]
         [Route("OtherCertificates")]
         public IActionResult Post(Models.Employee.Resume.List_Certificates value)
         {
             var UID = HttpContext.Items["UId"];
-            return Ok(new OtherCertificates().Add(UID,value));
+            return Ok(new OtherCertificates().Add(UID, value));
         }
 
         [HttpGet]
@@ -35,7 +35,7 @@ namespace HIsabKaro.Controllers.Employee.Resume
         public IActionResult Patch([FromBody] Models.Employee.Resume.Certificates value, [FromRoute] int Id)
         {
             var UID = HttpContext.Items["UId"];
-            return Ok(new OtherCertificates().Update(Id, UID,value));
+            return Ok(new OtherCertificates().Update(Id, UID, value));
         }
 
         [HttpPost]
@@ -43,15 +43,15 @@ namespace HIsabKaro.Controllers.Employee.Resume
         public IActionResult PostCertificate([FromBody] Models.Employee.Resume.Certificate value)
         {
             var UID = HttpContext.Items["UId"];
-            return Ok(new OtherCertificates().UploadCertificate(UID,value));
+            return Ok(new OtherCertificates().UploadCertificate(UID, value));
         }
 
-       /* [HttpDelete]
-        [Route("OtherCertificates/{Id}")]
-        public IActionResult Delete([FromRoute] int Id)
-        {
-            var UID = HttpContext.Items["UId"];
-            return Ok(new OtherCertificates().Delete(UID,Id));
-        }*/
+        /* [HttpDelete]
+         [Route("OtherCertificates/{Id}")]
+         public IActionResult Delete([FromRoute] int Id)
+         {
+             var UID = HttpContext.Items["UId"];
+             return Ok(new OtherCertificates().Delete(UID,Id));
+         }*/
     }
 }

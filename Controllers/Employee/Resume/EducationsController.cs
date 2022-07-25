@@ -30,18 +30,18 @@ namespace HIsabKaro.Controllers.Employee.Resume
 
         [HttpPatch]
         [Route("Educations")]
-        public IActionResult Patch([FromBody]Models.Employee.Resume.Educations value) 
+        public IActionResult Patch([FromBody] Models.Employee.Resume.Educations value)
         {
             var UID = HttpContext.Items["UId"];
-            return Ok(new Educations().Update(UID,value));
+            return Ok(new Educations().Update(UID, value));
         }
 
-      /*  [HttpDelete]
-        [Route("Educations/{Id}")]
-        public IActionResult Delete([FromRoute] int Id)
-        {
-            var UID = HttpContext.Items["UId"];
-            return Ok(new Educations().Delete(UID,Id));
-        }*/
+        /*  [HttpDelete]
+          [Route("Educations/{Id}")]
+          public IActionResult Delete([FromRoute] int Id)
+          {
+              var UID = HttpContext.Items["UId"];
+              return Ok(new Educations().Delete(UID,Id));
+          }*/
     }
 }

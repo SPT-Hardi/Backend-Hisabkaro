@@ -28,12 +28,16 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 {
                     throw new ArgumentException("User Details already exist!");
                 }
+                if (value.MobileNumber == value.AMobileNumber) 
+                {
+                    throw new ArgumentException("AMobileNumber not same as MobileNumber");
+                }
                 c.SubUsersDetails.InsertOnSubmit(new SubUsersDetail()
                 {
                     AddressID=null,
                     AMobileNumber=value.AMobileNumber,
                     Email=value.Email,
-                    FileId=(from x in c.CommonFiles where x.FGUID==value.ProfilePhotoFGUID select x.FileId).FirstOrDefault(),
+                    FileId=(from x in c.CommonFiles where x.FGUID==value.ProfilePhotoFGUID select x).FirstOrDefault()?.FileId,
                     FullName=value.FullName,
                     UId=user.UId,
                 });

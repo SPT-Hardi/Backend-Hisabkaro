@@ -118,5 +118,19 @@ namespace HIsabKaro.Controllers.Common
         {
             return Ok(new CustomeDrops.Languages().Get());
         }
+
+        [HttpGet]
+        [Route("General/Data/IndustrySector")]
+        public IActionResult IndustrySector_Drop()
+        {
+            return Ok(new CustomeDrops.Industry_Sector_Drop().Get());
+        }
+
+        [HttpGet]
+        [Route("General/Data/HighestEducation")]
+        public IActionResult HighestEducation_Drop()
+        {
+            return Ok(new CustomeDrops.HighestEducation_Drop().Get());
+        }
     }
 }

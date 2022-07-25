@@ -14,10 +14,10 @@ namespace HIsabKaro.Controllers.Employee.Resume
     {
         [HttpPost]
         [Route("WorkExperiences")]
-        public IActionResult Post([FromBody]Models.Employee.Resume.List_WorkExperienxes value) 
+        public IActionResult Post([FromBody] Models.Employee.Resume.List_WorkExperienxes value)
         {
-           var UID = HttpContext.Items["UId"];
-            return Ok(new WorkExperiences().Add(UID,value));
+            var UID = HttpContext.Items["UId"];
+            return Ok(new WorkExperiences().Add(UID, value));
         }
 
         [HttpGet]
@@ -30,19 +30,20 @@ namespace HIsabKaro.Controllers.Employee.Resume
 
         [HttpPatch]
         [Route("WorkExperiences/{Id}")]
-        public IActionResult Patch(Models.Employee.Resume.WorkExperiences value,int Id)
+        public IActionResult Patch(Models.Employee.Resume.WorkExperiences value, int Id)
         {
             var UID = HttpContext.Items["UId"];
-            return Ok(new WorkExperiences().Update(Id, UID,value));
+            return Ok(new WorkExperiences().Update(Id, UID, value));
         }
 
-      /*  [HttpDelete]
-        [Route("WorkExperiences/{Id}")]
-        public IActionResult Delete(int Id)
-        {
-            var UID = HttpContext.Items["UId"];
-            return Ok(new WorkExperiences().Delete(UID,Id));
-        }*/
+        
+        /*  [HttpDelete]
+          [Route("WorkExperiences/{Id}")]
+          public IActionResult Delete(int Id)
+          {
+              var UID = HttpContext.Items["UId"];
+              return Ok(new WorkExperiences().Delete(UID,Id));
+          }*/
 
     }
 }

@@ -172,7 +172,7 @@ namespace HIsabKaro
             });
             app.UseHttpsRedirection();
             app.UseRouting();
-            
+            app.UseDeveloperExceptionPage();
             app.UseAuthorization();
             app.UseMiddleware<JwtHandler>();
             //app.UseMiddleware<CustomeException>();

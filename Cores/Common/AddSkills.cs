@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Common
 {
     public class AddSkills
     {
-        public Result Add(int Id, Skills value)
+        public Result Add(int Id, Skill_Default value)
         {
             using (DBContext c = new DBContext())
             {

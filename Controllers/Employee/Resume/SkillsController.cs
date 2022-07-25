@@ -12,14 +12,6 @@ namespace HIsabKaro.Controllers.Employee.Resume
     [ApiController]
     public class SkillsController : ControllerBase
     {
-  /*      [HttpPost]
-        [Route("Skills")]
-        public IActionResult Add(Models.Employee.Resume.Skill value) 
-        {
-            var UID = HttpContext.Items["UId"];
-            return Ok(new Skills().Add(UID,value));
-        }*/
-
         [HttpGet]
         [Route("Skills")]
         public IActionResult Get()
@@ -28,20 +20,12 @@ namespace HIsabKaro.Controllers.Employee.Resume
             return Ok(new Skills().View(UID));
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("Skills")]
-        public IActionResult Update(Models.Employee.Resume.List_Skills value)
+        public  IActionResult Update([FromBody] Models.Employee.Resume.List_Skills value)
         {
             var UID = HttpContext.Items["UId"];
-            return Ok(new Skills().Update(UID,value));
+            return Ok(new Cores.Employee.Resume.Skills().Update_Skills(UID, value));
         }
-
-        /*[HttpDelete]
-        [Route("Skills/{Id}")]
-        public IActionResult Update([FromRoute]int Id)
-        {
-            var UID = HttpContext.Items["UId"];
-            return Ok(new Skills().Delete(UID,Id));
-        }*/
     }
 }

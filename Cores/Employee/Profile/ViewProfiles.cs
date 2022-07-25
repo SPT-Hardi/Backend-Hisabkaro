@@ -26,15 +26,15 @@ namespace HIsabKaro.Cores.Employee.Profile
                 var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
                 var res = new 
                 {
-                    AddressId =profile.AddressId,
-                    CurrentSalary =profile.CurrentSalary,
-                    Email =profile.Email,
-                    EnglishLevel =new IntegerNullString() { Id=profile.SubFixedLookup_EnglishLevelId.FixedLookupId,Text= profile.SubFixedLookup_EnglishLevelId.FixedLookup},
-                    IsVisibleToBusinessOwner =profile.IsVisibleToBussinessOwner,
-                    MobileNumber =profile.MobileNumber,
-                    Name =profile.FullName,
-                    ProfileId =profile.ProfileId,
-                    SalaryType =new IntegerNullString() { Id=profile.SubFixedLookup_SalaryTypeId.FixedLookupId,Text=profile.SubFixedLookup_SalaryTypeId.FixedLookup}
+                    AddressId =profile?.AddressId,
+                    CurrentSalary =profile?.CurrentSalary,
+                    Email =profile?.Email,
+                    EnglishLevel =new IntegerNullString() { Id=profile?.SubFixedLookup_EnglishLevelId.FixedLookupId,Text= profile?.SubFixedLookup_EnglishLevelId.FixedLookup},
+                    IsVisibleToBusinessOwner =profile?.IsVisibleToBussinessOwner,
+                    MobileNumber =profile?.MobileNumber,
+                    Name =profile?.FullName,
+                    ProfileId =profile?.ProfileId,
+                    SalaryType =new IntegerNullString() { Id=profile?.SubFixedLookup_SalaryTypeId.FixedLookupId,Text=profile?.SubFixedLookup_SalaryTypeId.FixedLookup}
                 };
                 return new Result()
                 {

@@ -305,5 +305,39 @@ namespace HIsabKaro.Cores
                 }
             }
         }
+
+        public class Industry_Sector_Drop
+        {
+            public Result Get()
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var IndustrySector = (from x in c.SubFixedLookups where x.FixedLookupType == "IndustrySector" select new IntegerNullString() { Id = x.FixedLookupId, Text = x.FixedLookup }).ToList();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "IndustrySector drop get successfully!",
+                        Data = IndustrySector,
+                    };
+                }
+            }
+        }
+
+        public class HighestEducation_Drop
+        {
+            public Result Get()
+            {
+                using (DBContext c = new DBContext())
+                {
+                    var HighestEducation = (from x in c.SubFixedLookups where x.FixedLookupType == "HighestEducation" select new IntegerNullString() { Id = x.FixedLookupId, Text = x.FixedLookup }).ToList();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "HighestEducation drop get successfully!",
+                        Data = HighestEducation,
+                    };
+                }
+            }
+        }
     }
 }

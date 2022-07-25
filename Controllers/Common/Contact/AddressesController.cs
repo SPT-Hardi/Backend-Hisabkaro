@@ -11,6 +11,20 @@ namespace HIsabKaro.Controllers.Common.Contact
     [ApiController]
     public class AddressesController : ControllerBase
     {
+        [HttpPost]
+        [Route("Add")]
+        public IActionResult Create([FromRoute]int? Id,Models.Common.Contact.Address value)
+        {
+            return Ok(new Cores.Common.Contact.ContactAddress().Create(Id,value));
+        }
+
+        [HttpGet]
+        [Route("Get/{Id}")]
+        public IActionResult Get([FromRoute] int Id)
+        {
+            return Ok(new Cores.Common.Contact.ContactAddress().Get(Id));
+        }
+
         [HttpGet]
         [Route("Organiztion/{Id}")]
         public IActionResult Org_Address([FromRoute]int Id) 
