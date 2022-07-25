@@ -12,28 +12,21 @@ namespace HIsabKaro.Controllers.Employee.Job
     [ApiController]
     public class EE_BookMarkedsController : ControllerBase
     {
-        [Route("save/{Jid}")]
         [HttpPost]
-        public IActionResult Create(int Jid)
+        [Route("Bookmarke/{Id}")]
+        public IActionResult Bookmark_Toggle([FromRoute]int Id)
         {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_BookmarkedJobs().Create(UserId, Jid));
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_BookmarkedJobs().BookMarkedJob_Toggle(UId,Id));
         }
 
-        [Route("save")]
         [HttpGet]
-        public IActionResult One()
+        [Route("Bookmarked_List")]
+        public IActionResult List()
         {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_BookmarkedJobs().One(UserId));
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_BookmarkedJobs().BookmarkedJob_List(UId));
         }
 
-        [Route("save/{SaveId}")]
-        [HttpDelete]
-        public IActionResult Delete(int SaveId)
-        {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_BookmarkedJobs().Remove(UserId, SaveId));
-        }
     }
 }

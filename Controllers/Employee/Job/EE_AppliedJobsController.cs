@@ -12,20 +12,20 @@ namespace HIsabKaro.Controllers.Employee.Job
     [ApiController]
     public class EE_AppliedJobsController : ControllerBase
     {
-        [Route("apply/{Jid}")]
+        [Route("Apply/{Id}")]
         [HttpPost]
-        public IActionResult Create(int Jid)
+        public IActionResult Apply_Toggle([FromRoute]int Id)
         {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_AppliedJobs().Create(UserId, Jid));
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_AppliedJobs().Applied_Toggle(UId,Id));
         }
 
-        [Route("apply")]
+        [Route("Apply_List")]
         [HttpGet]
-        public IActionResult One()
+        public IActionResult List()
         {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_AppliedJobs().One(UserId));
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_AppliedJobs().Applied_List(UId));
         }
     }
 }

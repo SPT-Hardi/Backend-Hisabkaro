@@ -126,6 +126,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                    skill = obj.SkillName,
                                }).ToList();
 
+                    scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,

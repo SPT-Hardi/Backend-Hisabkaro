@@ -420,8 +420,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                Applied = (from y in c.EmpApplyJobDetails
                                           where y.JobId == x.JobId
                                           select y.UId).Count(),
-                               Bookmarked =0,
-                               ShortListed =0,
+                               Bookmarked = (from y in c.EmpBookmarkJobsDetails
+                                             where y.JobId == x.JobId
+                                             select y.UId).Count(),
+                               ShortListed = (from y in c.EmprApplicantShortListDetails
+                                              where y.JobId == x.JobId
+                                              select y.ApplicantUId).Count(),
                            }).FirstOrDefault();
 
                 return new Result()

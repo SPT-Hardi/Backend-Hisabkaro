@@ -37,10 +37,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                             {
                                 Id=x.BookMarkId,
                                 Date=x.SaveDate,
-                                IsApplied=(from y in c.EmpApplyJobDetails where x.UId==y.UId && x.OId==y.OId select x).Any()? true : false,
+                                IsApplied=(from y in c.EmpApplyJobDetails where x.UId==y.UId && x.JobId ==y.JobId select x).Any()? true : false,
                                 ImageFGUID=x.SubUser.SubUsersDetail.CommonFile.FGUID,
                                 IsBookmarked=true,
-                                IsShortListed=(from y in c.EmprApplicantShortListDetails where x.UId == y.ApplicantUId && x.OId == y.OId select x).Any()? true : false,
+                                IsShortListed=(from y in c.EmprApplicantShortListDetails where x.UId == y.ApplicantUId && x.JobId == y.JobId select x).Any()? true : false,
                                 MobileNumber=x.SubUser.MobileNumber,
                                 Name=x.SubUser.SubUsersDetail.FullName,
                                 skills=x.SubUser.EmpResumeSkills.ToList().Select(y=>new Models.Employer.Organization.Job.JobSkill() { skill=y.SkillName}).ToList(),

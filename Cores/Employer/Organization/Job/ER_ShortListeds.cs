@@ -88,9 +88,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                   {
                                       Id = x.ShortListId,
                                       Date = x.MarkedDate,
-                                      IsApplied = (from y in c.EmpApplyJobDetails where x.ApplicantUId == y.UId && x.OId == y.OId select x).Any() ? true : false,
+                                      IsApplied = (from y in c.EmpApplyJobDetails where x.ApplicantUId == y.UId && x.JobId == y.JobId select x).Any() ? true : false,
                                       ImageFGUID = x.SubUser.SubUsersDetail.CommonFile.FGUID,
-                                      IsBookmarked= (from y in c.EmpBookmarkJobsDetails where x.ApplicantUId == y.UId && x.OId == y.OId select x).Any() ? true : false,
+                                      IsBookmarked= (from y in c.EmpBookmarkJobsDetails where x.ApplicantUId == y.UId && x.JobId == y.JobId select x).Any() ? true : false,
                                       IsShortListed = true,
                                       MobileNumber = x.SubUser.MobileNumber,
                                       Name = x.SubUser.SubUsersDetail.FullName,

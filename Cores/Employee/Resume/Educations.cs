@@ -60,37 +60,34 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }*/
-        public Result View(object UID) 
+        public Result View(object UID)
         {
-            using (TransactionScope scope = new TransactionScope())
+            using (DBContext c = new DBContext())
             {
-                using (DBContext c = new DBContext())
+                if (UID == null)
                 {
-                    if (UID == null) 
-                    {
-                        throw new ArgumentException("token not found or expired!");
-                    }
-                    var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
-                    if (user == null) 
-                    {
-                        throw new ArgumentException("User not exist!");
-                    }
-                    var Profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
-                    var Education = (from x in c.EmpResumeEducations
-                                     where x.UId == (int)UID && x.ProfileId == Profile.ProfileId
-                                     select new IntegerNullString()
-                                     {
-                                         Id=x.SubFixedLookup.FixedLookupId,
-                                         Text=x.SubFixedLookup.FixedLookup
-                                     });
-                    return new Result()
-                    {
-                        Status=Result.ResultStatus.success,
-                        Message="User education details viewed successfully!",
-                        Data=Education
-                    };
-                    
+                    throw new ArgumentException("token not found or expired!");
                 }
+                var user = (from x in c.SubUsers where x.UId == (int)UID select x).FirstOrDefault();
+                if (user == null)
+                {
+                    throw new ArgumentException("User not exist!");
+                }
+                var Profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                var Education = (from x in c.EmpResumeEducations
+                                 where x.UId == (int)UID && x.ProfileId == Profile.ProfileId
+                                 select new IntegerNullString()
+                                 {
+                                     Id = x.SubFixedLookup.FixedLookupId,
+                                     Text = x.SubFixedLookup.FixedLookup
+                                 }).FirstOrDefault();
+                return new Result()
+                {
+                    Status = Result.ResultStatus.success,
+                    Message = "User education details viewed successfully!",
+                    Data = Education
+                };
+
             }
         }
         public Result Update(object UID,Models.Employee.Resume.Educations value) 

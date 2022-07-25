@@ -12,20 +12,36 @@ namespace HIsabKaro.Controllers.Employee.Job
     [ApiController]
     public class EE_ViewJobsController : ControllerBase
     {
-        [Route("ViewJobByCompany")]
-        [HttpPost]
-        public IActionResult Search(Models.Employee.Job.EE_ViewJob value)
+        [Route("View_ListofJobs")]
+        [HttpGet]
+        public IActionResult View_ListofJobs()
         {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_ViewJobs().Create(UserId, value));
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_ViewJobs().List(UId));
         }
 
-        [Route("ViewJobs")]
+        [Route("View_Job/{Id}")]
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromRoute]int Id)
         {
-            var UserId = HttpContext.Items["UId"];
-            return Ok(new EE_ViewJobs().Get(UserId));
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_ViewJobs().One(UId,Id));
+        }
+
+        [Route("Search_Job/ByLocation")]
+        [HttpGet]
+        public IActionResult Search_ByLocation([FromQuery]string keyword)
+        {
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_ViewJobs().Search_ByLocation(UId,keyword));
+        }
+
+        [Route("Search_Job")]
+        [HttpGet]
+        public IActionResult Search([FromQuery]string keyword)
+        {
+            var UId = HttpContext.Items["UId"];
+            return Ok(new EE_ViewJobs().Search_BySector_Company_JobTitle(UId,keyword));
         }
     }
 }

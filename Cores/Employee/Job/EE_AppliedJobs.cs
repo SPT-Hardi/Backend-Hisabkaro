@@ -4,82 +4,108 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static HIsabKaro.Cores.Employer.Organization.Job.ER_JobDetails;
 
 namespace HIsabKaro.Cores.Employee.Job
 {
     public class EE_AppliedJobs
     {
-        public Result Create(object UserId, int Jid)
+        public Result Applied_Toggle(object UId,int Jid)
         {
-            var ISDT=new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
+                if (UId == null) 
+                {
+                    throw new ArgumentException("token not found or expired!");
+                }
+                var user = (from x in c.SubUsers where x.UId == (int)UId select x).FirstOrDefault();
+                if (user == null) 
+                {
+                    throw new ArgumentException("user not exist!");
+                }
                 var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
                 }
-
-                var apply = (from x in c.EmpApplyJobDetails
-                             orderby x.JobId descending
-                             where x.OId == job.OId && x.BranchId == job.BranchID
-                             && x.JobId == job.JobId && x.UId == (int)UserId
-                             select x).FirstOrDefault();
-                if (apply != null)
+                var empjob =job.EmpApplyJobDetails.ToList().Where(z => z.UId == user.UId).FirstOrDefault();
+                if (empjob != null)
                 {
-                    throw new ArgumentException("Job Already Applied");
-                }
-                c.EmpApplyJobDetails.InsertOnSubmit(new EmpApplyJobDetail()
-                {
-                    UId = (int)UserId,
-                    JobId = job.JobId,
-                    BranchId = job.BranchID,
-                    OId = (int)job.OId,
-                    ApplyDate = ISDT
-                });
-                c.SubmitChanges();
-                return new Result()
-                {
-                    Status = Result.ResultStatus.success,
-                    Message = string.Format("Job Apply Successfully"),
-                    Data = new
+                    c.EmpApplyJobDetails.DeleteOnSubmit(empjob);
+                    c.SubmitChanges();
+                    return new Result()
                     {
-                        Id = job.JobId,
-                        Title = job.Title
-                    }
-                };
+                        Status = Result.ResultStatus.success,
+                        Message = "Job application revoked successfully!",
+                        Data = new
+                        {
+                            Id = job.JobId,
+                            Title = job.Title
+                        }
+                    };
+                }
+                else 
+                {
+                    var j = new EmpApplyJobDetail()
+                    {
+                        ApplyDate=DateTime.Now,
+                        UId=user.UId,
+                        JobId=job.JobId,
+                    };
+                    c.EmpApplyJobDetails.InsertOnSubmit(j);
+                    c.SubmitChanges();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "Applied for job successfully!",
+                        Data = new
+                        {
+                            Id = job.JobId,
+                            Title = job.Title
+                        }
+                    };
+                }
             }
         }
-
-        public Result One(object UserId)
+        public Result Applied_List(object UId) 
         {
             using (DBContext c = new DBContext())
             {
-                var user = c.SubUsers.SingleOrDefault(x => x.UId == (int)UserId);
-                if (user == null)
+                if (UId == null)
                 {
-                    throw new ArgumentException("User Doesn't Exist");
+                    throw new ArgumentException("token not found or expired!");
                 }
-
-                var apply = (from x in c.EmpApplyJobDetails
-                            where x.UId == (int)UserId
-                             select new
-                            {
-                                ApplyId = x.ApplyId,
-                                JobTitle = x.EmprJob.Title,
-                                CompanyName = x.DevOrganisation.OrganisationName,
-                                BranchName = x.DevOrganisationBranch.BranchName,
-                                Type = (from y in c.EmprJobTypes
-                                        where y.JobId == x.JobId
-                                        select y.Type).ToList(),
-                                Salary = "₹" + x.EmprJob.MinSalary + " - ₹" + x.EmprJob.MaxSalary + "/yearly"
-                             }).ToList();
-
+                var res = (from x in c.EmprJobs
+                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && (from c in c.EmpApplyJobDetails where c.UId==(int)UId && c.JobId==x.JobId select x).Any() ? true : false
+                           select new
+                           {
+                               JobId = x.JobId,
+                               IsYouShortListed = (from z in c.EmprApplicantShortListDetails where z.ApplicantUId == (int)UId && z.JobId == x.JobId select x).Any() ? true : false,
+                               IsYouApplied = (from z in c.EmpApplyJobDetails where z.UId == (int)UId && z.JobId == x.JobId select x).Any() ? true : false,
+                               IsYouBookMarked = (from z in c.EmpBookmarkJobsDetails where z.UId == (int)UId && z.JobId == x.JobId select x).Any() ? true : false,
+                               MobileNumber = x.MobileNumber,
+                               JobTitle = x.Title,
+                               JobType = (from t in c.EmprJobTypes
+                                          where t.JobId == x.JobId
+                                          select new { Type = t.Type }).ToList(),
+                               Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
+                               MinSalary = x.MinSalary,
+                               MaxSalary = x.MaxSalary,
+                               Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
+                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
+                               Applied = (from y in c.EmpApplyJobDetails
+                                          where y.JobId == x.JobId
+                                          select y.UId).Count(),
+                               PostDate = x.PostDate,
+                               EndDate = x.EndDate,
+                               Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                               Address = x.BranchID == null ? new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } : new { City = x.DevOrganisationBranch.CommonContactAddress.City, State = x.DevOrganisationBranch.CommonContactAddress.State, }
+                           }).ToList();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
-                    Message = string.Format($"{apply.Count} Apply Job"),
-                    Data = apply,
+                    Message = "List of applied jobs get successfully!",
+                    Data = res
                 };
             }
         }

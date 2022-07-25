@@ -38,7 +38,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                                                 UId = (int)UID,
                                                 CertificateName = obj.CertificateName,
                                                 ProfileId=profile.ProfileId,
-                                                CertificateFileId=(from x in c.CommonFiles where x.FGUID==obj.FileGUId select x.FileId).FirstOrDefault(),
+                                                CertificateFileId=(from x in c.CommonFiles where x.FGUID==obj.FileGUId select x).FirstOrDefault()?.FileId,
                                             }).ToList();
                     c.EmpResumeOtherCertificates.InsertAllOnSubmit(othercertificates);
                     c.SubmitChanges();
@@ -153,7 +153,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     }
 
                     othercertificates.CertificateName = value.CertificateName;
-                    othercertificates.CertificateFileId =(from x in c.CommonFiles where x.FGUID==value.FileGUId select x.FileId).FirstOrDefault();
+                    othercertificates.CertificateFileId =(from x in c.CommonFiles where x.FGUID==value.FileGUId select x).FirstOrDefault()?.FileId;
 
                     c.SubmitChanges();
                     var res = new 

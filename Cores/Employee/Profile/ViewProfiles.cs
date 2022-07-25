@@ -24,17 +24,18 @@ namespace HIsabKaro.Cores.Employee.Profile
                     throw new ArgumentException("user not exist!");
                 }
                 var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
-                var res = new 
+                var res = new Models.Employee.Resume.PersonalInfo()
                 {
                     AddressId =profile?.AddressId,
                     CurrentSalary =profile?.CurrentSalary,
                     Email =profile?.Email,
                     EnglishLevel =new IntegerNullString() { Id=profile?.SubFixedLookup_EnglishLevelId.FixedLookupId,Text= profile?.SubFixedLookup_EnglishLevelId.FixedLookup},
-                    IsVisibleToBusinessOwner =profile?.IsVisibleToBussinessOwner,
+                    IsVisibleToBusinessOwner = profile==null ? true: profile.IsVisibleToBussinessOwner,
                     MobileNumber =profile?.MobileNumber,
                     Name =profile?.FullName,
-                    ProfileId =profile?.ProfileId,
-                    SalaryType =new IntegerNullString() { Id=profile?.SubFixedLookup_SalaryTypeId.FixedLookupId,Text=profile?.SubFixedLookup_SalaryTypeId.FixedLookup}
+                    ProfileId =profile==null ? 0 :profile.ProfileId,
+                    SalaryType =new IntegerNullString() { Id=profile?.SubFixedLookup_SalaryTypeId.FixedLookupId,Text=profile?.SubFixedLookup_SalaryTypeId.FixedLookup},
+                    OtherLanguages=profile?.EmpResumeOtherLanguages.ToList().Select(z=>new OtherLanguages() { language=z.OtherLanguage} ).ToList(),
                 };
                 return new Result()
                 {

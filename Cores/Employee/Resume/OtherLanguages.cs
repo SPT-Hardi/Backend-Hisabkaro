@@ -77,6 +77,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     c.EmpResumeOtherLanguages.InsertAllOnSubmit(OtherLanguages);
                     c.SubmitChanges();
 
+                    scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
