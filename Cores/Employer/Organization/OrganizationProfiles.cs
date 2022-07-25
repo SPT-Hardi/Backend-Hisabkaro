@@ -27,77 +27,11 @@ namespace HIsabKaro.Cores.Employer.Organization
             _contactAddress = contactAddress;
             _shiftTimes = shiftTimes;
         }
-        public Result One(int OId)
+        public Result Create(object UserId, int OId, Models.Employer.Organization.OrganizationProfile value, IConfiguration configuration, ITokenServices tokenServices)
         {
             using (DBContext c = new DBContext())
             {
-                var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == OId);
-                if (_OId is null)
-                {
-                    throw new ArgumentException("Organization Does Not Exits!");
-                }
-                var _Org = (from x in c.DevOrganisations
-                            where x.OId == OId
-                            select new Models.Employer.Organization.OrganizationProfile
-                            {
-                                LogoFile = (from f in c.CommonFiles
-                                            where f.FileId == x.LogoFileId
-                                            select f.FGUID).SingleOrDefault(),
-                                GSTNumber = x.GSTIN,
-                                GST = (from f in c.CommonFiles
-                                       where f.FileId == x.GSTFileId
-                                       select f.FGUID).SingleOrDefault(),
-                                ShiftTime = (from s in c.DevOrganisationsShiftTimes
-                                             where s.OId == x.OId
-                                             select new Models.Common.Shift.ShitTime
-                                             {
-                                                 ShiftTimeId = s.ShiftTimeId,
-                                                 StartTime = s.StartTime,
-                                                 EndTime = s.EndTime,
-                                                 MarkLate = s.MarkLate
-                                             }).ToList(),
-                                Address = (from a in c.CommonContactAddresses
-                                           where a.ContactAddressId == x.ContactAddressId
-                                           select new Models.Common.Contact.Address
-                                           {
-                                               AddressLine1 = a.AddressLine1,
-                                               AddressLine2 = a.AddressLine2,
-                                               City = a.City,
-                                               State = a.State,
-                                               PinCode = (int)a.PinCode,
-                                               LandMark = a.Landmark
-                                           }).SingleOrDefault(),
-                                PanCardNumber = x.PAN,
-                                PanCard = (from f in c.CommonFiles
-                                           where f.FileId == x.PANFileId
-                                           select f.FGUID).SingleOrDefault(),
-                                Email = x.Email,
-                                OwnershipType = (from l in c.SubLookups
-                                                 where l.LookupId == x.OwnershipTypeId
-                                                 select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()   ,
-                                MobileNumber = x.MobileNumber,
-                                Partners = (from p in c.DevOrganisationsPartners
-                                            where p.OId == x.OId
-                                            select new Models.Employer.Organization.Partner
-                                            {
-                                                Email = p.Email,
-                                                Mobilenumber = p.MobleNumber,                                                  
-                                            }).ToList()
-                            }).FirstOrDefault();
-                return new Result()
-                {
-                    Status = Result.ResultStatus.success,
-                    Message = string.Format("Success"),
-                    Data = _Org,
-
-                };
-            }
-        }
-        public Result Create(object UserId,int OId,Models.Employer.Organization.OrganizationProfile value, IConfiguration configuration, ITokenServices tokenServices)
-        {
-            using (DBContext c = new DBContext())
-            {
-                using (TransactionScope scope=new TransactionScope())
+                using (TransactionScope scope = new TransactionScope())
                 {
                     var _User = c.SubUsers.Where(u => u.UId == (int)UserId).SingleOrDefault();
                     if (_User is null)
@@ -125,8 +59,8 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     //if(_OId.ContactAddressId is null)
                     //{
-                        var _AId = _contactAddress.Create(_OId.ContactAddressId,value.Address);
-                        _OId.ContactAddressId = _AId.Data;
+                    var _AId = _contactAddress.Create(_OId.ContactAddressId, value.Address);
+                    _OId.ContactAddressId = _AId.Data;
                     //}
                     /*else
                     {
@@ -134,16 +68,16 @@ namespace HIsabKaro.Cores.Employer.Organization
                         _OId.ContactAddressId = _AId.Data;
                     }*/
                     var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
-                    
+
                     var _LogoFileId = (from x in c.CommonFiles where x.FGUID == value.LogoFile select x).FirstOrDefault();
                     var _GSTFileId = (from x in c.CommonFiles where x.FGUID == value.GST select x).FirstOrDefault();
                     var _PANFileId = (from x in c.CommonFiles where x.FGUID == value.PanCard select x).FirstOrDefault();
 
                     _OId.LogoFileId = _LogoFileId == null ? null : _LogoFileId.FileId;
-                    _OId.GSTFileId = _GSTFileId==null ? null : _GSTFileId.FileId;
+                    _OId.GSTFileId = _GSTFileId == null ? null : _GSTFileId.FileId;
                     _OId.GSTIN = value.GSTNumber;
                     _OId.PAN = value.PanCardNumber;
-                    _OId.PANFileId = _PANFileId==null ? null :_PANFileId.FileId;
+                    _OId.PANFileId = _PANFileId == null ? null : _PANFileId.FileId;
                     _OId.Email = value.Email;
                     _OId.MobileNumber = value.MobileNumber;
                     _OId.OwnershipTypeId = value.OwnershipType.Id;
@@ -155,26 +89,94 @@ namespace HIsabKaro.Cores.Employer.Organization
 
                     var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
                     var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == (int)UserId && x.OId == OId && x.RId == _OrgRole.RId);
-                   
-                    Cores.Common.Claims claims = new Common.Claims(configuration,tokenServices);
-                    
-                    var res =claims.Add((int)UserId, _User.SubUserTokens.Select(x => x.CommonDeviceToken.DeviceToken).FirstOrDefault(), _URID.URId);
+
+                    Cores.Common.Claims claims = new Common.Claims(configuration, tokenServices);
+
+                    var res = claims.Add((int)UserId, _User.SubUserTokens.Select(x => x.CommonDeviceToken.DeviceToken).FirstOrDefault(), _URID.URId);
 
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format($"Organization Add Successfully"),
-                        Data = new {
+                        Data = new
+                        {
                             OId = _OId.OId,
                             JWT = res.JWT,
-                            RToken=res.RToken
+                            RToken = res.RToken
                         }
                     };
                 }
             }
         }
-        internal Result PartnerCreate(int OId, List<Models.Employer.Organization.Partner> value)
+
+        /* public Result One(int OId)
+         {
+             using (DBContext c = new DBContext())
+             {
+                 var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == OId);
+                 if (_OId is null)
+                 {
+                     throw new ArgumentException("Organization Does Not Exits!");
+                 }
+                 var _Org = (from x in c.DevOrganisations
+                             where x.OId == OId
+                             select new Models.Employer.Organization.OrganizationProfile
+                             {
+                                 LogoFile = (from f in c.CommonFiles
+                                             where f.FileId == x.LogoFileId
+                                             select f.FGUID).SingleOrDefault(),
+                                 GSTNumber = x.GSTIN,
+                                 GST = (from f in c.CommonFiles
+                                        where f.FileId == x.GSTFileId
+                                        select f.FGUID).SingleOrDefault(),
+                                 ShiftTime = (from s in c.DevOrganisationsShiftTimes
+                                              where s.OId == x.OId
+                                              select new Models.Common.Shift.ShitTime
+                                              {
+                                                  ShiftTimeId = s.ShiftTimeId,
+                                                  StartTime = s.StartTime,
+                                                  EndTime = s.EndTime,
+                                                  MarkLate = s.MarkLate
+                                              }).ToList(),
+                                 Address = (from a in c.CommonContactAddresses
+                                            where a.ContactAddressId == x.ContactAddressId
+                                            select new Models.Common.Contact.Address
+                                            {
+                                                AddressLine1 = a.AddressLine1,
+                                                AddressLine2 = a.AddressLine2,
+                                                City = a.City,
+                                                State = a.State,
+                                                PinCode = (int)a.PinCode,
+                                                LandMark = a.Landmark
+                                            }).SingleOrDefault(),
+                                 PanCardNumber = x.PAN,
+                                 PanCard = (from f in c.CommonFiles
+                                            where f.FileId == x.PANFileId
+                                            select f.FGUID).SingleOrDefault(),
+                                 Email = x.Email,
+                                 OwnershipType = (from l in c.SubLookups
+                                                  where l.LookupId == x.OwnershipTypeId
+                                                  select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()   ,
+                                 MobileNumber = x.MobileNumber,
+                                 Partners = (from p in c.DevOrganisationsPartners
+                                             where p.OId == x.OId
+                                             select new Models.Employer.Organization.Partner
+                                             {
+                                                 Email = p.Email,
+                                                 Mobilenumber = p.MobleNumber,                                                  
+                                             }).ToList()
+                             }).FirstOrDefault();
+                 return new Result()
+                 {
+                     Status = Result.ResultStatus.success,
+                     Message = string.Format("Success"),
+                     Data = _Org,
+
+                 };
+             }
+         }*/
+        /*     internal Result PartnerCreate(int OId, List<Models.Employer.Organization.Partner> value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -216,6 +218,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                     };
                 }
             }
-        }
+        }*/
     }
 }

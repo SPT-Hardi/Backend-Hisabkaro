@@ -173,7 +173,8 @@ namespace HIsabKaro.Cores
                     {
                         ShiftTimeId=z.ShiftTimeId,
                         StartTime=z.StartTime,
-                        EndTime=z.EndTime
+                        EndTime=z.EndTime,
+                        MarkLate=z.MarkLate
                     }).ToList();
                     return new Result()
                     {
@@ -198,7 +199,8 @@ namespace HIsabKaro.Cores
                     {
                         ShiftTimeId=z.ShiftTimeId,
                         StartTime=z.StartTime,
-                        EndTime=z.EndTime
+                        EndTime=z.EndTime,
+                        MarkLate=z.MarkLate
                     }).ToList();
                     return new Result()
                     {

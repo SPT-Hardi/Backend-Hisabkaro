@@ -11,18 +11,13 @@ namespace HIsabKaro.Models.Employer.Organization
 {
     public class OrganizationProfile
     {
-        public string LogoFile { get; set; }
-        [RegularExpression(@"^[0-9]{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[A-Z]{1}\d{1}$", ErrorMessage = "Invalid GST Number!")]
-        public string GSTNumber { get; set; }
-        public string GST { get; set; }
+        [JsonIgnore]
+        public int OrganizationId { get; set; }
+        public string OrganizationName { get; set; }
+        public string LogoFGUId { get; set; }
         [Required(ErrorMessage = "Shift Time Is Required!")]
         public List<ShitTime> ShiftTime { get; set; } = new List<ShitTime>();        
-        public Address Address { get; set; }
-        [RegularExpression(@"^[A-Z]{5}\d{4}[A-Z]{1}$", ErrorMessage = "Invalid Pan Card Number!")] 
-        public string PanCardNumber { get; set; }             
-        public string PanCard { get; set; }
-        public string Email { get; set; }
-        public string MobileNumber { get; set; }
+        public int AddressId { get; set; }
         public Common.IntegerNullString OwnershipType { get; set; } = new Common.IntegerNullString();
         public List<Partner> Partners { get; set; } = new List<Partner>();
     }
