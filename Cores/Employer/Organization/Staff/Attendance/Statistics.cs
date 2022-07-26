@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Statistics
     {
-        public Result Get(object URId,DateTime date) 
+       /* public Result Get(object URId,DateTime date) 
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
@@ -27,10 +27,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
 //------------------------------------------------------------------------------------------------------//
                     //remove after controller logic added
-                   /* if (findorg.SubRole.RoleName.ToLower() != "admin")
+                   *//* if (findorg.SubRole.RoleName.ToLower() != "admin")
                     {
                         throw new ArgumentException("You are not authorize!");
-                    }*/
+                    }*//*
 //------------------------------------------------------------------------------------------------------//
                     if (findorg == null)
                     {
@@ -87,12 +87,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                               WeekoffoneDay = (obj.WeekOffOneDay == null) ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower(),
                                               WeekoffsecondDay = (obj.WeekOffSecondDay == null) ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower(),
                                           }).ToList();
-                        /* var overtime = (from obj in c.DevOrganisationsStaffs
+                        *//* var overtime = (from obj in c.DevOrganisationsStaffs
                                          join obj1 in c.OrgStaffsAttendancesDailies
                                          on obj.URId equals obj1.URId
                                          where obj.OId == findorg.OId && obj1.ChekIN.Value.Date == date.Date && ((obj.WeekOffOneDay == null ? false : obj.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()) || (obj.WeekOffSecondDay == null ? false : obj.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == date.DayOfWeek.ToString().ToLower()))
                                          select obj).ToList();
-                         var overtimecount = overtime.Count();*/
+                         var overtimecount = overtime.Count();*//*
                         var overtimelist = (from x in presentlist where x.IsOvertime == true select x).ToList();
                         var weekofflist = (from obj in absentlist
                                            where (obj.WeekoffoneDay || obj.WeekoffsecondDay) == true
@@ -190,8 +190,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 
             }
 
-        }
-        public List<DateTime> PaidLeaveList(int URId,DateTime date) 
+        }*/
+        /*public List<DateTime> PaidLeaveList(int URId,DateTime date) 
         {
             using (DBContext c = new DBContext()) 
             {
@@ -200,7 +200,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 if (paidleave != null)
                 {
                     var count = paidleave.PaidDays;
-                    /*for (var i = 0; i < paidleave.PaidDays; i++) 
+                    *//*for (var i = 0; i < paidleave.PaidDays; i++) 
                     {
                         var WeekOff = (from x in c.DevOrganisationsStaffs
                                        where
@@ -208,7 +208,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                        ((x.WeekOffOneDay == null && x.WeekOffSecondDay == null) ? false : (x.SubFixedLookup_WeekOffOneDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower() || x.SubFixedLookup_WeekOffSecondDay.FixedLookup.ToLower() == todaydate.DayOfWeek.ToString().ToLower()))
                                        select x).FirstOrDefault();
                         paidleavelist.Add(paidleave.StartDate.AddDays(i));
-                    }*/
+                    }*//*
                     if (paidleave.StartDate.Month == paidleave.EndDate.Month && paidleave.StartDate.Year == paidleave.EndDate.Year)
                     {
                         for (var i = paidleave.StartDate.Day; i <= paidleave.EndDate.Day; i++)
@@ -269,7 +269,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
             }
         }
-
+*/
     }
 }
 /*using (DBContext c = new DBContext())

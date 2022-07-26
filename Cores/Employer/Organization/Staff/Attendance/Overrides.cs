@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Overrides
     {
-        public Result Add(object URId,Models.Employer.Organization.Staff.Attendance.Override value) 
+       /* public Result Add(object URId,Models.Employer.Organization.Staff.Attendance.Override value) 
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
@@ -19,10 +19,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 {
                     var findrole = c.SubUserOrganisations.Where(x => x.URId == (int)URId).SingleOrDefault();
                     //remove after contoller added
-                    /*if (findrole.SubRole.RoleName.ToLower() != "admin")
+                    *//*if (findrole.SubRole.RoleName.ToLower() != "admin")
                     {
                         throw new ArgumentException("You are not authorize!");
-                    }*/
+                    }*//*
                     var staffexist = c.SubUserOrganisations.Where(x => x.OId == findrole.OId && x.URId == value.URId).SingleOrDefault();
                     if (staffexist == null) 
                     {
@@ -176,6 +176,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                     };
                 }
             }
-        }
+        }*/
     }
 }

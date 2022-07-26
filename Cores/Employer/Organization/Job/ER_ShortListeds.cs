@@ -41,7 +41,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 c.EmprApplicantShortListDetails.InsertOnSubmit(new EmprApplicantShortListDetail()
                 {
                     ApplicantUId=UId,
-                    BranchId=job.BranchID,
                     JobId=job.JobId,
                     MarkedByURId=(int)URId,
                     MarkedDate=DateTime.Now,

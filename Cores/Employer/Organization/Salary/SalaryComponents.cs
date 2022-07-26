@@ -69,7 +69,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                         Staff = new IntegerNullString() { Id = s.URId, Text = s.Name, },
                         Profile = s.Profile,
                         MobileNumber = s.MobileNumber,
-                        Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
+                        //Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
                     });
 
                 }
@@ -175,7 +175,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                         Staff = new IntegerNullString() { Id = s.URId, Text = s.Name, },
                         Profile = s.Profile,
                         MobileNumber = s.MobileNumber,
-                        Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
+                        //Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
                     });
 
                 }
@@ -281,7 +281,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                         Staff = new IntegerNullString() { Id = s.URId, Text = s.Name, },
                         Profile = s.Profile,
                         MobileNumber = s.MobileNumber,
-                        Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
+                        //Hours = new HistoryByMonths().Get(URId, s.URId, ISDT).Data.TotalWorkingHourPerMonth,
                     });
 
                 }

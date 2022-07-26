@@ -160,7 +160,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         NickName=value.Name,
                         URId = _URID.URId,
                         OId = (int)value.Organization.Id,
-                        BranchId = value.Branch.Id == 0 ? null : value.Branch.Id,
                         ShiftTimeId = value.ShiftTiming.Id ==0?null:value.ShiftTiming.Id,
                         Salary = value.Salary,
                         IsOpenWeek = value.IsOpenWeek,
@@ -312,7 +311,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             URId = _URID.URId,
                             OId = (int)v.Organization.Id,
-                            BranchId = v.Branch.Id == 0 ? null : v.Branch.Id,
                             ShiftTimeId = v.ShiftTiming.Id,
                             Salary = v.Salary,
                             IsOpenWeek = v.IsOpenWeek,

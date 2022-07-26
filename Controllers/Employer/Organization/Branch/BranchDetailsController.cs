@@ -25,37 +25,37 @@ namespace HIsabKaro.Controllers.Employer.Organization.Branch
             _shiftTimes = shiftTimes;
         }
 
-        [Route("Branch")]
+    /*    [Route("Branch")]
         [HttpPost]
         public IActionResult Create([FromBody]Models.Employer.Organization.Branch.BranchDetail value)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.Create(URId, value));
-        }
+        }*/
 
-        [Route("Branch/{BId}")]
+       /* [Route("Branch/{BId}")]
         [HttpPut]
         public IActionResult Update([FromBody]Models.Employer.Organization.Branch.BranchDetail value,int BId)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.Update(URId, BId,value));
-        }
+        }*/
 
-        [Route("OrgBranch")]
+      /*  [Route("OrgBranch")]
         [HttpGet]
         public IActionResult GetOrgBranch()
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.GetOrg(URId));
-        }
+        }*/
 
-        [Route("Branch/{Bid}")]
+    /*    [Route("Branch/{Bid}")]
         [HttpGet]
         public IActionResult GetBranch([FromRoute]int Bid)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_branchDetails.GetBranch(Bid, URId));
-        }
+        }*/
 
         [Route("date")]
         [HttpGet]

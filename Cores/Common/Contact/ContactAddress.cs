@@ -96,7 +96,7 @@ namespace HIsabKaro.Cores.Common.Contact
             }
         }
 
-        public Result GetBranchAddress(object UId, int Id)
+        /*public Result GetBranchAddress(object UId, int Id)
         {
             using (DBContext c = new DBContext())
             {
@@ -125,7 +125,7 @@ namespace HIsabKaro.Cores.Common.Contact
                     Data = branch,
                 };
             }
-        }
+        }*/
         public Result Get(int Id) 
         {
             using (DBContext c = new DBContext())

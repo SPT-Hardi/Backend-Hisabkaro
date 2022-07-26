@@ -36,9 +36,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                     {
                         LogoFileId = _FileId == null ? null : _FileId.FileId,
                         OrganisationName = value.OrgName,
-                        InudstrySectorId = value.InudstrySector.Id,
-                        Latitude = value.Latitude,
-                        Longitude = value.Longitude,
                         OrgCode = (OrgCode.Next(100000, 999999)).ToString(),
                         QRString = Guid.NewGuid().ToString(),
                         UId = (int)UserID,

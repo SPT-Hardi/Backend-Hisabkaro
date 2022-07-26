@@ -12,16 +12,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
 {
     public class BranchDetails
     {
-        private readonly ContactAddress _contactAddress;
-        private readonly ShiftTimes _shiftTimes;
+ /*       private readonly ContactAddress _contactAddress;
+        private readonly ShiftTimes _shiftTimes;*/
 
-        public BranchDetails(ContactAddress contactAddress, ShiftTimes shiftTimes)
+        /*public BranchDetails(ContactAddress contactAddress, ShiftTimes shiftTimes)
         {
             _contactAddress = contactAddress;
             _shiftTimes = shiftTimes;
-        }
+        }*/
 
-        public Result Create(object URId, Models.Employer.Organization.Branch.BranchDetail value)
+      /*  public Result Create(object URId, Models.Employer.Organization.Branch.BranchDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -90,9 +90,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     };
                 }
             }
-        }
+        }*/
 
-        public Result Update(object URId, int BId,Models.Employer.Organization.Branch.BranchDetail value)
+     /*   public Result Update(object URId, int BId,Models.Employer.Organization.Branch.BranchDetail value)
         {
             using (DBContext c = new DBContext())
             {
@@ -136,9 +136,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     };
                 }
             }
-        }
+        }*/
 
-        public Result GetOrg(object URId)
+        /*public Result GetOrg(object URId)
         {
             using (DBContext c = new DBContext())
             {
@@ -171,9 +171,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                         Branch = query.ToList() },
                 };
             }
-        }
+        }*/
 
-        public Result GetBranch(int Bid, object URId)
+      /*  public Result GetBranch(int Bid, object URId)
         {
             using (DBContext c = new DBContext())
             {
@@ -213,7 +213,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Branch
                     Data = query,
                 };
             }
-        }
+        }*/
 
     }
 }

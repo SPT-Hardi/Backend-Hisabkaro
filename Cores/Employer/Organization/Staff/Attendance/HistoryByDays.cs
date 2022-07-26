@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class HistoryByDays
     {
-        public Result Get(object URId, DateTime date)
+       /* public Result Get(object URId, DateTime date)
         {
             using (DBContext c = new DBContext())
             {
@@ -90,6 +90,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
                    
             }
-        }
+        }*/
     }
 }

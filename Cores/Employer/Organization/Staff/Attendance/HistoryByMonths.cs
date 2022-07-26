@@ -13,7 +13,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class HistoryByMonths
     {
-        public Result Get(object URId, int Id, DateTime date)
+        /*public Result Get(object URId, int Id, DateTime date)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
@@ -439,14 +439,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                                 isweekoff = true;
                                 totalweeklyoff += 1;
                             }
-                            /*
+                            *//*
                              Present-P
                              Absent-A
                              WeeklyOff-WO
                              Overtime-OT
                              PaidLeave-PL
                              Late/HalfDay-L
-                             */
+                             *//*
                             statuslist.Add(new Status()
                             {
                                 Date = todaydate,
@@ -668,7 +668,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
             }
             return result.ToString();
-        }
+        }*/
     }
 }
     

@@ -33,12 +33,12 @@ namespace HIsabKaro.Controllers.Common.Contact
             return Ok(new Cores.Common.Contact.ContactAddress().GetOrgAddress(UId,Id));
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("Branch/{Id}")]
         public IActionResult Branch_Address([FromRoute] int Id)
         {
             var UId = HttpContext.Items["UId"];
             return Ok(new Cores.Common.Contact.ContactAddress().GetBranchAddress(UId, Id));
-        }
+        }*/
     }
 }

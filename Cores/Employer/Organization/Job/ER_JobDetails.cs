@@ -60,7 +60,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     }
 
                     var jDetails = (from j in c.EmprJobs
-                                    where j.Title == value.Title  && j.DevOrganisation.OId == value.Organisation.Id && j.BranchID == (value.Branch.Id == null ? null : value.Branch.Id)
+                                    where j.Title == value.Title  && j.DevOrganisation.OId == value.Organisation.Id 
                                     orderby j.JobId descending
                                     select j).FirstOrDefault();
 
@@ -81,7 +81,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         PostDate = ISDT,
                         EndDate = value.EndDate.ToLocalTime(),
                         OId = (int)value.Organisation.Id,
-                        BranchID = value.Branch.Id == 0 ? null : value.Branch.Id,
                         URId = user.URId,
                         JobStatusId = (int)JobStatus.Open,
                         AddressId=value.AddressId,
@@ -183,7 +182,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.Description = value.Description;
                     job.EndDate = value.EndDate.ToLocalTime();
                     job.OId = (int)value.Organisation.Id;
-                    job.BranchID = value.Branch.Id == 0 ? null : value.Branch.Id;
                     job.URId = user.URId;
                     job.JobStatusId = (int)JobStatus.Open;
                     job.AddressId = value.AddressId;
@@ -333,18 +331,17 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                  JobType = (from t in c.EmprJobTypes
                                          where t.JobId == x.JobId
                                          select new {Type = t.Type}).ToList(),
-                                 Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
+                                 Image = x.DevOrganisation.CommonFile.FGUID,
                                  MinSalary = x.MinSalary,
                                  MaxSalary = x.MaxSalary,
                                  Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
-                                 Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                  Applied = (from y in c.EmpApplyJobDetails
                                             where y.JobId == x.JobId
                                             select y.UId).Count(),
                                  PostDate = x.PostDate,
                                  EndDate = x.EndDate,
                                  Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
-                                 Address= x.BranchID==null ? new {City=x.DevOrganisation.CommonContactAddress.City,State= x.DevOrganisation.CommonContactAddress.State } : new {City=x.DevOrganisationBranch.CommonContactAddress.City,State= x.DevOrganisationBranch.CommonContactAddress.State, } 
+                                 Address= new {City=x.DevOrganisation.CommonContactAddress.City,State= x.DevOrganisation.CommonContactAddress.State }  
                              }).ToList();
 
                 return new Result()
@@ -396,7 +393,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                    PinCode=x.CommonContactAddress.PinCode,
                                    State=x.CommonContactAddress.State
                                },
-                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                Comment = x.Comment,
                                Description = x.Description,
                                Email = x.Email,

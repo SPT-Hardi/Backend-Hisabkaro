@@ -12,7 +12,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class HistoryByDaysController : ControllerBase
     {
-        [HttpGet]
+        /*[HttpGet]
         [Route("HistoyByDay")]
         public IActionResult Get([FromQuery]DateTime date) 
         {
@@ -22,7 +22,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
                 throw new ArgumentException("Token Expired or not valid!");
             }
             return Ok(new HistoryByDays().Get(URId,date));
-        }
+        }*/
 
     }
 }

@@ -12,7 +12,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class HistoryByMonthsController : ControllerBase
     {
-        [HttpGet]
+        /*[HttpGet]
         [Route("HistoyOfMonth/{date}/{Id}")]
         
         public IActionResult Get([FromRoute] DateTime date,[FromRoute] int Id) 
@@ -20,9 +20,9 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
             var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new HistoryByMonths().Get(URId,Id,date));
-        }
+        }*/
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("StatisticsOfMonth")]
 
         public IActionResult GetStatistics([FromQuery]DateTime date)
@@ -30,6 +30,6 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
             var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new HistoryByMonths().StatisticsByMonth(URId,date));
-        }
+        }*/
     }
 }

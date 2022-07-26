@@ -14,7 +14,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
 {
     public class SalarySheets
     {
-        public Result SalarySlip(object URId)
+       /* public Result SalarySlip(object URId)
         {
             using (DBContext c = new DBContext())
             {
@@ -32,7 +32,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                            {
                                OId = x.OId,
                                OrganizationName = x.OrganisationName,
-                               Logo = x.CommonFile_LogoFileId.FilePath,
+                               Logo = x.CommonFile.FilePath,
                                PAN = x.PAN,
                                GST = x.GSTIN
                            }).SingleOrDefault();
@@ -103,8 +103,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                 };
             }
         }
-
-        public Result Pending(object URId)
+*/
+       /* public Result Pending(object URId)
         {
             using (DBContext c = new DBContext())
             {
@@ -158,7 +158,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                     };
                 }
             }
-        }
+        }*/
 
         public Result Create(object URId ,int StaffURId)
         {

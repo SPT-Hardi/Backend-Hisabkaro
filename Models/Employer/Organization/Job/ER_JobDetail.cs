@@ -12,8 +12,6 @@ namespace HIsabKaro.Models.Employer.Organization.Job
     {
         [Validation.Pair_RequiredIntegerNullString(ErrorMessage ="Organization Id is required!,Value_Allowed : any valid Integer,Value_NotAllowed : 0 or null")]
         public Models.Common.IntegerNullString Organisation { get; set; } = new Models.Common.IntegerNullString();
-        [Validation.Pair_NullIntegerNullString(ErrorMessage = "Branch Id is required!,Value_Allowed: 0 or valid Integer,Value_NotAllowed:null")]
-        public Models.Common.IntegerNullString Branch { get; set; } = new Models.Common.IntegerNullString();
 
         [Required(ErrorMessage = "Title is required")]
         [RegularExpression("^.{1,50}$", ErrorMessage = "Value_Allowed: Any, Max_Length:50 character")]

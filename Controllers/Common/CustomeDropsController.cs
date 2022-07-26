@@ -59,13 +59,13 @@ namespace HIsabKaro.Controllers.Common
             return Ok(new CustomeDrops.Org_Shift_Type().Get(UId,Id));
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("General/Data/Branch_ShiftTime/{Id}")]
         public IActionResult Branch_ShiftTime_Drop([FromRoute]int Id)
         {
             var UId = HttpContext.Items["UId"];
             return Ok(new CustomeDrops.Branch_Shift_Type().Get(UId,Id));
-        }
+        }*/
 
         [HttpGet]
         [Route("General/Data/Incentive_Type")]

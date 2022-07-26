@@ -69,7 +69,7 @@ namespace HIsabKaro.Cores
                         throw new ArgumentException("token not found or expired!");
                     }
                     var org = (from x in c.DevOrganisations where x.UId == (int)UId && x.OId == (int)Id select x).FirstOrDefault();
-                    var res = org.DevOrganisationBranches.ToList().Select(z => new IntegerNullString() { Id = z.BranchId, Text = z.BranchName, }).ToList();
+                    var res = org.DevOrganisations_ParentOrgId.ToList().Select(z => new IntegerNullString() { Id = z.OId, Text = z.OrganisationName, }).ToList();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
@@ -98,7 +98,7 @@ namespace HIsabKaro.Cores
                             var res = new Models.Common.CustomeDrop.Org_Branch_Drop()
                             {
                                 Organization = new IntegerNullString() { Id = x.OId, Text = x.OrganisationName },
-                                Branches = x.DevOrganisationBranches.ToList().Select(z => new IntegerNullString() { Id = z.BranchId, Text = z.BranchName }).ToList(),
+                                Branches = x.DevOrganisations_ParentOrgId.ToList().Select(z => new IntegerNullString() { Id = z.OId, Text = z.OrganisationName }).ToList(),
                             };
                             org_Branch_Drop.Add(res);
                         }
@@ -115,7 +115,7 @@ namespace HIsabKaro.Cores
                         var res = new Models.Common.CustomeDrop.Org_Branch_Drop()
                         {
                             Organization = new IntegerNullString() { Id = org.OId, Text = org.OrganisationName },
-                            Branches = org.DevOrganisationBranches.ToList().Select(z => new IntegerNullString() { Id = z.BranchId, Text = z.BranchName }).ToList(),
+                            Branches = org.DevOrganisations_ParentOrgId.ToList().Select(z => new IntegerNullString() { Id = z.OId, Text = z.OrganisationName }).ToList(),
                         };
                         return new Result()
                         {
@@ -185,7 +185,7 @@ namespace HIsabKaro.Cores
                 }
             }
         }
-        public class Branch_Shift_Type
+       /* public class Branch_Shift_Type
         {
             public Result Get(object UId,int Id)
             {
@@ -210,7 +210,7 @@ namespace HIsabKaro.Cores
                     };
                 }
             }
-        }
+        }*/
         public class Skill_Search 
         {
             public Result Get(string keyword) 

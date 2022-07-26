@@ -12,13 +12,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class AttendanceReportsController : ControllerBase
     {
-        [HttpGet]
+        /*[HttpGet]
         [Route("Report/{date}")]
         public IActionResult Get([FromRoute]DateTime date) 
         {
             var URId=HttpContext.Items["URId"];
             var Ids = HttpContext.Items["Ids"];
             return Ok(new AttendanceReports().Get(Ids,date));
-        }
+        }*/
     }
 }

@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 {
     public class StaffOrganizations
     {
-        public Result Get(object URId) 
+       /* public Result Get(object URId) 
         {
             using (HisabKaroContext.DBContext c = new HisabKaroContext.DBContext())
             {
@@ -60,6 +60,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                     }
                 };
             }
-        }
+        }*/
     }
 }

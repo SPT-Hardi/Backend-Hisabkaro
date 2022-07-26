@@ -17,8 +17,8 @@ namespace HIsabKaro.Models.Common
         {
             [JsonIgnore]
             public int ShiftTimeId { get; set; }
-            public TimeSpan StartTime { get; set; }
-            public TimeSpan EndTime { get; set; }
+            public TimeSpan? StartTime { get; set; }
+            public TimeSpan? EndTime { get; set; }
             public TimeSpan? MarkLate { get; set; }
         }
     }

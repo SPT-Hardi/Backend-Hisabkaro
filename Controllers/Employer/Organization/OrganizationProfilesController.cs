@@ -18,7 +18,6 @@ namespace HIsabKaro.Controllers.Employer.Organization
     { 
         private readonly ITokenServices _tokenService;
         private readonly IConfiguration _configuration;
-
         public OrganizationProfilesController(ITokenServices tokenService,IConfiguration configuration)
         {
             _tokenService = tokenService;

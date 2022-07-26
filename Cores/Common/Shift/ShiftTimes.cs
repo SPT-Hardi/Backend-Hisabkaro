@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Common.Shift
 {
     public class ShiftTimes
     {
-        internal Result Create(int OId ,List<Models.Common.Shift.ShitTime> value)
+        /*internal Result Create(int OId ,List<Models.Common.Shift.ShitTime> value)
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -55,9 +55,9 @@ namespace HIsabKaro.Cores.Common.Shift
                     };
                 }
             }
-        }
+        }*/
 
-        internal Result CreateBranchShift(int OId, int BId, List<Models.Common.Shift.ShitTime> value)
+       /* internal Result CreateBranchShift(int OId, int BId, List<Models.Common.Shift.ShitTime> value)
         {
             using (DBContext c = new DBContext())
             {
@@ -86,6 +86,6 @@ namespace HIsabKaro.Cores.Common.Shift
                     Message = string.Format("shift Added Successfully!"),
                 };
             }
-        }
+        }*/
     }
 }

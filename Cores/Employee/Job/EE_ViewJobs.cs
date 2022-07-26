@@ -32,18 +32,17 @@ namespace HIsabKaro.Cores.Employee.Job
                                JobType = (from t in c.EmprJobTypes
                                           where t.JobId == x.JobId
                                           select new { Type = t.Type }).ToList(),
-                               Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
+                               Image = x.DevOrganisation.CommonFile.FGUID,
                                MinSalary = x.MinSalary,
                                MaxSalary = x.MaxSalary,
                                Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
-                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                Applied = (from y in c.EmpApplyJobDetails
                                           where y.JobId == x.JobId
                                           select y.UId).Count(),
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
                                Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
-                               Address = x.BranchID == null ? new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } : new { City = x.DevOrganisationBranch.CommonContactAddress.City, State = x.DevOrganisationBranch.CommonContactAddress.State, }
+                               Address = new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } 
                            }).ToList();
                 return new Result()
                 {
@@ -77,7 +76,6 @@ namespace HIsabKaro.Cores.Employee.Job
                                IsYouBookMarked = (from z in c.EmpBookmarkJobsDetails where z.UId == (int)UId && z.JobId == x.JobId select x).Any() ? true : false,
                                SalaryType = new IntegerNullString() { Id = x.SubFixedLookup_SalaryTypeId.FixedLookupId, Text = x.SubFixedLookup_SalaryTypeId.FixedLookup, },
                                AddressId = x.AddressId,
-                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                Comment = x.Comment,
                                Description = x.Description,
                                Email = x.Email,
@@ -132,18 +130,17 @@ namespace HIsabKaro.Cores.Employee.Job
                                JobType = (from t in c.EmprJobTypes
                                           where t.JobId == x.JobId
                                           select new { Type = t.Type }).ToList(),
-                               Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
+                               Image = x.DevOrganisation.CommonFile.FGUID,
                                MinSalary = x.MinSalary,
                                MaxSalary = x.MaxSalary,
                                Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
-                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                Applied = (from y in c.EmpApplyJobDetails
                                           where y.JobId == x.JobId
                                           select y.UId).Count(),
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
                                Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
-                               Address = x.BranchID == null ? new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } : new { City = x.DevOrganisationBranch.CommonContactAddress.City, State = x.DevOrganisationBranch.CommonContactAddress.State, }
+                               Address = new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } 
                            }).ToList();
                 return new Result()
                 {
@@ -162,7 +159,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     throw new ArgumentException("token not found or expired!");
                 }
                 var res = (from x in c.EmprJobs
-                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && ( x.BranchID==null ? x.DevOrganisation.OrganisationName.Contains(keyword) : x.DevOrganisationBranch.BranchName.Contains(keyword) || x.Title.Contains(keyword) || x.DevOrganisation.SubFixedLookup_InudstrySectorId.FixedLookup.Contains(keyword))
+                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && ( x.DevOrganisation.OrganisationName.Contains(keyword)  || x.Title.Contains(keyword) || x.DevOrganisation.SubFixedLookup.FixedLookup.Contains(keyword))
                            orderby x.PostDate descending
                            select new
                            {
@@ -175,18 +172,17 @@ namespace HIsabKaro.Cores.Employee.Job
                                JobType = (from t in c.EmprJobTypes
                                           where t.JobId == x.JobId
                                           select new { Type = t.Type }).ToList(),
-                               Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
+                               Image = x.DevOrganisation.CommonFile.FGUID,
                                MinSalary = x.MinSalary,
                                MaxSalary = x.MaxSalary,
                                Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
-                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                Applied = (from y in c.EmpApplyJobDetails
                                           where y.JobId == x.JobId
                                           select y.UId).Count(),
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
                                Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
-                               Address = x.BranchID == null ? new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } : new { City = x.DevOrganisationBranch.CommonContactAddress.City, State = x.DevOrganisationBranch.CommonContactAddress.State, }
+                               Address =  new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } 
                            }).ToList();
                 return new Result()
                 {

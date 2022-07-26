@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class Submits
     {
-        public Result Add(object URId, SubmitDaily value)
+       /* public Result Add(object URId, SubmitDaily value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (TransactionScope scope = new TransactionScope())
@@ -195,6 +195,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                 }
             }
 
-        }
+        }*/
     }
 }

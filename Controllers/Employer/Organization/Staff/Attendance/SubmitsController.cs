@@ -14,32 +14,32 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class SubmitsController : ControllerBase
     {
-       [HttpPost]
+      /* [HttpPost]
         [Route("SubmitDaily")]
         public IActionResult Post([FromBody]SubmitDaily value)
         {
             var URId = HttpContext.Items["URId"];
             //int URId = 10000062;
             return Ok(new Submits().Add(URId,value));
-        }
+        }*/
 
-        [HttpGet]
+    /*    [HttpGet]
         [Route("SubmitDaily")]
         public IActionResult Get()
         {
             var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new Submits().Get(URId));
-        }
+        }*/
 
-        [HttpPost]
+      /*  [HttpPost]
         [Route("SubmitDailyQR")]
         public IActionResult PostQR([FromBody] SubmitDailyThroughQR value)
         {
             var URId = HttpContext.Items["URId"];
             //int URId = 10000024;
             return Ok(new Submits().AddFromQr(URId,value));
-        }
+        }*/
 
     }
 }

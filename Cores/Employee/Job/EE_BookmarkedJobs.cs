@@ -89,18 +89,17 @@ namespace HIsabKaro.Cores.Employee.Job
                                JobType = (from t in c.EmprJobTypes
                                           where t.JobId == x.JobId
                                           select new { Type = t.Type }).ToList(),
-                               Image = x.DevOrganisation.CommonFile_LogoFileId.FGUID,
+                               Image = x.DevOrganisation.CommonFile.FGUID,
                                MinSalary = x.MinSalary,
                                MaxSalary = x.MaxSalary,
                                Organization = new IntegerNullString() { Id = x.DevOrganisation.OId, Text = x.DevOrganisation.OrganisationName },
-                               Branch = x.BranchID == null ? new IntegerNullString { Id = 0, Text = null, } : new IntegerNullString() { Id = x.DevOrganisationBranch.BranchId, Text = x.DevOrganisationBranch.BranchName, },
                                Applied = (from y in c.EmpApplyJobDetails
                                           where y.JobId == x.JobId
                                           select y.UId).Count(),
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
                                Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
-                               Address = x.BranchID == null ? new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } : new { City = x.DevOrganisationBranch.CommonContactAddress.City, State = x.DevOrganisationBranch.CommonContactAddress.State, }
+                               Address = new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } 
                            }).ToList();
                 return new Result()
                 {

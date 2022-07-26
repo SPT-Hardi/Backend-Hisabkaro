@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
 {
     public class AttendanceReports
     {
-        public Result Get(object Ids,DateTime date) 
+       /* public Result Get(object Ids,DateTime date) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -46,6 +46,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Attendance
                         Data = attendaneReports,
                     };
             }
-        }
+        }*/
     }
 }
