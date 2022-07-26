@@ -9,9 +9,9 @@ namespace HIsabKaro.Models.Common.Shift
     public class ShitTime
     {
         [JsonIgnore]
-        public int? ShiftTimeId { get; set; }
-        public TimeSpan? StartTime { get; set; }
-        public TimeSpan? EndTime { get; set; }
-        public TimeSpan? MarkLate { get; set; }
+        public int? ShiftTimeId { get; set; } 
+        public TimeSpan? StartTime { get; set; } = null;
+        public TimeSpan? EndTime { get; set; } = null;
+        public TimeSpan? MarkLate { get; set; } = null;
     }
 }

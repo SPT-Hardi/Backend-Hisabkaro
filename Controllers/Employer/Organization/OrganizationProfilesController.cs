@@ -15,36 +15,23 @@ namespace HIsabKaro.Controllers.Employer.Organization
     [Route("Employer/Organization")]
     [ApiController]
     public class OrganizationProfilesController : ControllerBase
-    {
-        private readonly OrganizationProfiles _organizationProfiles; 
+    { 
         private readonly ITokenServices _tokenService;
-        private readonly ContactAddress _contactAddress;
-        private readonly ShiftTimes _shiftTimes;
         private readonly IConfiguration _configuration;
 
-        public OrganizationProfilesController(OrganizationProfiles organizationProfiles, ITokenServices tokenService, ContactAddress contactAddress,ShiftTimes shiftTimes, IConfiguration configuration)
+        public OrganizationProfilesController(ITokenServices tokenService,IConfiguration configuration)
         {
-            _organizationProfiles = organizationProfiles;
             _tokenService = tokenService;
-            _contactAddress = contactAddress;
-            _shiftTimes = shiftTimes;
             _configuration = configuration;
         }
 
-        [HttpGet]
-        [Route("OrganizationProfiles/One")]
-        public IActionResult One([FromQuery] int OId)
-        {
-            return Ok(_organizationProfiles.One(OId));
-        }
-
         [HttpPost]
-        [Route("OrganizationProfiles/Create/{OId}")]
-        public IActionResult Create([FromRoute] int OId,[FromBody] Models.Employer.Organization.OrganizationProfile value)
+        [Route("OrganizationProfiles/Create")]
+        public IActionResult Create([FromBody] Models.Employer.Organization.OrganizationProfile value)
         {
-            var UserId = HttpContext.Items["UId"];
-            //int UserId = 50000333;
-            return Ok(_organizationProfiles.Create(UserId,OId,value,_configuration,_tokenService));
+            var UId = HttpContext.Items["UId"];
+            var DeviceToken = HttpContext.Items["DeviceToken"];
+            return Ok(new Cores.Employer.Organization.OrganizationProfiles().Create(UId,DeviceToken,value,_tokenService,_configuration));
         }
     }
 }

@@ -2,6 +2,7 @@
 using HIsabKaro.Cores.Common.Contact;
 using HIsabKaro.Cores.Common.Shift;
 using HIsabKaro.Models.Common;
+using HIsabKaro.Models.Employer.Organization;
 using HIsabKaro.Services;
 using HisabKaroContext;
 using Microsoft.Extensions.Configuration;
@@ -12,212 +13,197 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
+using static HIsabKaro.Cores.Developer.Subscriber.Users;
 
 namespace HIsabKaro.Cores.Employer.Organization
 {
     public class OrganizationProfiles
     {
-        private readonly ITokenServices _tokenService;
-        private readonly ContactAddress _contactAddress;
-        private readonly ShiftTimes _shiftTimes;
-
-        public OrganizationProfiles(ITokenServices tokenService,ContactAddress contactAddress,ShiftTimes shiftTimes)
+        public enum DocumentName
         {
-            _tokenService = tokenService;
-            _contactAddress = contactAddress;
-            _shiftTimes = shiftTimes;
+            GST = 169,
+            PAN = 168
         }
-        public Result Create(object UserId, int OId, Models.Employer.Organization.OrganizationProfile value, IConfiguration configuration, ITokenServices tokenServices)
-        {
-            using (DBContext c = new DBContext())
-            {
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    var _User = c.SubUsers.Where(u => u.UId == (int)UserId).SingleOrDefault();
-                    if (_User is null)
-                    {
-                        throw new ArgumentException("User Does Not Exits!");
-                    }
-
-                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == OId);
-                    if (_OId is null)
-                    {
-                        throw new ArgumentException("Organization Does Not Exits!");
-                    }
-
-                    var _UserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _User.UId && x.OId == _OId.OId);
-                    if (_UserOrg is null)
-                    {
-                        throw new ArgumentException("Unauthorized!");
-                    }
-
-                    var listPartner = value.Partners.Select(x => new { Email = x.Email, MobileNumber = x.Mobilenumber }).ToList();
-                    if (listPartner.Distinct().Count() != listPartner.Count())
-                    {
-                        throw new ArgumentException($"Duplecate Entry In Partners!");
-                    }
-
-                    //if(_OId.ContactAddressId is null)
-                    //{
-                    var _AId = _contactAddress.Create(_OId.ContactAddressId, value.Address);
-                    _OId.ContactAddressId = _AId.Data;
-                    //}
-                    /*else
-                    {
-                        var _AId = _contactAddress.Update((int)_OId.ContactAddressId,value.Address);
-                        _OId.ContactAddressId = _AId.Data;
-                    }*/
-                    var shifttime = _shiftTimes.Create(_OId.OId, value.ShiftTime);
-
-                    var _LogoFileId = (from x in c.CommonFiles where x.FGUID == value.LogoFile select x).FirstOrDefault();
-                    var _GSTFileId = (from x in c.CommonFiles where x.FGUID == value.GST select x).FirstOrDefault();
-                    var _PANFileId = (from x in c.CommonFiles where x.FGUID == value.PanCard select x).FirstOrDefault();
-
-                    _OId.LogoFileId = _LogoFileId == null ? null : _LogoFileId.FileId;
-                    _OId.GSTFileId = _GSTFileId == null ? null : _GSTFileId.FileId;
-                    _OId.GSTIN = value.GSTNumber;
-                    _OId.PAN = value.PanCardNumber;
-                    _OId.PANFileId = _PANFileId == null ? null : _PANFileId.FileId;
-                    _OId.Email = value.Email;
-                    _OId.MobileNumber = value.MobileNumber;
-                    _OId.OwnershipTypeId = value.OwnershipType.Id;
-                    _OId.IsCompleted = true;
-
-                    c.SubmitChanges();
-
-                    var _Partner = PartnerCreate(_OId.OId, value.Partners);
-
-                    var _OrgRole = c.SubRoles.SingleOrDefault(x => x.RoleName.ToLower() == "admin" && x.OId == OId);
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == (int)UserId && x.OId == OId && x.RId == _OrgRole.RId);
-
-                    Cores.Common.Claims claims = new Common.Claims(configuration, tokenServices);
-
-                    var res = claims.Add((int)UserId, _User.SubUserTokens.Select(x => x.CommonDeviceToken.DeviceToken).FirstOrDefault(), _URID.URId);
-
-                    scope.Complete();
-                    return new Result()
-                    {
-                        Status = Result.ResultStatus.success,
-                        Message = string.Format($"Organization Add Successfully"),
-                        Data = new
-                        {
-                            OId = _OId.OId,
-                            JWT = res.JWT,
-                            RToken = res.RToken
-                        }
-                    };
-                }
-            }
-        }
-
-        /* public Result One(int OId)
-         {
-             using (DBContext c = new DBContext())
-             {
-                 var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == OId);
-                 if (_OId is null)
-                 {
-                     throw new ArgumentException("Organization Does Not Exits!");
-                 }
-                 var _Org = (from x in c.DevOrganisations
-                             where x.OId == OId
-                             select new Models.Employer.Organization.OrganizationProfile
-                             {
-                                 LogoFile = (from f in c.CommonFiles
-                                             where f.FileId == x.LogoFileId
-                                             select f.FGUID).SingleOrDefault(),
-                                 GSTNumber = x.GSTIN,
-                                 GST = (from f in c.CommonFiles
-                                        where f.FileId == x.GSTFileId
-                                        select f.FGUID).SingleOrDefault(),
-                                 ShiftTime = (from s in c.DevOrganisationsShiftTimes
-                                              where s.OId == x.OId
-                                              select new Models.Common.Shift.ShitTime
-                                              {
-                                                  ShiftTimeId = s.ShiftTimeId,
-                                                  StartTime = s.StartTime,
-                                                  EndTime = s.EndTime,
-                                                  MarkLate = s.MarkLate
-                                              }).ToList(),
-                                 Address = (from a in c.CommonContactAddresses
-                                            where a.ContactAddressId == x.ContactAddressId
-                                            select new Models.Common.Contact.Address
-                                            {
-                                                AddressLine1 = a.AddressLine1,
-                                                AddressLine2 = a.AddressLine2,
-                                                City = a.City,
-                                                State = a.State,
-                                                PinCode = (int)a.PinCode,
-                                                LandMark = a.Landmark
-                                            }).SingleOrDefault(),
-                                 PanCardNumber = x.PAN,
-                                 PanCard = (from f in c.CommonFiles
-                                            where f.FileId == x.PANFileId
-                                            select f.FGUID).SingleOrDefault(),
-                                 Email = x.Email,
-                                 OwnershipType = (from l in c.SubLookups
-                                                  where l.LookupId == x.OwnershipTypeId
-                                                  select new IntegerNullString { Id = l.LookupId, Text = l.Lookup }).SingleOrDefault()   ,
-                                 MobileNumber = x.MobileNumber,
-                                 Partners = (from p in c.DevOrganisationsPartners
-                                             where p.OId == x.OId
-                                             select new Models.Employer.Organization.Partner
-                                             {
-                                                 Email = p.Email,
-                                                 Mobilenumber = p.MobleNumber,                                                  
-                                             }).ToList()
-                             }).FirstOrDefault();
-                 return new Result()
-                 {
-                     Status = Result.ResultStatus.success,
-                     Message = string.Format("Success"),
-                     Data = _Org,
-
-                 };
-             }
-         }*/
-        /*     internal Result PartnerCreate(int OId, List<Models.Employer.Organization.Partner> value)
+        public Result Create(object UId, object DeviceToken, OrganizationProfile value, ITokenServices tokenServices, IConfiguration configuration)
         {
             using (TransactionScope scope = new TransactionScope())
             {
                 using (DBContext c = new DBContext())
                 {
-                    var listPartner = value.Select(x => new { Email = x.Email, MobileNumber = x.Mobilenumber }).ToList();
-                    if (listPartner.Distinct().Count() != listPartner.Count())
+                    if (UId == null || DeviceToken == null)
                     {
-                        throw new ArgumentException($"Duplecate Entry In Partners!");
+                        throw new ArgumentException("token not found or expired!");
                     }
+                    var user = (from x in c.SubUsers where x.UId == (int)UId select x).FirstOrDefault();
+                    if (user == null)
+                    {
+                        throw new ArgumentException("user not found!");
+                    }
+                    Random orgCode = new Random();
+                    Random brcCode = new Random();
+                    //create new Org
+                    var org = new DevOrganisation()
+                    {
+                        ContactAddressId = value.AddressId,
+                        Email = user.SubUsersDetail.Email,
+                        IsBranch = false,
+                        LogoFileId = (from x in c.CommonFiles where x.FGUID == value.LogoFGUId select x).FirstOrDefault()?.FileId,
+                        MobileNumber = user.MobileNumber,
+                        OrganisationName = value.OrganizationName,
+                        OrgCode = (orgCode.Next(100000, 999999)).ToString(),
+                        QRString = new Guid().ToString(),
+                        ParentOrgId = null,
+                        SectorId = value.Sector.Id,
+                        UId = user.UId,
+                    };
+                    c.DevOrganisations.InsertOnSubmit(org);
+                    c.SubmitChanges();
 
-                    value.ForEach((x) =>
+                    //make role entry in role table
+                    //1.Employer
+                    var orgAdmin = new SubRole()
                     {
-                        if (x.PartnerId is null)
-                        {
-                            var partner = new DevOrganisationsPartner()
-                            {
-                                Email=x.Email,
-                                MobleNumber=x.Mobilenumber,
-                                OId = OId
-                            };
-                            c.DevOrganisationsPartners.InsertOnSubmit(partner);
-                            c.SubmitChanges();
-                        }
-                        else
-                        {
-                            var _partner = c.DevOrganisationsPartners.SingleOrDefault(y => y.PId == x.PartnerId);
-                            _partner.Email = x.Email;
-                            _partner.MobleNumber = x.Mobilenumber;
-                            _partner.OId = OId;
-                            c.SubmitChanges();
-                        }
+                        IsLocked = false,
+                        LoginTypeId = (int)LoginType.Employer,
+                        OId = org.OId,
+                        RoleName = "Admin",
+                    };
+                    c.SubRoles.InsertOnSubmit(orgAdmin);
+                    c.SubmitChanges();
+                    //2.Partner
+                    var orgPartner = new SubRole()
+                    {
+                        IsLocked = false,
+                        LoginTypeId = (int)LoginType.Partner,
+                        OId = org.OId,
+                        RoleName = "Partner",
+                    };
+                    c.SubRoles.InsertOnSubmit(orgAdmin);
+                    c.SubmitChanges();
+                    //3.Staff
+                    c.SubRoles.InsertOnSubmit(new SubRole()
+                    {
+                        IsLocked = false,
+                        LoginTypeId = (int)LoginType.Staff,
+                        OId = org.OId,
+                        RoleName = "Staff",
                     });
-                    scope.Complete();
-                    return new Models.Common.Result
+                    c.SubmitChanges();
+                    //4.Manager
+                    c.SubRoles.InsertOnSubmit(new SubRole()
                     {
-                        Status = Models.Common.Result.ResultStatus.success,
-                        Message = string.Format("Partners Added Successfully!"),
+                        IsLocked = false,
+                        LoginTypeId = (int)LoginType.Manager,
+                        OId = org.OId,
+                        RoleName = "Manager",
+                    });
+                    c.SubmitChanges();
+
+                    //create user_Organization for role Admin
+                    var orgAdmin_URId = new SubUserOrganisation()
+                    {
+                        OId = org.OId,
+                        RId = orgAdmin.RId,
+                        UId = user.UId
+                    };
+                    c.SubUserOrganisations.InsertOnSubmit(orgAdmin_URId);
+                    c.SubmitChanges();
+
+                    //generate token for admin
+                    var tkn = new Cores.Common.Claims(configuration, tokenServices).Add(user.UId, DeviceToken.ToString(), orgAdmin_URId.URId);
+
+                    //create weekoff for Organization
+                    c.DevOrganizationWeekOffs.InsertAllOnSubmit(value.WeekOff.Where(z => z.Id != 0 || z.Text != null).Select(z => new DevOrganizationWeekOff()
+                    {
+                        Created = DateTime.Now,
+                        LastUpdated = DateTime.Now,
+                        OId = org.OId,
+                        URId = orgAdmin_URId.URId,
+                        WeekOffDay = z.Text,
+                        WeekOffDayId = z.Id,
+                    }));
+                    c.SubmitChanges();
+
+                    //create shiftTime for organization
+                    c.DevOrganisationsShiftTimes.InsertAllOnSubmit(value.ShiftTime.Where(z => z.MarkLate != null || z.StartTime != null || z.EndTime != null).Select(z => new DevOrganisationsShiftTime()
+                    {
+                        Created = DateTime.Now,
+                        EndTime = z.EndTime,
+                        MarkLate = z.MarkLate,
+                        OId = org.OId,
+                        LastUpdated = DateTime.Now,
+                        StartTime = z.StartTime,
+                        URId = orgAdmin_URId.URId,
+                    }));
+                    c.SubmitChanges();
+
+                    //add new branches
+                    c.DevOrganisations.InsertAllOnSubmit(value.Branches.Where(z => z.BranchName != null).Select(z => new DevOrganisation()
+                    {
+                        ContactAddressId = z.AddressId,
+                        Email = user.SubUsersDetail.Email,
+                        IsBranch = true,
+                        LogoFileId = null,
+                        MobileNumber = user.MobileNumber,
+                        OrganisationName = z.BranchName,
+                        OrgCode = (brcCode.Next(100000, 999999)).ToString(),
+                        QRString = new Guid().ToString(),
+                        ParentOrgId = org.OId,
+                        SectorId = null,
+                        UId = user.UId,
+                    }));
+                    c.SubmitChanges();
+
+                    //add partners in Organization
+                    c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Where(z => z.PartnerName != null).Select(z => new DevOrganisationsPartner()
+                    {
+                        MobleNumber = z.Mobilenumber,
+                        OId = org.OId,
+                        PartnerName = z.PartnerName,
+                        PartnerURId = null, //can be change for permissions 
+                    }));
+                    c.SubmitChanges();
+
+                    //add OrganizationInformation ---GST
+                    c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                    {
+                        DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.GSTFGUId select x).FirstOrDefault()?.FileId,
+                        DocumentName = "GST",
+                        DocumentNameId = (int)DocumentName.GST,
+                        DocumentNumber = value.OrgInformation.GSTNumber,
+                        OId = org.OId,
+                        URId = orgAdmin_URId.URId,
+                    });
+                    c.SubmitChanges();
+                    //add OrganizationInformation ---PAN
+                    c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                    {
+                        DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.PANFGUId select x).FirstOrDefault()?.FileId,
+                        DocumentName = "PAN",
+                        DocumentNameId = (int)DocumentName.PAN,
+                        DocumentNumber = value.OrgInformation.PANNumber,
+                        OId = org.OId,
+                        URId = orgAdmin_URId.URId,
+                    });
+                    c.SubmitChanges();
+
+                    var res = new
+                    {
+                        OrganizationId = org.OId,
+                        OrganizationName = org.OrganisationName,
+                        URId = orgAdmin_URId.URId,
+                        JWT = tkn.JWT,
+                        RToken = tkn.RToken,
+                    };
+                    scope.Complete();
+                    return new Result()
+                    {
+                        Status = Result.ResultStatus.success,
+                        Message = "Organization created successfully!",
+                        Data = res
                     };
                 }
             }
-        }*/
+        }
     }
 }

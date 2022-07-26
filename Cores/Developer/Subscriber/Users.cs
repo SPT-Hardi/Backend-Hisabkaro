@@ -29,6 +29,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
             Employer=21,
             Staff=23,
             Manager=163,
+            Partner=167
         }
         public Result Add(Models.Developer.Subscriber.User value)
         {
@@ -215,15 +216,16 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         LoginType = qs.SubUser.DefaultLoginTypeId == null ? new IntegerNullString() { Id = 0, Text = null } : (login == null ? new IntegerNullString() { Id = qs.SubUser.SubFixedLookup.FixedLookupId, Text = qs.SubUser.SubFixedLookup.FixedLookup } : new IntegerNullString() { Id = login.SubFixedLookup.FixedLookupId, Text = login.SubFixedLookup.FixedLookup }),
                         JWT = res.JWT,
                         RToken = res.RToken,
-                        IsDetailsCompleted = usersigninrole.SubUsersDetail!=null,
+                        IsDetailsCompleted = usersigninrole.SubUsersDetail != null,
                         IsResumeCreted = userProfileList.Count() > 0 ? true : false,
+                        IsOrganizationCreated = (from x in c.DevOrganisations where x.UId == usersigninrole.UId select x).Any() ? true : false
                     };
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = "otp verified successfully!",
-                        Data =Data
+                        Data = Data
                     };
                 }
                 /*
