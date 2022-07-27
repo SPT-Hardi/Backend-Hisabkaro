@@ -39,6 +39,18 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 using (DBContext c = new DBContext())
                 {
                     var DeviceTokenId = (from x in c.CommonDeviceTokens where x.DeviceToken == value.DeviceToken select x.DeviceTokenId).FirstOrDefault();
+                    if (DeviceTokenId == 0) 
+                    {
+                        var d = new CommonDeviceToken()
+                        {
+                            DeviceToken = value.DeviceToken,
+                        };
+
+                        c.CommonDeviceTokens.InsertOnSubmit(d);
+                        c.SubmitChanges();
+                        DeviceTokenId = d.DeviceTokenId;
+
+                    }
                     var qs = c.SubUsers.Where(x => x.MobileNumber == value.MobileNumber).SingleOrDefault();
                     var smsres = new SMSServices();
                     CustomOTPs customOTPs = new CustomOTPs();
@@ -69,17 +81,10 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     //create new otp for user
                     if (newotp == null)
                     {
-                        var d = new CommonDeviceToken()
-                        {
-                            DeviceToken = value.DeviceToken,
-                        };
-                        c.CommonDeviceTokens.InsertOnSubmit(d);
-                        c.SubmitChanges();
-
                         sotp.OTP = otp;
                         sotp.ExpiryDate = ISDT.AddMinutes(3);
                         sotp.IsUsed = false;
-                        sotp.DeviceTokenId = d.DeviceTokenId;
+                        sotp.DeviceTokenId = DeviceTokenId;
                         sotp.MobileNumber = value.MobileNumber;
                         c.SubOTPs.InsertOnSubmit(sotp);
                         c.SubmitChanges();
@@ -345,21 +350,22 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                     {
                         throw new ArgumentException("token not valid!");
                     }
-                    else if (user.SubUserDefaultLogins.ToList().Count() > 0) 
+                    else if (user.DefaultLoginTypeId!=null) 
                     {
                         throw new ArgumentException("not authorized!");
                     }
 
                     user.DefaultLoginTypeId = value.LoginType.Id;
                     c.SubmitChanges();
-                    c.SubUserDefaultLogins.InsertOnSubmit(new SubUserDefaultLogin()
+
+/*                    c.SubUserDefaultLogins.InsertOnSubmit(new SubUserDefaultLogin()
                     {
                         DefaultLoginId=value.LoginType.Id,
                         DeviceTokenId=DeviceTokenId,
                         UId=user.UId,
                         URId=null,
                     });
-                    c.SubmitChanges();
+                    c.SubmitChanges();*/
 
                     scope.Complete();
                     return new Result()

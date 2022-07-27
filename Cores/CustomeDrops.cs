@@ -1,4 +1,4 @@
-﻿using HIsabKaro.Models.Common;
+﻿  using HIsabKaro.Models.Common;
 using HisabKaroContext;
 using System;
 using System.Collections.Generic;
