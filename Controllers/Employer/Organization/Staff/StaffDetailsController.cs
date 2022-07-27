@@ -36,7 +36,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         [HttpPost]
         [Route("StaffDetails/Create")]
-        public IActionResult Create([FromBody] Models.Employer.Organization.Staff.StaffDetail value)
+        public IActionResult Create([FromBody] List<Models.Employer.Organization.Staff.StaffDetail> value)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(_staffDetails.Create(URId, value));

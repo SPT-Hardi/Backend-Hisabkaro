@@ -30,96 +30,99 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
             _mailSetting = mailSetting;
         }
 
-        public Result Create(object URId, Models.Employer.Organization.Staff.StaffDetail value)
+        public Result Create(object URId, List<Models.Employer.Organization.Staff.StaffDetail> value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == value.Organization.Id);
-                    if (_OId is null)
-                    {
-                        throw new ArgumentException("Organization Does Not Exits!");
-                    }
+                    value.ForEach((v) =>
+                     {
+                         var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == v.Organization.Id);
+                         if (_OId is null)
+                         {
+                             throw new ArgumentException("Organization Does Not Exits!");
+                         }
 
-                    var _OrgRole = (from x in c.SubRoles where x.OId == value.Organization.Id && x.RoleName == "Staff" select x).FirstOrDefault();
-                    var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == value.MobileNumber);
+                         var _OrgRole = (from x in c.SubRoles where x.OId == v.Organization.Id && x.RoleName == "Staff" select x).FirstOrDefault();
+                         var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == v.MobileNumber);
 
-                    if (_subUser is not null)
-                    {
-                        var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
-                        if (_subUserOrg is not null)
-                        {
-                            throw new ArgumentException($"Staff Member Are Already Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
-                        }
-                        else
-                        {
-                            var _userOrg = new SubUserOrganisation()
-                            {
-                                UId = _subUser.UId,
-                                OId = _OId.OId,
-                                RId = _OrgRole.RId
-                            };
-                            c.SubUserOrganisations.InsertOnSubmit(_userOrg);
-                            c.SubmitChanges();
-                        }
-                    }
-                    else
-                    {
-                        var _user = new SubUser()
-                        {
-                            MobileNumber = value.MobileNumber,
-                            DefaultLanguageId = 42,
-                            DefaultLoginTypeId = 20
-                        };
-                        c.SubUsers.InsertOnSubmit(_user);
-                        c.SubmitChanges();
+                         if (_subUser is not null)
+                         {
+                             var _subUserOrg = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
+                             if (_subUserOrg is not null)
+                             {
+                                 throw new ArgumentException($"Staff Member Are Already Exits In {_subUserOrg.DevOrganisation.OrganisationName}!");
+                             }
+                             else
+                             {
+                                 var _userOrg = new SubUserOrganisation()
+                                 {
+                                     UId = _subUser.UId,
+                                     OId = _OId.OId,
+                                     RId = _OrgRole.RId
+                                 };
+                                 c.SubUserOrganisations.InsertOnSubmit(_userOrg);
+                                 c.SubmitChanges();
+                             }
+                         }
+                         else
+                         {
+                             var _user = new SubUser()
+                             {
+                                 MobileNumber = v.MobileNumber,
+                                 DefaultLanguageId = 42,
+                                 DefaultLoginTypeId = 20
+                             };
+                             c.SubUsers.InsertOnSubmit(_user);
+                             c.SubmitChanges();
 
-                        var _userDetail = new SubUsersDetail()
-                        {
-                            UId = _user.UId,
-                            FullName = value.Name
-                        };
-                        c.SubUsersDetails.InsertOnSubmit(_userDetail);
-                        c.SubmitChanges();
+                             var _userDetail = new SubUsersDetail()
+                             {
+                                 UId = _user.UId,
+                                 FullName = v.Name
+                             };
+                             c.SubUsersDetails.InsertOnSubmit(_userDetail);
+                             c.SubmitChanges();
 
-                        var _userOrg = new SubUserOrganisation()
-                        {
-                            UId = _user.UId,
-                            OId = _OId.OId,
-                            RId = _OrgRole.RId
-                        };
-                        c.SubUserOrganisations.InsertOnSubmit(_userOrg);
-                        c.SubmitChanges();
-                        _subUser = _user;
-                    }
-                    var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
+                             var _userOrg = new SubUserOrganisation()
+                             {
+                                 UId = _user.UId,
+                                 OId = _OId.OId,
+                                 RId = _OrgRole.RId
+                             };
+                             c.SubUserOrganisations.InsertOnSubmit(_userOrg);
+                             c.SubmitChanges();
+                             _subUser = _user;
+                         }
+                         var _URID = c.SubUserOrganisations.SingleOrDefault(x => x.UId == _subUser.UId && x.OId == _OId.OId && x.RId == _OrgRole.RId);
 
-                    var _Sid = (from x in c.DevOrganisationsStaffs
-                                where x.OId == _OId.OId
-                                select x).Max(x => x.SId);
+                         var _Sid = (from x in c.DevOrganisationsStaffs
+                                     where x.OId == _OId.OId
+                                     select x).Max(x => x.SId);
 
-                    if (_Sid == null)
-                       _Sid = 1;                    
-                    else
-                        _Sid += 1;
-                    var staff = new DevOrganisationsStaff()
-                    {
-                        NickName = value.Name,
-                        URId = _URID.URId,
-                        OId = (int)value.Organization.Id,
-                        IsMonthly = value.IsMonthly,
-                        Salary = value.SalaryAmount,
-                        SId = _Sid,
-                        Status = false,
-                        CreateDate = ISDT,
-                    };
-                    if (value.IsMonthly == true)
-                        staff.HRA = value.HRA;
+                         if (_Sid == null)
+                             _Sid = 1;
+                         else
+                             _Sid += 1;
+                         var staff = new DevOrganisationsStaff()
+                         {
+                             NickName = v.Name,
+                             URId = _URID.URId,
+                             OId = (int)v.Organization.Id,
+                             IsMonthly = v.IsMonthly,
+                             Salary = v.SalaryAmount,
+                             SId = _Sid,
+                             Status = false,
+                             CreateDate = ISDT,
+                         };
+                         if (v.IsMonthly == true)
+                             staff.HRA = v.HRA;
 
-                    c.DevOrganisationsStaffs.InsertOnSubmit(staff);
-                    c.SubmitChanges();
+                         c.DevOrganisationsStaffs.InsertOnSubmit(staff);
+                         c.SubmitChanges();
+                     });
                     scope.Complete();
                     return new Result()
                     {
@@ -127,8 +130,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         Message = string.Format("View"),
                         Data = new
                         {
-                            OrgCode = _OId.OrgCode,
-                            OId = value.Organization.Id,
+                            //OrgCode = _OId.OrgCode,
+                            //OId = value.Organization.Id,
                         }
                     };
                 }
