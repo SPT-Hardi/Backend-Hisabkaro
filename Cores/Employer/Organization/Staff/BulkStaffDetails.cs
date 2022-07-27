@@ -129,7 +129,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
                         {
                             URId = _URID.URId,
                             OId = _OId.OId,
-                            Salary = float.Parse(csvTable.Rows[i][4].ToString()),
+                            //Salary = float.Parse(csvTable.Rows[i][4].ToString()),
                             IsOpenWeek = bool.Parse(csvTable.Rows[i][5].ToString()),
                             SId = (int)_Sid,
                             Status = false,

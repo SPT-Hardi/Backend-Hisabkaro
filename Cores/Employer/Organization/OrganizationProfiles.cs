@@ -343,21 +343,27 @@ namespace HIsabKaro.Cores.Employer.Organization
         public Result One(int OId)
         {
             using (DBContext c = new DBContext())
-            {
+            {   
                 var Org = (from x in c.DevOrganisations
                            where x.OId == OId
                            select new Models.Employer.Organization.OrganizationProfile
                            {
-                               LogoFGUId = "  ",// x.CommonFile.FGUID,
-                               OrganizationName = "",//x.OrganisationName,
-                               //AddressId = x.CommonContactAddress.ContactAddressId,
-                               //WeekOff = x.DevOrganizationWeekOffs.Select(w => new IntegerString() { Id = w.WeekOffDayId, Text = w.WeekOffDay }).ToList(),
-                               //ShiftTime = x.DevOrganisationsShiftTimes.Select(s => new Models.Common.Shift.ShitTime() { ShiftTimeId = s.ShiftTimeId , StartTime = s.StartTime , EndTime = s.EndTime , MarkLate = s.MarkLate }).ToList(),
-                               //Sector = new IntegerNullString() { Id = x.SectorId, Text = x.SubFixedLookup.FixedLookup },
-                               //Branches = x.DevOrganisations_ParentOrgId.Select(b => new Branches() { BranchId = b.OId , BranchName = b.OrganisationName , AddressId = b.ContactAddressId}).ToList(),
-                               //Partners = x.DevOrganisationsPartners.Select(p => new Partner() { PartnerId = p.PId , PartnerName = p.PartnerName , Mobilenumber = p.MobleNumber}).ToList(),
-                               //OrgInformation = x.DevOrganizationInfoDocs.Select(d => new OrgInformation() { GSTFGUId = d. })
-                           });
+                               LogoFGUId = x.CommonFile.FGUID,
+                               OrganizationName = x.OrganisationName,
+                               AddressId = x.CommonContactAddress.ContactAddressId,
+                               WeekOff = x.DevOrganizationWeekOffs.Select(w => new IntegerString() { Id = w.WeekOffDayId, Text = w.WeekOffDay }).ToList(),
+                               ShiftTime = x.DevOrganisationsShiftTimes.Select(s => new Models.Common.Shift.ShitTime() { ShiftTimeId = s.ShiftTimeId, StartTime = s.StartTime, EndTime = s.EndTime, MarkLate = s.MarkLate }).ToList(),
+                               Sector = new IntegerNullString() { Id = x.SectorId, Text = x.SubFixedLookup.FixedLookup },
+                               Branches = x.DevOrganisations_ParentOrgId.Select(b => new Branches() { BranchId = b.OId, BranchName = b.OrganisationName, AddressId = b.ContactAddressId }).ToList(),
+                               Partners = x.DevOrganisationsPartners.Select(p => new Partner() { PartnerId = p.PId, PartnerName = p.PartnerName, Mobilenumber = p.MobleNumber }).ToList(),
+                               //OrgInformation = x.DevOrganizationInfoDocs.Select(d => new OrgInformation()
+                               //{
+                               //    GSTFGUId = d.CommonFile.FGUID,
+                               //    GSTNumber = d.DocumentNumber,
+                               //    PANFGUId = d.CommonFile.FGUID,
+                               //    PANNumber = d.DocumentNumber
+                               //}).FirstOrDefault(),
+                           }).ToList();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
