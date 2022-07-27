@@ -51,7 +51,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         MobileNumber = user.MobileNumber,
                         OrganisationName = value.OrganizationName,
                         OrgCode = (orgCode.Next(100000, 999999)).ToString(),
-                        QRString = new Guid().ToString(),
+                        QRString = Guid.NewGuid().ToString(),
                         ParentOrgId = null,
                         SectorId = value.Sector.Id,
                         UId = user.UId,
@@ -78,7 +78,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         OId = org.OId,
                         RoleName = "Partner",
                     };
-                    c.SubRoles.InsertOnSubmit(orgAdmin);
+                    c.SubRoles.InsertOnSubmit(orgPartner);
                     c.SubmitChanges();
                     //3.Staff
                     c.SubRoles.InsertOnSubmit(new SubRole()
@@ -109,7 +109,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     c.SubUserOrganisations.InsertOnSubmit(orgAdmin_URId);
                     c.SubmitChanges();
 
-                    //generate token for admin
+                    //generate token for admin for Organization
                     var tkn = new Cores.Common.Claims(configuration, tokenServices).Add(user.UId, DeviceToken.ToString(), orgAdmin_URId.URId);
 
                     //create weekoff for Organization
@@ -137,22 +137,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                     }));
                     c.SubmitChanges();
 
-                    //add new branches
-                    c.DevOrganisations.InsertAllOnSubmit(value.Branches.Where(z => z.BranchName != null).Select(z => new DevOrganisation()
-                    {
-                        ContactAddressId = z.AddressId,
-                        Email = user.SubUsersDetail.Email,
-                        IsBranch = true,
-                        LogoFileId = null,
-                        MobileNumber = user.MobileNumber,
-                        OrganisationName = z.BranchName,
-                        OrgCode = (brcCode.Next(100000, 999999)).ToString(),
-                        QRString = new Guid().ToString(),
-                        ParentOrgId = org.OId,
-                        SectorId = null,
-                        UId = user.UId,
-                    }));
-                    c.SubmitChanges();
 
                     //add partners in Organization
                     c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Where(z => z.PartnerName != null).Select(z => new DevOrganisationsPartner()
@@ -165,27 +149,176 @@ namespace HIsabKaro.Cores.Employer.Organization
                     c.SubmitChanges();
 
                     //add OrganizationInformation ---GST
-                    c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                    if (value.OrgInformation.GSTNumber != null || string.IsNullOrWhiteSpace(value.OrgInformation.GSTNumber)!=true)
                     {
-                        DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.GSTFGUId select x).FirstOrDefault()?.FileId,
-                        DocumentName = "GST",
-                        DocumentNameId = (int)DocumentName.GST,
-                        DocumentNumber = value.OrgInformation.GSTNumber,
-                        OId = org.OId,
-                        URId = orgAdmin_URId.URId,
-                    });
-                    c.SubmitChanges();
+                        c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                        {
+                            DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.GSTFGUId select x).FirstOrDefault()?.FileId,
+                            DocumentName = "GST",
+                            DocumentNameId = (int)DocumentName.GST,
+                            DocumentNumber = value.OrgInformation.GSTNumber,
+                            OId = org.OId,
+                            URId = orgAdmin_URId.URId,
+                        });
+                        c.SubmitChanges();
+                    }
                     //add OrganizationInformation ---PAN
-                    c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                    if (value.OrgInformation.PANNumber != null || string.IsNullOrWhiteSpace(value.OrgInformation.PANNumber) != true)
                     {
-                        DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.PANFGUId select x).FirstOrDefault()?.FileId,
-                        DocumentName = "PAN",
-                        DocumentNameId = (int)DocumentName.PAN,
-                        DocumentNumber = value.OrgInformation.PANNumber,
-                        OId = org.OId,
-                        URId = orgAdmin_URId.URId,
-                    });
+                        c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                        {
+                            DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.PANFGUId select x).FirstOrDefault()?.FileId,
+                            DocumentName = "PAN",
+                            DocumentNameId = (int)DocumentName.PAN,
+                            DocumentNumber = value.OrgInformation.PANNumber,
+                            OId = org.OId,
+                            URId = orgAdmin_URId.URId,
+                        });
+                        c.SubmitChanges();
+                    }
+
+                    //Update DefaultLogin Type
+                    user.DefaultLoginTypeId = (int)LoginType.Employer;
                     c.SubmitChanges();
+
+                    //add new branches
+                    foreach (var brc in value.Branches)
+                    {
+                        if (brc.BranchName != null)
+                        {
+                            var orgBranch = new DevOrganisation()
+                            {
+                                ContactAddressId = brc.AddressId,
+                                Email = user.SubUsersDetail.Email,
+                                IsBranch = true,
+                                LogoFileId = null,
+                                MobileNumber = user.MobileNumber,
+                                OrganisationName = brc.BranchName,
+                                OrgCode = (brcCode.Next(100000, 999999)).ToString(),
+                                QRString = Guid.NewGuid().ToString(),
+                                ParentOrgId = org.OId,
+                                SectorId = value.Sector.Id,
+                                UId = user.UId,
+                            };
+                            c.DevOrganisations.InsertOnSubmit(orgBranch);
+                            c.SubmitChanges();
+
+                            //make role entry in role table
+                            //1.Employer
+                            var brcAdmin = new SubRole()
+                            {
+                                IsLocked = false,
+                                LoginTypeId = (int)LoginType.Employer,
+                                OId = orgBranch.OId,
+                                RoleName = "Admin",
+                            };
+                            c.SubRoles.InsertOnSubmit(brcAdmin);
+                            c.SubmitChanges();
+                            //2.Partner
+                            var brcPartner = new SubRole()
+                            {
+                                IsLocked = false,
+                                LoginTypeId = (int)LoginType.Partner,
+                                OId = orgBranch.OId,
+                                RoleName = "Partner",
+                            };
+                            c.SubRoles.InsertOnSubmit(brcPartner);
+                            c.SubmitChanges();
+                            //3.Staff
+                            c.SubRoles.InsertOnSubmit(new SubRole()
+                            {
+                                IsLocked = false,
+                                LoginTypeId = (int)LoginType.Staff,
+                                OId = orgBranch.OId,
+                                RoleName = "Staff",
+                            });
+                            c.SubmitChanges();
+                            //4.Manager
+                            c.SubRoles.InsertOnSubmit(new SubRole()
+                            {
+                                IsLocked = false,
+                                LoginTypeId = (int)LoginType.Manager,
+                                OId = orgBranch.OId,
+                                RoleName = "Manager",
+                            });
+                            c.SubmitChanges();
+
+                            //create user_Organization for role Admin for Branch
+                            var orgAdminBranch_URId = new SubUserOrganisation()
+                            {
+                                OId = orgBranch.OId,
+                                RId = brcAdmin.RId,
+                                UId = user.UId
+                            };
+                            c.SubUserOrganisations.InsertOnSubmit(orgAdminBranch_URId);
+                            c.SubmitChanges();
+
+                            //create weekoff for Branch
+                            c.DevOrganizationWeekOffs.InsertAllOnSubmit(value.WeekOff.Where(z => z.Id != 0 || z.Text != null).Select(z => new DevOrganizationWeekOff()
+                            {
+                                Created = DateTime.Now,
+                                LastUpdated = DateTime.Now,
+                                OId = orgBranch.OId,
+                                URId = orgAdminBranch_URId.URId,
+                                WeekOffDay = z.Text,
+                                WeekOffDayId = z.Id,
+                            }));
+                            c.SubmitChanges();
+
+                            //create shiftTime for organization
+                            c.DevOrganisationsShiftTimes.InsertAllOnSubmit(value.ShiftTime.Where(z => z.MarkLate != null || z.StartTime != null || z.EndTime != null).Select(z => new DevOrganisationsShiftTime()
+                            {
+                                Created = DateTime.Now,
+                                EndTime = z.EndTime,
+                                MarkLate = z.MarkLate,
+                                OId = orgBranch.OId,
+                                LastUpdated = DateTime.Now,
+                                StartTime = z.StartTime,
+                                URId = orgAdminBranch_URId.URId,
+                            }));
+                            c.SubmitChanges();
+
+
+                            //add partners in Organization
+                            c.DevOrganisationsPartners.InsertAllOnSubmit(value.Partners.Where(z => z.PartnerName != null).Select(z => new DevOrganisationsPartner()
+                            {
+                                MobleNumber = z.Mobilenumber,
+                                OId = orgBranch.OId,
+                                PartnerName = z.PartnerName,
+                                PartnerURId = null, //can be change for permissions 
+                            }));
+                            c.SubmitChanges();
+
+                            //add OrganizationInformation ---GST
+                            if (value.OrgInformation.GSTNumber != null || string.IsNullOrWhiteSpace(value.OrgInformation.GSTNumber) != true)
+                            {
+                                c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                                {
+                                    DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.GSTFGUId select x).FirstOrDefault()?.FileId,
+                                    DocumentName = "GST",
+                                    DocumentNameId = (int)DocumentName.GST,
+                                    DocumentNumber = value.OrgInformation.GSTNumber,
+                                    OId = orgBranch.OId,
+                                    URId = orgAdminBranch_URId.URId,
+                                });
+                                c.SubmitChanges();
+                            }
+                            //add OrganizationInformation ---PAN
+                            if (value.OrgInformation.PANNumber != null || string.IsNullOrWhiteSpace(value.OrgInformation.PANNumber) != true)
+                            {
+                                c.DevOrganizationInfoDocs.InsertOnSubmit(new DevOrganizationInfoDoc()
+                                {
+                                    DocumentFileId = (from x in c.CommonFiles where x.FGUID == value.OrgInformation.PANFGUId select x).FirstOrDefault()?.FileId,
+                                    DocumentName = "PAN",
+                                    DocumentNameId = (int)DocumentName.PAN,
+                                    DocumentNumber = value.OrgInformation.PANNumber,
+                                    OId = orgBranch.OId,
+                                    URId = orgAdminBranch_URId.URId,
+                                });
+                                c.SubmitChanges();
+                            }
+                        }
+                    }
 
                     var res = new
                     {
@@ -195,6 +328,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                         JWT = tkn.JWT,
                         RToken = tkn.RToken,
                     };
+
                     scope.Complete();
                     return new Result()
                     {
