@@ -30,7 +30,14 @@ namespace HIsabKaro.Controllers.Employer.Organization
         {
             var UId = HttpContext.Items["UId"];
             var DeviceToken = HttpContext.Items["DeviceToken"];
-            return Ok(new Cores.Employer.Organization.OrganizationProfiles().Create(UId,DeviceToken,value,_tokenService,_configuration));
+            return Ok(new Cores.Employer.Organization.OrganizationProfiles().Create(UId, DeviceToken, value, _tokenService, _configuration));
+        }
+
+        [HttpGet]
+        [Route("OrganizationProfiles/One/{OId}")]
+        public IActionResult One([FromRoute] int OId)
+        {
+            return Ok(new Cores.Employer.Organization.OrganizationProfiles().One(OId));
         }
     }
 }
