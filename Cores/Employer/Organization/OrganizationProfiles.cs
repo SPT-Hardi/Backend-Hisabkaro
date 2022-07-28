@@ -357,7 +357,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                                //Branches = x.DevOrganisations_ParentOrgId.Select(b => new Branches() { BranchId = b.OId , BranchName = b.OrganisationName , AddressId = b.ContactAddressId}).ToList(),
                                //Partners = x.DevOrganisationsPartners.Select(p => new Partner() { PartnerId = p.PId , PartnerName = p.PartnerName , Mobilenumber = p.MobleNumber}).ToList(),
                                //OrgInformation = x.DevOrganizationInfoDocs.Select(d => new OrgInformation() { GSTFGUId = d. })
-                           });
+                           }).ToList();
                 return new Result()
                 {
                     Status = Result.ResultStatus.success,
