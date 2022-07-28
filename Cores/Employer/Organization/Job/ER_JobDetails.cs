@@ -309,20 +309,22 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         {
             using (DBContext c = new DBContext())
             {
+                if (URId == null) 
+                {
+                    throw new ArgumentException("token not found or expired!");
+                }
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
                     throw new ArgumentException("User not found!!");
                 }
-
                 if (user.SubRole.RoleName.ToLower() != "admin")
                 {
                     throw new ArgumentException("Access not allow!!");
                 }
 
                 var res = (from x in c.EmprJobs
-                             //where x.SubUserOrganisation.URId==user.URId
-                             where x.SubUserOrganisation.SubUser.UId==user.UId 
+                             where x.OId==user.OId 
                              orderby x.JobId descending
                              select new
                              {
@@ -358,6 +360,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
         {
             using (DBContext c = new DBContext())
             {
+                if (URId == null) 
+                {
+                    throw new ArgumentException("token not found or expired!");
+                }
                 var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                 if (user == null)
                 {
@@ -376,7 +382,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 }
 
                 var res = (from x in c.EmprJobs
-                           where x.JobId == Jid
+                           where x.JobId == Jid 
                            orderby x.JobId descending
                            select new
                            {
