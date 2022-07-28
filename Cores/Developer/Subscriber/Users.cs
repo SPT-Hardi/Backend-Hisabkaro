@@ -141,7 +141,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                         if (value.OTP != "456456")
                         {
 
-                            throw new ArgumentException("Enter Valid OTP or OTPID!");
+                            throw new ArgumentException("Enter Valid OTP!");
                         }
                     }
                     if (qs.IsUsed == true)

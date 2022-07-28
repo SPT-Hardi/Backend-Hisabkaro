@@ -13,7 +13,7 @@ namespace HIsabKaro.Controllers.Common.Contact
     {
         [HttpPost]
         [Route("Add")]
-        public IActionResult Create([FromRoute]int? Id,Models.Common.Contact.Address value)
+        public IActionResult Create([FromQuery]int? Id,Models.Common.Contact.Address value)
         {
             return Ok(new Cores.Common.Contact.ContactAddress().Create(Id,value));
         }

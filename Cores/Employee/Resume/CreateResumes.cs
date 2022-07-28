@@ -78,7 +78,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     c.SubmitChanges();
 
                     //create new user_Resume_Education
-                    if (value.HighestEducation.Id != 0 || value.HighestEducation.Text != null)
+                    if (value.HighestEducation.Id != 0 && value.HighestEducation.Text != null)
                     {
 
                         c.EmpResumeEducations.InsertOnSubmit(new EmpResumeEducation()

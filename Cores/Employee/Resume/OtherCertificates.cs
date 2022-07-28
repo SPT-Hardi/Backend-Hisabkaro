@@ -82,17 +82,18 @@ namespace HIsabKaro.Cores.Employee.Resume
                     }
                     certificate.CertificateFileId = file.FileId;
                     c.SubmitChanges();
-                   
+
+                    var res = new
+                    {
+                        CertificateId = certificate.EmpResumeOtherCertificateId,
+                        CertificateName = certificate.CertificateName,
+                    };
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = "Employee Resume-OtherCertificates File added successfully!",
-                        Data = new 
-                        {
-                            CertificateFileId=certificate.CertificateFileId,
-                            CertificateName=certificate.CertificateName,
-                        },
+                        Data = res
                     };
                 }
             }

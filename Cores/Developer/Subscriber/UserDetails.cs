@@ -28,9 +28,17 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 {
                     throw new ArgumentException("User Details already exist!");
                 }
-                if (value.MobileNumber == value.AMobileNumber) 
+                if (value.MobileNumber != user.MobileNumber) 
+                {
+                    throw new ArgumentException("Mobile number not match!");
+                }
+                if (value.MobileNumber == value.AMobileNumber)
                 {
                     throw new ArgumentException("AMobileNumber not same as MobileNumber");
+                }
+                if (user.SubUsersDetail == null) 
+                {
+                    throw new ArgumentException("Please first select loginType!");
                 }
                 c.SubUsersDetails.InsertOnSubmit(new SubUsersDetail()
                 {

@@ -340,10 +340,19 @@ namespace HIsabKaro.Cores.Employer.Organization
             }
         }
 
-        public Result One(int OId)
+        public Result One(object URId,int OId)
         {
             using (DBContext c = new DBContext())
             {
+                if (URId == null) 
+                {
+                    throw new ArgumentException("token not found or expired!");
+                }
+                var userOrganization = (from x in c.SubUserOrganisations where x.URId == (int)URId select x).FirstOrDefault();
+                if (userOrganization == null)
+                {
+                    throw new ArgumentException("Invalid token!");
+                }
                 var info = (from x in c.DevOrganizationInfoDocs where x.OId == OId select x).ToList();
                 OrgInformation orgInformation = new OrgInformation();
                 if (info.Count <= 0)
@@ -354,7 +363,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     orgInformation.PANNumber = info.Where(z => z.DocumentNameId == (int)DocumentName.PAN).Select(z => z.DocumentNumber).FirstOrDefault();
                 }
                 var Org = (from x in c.DevOrganisations
-                           where x.OId == OId
+                           where x.OId == OId && x.UId==userOrganization.UId
                            select new Models.Employer.Organization.OrganizationProfile
                            {
                                OrganizationId=x.OId,

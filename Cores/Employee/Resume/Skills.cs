@@ -71,6 +71,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                         throw new ArgumentException("User doesnt Exist!");
                     }
                     var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (profile == null) 
+                    {
+                        throw new ArgumentException("User resume yet not created!");
+                    }
                     var skills = c.EmpResumeSkills.Where(x => x.UId == (int)UID && x.ProfileId==profile.ProfileId).ToList();
                     var res = (from obj in skills
                                select new Models.Employee.Resume.Skills()

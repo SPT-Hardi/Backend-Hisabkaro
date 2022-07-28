@@ -37,7 +37,8 @@ namespace HIsabKaro.Controllers.Employer.Organization
         [Route("OrganizationProfiles/One/{OId}")]
         public IActionResult One([FromRoute] int OId)
         {
-            return Ok(new Cores.Employer.Organization.OrganizationProfiles().One(OId));
+            var URId = HttpContext.Items["URId"];
+            return Ok(new Cores.Employer.Organization.OrganizationProfiles().One(URId,OId));
         }
     }
 }
