@@ -45,7 +45,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                 Name=x.SubUser.SubUsersDetail.FullName,
                                 skills=x.SubUser.EmpResumeSkills.ToList().Select(y=>new Models.Employer.Organization.Job.JobSkill() { skill=y.SkillName}).ToList(),
                                 UId=x.UId,
-                                //WorkExperience= new Employee.Resume.WorkExperiences().TotalExperience(x.UId),
+                                WorkExperience= new Employee.Resume.WorkExperiences().TotalExperience(x.UId),
                             }).ToList();
 
                 return new Result()

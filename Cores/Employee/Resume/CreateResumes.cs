@@ -39,7 +39,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                         MobileNumber=value.PersonalInfo.MobileNumber,
                         UId=user.UId,
                         SalaryTypeId=value.PersonalInfo.SalaryType.Id,
-                        AddressId=value.PersonalInfo.AddressId,
+                        AddressId=value.PersonalInfo.AddressId==0 ? null : value.PersonalInfo.AddressId,
                     };
                     
                     c.EmpResumeProfiles.InsertOnSubmit(userProfile);
@@ -99,13 +99,18 @@ namespace HIsabKaro.Cores.Employee.Resume
                         UId=user.UId,
                     }));
                     c.SubmitChanges();
-
+                    var res = new
+                    {
+                        ProfileId=userProfile.ProfileId,
+                        UId=user.UId,
+                        Name=userProfile.FullName,
+                    };
                     scope.Complete();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
                         Message = "User resume details added successfully!",
-                        Data = ""
+                        Data =res 
                     };
                 }
             }

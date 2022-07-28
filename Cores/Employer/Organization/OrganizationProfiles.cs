@@ -21,8 +21,8 @@ namespace HIsabKaro.Cores.Employer.Organization
     {
         public enum DocumentName
         {
+            PAN = 168,
             GST = 169,
-            PAN = 168
         }
         public Result Create(object UId, object DeviceToken, OrganizationProfile value, ITokenServices tokenServices, IConfiguration configuration)
         {
@@ -343,11 +343,21 @@ namespace HIsabKaro.Cores.Employer.Organization
         public Result One(int OId)
         {
             using (DBContext c = new DBContext())
-            {   
+            {
+                var info = (from x in c.DevOrganizationInfoDocs where x.OId == OId select x).ToList();
+                OrgInformation orgInformation = new OrgInformation();
+                if (info.Count <= 0)
+                {
+                    orgInformation.GSTFGUId = info.Where(z => z.DocumentNameId == (int)DocumentName.GST).Select(z => z.CommonFile.FGUID).FirstOrDefault();
+                    orgInformation.GSTNumber = info.Where(z => z.DocumentNameId == (int)DocumentName.GST).Select(z => z.DocumentNumber).FirstOrDefault();
+                    orgInformation.PANFGUId = info.Where(z => z.DocumentNameId == (int)DocumentName.PAN).Select(z => z.CommonFile.FGUID).FirstOrDefault();
+                    orgInformation.PANNumber = info.Where(z => z.DocumentNameId == (int)DocumentName.PAN).Select(z => z.DocumentNumber).FirstOrDefault();
+                }
                 var Org = (from x in c.DevOrganisations
                            where x.OId == OId
                            select new Models.Employer.Organization.OrganizationProfile
                            {
+                               OrganizationId=x.OId,
                                LogoFGUId = x.CommonFile.FGUID,
                                OrganizationName = x.OrganisationName,
                                AddressId = x.CommonContactAddress.ContactAddressId,
@@ -356,13 +366,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                                Sector = new IntegerNullString() { Id = x.SectorId, Text = x.SubFixedLookup.FixedLookup },
                                Branches = x.DevOrganisations_ParentOrgId.Select(b => new Branches() { BranchId = b.OId, BranchName = b.OrganisationName, AddressId = b.ContactAddressId }).ToList(),
                                Partners = x.DevOrganisationsPartners.Select(p => new Partner() { PartnerId = p.PId, PartnerName = p.PartnerName, Mobilenumber = p.MobleNumber }).ToList(),
-                               //OrgInformation = x.DevOrganizationInfoDocs.Select(d => new OrgInformation()
-                               //{
-                               //    GSTFGUId = d.CommonFile.FGUID,
-                               //    GSTNumber = d.DocumentNumber,
-                               //    PANFGUId = d.CommonFile.FGUID,
-                               //    PANNumber = d.DocumentNumber
-                               //}).FirstOrDefault(),
+                               OrgInformation=orgInformation
                            }).ToList();
                 return new Result()
                 {

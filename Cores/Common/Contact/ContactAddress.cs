@@ -74,7 +74,7 @@ namespace HIsabKaro.Cores.Common.Contact
                     throw new ArgumentException("token not found or expired!");
                 }
                 var org = (from x in c.DevOrganisations
-                           where x.OId == Id
+                           where x.OId == Id && x.UId==(int)UId
                            select new
                            {
                                AddressId = x.CommonContactAddress.ContactAddressId,

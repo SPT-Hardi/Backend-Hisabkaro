@@ -48,7 +48,7 @@ namespace HIsabKaro.Cores
                     {
                         throw new ArgumentException("token not found or expired!");
                     }
-                    var orgList = (from x in c.DevOrganisations where x.UId == (int)UId select new IntegerNullString() { Id = x.OId, Text = x.OrganisationName, }).ToList();
+                    var orgList = (from x in c.DevOrganisations where x.UId == (int)UId && x.IsBranch==false select new IntegerNullString() { Id = x.OId, Text = x.OrganisationName, }).ToList();
                     return new Result()
                     {
                         Status = Result.ResultStatus.success,
@@ -68,7 +68,11 @@ namespace HIsabKaro.Cores
                     {
                         throw new ArgumentException("token not found or expired!");
                     }
-                    var org = (from x in c.DevOrganisations where x.UId == (int)UId && x.OId == (int)Id select x).FirstOrDefault();
+                    var org = (from x in c.DevOrganisations where x.UId == (int)UId && x.OId == (int)Id && x.IsBranch==false select x).FirstOrDefault();
+                    if (org == null) 
+                    {
+                        throw new ArgumentException($"no record found for Id:{Id}");
+                    }
                     var res = org.DevOrganisations_ParentOrgId.ToList().Select(z => new IntegerNullString() { Id = z.OId, Text = z.OrganisationName, }).ToList();
                     return new Result()
                     {
@@ -92,7 +96,7 @@ namespace HIsabKaro.Cores
                     if (Id == null)
                     {
                         List<Models.Common.CustomeDrop.Org_Branch_Drop> org_Branch_Drop = new List<CustomeDrop.Org_Branch_Drop>();
-                        var orgList = (from x in c.DevOrganisations where x.UId == (int)UId select x).ToList();
+                        var orgList = (from x in c.DevOrganisations where x.UId == (int)UId && x.IsBranch==false select x).ToList();
                         foreach (var x in orgList)
                         {
                             var res = new Models.Common.CustomeDrop.Org_Branch_Drop()
@@ -169,7 +173,12 @@ namespace HIsabKaro.Cores
                     {
                         throw new ArgumentException("token not found or expired!");
                     }
-                    var shiftTimeList = (from x in c.DevOrganisations where x.OId == Id select x).FirstOrDefault().DevOrganisationsShiftTimes.ToList().Select(z => new Models.Common.CustomeDrop.Shit_Time()
+                    var org = (from x in c.DevOrganisations where x.OId == Id && x.UId == (int)UId select x).FirstOrDefault();
+                    if (org == null) 
+                    {
+                        throw new ArgumentException($"no record found for given Id:{Id}");
+                    }
+                    var shiftTimeList = org.DevOrganisationsShiftTimes.ToList().Select(z => new Models.Common.CustomeDrop.Shit_Time()
                     {
                         ShiftTimeId=z.ShiftTimeId,
                         StartTime=z.StartTime,
