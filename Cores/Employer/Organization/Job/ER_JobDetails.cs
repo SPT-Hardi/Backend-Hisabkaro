@@ -157,25 +157,25 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 {
                     var user = c.SubUserOrganisations.SingleOrDefault(x => x.URId == (int)URId);
                     if (user == null)
-                    {
                         throw new ArgumentException("User not found!!");
-                    }
+
+                    if(user.OId != value.Organisation.Id)
+                        throw new ArgumentException("You Can Not Edit!!");
 
                     if (user.SubRole.RoleName.ToLower() != "admin")
-                    {
                         throw new ArgumentException("Access not allow!!");
-                    }
-
+                    
                     if (ISDT > value.EndDate)
-                    {
                         throw new ArgumentException("Post Date Can't be After End Date.");
-                    }
-
+                    
                     var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.JobStatusId!=(int)JobStatus.Remove);
+
                     if (null == job)
-                    {
                         throw new ArgumentException("JobDeatils doesn't exist");
-                    }
+                    if (job.OId != user.OId && job.OId != value.Organisation.Id)
+                        throw new ArgumentException("You Can Not Edit!!"); 
+
+
                     job.Title = value.Title;
                     job.MinSalary = value.MinSalary;
                     job.MaxSalary = value.MaxSalary;
