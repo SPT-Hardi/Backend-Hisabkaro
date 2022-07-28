@@ -120,6 +120,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                         throw new ArgumentException("User not found!");
                     }
                     var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (profile == null)
+                    {
+                        throw new ArgumentException("User resume not created yet!");
+                    }
                     var workExperience = c.EmpResumeWorkExperiences.Where(x => x.UId == (int)UID && x.EmpResumeWorkExperienceId == Id && x.ProfileId==profile.ProfileId).SingleOrDefault();
                     if (workExperience == null) 
                     {
@@ -152,7 +156,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Delete(object UId,int Id) 
+     /*   public Result Delete(object UId,int Id) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -179,7 +183,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                     };
                 }
             }
-        }
+        }*/
         public TimeSpan TotalExperience(int UId)
         {
             using (DBContext c = new DBContext())

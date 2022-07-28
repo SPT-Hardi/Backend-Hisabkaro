@@ -110,6 +110,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                         throw new ArgumentException("User not exist!");
                     }
                     var Profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (Profile == null) 
+                    {
+                        throw new ArgumentException("User resume not created yet!");
+                    }
                     if (Profile.EmpResumeEducations.ToList().Any())
                     {
                         c.EmpResumeEducations.DeleteAllOnSubmit(Profile.EmpResumeEducations.ToList());

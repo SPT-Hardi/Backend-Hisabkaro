@@ -33,7 +33,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                 {
                     throw new ArgumentException("Access not allow!!");
                 }
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == JId && o.SubUserOrganisation.UId==user.UId && o.JobStatusId != (int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == JId && o.OId==user.OId && o.JobStatusId != (int)JobStatus.Remove && o.EndDate < DateTime.Now);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
@@ -75,7 +75,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId== user.UId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");

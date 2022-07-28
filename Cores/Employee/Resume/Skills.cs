@@ -140,7 +140,7 @@ namespace HIsabKaro.Cores.Employee.Resume
                 }
             }
         }
-        public Result Delete(object UId,int Id) 
+  /*      public Result Delete(object UId,int Id) 
         {
             using (TransactionScope scope = new TransactionScope())
             {
@@ -167,6 +167,6 @@ namespace HIsabKaro.Cores.Employee.Resume
                     };
                 }
             }
-        }
+        }*/
     }
 }

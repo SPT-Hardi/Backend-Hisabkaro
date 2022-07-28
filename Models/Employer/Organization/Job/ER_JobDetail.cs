@@ -31,7 +31,7 @@ namespace HIsabKaro.Models.Employer.Organization.Job
         [RegularExpression(@"((([0-1][0-9])|(2[0-3]))(:[0-5][0-9])(:[0-5][0-9])?)", ErrorMessage = "Time must be between 00:00 to 23:59")]
         public TimeSpan? JobStartTime { get; set; }
         [RegularExpression(@"((([0-1][0-9])|(2[0-3]))(:[0-5][0-9])(:[0-5][0-9])?)", ErrorMessage = "Time must be between 00:00 to 23:59")]
-        public TimeSpan? JobEndDate { get; set; }
+        public TimeSpan? JobEndTime { get; set; }
         [RegularExpression("^.{1,300}$", ErrorMessage = "Value_Allowed: Any, Max_Length:300 character")]
         public string Description { get; set; }
         [RegularExpression("^.{1,150}$", ErrorMessage = "Value_Allowed: Any, Max_Length:150 character")]

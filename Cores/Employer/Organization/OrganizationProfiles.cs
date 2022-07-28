@@ -353,7 +353,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                 {
                     throw new ArgumentException("Invalid token!");
                 }
-                var info = (from x in c.DevOrganizationInfoDocs where x.OId == OId select x).ToList();
+                var info = (from x in c.DevOrganizationInfoDocs where x.OId == OId && x.OId==userOrganization.OId select x).ToList();
                 OrgInformation orgInformation = new OrgInformation();
                 if (info.Count <= 0)
                 {
@@ -363,7 +363,7 @@ namespace HIsabKaro.Cores.Employer.Organization
                     orgInformation.PANNumber = info.Where(z => z.DocumentNameId == (int)DocumentName.PAN).Select(z => z.DocumentNumber).FirstOrDefault();
                 }
                 var Org = (from x in c.DevOrganisations
-                           where x.OId == OId && x.UId==userOrganization.UId
+                           where x.OId == OId && x.OId==userOrganization.OId
                            select new Models.Employer.Organization.OrganizationProfile
                            {
                                OrganizationId=x.OId,

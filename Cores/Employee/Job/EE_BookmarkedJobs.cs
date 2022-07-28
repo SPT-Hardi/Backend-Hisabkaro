@@ -23,7 +23,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 {
                     throw new ArgumentException("user not exist!");
                 }
-                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid);
+                var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.JobStatusId!=(int)JobStatus.Remove && x.JobStatusId != (int)JobStatus.Disable && x.EndDate<DateTime.Now);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Doesn't Exist");
@@ -76,7 +76,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     throw new ArgumentException("token not found or expired!");
                 }
                 var res = (from x in c.EmprJobs
-                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && (from c in c.EmpBookmarkJobsDetails where c.UId==(int)UId && c.JobId==x.JobId select x).Any() ? true : false 
+                           where /*x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && */(from c in c.EmpBookmarkJobsDetails where c.UId==(int)UId && c.JobId==x.JobId select x).Any() ? true : false 
                            orderby x.PostDate descending
                            select new
                            {
@@ -98,7 +98,7 @@ namespace HIsabKaro.Cores.Employee.Job
                                           select y.UId).Count(),
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
-                               Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                               Status = x.EndDate<DateTime.Now==true ? "Remove" : x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
                                Address = new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State } 
                            }).ToList();
                 return new Result()

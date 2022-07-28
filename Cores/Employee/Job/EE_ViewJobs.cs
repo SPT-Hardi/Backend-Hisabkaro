@@ -19,7 +19,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     throw new ArgumentException("token not found or expired!");
                 }
                 var res = (from x in c.EmprJobs
-                           where x.JobStatusId!=(int)JobStatus.Disable && x.JobStatusId!=(int)JobStatus.Remove
+                           where x.JobStatusId!=(int)JobStatus.Disable && x.JobStatusId!=(int)JobStatus.Remove && x.EndDate<DateTime.Now
                            orderby x.PostDate descending
                            select new
                            {
@@ -60,7 +60,7 @@ namespace HIsabKaro.Cores.Employee.Job
                 {
                     throw new ArgumentException("token not found or expired!");
                 }
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.JobStatusId != (int)JobStatus.Remove && o.JobStatusId != (int)JobStatus.Disable);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.JobStatusId != (int)JobStatus.Remove && o.JobStatusId != (int)JobStatus.Disable && o.EndDate<DateTime.Now);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -117,7 +117,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     throw new ArgumentException("token not found or expired!");
                 }
                 var res = (from x in c.EmprJobs
-                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && (x.CommonContactAddress.AddressLine1.Contains(keyword) || x.CommonContactAddress.City.Contains(keyword) || x.CommonContactAddress.State.Contains(keyword))
+                           where x.EndDate<DateTime.Now && x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && (x.CommonContactAddress.AddressLine1.Contains(keyword) || x.CommonContactAddress.City.Contains(keyword) || x.CommonContactAddress.State.Contains(keyword))
                            orderby x.PostDate descending
                            select new
                            {
@@ -159,7 +159,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     throw new ArgumentException("token not found or expired!");
                 }
                 var res = (from x in c.EmprJobs
-                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && ( x.DevOrganisation.OrganisationName.Contains(keyword)  || x.Title.Contains(keyword) || x.DevOrganisation.SubFixedLookup.FixedLookup.Contains(keyword))
+                           where x.EndDate < DateTime.Now && x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && ( x.DevOrganisation.OrganisationName.Contains(keyword)  || x.Title.Contains(keyword) || x.DevOrganisation.SubFixedLookup.FixedLookup.Contains(keyword))
                            orderby x.PostDate descending
                            select new
                            {

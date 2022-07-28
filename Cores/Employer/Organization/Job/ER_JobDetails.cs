@@ -88,7 +88,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         Email=value.Email,
                         IncentiveTypeId=value.IncentiveType.Id==0? null : value.IncentiveType.Id,
                         JobStartTime=value.JobStartTime,
-                        JobEndTime=value.JobEndDate,
+                        JobEndTime=value.JobEndTime,
                         MaxIncentive=value.MaxIncentive,
                         MinIncentive=value.MinIncentive,
                         MobileNumber=value.MobileNumber,
@@ -160,20 +160,20 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                         throw new ArgumentException("User not found!!");
 
                     if(user.OId != value.Organisation.Id)
-                        throw new ArgumentException("You Can Not Edit!!");
+                        throw new ArgumentException("not authorized!");
 
                     if (user.SubRole.RoleName.ToLower() != "admin")
                         throw new ArgumentException("Access not allow!!");
                     
                     if (ISDT > value.EndDate)
-                        throw new ArgumentException("Post Date Can't be After End Date.");
+                        throw new ArgumentException("Post date can't be after end date.");
                     
-                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.JobStatusId!=(int)JobStatus.Remove);
+                    var job = c.EmprJobs.SingleOrDefault(x => x.JobId == Jid && x.JobStatusId!=(int)JobStatus.Remove && x.EndDate<DateTime.Now);
 
                     if (null == job)
                         throw new ArgumentException("JobDeatils doesn't exist");
                     if (job.OId != user.OId && job.OId != value.Organisation.Id)
-                        throw new ArgumentException("You Can Not Edit!!"); 
+                        throw new ArgumentException("not authorized!!"); 
 
 
                     job.Title = value.Title;
@@ -189,7 +189,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     job.Email = value.Email;
                     job.IncentiveTypeId = value.IncentiveType.Id==0 ? null : value.IncentiveType.Id;
                     job.JobStartTime = value.JobStartTime;
-                    job.JobEndTime = value.JobEndDate;
+                    job.JobEndTime = value.JobEndTime;
                     job.MaxIncentive = value.MaxIncentive;
                     job.MinIncentive = value.MinIncentive;
                     job.MobileNumber = value.MobileNumber;
@@ -342,7 +342,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                             select y.UId).Count(),
                                  PostDate = x.PostDate,
                                  EndDate = x.EndDate,
-                                 Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                                 Status = x.EndDate<DateTime.Now==true ? "Removed" :x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
                                  Address= new {City=x.DevOrganisation.CommonContactAddress.City,State= x.DevOrganisation.CommonContactAddress.State }  
                              }).ToList();
 
@@ -375,7 +375,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId && o.JobStatusId != (int)JobStatus.Remove);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -416,7 +416,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                                MinIncentive =x.MinIncentive,
                                MinSalary =x.MinSalary,
                                MobileNumber =x.MobileNumber,
-                               Status=x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                               Status= x.EndDate < DateTime.Now == true ? "Removed" :x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
                                Organization =new IntegerNullString() { Id=x.DevOrganisation.OId,Text=x.DevOrganisation.OrganisationName,},
                                Title =x.Title,
                                Applied = (from y in c.EmpApplyJobDetails
@@ -453,7 +453,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("Access not allow!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId && o.JobStatusId != (int)JobStatus.Remove && o.EndDate < DateTime.Now);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");
@@ -486,7 +486,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Job
                     throw new ArgumentException("User not found!!");
                 }
 
-                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.SubUserOrganisation.UId == user.UId && o.JobStatusId != (int)JobStatus.Remove);
+                var job = c.EmprJobs.SingleOrDefault(o => o.JobId == Jid && o.OId == user.OId && o.JobStatusId != (int)JobStatus.Remove && o.EndDate < DateTime.Now);
                 if (job == null)
                 {
                     throw new ArgumentException("Job Not Found!!");

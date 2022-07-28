@@ -76,7 +76,7 @@ namespace HIsabKaro.Cores.Employee.Job
                     throw new ArgumentException("token not found or expired!");
                 }
                 var res = (from x in c.EmprJobs
-                           where x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove && (from c in c.EmpApplyJobDetails where c.UId==(int)UId && c.JobId==x.JobId select x).Any() ? true : false
+                           where /*x.JobStatusId != (int)JobStatus.Disable && x.JobStatusId != (int)JobStatus.Remove &&*/ (from c in c.EmpApplyJobDetails where c.UId==(int)UId && c.JobId==x.JobId select x).Any() ? true : false
                            select new
                            {
                                JobId = x.JobId,
@@ -97,7 +97,7 @@ namespace HIsabKaro.Cores.Employee.Job
                                           select y.UId).Count(),
                                PostDate = x.PostDate,
                                EndDate = x.EndDate,
-                               Status = x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
+                               Status = x.EndDate<DateTime.Now==true ? "Remove" :x.SubFixedLookup_JobStatusId.FixedLookupFormatted,
                                Address = new { City = x.DevOrganisation.CommonContactAddress.City, State = x.DevOrganisation.CommonContactAddress.State }
                            }).ToList();
                 return new Result()

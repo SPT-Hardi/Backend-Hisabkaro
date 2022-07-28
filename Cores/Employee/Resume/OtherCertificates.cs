@@ -69,6 +69,15 @@ namespace HIsabKaro.Cores.Employee.Resume
             {
                 using (DBContext c = new DBContext())
                 {
+                    if (UID == null)
+                    {
+                        throw new ArgumentException("token not found or expired!");
+                    }
+                    var user = c.SubUsers.Where(x => x.UId == (int)UID).SingleOrDefault();
+                    if (user == null)
+                    {
+                        throw new ArgumentException("User doesnt exist,(enter valid token)");
+                    }
                     var certificate = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == value.CertificateId).SingleOrDefault();
                     if (certificate == null) 
                     {
@@ -147,6 +156,10 @@ namespace HIsabKaro.Cores.Employee.Resume
                         throw new ArgumentException("user not exist!");
                     }
                     var profile = user.EmpResumeProfiles.ToList().FirstOrDefault();
+                    if (profile == null) 
+                    {
+                        throw new ArgumentException("user resume not created yet!");
+                    }
                     var othercertificates = c.EmpResumeOtherCertificates.Where(x => x.UId == (int)UID && x.EmpResumeOtherCertificateId == Id ).SingleOrDefault();
                     if (othercertificates == null) 
                     {
