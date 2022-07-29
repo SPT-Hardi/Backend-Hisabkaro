@@ -14,18 +14,18 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class StatisticsController : ControllerBase
     {
-      /*  [HttpGet]
+        [HttpGet]
         [Route("Statistics/{date}")]
         [Authenticate("Employer-Organization-Staff-Attendance-HistoryByMonths")]
-        public IActionResult Get(DateTime date) 
+        public IActionResult Get(DateTime date)
         {
             var URId = HttpContext.Items["URId"];
             var Ids = HttpContext.Items["Ids"];
             //int URId = 10000024;
             new HaveAuthority().AccessStaff(Ids);
-            
-            return Ok(new Statistics().Get(URId,date));
-            
-        }*/
+
+            return Ok(new Statistics().Get(URId, date));
+
+        }
     }
 }
