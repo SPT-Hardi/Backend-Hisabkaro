@@ -36,7 +36,7 @@ namespace HIsabKaro.Cores.Developer.Subscriber
                 {
                     throw new ArgumentException("AMobileNumber not same as MobileNumber");
                 }
-                if (user.SubUsersDetail == null) 
+                if (user.DefaultLoginTypeId == null) 
                 {
                     throw new ArgumentException("Please first select loginType!");
                 }
