@@ -15,7 +15,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class OverridesController : ControllerBase
     {
-        [HttpPost]
+     /*   [HttpPost]
         [Route("Override")]
         [Authenticate("Employer-Organization-Staff-Attendance-Overrides")]
         public IActionResult Post(Override value)
@@ -25,6 +25,6 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
             //int URId = 10000024;
             new HaveAuthority().AccessStaff(Ids);
             return Ok(new Overrides().Add(URId, value));
-        }
+        }*/
     }
 }
