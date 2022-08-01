@@ -12,20 +12,20 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Loan
     [ApiController]
     public class LoanDetailsController : ControllerBase
     {
-        [Route("Orgloandetail")]
+/*        [Route("Orgloandetail")]
         [HttpGet]
         public IActionResult GetOrg()
         {
             var URId = HttpContext.Items["URId"];
             return Ok(new LoanDetails().GetOrgLoan(URId));
-        }
+        }*/
 
-        [Route("Staffloandetail/{LoanId}")]
+     /*   [Route("Staffloandetail/{LoanId}")]
         [HttpGet]
         public IActionResult GetStaff([FromRoute]int LoanId)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(new LoanDetails().GetStaffLoan(URId,LoanId));
-        }
+        }*/
     }
 }

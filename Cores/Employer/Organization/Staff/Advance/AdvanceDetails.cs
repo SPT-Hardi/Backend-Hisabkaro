@@ -27,18 +27,18 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                 }
 
                 var _TotalAdvance = (from x in c.OrgStaffsAdvanceDetails
-                                     where x.URId == (int)URId
+                                     where x.StaffURId == (int)URId
                                      select new { Total = x.Amount }).Sum(x=>x.Total);
 
                 var _Advance = (from x in c.OrgStaffsAdvanceDetails
-                                 where x.URId == (int)URId
+                                 where x.StaffURId == (int)URId
                                  select new
                                  {
                                      AdvanceId = x.AdvanceId,
                                      StaffURId = x.StaffURId,
                                      Name = x.SubUserOrganisation_StaffURId.DevOrganisationsStaffs.Select(y => y.NickName).FirstOrDefault(),
                                      Image = x.SubUserOrganisation_StaffURId.SubUser.SubUsersDetail.CommonFile.FGUID,
-                                     Date=x.Date,
+                                     //Date=x.Date,
                                      Amount = x.Amount,
                                  }).ToList();
 
@@ -68,7 +68,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                     {
                         throw new ArgumentException("Unathorized!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.URId == StaffId && x.SubUserOrganisation.OId==_URId.OId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.StaffURId == StaffId && x.SubUserOrganisation.OId==_URId.OId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
@@ -76,10 +76,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
                     var Advance = new OrgStaffsAdvanceDetail()
                     {
                         StaffURId = StaffId,
-                        Date = value.Date,
+                        //Date = value.Date,
                         Amount = value.Amount,
                         Description = value.Description,
-                        URId = (int)URId,
+                        AdminURId = (int)URId,
                         IsEMI = false
                     };
                          
@@ -91,7 +91,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Advance
 
                         var loan = new Cores.Employer.Organization.Staff.Loan.LoanDetails().Create(URId,StaffId,value.loanDetail,c).Data.Id;
 
-                        var installment = new Cores.Employer.Organization.Staff.Loan.LoanInstallments().Create(loan, c);
+                        //var installment = new Cores.Employer.Organization.Staff.Loan.LoanInstallments().Create(loan, c);
 
                         scope.Complete();
                         return new Result()

@@ -19,7 +19,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                 {
                     throw new ArgumentException("User Does Not Exits!");
                 }
-                var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == (int)URId);
+                var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.StaffURId == (int)URId);
                 if (_Staff is null)
                 {
                     throw new ArgumentException("Staff Does Not Exits!");
@@ -59,7 +59,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == (int)URId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.StaffURId == (int)URId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");

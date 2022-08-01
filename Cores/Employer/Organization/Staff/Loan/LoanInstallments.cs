@@ -10,7 +10,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 {
     public class LoanInstallments
     {
-        public Result Create(int LoanId, DBContext c)
+        /*public Result Create(int LoanId, DBContext c)
         {
             var loan = c.OrgStaffsLoanDetails.Where(x => x.LoanId == LoanId).FirstOrDefault();
             if (loan == null)
@@ -40,6 +40,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 Status = Result.ResultStatus.success,
                 Message = "Loan details added successfully!",
             };
-        }
+        }*/
     }
 }

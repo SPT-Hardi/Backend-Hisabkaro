@@ -1,10 +1,12 @@
-﻿using HIsabKaro.Cores.Employer.Organization.Staff;
+﻿using HIsabKaro.Controllers.Filters;
+using HIsabKaro.Cores.Employer.Organization.Staff;
 using HIsabKaro.Models.Common;
 using HIsabKaro.Services;
 using HisabKaroContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +19,6 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
     [ApiController]
     public class StaffDetailsController : ControllerBase
     {
-        private readonly StaffDetails _staffDetails;
-        private readonly IConfiguration _configuration;
-        private readonly ITokenServices _tokenService;
-
-        public StaffDetailsController(StaffDetails staffDetails,IConfiguration configuration,ITokenServices tokenService)
-        {
-            _staffDetails = staffDetails;
-            _configuration = configuration;
-            _tokenService = tokenService;
-        }
         //    [HttpGet]
         //    [Route("StaffDetails/One")]
         //    public IActionResult One([FromQuery] int OId)
@@ -36,10 +28,13 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
 
         [HttpPost]
         [Route("StaffDetails/Create")]
-        public IActionResult Create([FromBody] List<Models.Employer.Organization.Staff.StaffDetail> value)
+        [ValidateEmployerToken]
+        public IActionResult Create([FromBody]Models.Employer.Organization.Staff.StaffDetailList value)
         {
+            //var s =JsonConvert.DeserializeObject<List<Models.Employer.Organization.Staff.StaffDetail>>(value.ToString());
+
             var URId = HttpContext.Items["URId"];
-            return Ok(_staffDetails.Create(URId, value));
+            return Ok(new StaffDetails().Create(URId, value));
         }
 
         //    //Angular

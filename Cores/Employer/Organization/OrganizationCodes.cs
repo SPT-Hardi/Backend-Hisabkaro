@@ -18,7 +18,6 @@ namespace HIsabKaro.Cores.Employer.Organization
                 {
                     throw new ArgumentException("Organization not exist!");
                 }
-               
                 var orgcode = c.DevOrganisations.Where(x => x.OId == oid).SingleOrDefault();
                 return new Result()
                 {

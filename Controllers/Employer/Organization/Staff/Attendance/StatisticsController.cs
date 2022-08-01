@@ -14,7 +14,7 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
     [ApiController]
     public class StatisticsController : ControllerBase
     {
-        [HttpGet]
+     /*   [HttpGet]
         [Route("Statistics/{date}")]
         [Authenticate("Employer-Organization-Staff-Attendance-HistoryByMonths")]
         public IActionResult Get(DateTime date)
@@ -26,6 +26,6 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff.Attendance
 
             return Ok(new Statistics().Get(URId, date));
 
-        }
+        }*/
     }
 }

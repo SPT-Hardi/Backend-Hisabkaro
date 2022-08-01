@@ -11,7 +11,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
 {
     public class LoanDetails
     {
-        public Result GetOrgLoan(object URId)
+       /* public Result GetOrgLoan(object URId)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
@@ -56,9 +56,6 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                                 MontlyPay = x.MonthlyPay,
                                 RemainingAmount = x.RemainingAmt,
                                 Duration = x.TotalMonth,
-                                InstallmentPaid = (from y in c.OrgStaffLoanInstallmentDetails
-                                                   where y.LoanId == x.LoanId && y.IsInstallmentCompleted == true
-                                                   select y).Count(),
                                                    //(DateTime.Now.ToLocalTime().Month - x.StartDate.Month) <= 0 ? 0 : (DateTime.Now.ToLocalTime().Month - x.StartDate.Month),
                                 Status = x.IsLoanPending == true ? "Pending" : "Completed"
                             }).ToList();
@@ -69,7 +66,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     Data = loan
                 };
             }
-        }
+        }*/
 
         //public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Loan.LoanDetail value)
         //{
@@ -166,7 +163,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
         //    }
         //}
 
-        public Result GetStaffLoan(object URId, int LoanId)
+       /* public Result GetStaffLoan(object URId, int LoanId)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
@@ -232,7 +229,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 };
             }
         }
-
+*/
         public Result Create(object URId, int StaffId, Models.Employer.Organization.Staff.Loan.LoanDetail value,DBContext c)
         {
             decimal totalmonth = 0;
@@ -272,7 +269,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                     throw new ArgumentException("Monthly Pay can't be greater than calculate EMI!!");
                 }
             }
-
+/*
             var _loan = new OrgStaffsLoanDetail()
             {
                 StartDate = value.StartDate.ToLocalTime(),
@@ -289,14 +286,14 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Loan
                 IsLoanPending = true,
                 TotalMonth = totalmonth
             };
-            c.OrgStaffsLoanDetails.InsertOnSubmit(_loan);
-            c.SubmitChanges();
+           // c.OrgStaffsLoanDetails.InsertOnSubmit(_loan);
+            c.SubmitChanges();*/
             return new Result()
             {
                 Status = Result.ResultStatus.success,
                 Data = new
                 {
-                    Id = _loan.LoanId
+                    /*Id = _loan.LoanId*/
                 },
             };
         }

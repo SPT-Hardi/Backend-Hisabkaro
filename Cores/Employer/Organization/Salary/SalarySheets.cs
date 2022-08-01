@@ -179,7 +179,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                     }
 
                     var _Salary = One(_URId.URId, StaffURId, ISDT);
-                    var _loan = CreateLoan(StaffURId, ISDT);
+                    //var _loan = CreateLoan(StaffURId, ISDT);
 
 
                     var slip = new PayrollSalarySlip()
@@ -189,9 +189,9 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                         GeneratedAt = ISDT.Date,
                         BasicAmount = _Salary.Data.ActualSalary,
                         Month = ISDT.Month==1 ? new DateTime(ISDT.Year-1, 12, 1) : new DateTime(ISDT.Year, ISDT.Month - 1,1),
-                        NetPay=_Salary.Data.Salary - _loan.Data.Text,
+                       // NetPay=_Salary.Data.Salary - _loan.Data.Text,
                         AbsentDeduction= _Salary.Data.Leave,
-                        LoanDeduction=_loan.Data.Text,
+                       // LoanDeduction=_loan.Data.Text,
                         OverTimeEarning=_Salary.Data.OverTime,
                         URId=(int)URId,
                     };
@@ -247,7 +247,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                     {
                         throw new ArgumentException("Unathorized!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.URId == StaffId && x.SubUserOrganisation.OId == _URId.OId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.StaffURId == StaffId && x.SubUserOrganisation.OId == _URId.OId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
@@ -260,12 +260,12 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
 
                     var Deduction= c.PayrollStaffSalaryComponents.Where(x => x.URId == StaffId && x.PayrollSalaryComponent.ComponentTypeId == (int)Component.Deduction).Select(x => x.Amount).Sum();
 
-                    decimal Salary = (decimal)_Staff.Salary;
+                    decimal Salary = (decimal)_Staff.TotalSalaryAmount;
                     decimal _OverTime = OverTime(StaffId,ISDT, Salary);
-                    decimal _Advance =  Advance(StaffId, ISDT);    
+                    //decimal _Advance =  Advance(StaffId, ISDT);    
                     decimal _Leave =Leave(StaffId, Earning, ISDT);    
                     
-                    decimal _Salary = Salary + Earning - Deduction - _Advance - _Leave ;
+                    //decimal _Salary = Salary + Earning - Deduction - _Advance - _Leave ;
 
                     scope.Complete();
                     return new Result()
@@ -277,10 +277,10 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                             OverTime = _OverTime,
                             Earning= Earning,
                             Deduction= Deduction,
-                            Advance = _Advance,
+                            //Advance = _Advance,
                             Leave = _Leave,
                             ActualSalary = Salary,
-                            Salary = Salary + Earning + _OverTime - Deduction - _Advance - _Leave ,
+                            //Salary = Salary + Earning + _OverTime - Deduction - _Advance - _Leave ,
                         }
                     };
                 }
@@ -314,7 +314,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
             }
         }
                 
-        public decimal Advance(int StaffURId, DateTime ISDT)
+        /*public decimal Advance(int StaffURId, DateTime ISDT)
         {
             using (DBContext c = new DBContext())
             {
@@ -328,7 +328,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
 
                 }
             }
-        }
+        }*/
 
         public decimal Leave(int StaffURId, decimal Earning, DateTime ISDT)
         {
@@ -337,8 +337,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var salary = (from x in c.DevOrganisationsStaffs
-                                  where x.URId == StaffURId
-                                  select x.Salary).SingleOrDefault();
+                                  where x.StaffURId == StaffURId
+                                  select x.TotalSalaryAmount).SingleOrDefault();
 
                     var leave = (from x in c.OrgStaffsLeaveApplications
                                 where x.StaffURId == StaffURId && x.StartDate.Month == ISDT.Month - 1 && x.StartDate.Year == (ISDT.Month == 1 ? ISDT.Year - 1 : ISDT.Year) && x.LeaveStatusId == (int)LeaveStatus.Accepted
@@ -353,7 +353,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
             }
         }
         
-        public decimal OneLoan(int StaffURId, DateTime ISDT)
+     /*   public decimal OneLoan(int StaffURId, DateTime ISDT)
         {
             using (DBContext c = new DBContext())
             {
@@ -373,8 +373,8 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
 
             }
         }
-
-        public Result CreateLoan(int StaffURId,DateTime ISDT)
+*/
+      /*  public Result CreateLoan(int StaffURId,DateTime ISDT)
         {
             using (DBContext c = new DBContext())
             {
@@ -434,11 +434,11 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                     {
                         Status = Result.ResultStatus.success,
                         Message = string.Format(""),
-                        Data = new { Id = _Loan.LoanId, Text = cut.MonthlyPay/*.ToString() */}
+                        Data = new { Id = _Loan.LoanId, Text = cut.MonthlyPay*//*.ToString() *//*}
                     };
                 }
-            }
+            }*/
         }
 
     }
-}
+

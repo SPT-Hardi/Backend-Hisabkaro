@@ -21,19 +21,17 @@ namespace HIsabKaro.Cores.Employee.Staff
         {
             using (DBContext c = new DBContext())
             {
-                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == (int)URId);
+                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.StaffURId == (int)URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
                 var _Org = (from x in c.DevOrganisationsStaffs
-                            where x.URId == (int)URId
+                            where x.StaffURId == (int)URId
                             select new
                             {
                                 URId=URId,
-                                DOB =x.DOB,
-                                Gender =x.Gender,
                                 Address =(from y in c.CommonContactAddresses
                                        where y.ContactAddressId == x.SubUserOrganisation.SubUser.SubUsersDetail.AddressID
                                           select new
@@ -68,15 +66,15 @@ namespace HIsabKaro.Cores.Employee.Staff
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId ==(int)URId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.StaffURId ==(int)URId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");
                     }
 
                     var _AId = _contactAddress.Create(_User.SubUser.SubUsersDetail.AddressID,value.Address);
-                    _Staff.DOB = value.DOB;
-                    _Staff.Gender = value.Gender;
+                    //_Staff.DOB = value.DOB;
+                    //_Staff.Gender = value.Gender;
                     _Staff.SubUserOrganisation.SubUser.SubUsersDetail.AddressID = _AId.Data;
 
                     c.SubmitChanges();
@@ -95,14 +93,14 @@ namespace HIsabKaro.Cores.Employee.Staff
         {
             using (DBContext c = new DBContext())
             {
-                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.URId == (int)URId);
+                var _SId = c.DevOrganisationsStaffs.SingleOrDefault(o => o.StaffURId == (int)URId);
                 if (_SId is null)
                 {
                     throw new ArgumentException("Satff Does Not Exits!");
                 }
 
                 var _Org = (from x in c.DevOrganisationsStaffs
-                            where x.URId == (int)URId
+                            where x.StaffURId == (int)URId
                             select new
                             {
                                 URId = URId,
@@ -132,7 +130,7 @@ namespace HIsabKaro.Cores.Employee.Staff
                     {
                         throw new ArgumentException("User Does Not Exits!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.URId == (int)URId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(u => u.StaffURId == (int)URId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");

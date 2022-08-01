@@ -48,15 +48,15 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
 
                 var _staff = (from x in c.DevOrganisationsStaffs
                               where x.OId == _User.OId
-                              select new { URId = x.URId }).ToList().Except(staff);
+                              select new { URId = x.StaffURId }).ToList().Except(staff);
                 
                 foreach (var item in _staff)
                 {
                     var s = (from y in c.DevOrganisationsStaffs
-                             where y.URId == item.URId
+                             where y.StaffURId == item.URId
                              select new
                              {
-                                 URId = y.URId,
+                                 URId = y.StaffURId,
                                  Name = y.NickName,
                                  Profile = (from z in c.CommonFiles
                                             where z.FileId == y.SubUserOrganisation.SubUser.SubUsersDetail.FileId
@@ -153,16 +153,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                               where x.OId == _User.OId
                               select new
                               {
-                                  URId = x.URId,
+                                  URId = x.StaffURId,
                               }).ToList().Except(staff);
 
                 foreach (var item in _staff)
                 {
                     var s = (from y in c.DevOrganisationsStaffs
-                             where y.URId == item.URId
+                             where y.StaffURId == item.URId
                              select new
                              {
-                                 URId = y.URId,
+                                 URId = y.StaffURId,
                                  Name = y.NickName,
                                  Profile = (from z in c.CommonFiles
                                             where z.FileId == y.SubUserOrganisation.SubUser.SubUsersDetail.FileId
@@ -259,16 +259,16 @@ namespace HIsabKaro.Cores.Employer.Organization.Salary
                               where x.OId == _User.OId
                               select new
                               {
-                                  URId = x.URId,
+                                  URId = x.StaffURId,
                               }).ToList();//.Except(staff);
 
                 foreach (var item in _staff)
                 {
                     var s = (from y in c.DevOrganisationsStaffs
-                             where y.URId == item.URId
+                             where y.StaffURId == item.URId
                              select new
                              {
-                                 URId = y.URId,
+                                 URId = y.StaffURId,
                                  Name = y.NickName,
                                  Profile = (from z in c.CommonFiles
                                             where z.FileId == y.SubUserOrganisation.SubUser.SubUsersDetail.FileId

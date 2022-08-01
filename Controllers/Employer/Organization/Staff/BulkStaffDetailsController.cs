@@ -12,12 +12,12 @@ namespace HIsabKaro.Controllers.Employer.Organization.Staff
     [ApiController]
     public class BulkStaffDetailsController : ControllerBase
     {
-        [HttpPost]
+    /*    [HttpPost]
         [Route("BulkStaffDetails/Create")]
         public IActionResult Create([FromBody] Models.Employer.Organization.Staff.BulkStaffDetail value)
         {
             var URId = HttpContext.Items["URId"];
             return Ok(new BulkStaffDetails().Create(URId,value));
-        }                                                                     
+        }    */                                                                 
     }
 }

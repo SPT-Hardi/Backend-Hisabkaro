@@ -60,7 +60,7 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff.Bonus
                     {
                         throw new ArgumentException("Unathorized!");
                     }
-                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.URId == StaffId && x.SubUserOrganisation.OId==_URId.OId);
+                    var _Staff = c.DevOrganisationsStaffs.SingleOrDefault(x => x.StaffURId == StaffId && x.SubUserOrganisation.OId==_URId.OId);
                     if (_Staff is null)
                     {
                         throw new ArgumentException("Staff Does Not Exits!");

@@ -16,36 +16,43 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
+using static HIsabKaro.Cores.Developer.Subscriber.Users;
 
 namespace HIsabKaro.Cores.Employer.Organization.Staff
 {
     public class StaffDetails
     {
-        private readonly ITokenServices _tokenService;
-        private readonly IOptions<MailSetting> _mailSetting;
-
-        public StaffDetails(ITokenServices tokenService, IOptions<MailSetting> mailSetting)
+        public enum SalaryType 
         {
-            _tokenService = tokenService;
-            _mailSetting = mailSetting;
+            Yearly=48,
+            Monthly=49,
+            Daily=50,
+            Hourly=51
         }
-
-        public Result Create(object URId, List<Models.Employer.Organization.Staff.StaffDetail> value)
+        public Result Create(object URId, Models.Employer.Organization.Staff.StaffDetailList value)
         {
             var ISDT = new Common.ISDT().GetISDT(DateTime.Now);
             using (DBContext c = new DBContext())
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    value.ForEach((v) =>
+                    var userOrganization = (from x in c.SubUserOrganisations where x.URId == (int)URId select x).FirstOrDefault();
+                    if (userOrganization == null) 
+                    {
+                        throw new ArgumentException("User not exist!");
+                    }
+                    value.StaffDetails.ForEach((v) =>
                      {
                          var _OId = c.DevOrganisations.SingleOrDefault(o => o.OId == v.Organization.Id);
                          if (_OId is null)
                          {
                              throw new ArgumentException("Organization Does Not Exits!");
                          }
-
-                         var _OrgRole = (from x in c.SubRoles where x.OId == v.Organization.Id && x.RoleName == "Staff" select x).FirstOrDefault();
+                         if (_OId.SubUser.UId != userOrganization.SubUser.UId) 
+                         {
+                             throw new ArgumentException("Not authorized!");
+                         }
+                         var _OrgRole = (from x in c.SubRoles where x.OId == v.Organization.Id && x.LoginTypeId ==(int)LoginType.Staff select x).FirstOrDefault();
                          var _subUser = c.SubUsers.SingleOrDefault(x => x.MobileNumber == v.MobileNumber);
 
                          if (_subUser is not null)
@@ -100,28 +107,74 @@ namespace HIsabKaro.Cores.Employer.Organization.Staff
 
                          var _Sid = (from x in c.DevOrganisationsStaffs
                                      where x.OId == _OId.OId
-                                     select x).Max(x => x.SId);
+                                     select x).Max(x => x.StaffCardId);
 
-                         if (_Sid == null)
+                         if (_Sid == 0)
                              _Sid = 1;
                          else
                              _Sid += 1;
                          var staff = new DevOrganisationsStaff()
                          {
                              NickName = v.Name,
-                             URId = _URID.URId,
+                             StaffURId = _URID.URId,
                              OId = (int)v.Organization.Id,
-                             IsMonthly = v.IsMonthly,
-                             Salary = v.SalaryAmount,
-                             SId = _Sid,
-                             Status = false,
+                             SalaryTypeId = v.SalaryType.Id,
+                             BasicSalary = v.BasicSalary,
+                             StaffCardId = _Sid,
                              CreateDate = ISDT,
+                             IsJoined=false,
+                             TotalSalaryAmount=v.TotalSalaryAmount
                          };
-                         if (v.IsMonthly == true)
+                         if (v.SalaryType.Id == (int)SalaryType.Monthly || v.SalaryType.Id == (int)SalaryType.Yearly)
                              staff.HRA = v.HRA;
 
                          c.DevOrganisationsStaffs.InsertOnSubmit(staff);
                          c.SubmitChanges();
+
+
+                         //----------------------------Advance-----------------------------------------------//
+                         v.Advances.ForEach((z) =>
+                         {
+                             if (z.AdvanceAmount != null || z.AdvanceAmount!=0)
+                             {
+                                 var advance = new OrgStaffsAdvanceDetail()
+                                 {
+                                     AdminURId=(int)URId,
+                                     Amount=z.AdvanceAmount==null ? 0 : (decimal)z.AdvanceAmount,
+                                     FinalAmountWithInterest=z.FinalAmountWithInterest,
+                                     CompleteDate=z.EndDate,   //Can be update in future if one pay late
+                                     CreateDate=DateTime.Now,
+                                     Description=z.Description,
+                                     EndDate=z.EndDate,    //In future never update
+                                     InterestRate=z.InterestRate,
+                                     IsCompleted=false,
+                                     IsEMI=z.IsEMI,
+                                     LastUpdated=DateTime.Now,
+                                     StaffURId=_URID.URId,
+                                     StartDate=z.StartDate,
+                                     TotalMonths=z.TotalMonths,
+                                 };
+                                 c.OrgStaffsAdvanceDetails.InsertOnSubmit(advance);
+                                 c.SubmitChanges();
+
+                                 c.OrgStaffAdvanceInstallments.InsertAllOnSubmit(z.EMIPerMonths.Where(z => z.EMIAmount != null || z.EMIAmount != 0).Select(z => new OrgStaffAdvanceInstallment()
+                                 {
+                                     AdvanceId=advance.AdvanceId,
+                                     InstallmentAmount=z.InstallmentAmount,
+                                     TotalAmountPaid=z.TotalAmountPaid,
+                                     TotalRemainAmount=z.TotalRemainAmount,
+                                     CompleteDate=z.EndDate,       //can be updated
+                                     Created=DateTime.Now,
+                                     InstallmentEndDate=z.EndDate,   //cant be updated
+                                     InstallmentMonth=z.InstallmentMonth,
+                                     InstallmentStartDate=z.StartDate,
+                                     IsCompleted=false,
+                                     LastUpdated=DateTime.Now
+                                 }));
+                                 c.SubmitChanges();
+                                 
+                             }
+                         });
                      });
                     scope.Complete();
                     return new Result()
